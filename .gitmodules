@@ -1,0 +1,3 @@
+[submodule "sofa-ark"]
+	path = sofa-ark
+	url = https://github.com/sofastack/sofa-ark.git
