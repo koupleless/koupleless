@@ -1,0 +1,9 @@
+target/
+*.iml
+.idea/
+pom.xml.bak
+.DS_Store
+.settings
+.classpath
+*.log
+logs/
