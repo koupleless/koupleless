@@ -52,7 +52,7 @@ SOFAServerless 研发运维平台是蚂蚁集团随着业务发展、研发运�
 ### 并行独立迭代
 多个模块的开发和发布运维，可以并行进行，互相不影响，也有效解决了迭代冲突、环境抢占等企业应用的研发痛点。
 
-  
+<br/>
 
 ## SOFAServerless 开源组件
 
@@ -64,7 +64,7 @@ SOFAServerless 研发运维平台是蚂蚁集团随着业务发展、研发运�
 | <b>module-deployment</b> | 模块运维调度系统，清晰的定义 ModuleDeployment 相关模型和 API，并且既支持 K8S CR + ETCD 调和的实现方式又支持标准 HTTP/RPC + DB 的实现方式。底层对接编排模块热替换的客户端（arklet、nodejs 等）。最终实现模块秒级发布运维能力，让开发者享受 Serverless 发布运维体验。 |
 | <b>serverless-paas (待定)</b> | 联邦层的 ServerlessPaaS 平台。module-deployment 只支持一个 K8S 集群或者一个机房内的模块发布运维，我们还需要一个联邦层的 PaaS 平台，能运维各个集群或者各个机房的 ModuleDeployment，并且对上游暴露统一的发布运维工单模型（OperationPlan）。不过 K8S 社区已经支持了联邦多集群（Federation）运维能力，是否需要额外建设联邦层 PaaS 平台会结合具体需求。 |
 
-  
+<br/>
 
 ## SOFAServerless 开源大体里程碑
 
