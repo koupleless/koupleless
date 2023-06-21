@@ -55,27 +55,29 @@ SOFAServerless 研发运维平台是蚂蚁集团随着业务发展、研发运�
 
 ## SOFAServerless 开源组件
 
-- <b>sofa-ark：</b>原来的 sofa-ark 2.0 Java 合并部署与热部署框架。
-- <b>arklet：</b>一个客户端框架，对接 SOFAArk 实现 Biz 模块的热部署和热卸载，并且暴露 HTTP API 接口可以让上游系统或者开发者直接使用。
-- <b>nodejslet：</b>一个客户端框架，对接 NodeJS 原生 API 实现 NodeJS 模块的热替换，并且暴露 HTTP API 接口可以让上游系统或者开发者直接使用。
-- <b>module-deployment：</b>模块运维调度系统，清晰的定义 ModuleDeployment 相关模型和 API，并且既支持 K8S CR + ETCD 调和的实现方式又支持标准 HTTP/RPC + DB 的实现方式。底层对接编排模块热替换的客户端（arklet、nodejs 等）。最终实现模块秒级发布运维能力，让开发者享受 Serverless 发布运维体验。
-- <b>serverless-paas（待定）：</b>联邦层的 ServerlessPaaS 平台。module-deployment 只支持一个 K8S 集群或者一个机房内的模块发布运维，我们还需要一个联邦层的 PaaS 平台，能运维各个集群或者各个机房的 ModuleDeployment，并且对上游暴露统一的发布运维工单模型（OperationPlan）。不过 K8S 社区已经支持了联邦多集群（Federation）运维能力，是否需要额外建设联邦层 PaaS 平台会结合具体需求。
+|  系统/组件   | 职责描述  |
+|  ----  | ----  |
+| <b>sofa-ark</b>  | 原来的 sofa-ark 2.0 Java 合并部署与热部署框架。 |
+| <b>arklet</b>  | 一个客户端框架，对接 SOFAArk 实现 Biz 模块的热部署和热卸载，并且暴露 HTTP API 接口可以让上游系统或者开发者直接使用。 |
+| <b>nodejslet</b>  | 一个客户端框架，对接 NodeJS 原生 API 实现 NodeJS 模块的热替换，并且暴露 HTTP API 接口可以让上游系统或者开发者直接使用。 |
+| <b>module-deployment</b> | 模块运维调度系统，清晰的定义 ModuleDeployment 相关模型和 API，并且既支持 K8S CR + ETCD 调和的实现方式又支持标准 HTTP/RPC + DB 的实现方式。底层对接编排模块热替换的客户端（arklet、nodejs 等）。最终实现模块秒级发布运维能力，让开发者享受 Serverless 发布运维体验。 |
+| <b>serverless-paas (待定)</b> | 联邦层的 ServerlessPaaS 平台。module-deployment 只支持一个 K8S 集群或者一个机房内的模块发布运维，我们还需要一个联邦层的 PaaS 平台，能运维各个集群或者各个机房的 ModuleDeployment，并且对上游暴露统一的发布运维工单模型（OperationPlan）。不过 K8S 社区已经支持了联邦多集群（Federation）运维能力，是否需要额外建设联邦层 PaaS 平台会结合具体需求。 |
 
 
 ## SOFAServerless 开源大体里程碑
 
 SOFAServerless 开源版非常希望并且欢迎与社区同学一起共建，凡是 23 年下半年参与社区共建的同学我们都会颁发奖品。2023 年下半年初步的里程碑计划如下：
 
-- arklet 首个初始化 MR 完成提交 - <b>07.05</b>
-- arklet 1.0 版本完成发布（单模块安装和卸载运维编排、基座容器启动自动安装模块、HTTP/RPC 多种对外接口支持等）- <b>09.01</b>
-- module-deployment 首个初始化 MR 完成提交 - <b>07.31</b>
-- module-deployment 1.0 版本完成发布（基于 ModuleDeployment 的模块分组发布能力、模块首发和下线能力、基于基座模块安装个数限制的简单调度能力，使用 K8S 调和方式实现）- <b>09.31</b>
-- arklet 1.1 版本完成发布（多模块安装和卸载运维编排）- <b>10 月</b>
-- module-deployment 1.1 版本完成发布（模块扩缩容能力、替换能力）- <b>10 月</b>
-- module-deployment 1.2 版本完成发布（更加定制化的模块调度能力）- <b>11 月</b>
-- module-deployment 1.3 版本完成发布（模块发布运维能力支持 HTTP/RPC + DB 方式实现）- <b>1 月</b>
-- module-deployment 1.4 版本完成发布（支持先扩容后缩缩容的热部署方式，根除原地替换潜在的类卸载问题）- <b>3 月</b>
-- module-deployment 1.5 版本完成发布（当发现基座应用 Pod 不够调度支持自动扩容 Pod）- <b>5 月</b>
+- <b>23.07.05：</b>arklet 首个初始化 MR 完成提交
+- <b>23.07.31：</b>module-deployment 首个初始化 MR 完成提交
+- <b>23.09.01：</b>arklet 1.0 版本完成发布（单模块安装和卸载运维编排、基座容器启动自动安装模块、HTTP/RPC 多种对外接口支持等）
+- <b>23.09.31：</b>module-deployment 1.0 版本完成发布（基于 ModuleDeployment 的模块分组发布能力、模块首发和下线能力、基于基座模块安装个数限制的简单调度能力，使用 K8S 调和方式实现）
+- <b>23 年 10 月：</b>arklet 1.1 版本完成发布（多模块安装和卸载运维编排）
+- <b>23 年 10 月：</b>module-deployment 1.1 版本完成发布（模块扩缩容能力、替换能力）
+- <b>23 年 11 月：</b>module-deployment 1.2 版本完成发布（更加定制化的模块调度能力）
+- <b>24 年 1 月：</b>module-deployment 1.3 版本完成发布（模块发布运维能力支持 HTTP/RPC + DB 方式实现）
+- <b>24 年 3 月：</b>module-deployment 1.4 版本完成发布（支持先扩容后缩缩容的热部署方式，根除原地替换潜在的类卸载问题）
+- <b>24 年 5 月：</b>module-deployment 1.5 版本完成发布（当发现基座应用 Pod 不够调度支持自动扩容 Pod）
 - ...
 
 更具体的里程碑细节尚待各个组件首个 MR 提交后再更新。
