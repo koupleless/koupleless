@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
-import com.alipay.sofa.serverless.arklet.core.command.meta.OutputMeta;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 
 /**
  * @author mingmen
@@ -26,7 +26,7 @@ public interface CommandService extends ArkletComponent {
      * @param content detail for this command
      * @return process result
      */
-    OutputMeta process(String cmd, Map content) throws InterruptedException;
+    Output<?> process(String cmd, Map content) throws InterruptedException;
 
     /**
      * if the cmd supported

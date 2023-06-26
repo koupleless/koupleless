@@ -14,12 +14,12 @@ import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
  */
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractCommandHandler<P extends InputMeta, Q extends OutputMeta> {
+public abstract class AbstractCommandHandler<P extends InputMeta, Q> {
 
     private final UnifiedOperationService unifiedOperationService = ArkletComponentRegistry.getOperationServiceInstance();
     private final CommandService commandService = ArkletComponentRegistry.getCommandServiceInstance();
 
-    public abstract Q handle(P p);
+    public abstract Output<Q> handle(P p);
     public abstract Command command();
     public abstract void validate(P p) throws CommandValidationException;
 

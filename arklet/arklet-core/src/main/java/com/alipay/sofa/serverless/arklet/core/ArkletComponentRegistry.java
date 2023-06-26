@@ -23,8 +23,10 @@ import com.google.inject.multibindings.Multibinder;
 public class ArkletComponentRegistry {
 
     private static final List<ArkletComponent> componentList = new ArrayList<>(8);
-    private AtomicBoolean init = new AtomicBoolean(false);
-    private static Injector componentInjector;
+    private final AtomicBoolean init = new AtomicBoolean(false);
+    private final AtomicBoolean destroy = new AtomicBoolean(false);
+
+    private static final Injector componentInjector;
 
     static {
         Injector injector = Guice.createInjector(new ComponentGuiceModule());
@@ -37,9 +39,21 @@ public class ArkletComponentRegistry {
     }
 
     public ArkletComponentRegistry() {
+
+    }
+
+    public void initComponents() {
         if (init.compareAndSet(false, true)) {
             for (ArkletComponent component : componentList) {
                 component.init();
+            }
+        }
+    }
+
+    public void destroyComponents() {
+        if (destroy.compareAndSet(false, true)) {
+            for (ArkletComponent component : componentList) {
+                component.destroy();
             }
         }
     }
@@ -52,9 +66,13 @@ public class ArkletComponentRegistry {
         return componentInjector.getInstance(CommandService.class);
     }
 
-    public static List<ArkletComponent> getAllComponents() {
-        return componentList;
+    public static ApiClient getApiClientInstance() {
+        return componentInjector.getInstance(ApiClient.class);
     }
+
+    //public static List<ArkletComponent> getAllComponents() {
+    //    return componentList;
+    //}
 
 
 

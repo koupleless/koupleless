@@ -17,7 +17,9 @@ public class ArkletAutoConfiguration {
     @Bean
     @ConditionalOnMasterBiz
     public ArkletComponentRegistry componentRegistry() {
-        return new ArkletComponentRegistry();
+        ArkletComponentRegistry registry = new ArkletComponentRegistry();
+        registry.initComponents();
+        return registry;
     }
 
     @Bean

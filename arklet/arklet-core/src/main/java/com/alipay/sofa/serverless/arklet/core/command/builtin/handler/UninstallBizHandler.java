@@ -1,27 +1,31 @@
 package com.alipay.sofa.serverless.arklet.core.command.builtin.handler;
 
+import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltInCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler.Input;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler.Output;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.common.CommandValidationException;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
-import com.alipay.sofa.serverless.arklet.core.command.meta.OutputMeta;
 import com.alipay.sofa.serverless.arklet.core.common.ArkletRuntimeException;
 
 /**
  * @author mingmen
  * @date 2023/6/14
  */
-public class UninstallBizHandler extends AbstractCommandHandler<Input, Output> {
+public class UninstallBizHandler extends AbstractCommandHandler<Input, Void> {
 
     @Override
-    public Output handle(Input input) {
+    public Output<Void> handle(Input input) {
         try {
-            ResponseCode code = getOperationService().uninstall(input.getBizName(), input.getBizVersion());
-            return new Output(code.name());
+            ClientResponse res = getOperationService().uninstall(input.getBizName(), input.getBizVersion());
+            if (ResponseCode.SUCCESS.equals(res.getCode())) {
+                return Output.ofSuccess(null);
+            } else {
+                return Output.ofFailed(res.getCode().name() + ":" + res.getMessage());
+            }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);
         }
@@ -61,22 +65,6 @@ public class UninstallBizHandler extends AbstractCommandHandler<Input, Output> {
 
         public void setBizVersion(String bizVersion) {
             this.bizVersion = bizVersion;
-        }
-    }
-
-    public static class Output extends OutputMeta {
-        private String res;
-
-        public Output(String res) {
-            this.res = res;
-        }
-
-        public String getRes() {
-            return res;
-        }
-
-        public void setRes(String res) {
-            this.res = res;
         }
     }
 

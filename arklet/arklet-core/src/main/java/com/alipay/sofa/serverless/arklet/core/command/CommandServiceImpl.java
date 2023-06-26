@@ -22,7 +22,7 @@ import com.alipay.sofa.serverless.arklet.core.command.coordinate.CoordinatorConf
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.ExecutionLock;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
-import com.alipay.sofa.serverless.arklet.core.command.meta.OutputMeta;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.common.CommandValidationException;
 import com.alipay.sofa.serverless.arklet.core.common.ArkletInitException;
 import com.alipay.sofa.serverless.arklet.core.util.AssertUtils;
@@ -67,7 +67,7 @@ public class CommandServiceImpl implements CommandService {
     }
 
     @Override
-    public OutputMeta process(String cmd, Map content) throws CommandValidationException, CommandMutexException {
+    public Output<?> process(String cmd, Map content) throws CommandValidationException, CommandMutexException {
         AbstractCommandHandler handler = getHandler(cmd);
         InputMeta input = toJavaBean(handler.getInputClass(), content);
         handler.validate(input);
