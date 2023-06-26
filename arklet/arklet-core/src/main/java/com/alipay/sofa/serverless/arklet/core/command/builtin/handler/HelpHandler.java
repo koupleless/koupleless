@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltInCommand;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HelpHandler.Output;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.model.CommandModel;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
-import com.alipay.sofa.serverless.arklet.core.common.CommandValidationException;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
-import com.alipay.sofa.serverless.arklet.core.command.meta.OutputMeta;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
+import com.alipay.sofa.serverless.arklet.core.common.CommandValidationException;
 
 /**
  * @author mingmen
@@ -18,16 +17,16 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.OutputMeta;
  */
 
 @SuppressWarnings("rawtypes")
-public class HelpHandler extends AbstractCommandHandler<InputMeta, Output> {
+public class HelpHandler extends AbstractCommandHandler<InputMeta, List> {
 
     @Override
-    public Output handle(InputMeta helpCmd) {
+    public Output<List> handle(InputMeta inputMeta) {
         List<AbstractCommandHandler> list = getCommandService().listAllHandlers();
         List<CommandModel> models = new ArrayList<>(list.size());
         for (AbstractCommandHandler handler : list) {
             models.add(new CommandModel(handler.command().getId(), handler.command().getDesc(), handler.command().getSample()));
         }
-        return new Output(models);
+        return Output.ofSuccess(models);
     }
 
     @Override
@@ -38,23 +37,6 @@ public class HelpHandler extends AbstractCommandHandler<InputMeta, Output> {
     @Override
     public void validate(InputMeta input) throws CommandValidationException {
 
-    }
-
-    public static class Output extends OutputMeta {
-        private List<CommandModel> supportedCmds;
-
-        public Output(List<CommandModel> supportedCmds) {
-            this.supportedCmds = supportedCmds;
-        }
-
-        public List<CommandModel> getSupportedCmds() {
-            return supportedCmds;
-        }
-
-        public void setSupportedCmds(
-            List<CommandModel> supportedCmds) {
-            this.supportedCmds = supportedCmds;
-        }
     }
 
 }

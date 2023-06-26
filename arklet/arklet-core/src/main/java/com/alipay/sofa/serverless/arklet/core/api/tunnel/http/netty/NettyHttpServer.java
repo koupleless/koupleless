@@ -22,7 +22,8 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 
-import com.alipay.sofa.serverless.arklet.core.command.meta.OutputMeta;
+import com.alipay.sofa.serverless.arklet.core.api.model.Response;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.common.ArkletException;
 import io.netty.bootstrap.ServerBootstrap;
@@ -128,15 +129,16 @@ public class NettyHttpServer {
                     ret500(ctx, validation.getMessage());
                 } else {
                     if (!validation.isCmdSupported()) {
-                        ret404(ctx);
+                        returnResponse(ctx, Response.notFound());
                     }
-                    OutputMeta result = commandService.process(validation.getCmd(), validation.getCmdContent());
-                    ret200(ctx, result);
+                    Output<?> output = commandService.process(validation.getCmd(), validation.getCmdContent());
+                    Response response = Response.fromCommandOutput(output);
+                    returnResponse(ctx, response);
                 }
             } catch (ArkletException ex) {
-                ret500(ctx, "Internal Error: " + ex.getMessage());
+                returnResponse(ctx, Response.internalError("Internal Error: " + ex.getMessage()));
             } catch (Exception ex) {
-                ret500(ctx, "Internal Error");
+                returnResponse(ctx, Response.internalError("Internal Error"));
             }
         }
 
@@ -154,10 +156,10 @@ public class NettyHttpServer {
             return RequestValidation.passed(supported, cmd, paramMap);
         }
 
-        private void ret200(ChannelHandlerContext ctx, OutputMeta result) {
+        private void returnResponse(ChannelHandlerContext ctx, Response response) {
             DefaultFullHttpResponse httpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
                 HttpResponseStatus.OK,
-                Unpooled.copiedBuffer(JSONObject.toJSONString(result),
+                Unpooled.copiedBuffer(JSONObject.toJSONString(response),
                     CharsetUtil.UTF_8));
             ChannelFuture future = ctx.writeAndFlush(httpResponse);
             future.addListener(ChannelFutureListener.CLOSE);

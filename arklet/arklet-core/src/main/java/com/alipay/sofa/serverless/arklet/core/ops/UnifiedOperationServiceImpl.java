@@ -27,16 +27,15 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
 
     }
 
-    public ResponseCode install(String bizPath) throws Throwable {
+    public ClientResponse install(String bizPath) throws Throwable {
         BizOperation bizOperation = new BizOperation().setOperationType(BizOperation.OperationType.INSTALL);
         bizOperation.putParameter(Constants.CONFIG_BIZ_URL, "file://" + bizPath);
-        ClientResponse response = ArkClient.installOperation(bizOperation);
-        return response.getCode();
+        return ArkClient.installOperation(bizOperation);
     }
 
     @Override
-    public ResponseCode uninstall(String bizName, String bizVersion) throws Throwable {
-        return ArkClient.uninstallBiz(bizName, bizVersion).getCode();
+    public ClientResponse uninstall(String bizName, String bizVersion) throws Throwable {
+        return ArkClient.uninstallBiz(bizName, bizVersion);
     }
 
     @Override
@@ -45,7 +44,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     }
 
     @Override
-    public ResponseCode switchBiz(String bizName, String bizVersion) throws Throwable {
-        return ArkClient.switchBiz(bizName, bizVersion).getCode();
+    public ClientResponse switchBiz(String bizName, String bizVersion) throws Throwable {
+        return ArkClient.switchBiz(bizName, bizVersion);
     }
 }

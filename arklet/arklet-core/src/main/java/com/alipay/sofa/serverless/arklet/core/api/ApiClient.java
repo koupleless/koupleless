@@ -54,6 +54,10 @@ public class ApiClient implements ArkletComponent {
         }
     }
 
+    public List<Tunnel> getTunnels() {
+        return tunnelList;
+    }
+
     private static class TunnelGuiceModule extends AbstractModule {
         @Override
         protected void configure() {
