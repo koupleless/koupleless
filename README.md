@@ -66,7 +66,7 @@ SOFAServerless 研发运维平台是蚂蚁集团随着业务发展、研发运�
 
 <br/>
 
-## SOFAServerless 开源大体里程碑
+## SOFAServerless 开源版大体里程碑
 
 SOFAServerless 开源版非常希望并且欢迎与社区同学一起共建，凡是 23 年下半年参与社区共建的同学我们都会颁发奖品。2023 年下半年初步的里程碑计划如下：
 
