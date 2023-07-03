@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alipay.sofa.ark.spi.model.Biz;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltInCommand;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.model.BizModel;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
-import com.alipay.sofa.serverless.arklet.core.common.CommandValidationException;
+import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 
 /**
@@ -36,7 +36,7 @@ public class QueryAllBizHandler extends AbstractCommandHandler<InputMeta, List<B
 
     @Override
     public Command command() {
-        return BuiltInCommand.QUERY_ALL_BIZ;
+        return BuiltinCommand.QUERY_ALL_BIZ;
     }
 
     @Override

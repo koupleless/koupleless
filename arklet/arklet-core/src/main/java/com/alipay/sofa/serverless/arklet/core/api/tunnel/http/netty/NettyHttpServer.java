@@ -25,7 +25,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.sofa.serverless.arklet.core.api.model.Response;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
-import com.alipay.sofa.serverless.arklet.core.common.ArkletException;
+import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletException;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

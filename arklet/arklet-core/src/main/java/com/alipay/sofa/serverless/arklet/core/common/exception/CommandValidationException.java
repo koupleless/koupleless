@@ -1,6 +1,4 @@
-package com.alipay.sofa.serverless.arklet.core.common;
-
-import com.alipay.sofa.serverless.arklet.core.common.ArkletException;
+package com.alipay.sofa.serverless.arklet.core.common.exception;
 
 /**
  * @author mingmen

@@ -7,12 +7,10 @@ package com.alipay.sofa.serverless.arklet.core.command.builtin.model;
 public class CommandModel {
     private String id;
     private String desc;
-    private String sample;
 
-    public CommandModel(String id, String desc, String sample) {
+    public CommandModel(String id, String desc) {
         this.id = id;
         this.desc = desc;
-        this.sample = sample;
     }
 
     public String getId() {
@@ -23,7 +21,4 @@ public class CommandModel {
         return desc;
     }
 
-    public String getSample() {
-        return sample;
-    }
 }

@@ -5,7 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import com.alipay.sofa.common.utils.StringUtil;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
-import com.alipay.sofa.serverless.arklet.core.common.CommandValidationException;
+import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
 
 /**
@@ -19,9 +19,9 @@ public abstract class AbstractCommandHandler<P extends InputMeta, Q> {
     private final UnifiedOperationService unifiedOperationService = ArkletComponentRegistry.getOperationServiceInstance();
     private final CommandService commandService = ArkletComponentRegistry.getCommandServiceInstance();
 
+    public abstract void validate(P p) throws CommandValidationException;
     public abstract Output<Q> handle(P p);
     public abstract Command command();
-    public abstract void validate(P p) throws CommandValidationException;
 
     public UnifiedOperationService getOperationService() {
         return unifiedOperationService;

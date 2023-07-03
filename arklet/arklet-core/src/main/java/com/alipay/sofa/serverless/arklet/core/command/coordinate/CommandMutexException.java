@@ -1,6 +1,6 @@
 package com.alipay.sofa.serverless.arklet.core.command.coordinate;
 
-import com.alipay.sofa.serverless.arklet.core.common.ArkletRuntimeException;
+import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletRuntimeException;
 
 /**
  * @author mingmen
