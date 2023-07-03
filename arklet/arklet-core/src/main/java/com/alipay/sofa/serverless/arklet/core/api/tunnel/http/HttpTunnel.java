@@ -1,9 +1,6 @@
 package com.alipay.sofa.serverless.arklet.core.api.tunnel.http;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.alipay.sofa.ark.common.log.ArkLogger;
-import com.alipay.sofa.ark.common.log.ArkLoggerFactory;
 import com.alipay.sofa.ark.common.util.AssertUtils;
 import com.alipay.sofa.ark.common.util.EnvironmentUtils;
 import com.alipay.sofa.ark.common.util.PortSelectUtils;
@@ -11,8 +8,10 @@ import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.serverless.arklet.core.api.tunnel.Tunnel;
 import com.alipay.sofa.serverless.arklet.core.api.tunnel.http.netty.NettyHttpServer;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
-import com.alipay.sofa.serverless.arklet.core.common.ArkletInitException;
-import com.alipay.sofa.serverless.arklet.core.common.ArkletRuntimeException;
+import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletInitException;
+import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletRuntimeException;
+import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
+import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
 import com.google.inject.Singleton;
 
 /**
@@ -23,7 +22,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class HttpTunnel implements Tunnel {
 
-    private static final ArkLogger LOGGER = ArkLoggerFactory.getDefaultLogger();
+    private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
     private final static String HTTP_PORT_ATTRIBUTE = "sofa.serverless.arklet.http.port";
     private int port = -1;
     private final static int DEFAULT_HTTP_PORT = 1238;
@@ -58,7 +57,7 @@ public class HttpTunnel implements Tunnel {
         if (run.compareAndSet(false, true)) {
             AssertUtils.isTrue(port > 0, "Http port should be positive integer.");
             try {
-                LOGGER.info("arklet listening on port: " + port);
+                LOGGER.info("http tunnel listening on port: " + port);
                 nettyHttpServer = new NettyHttpServer(port, commandService);
                 nettyHttpServer.open();
             } catch (InterruptedException e) {

@@ -27,6 +27,8 @@
         <maven.compiler.target>8</maven.compiler.target>
         <guice.version>4.0</guice.version>
         <netty.version>4.1.42.Final</netty.version>
+        <logback.version>1.2.9</logback.version>
+        <lombok.version>1.18.12</lombok.version>
         <junit.version>4.13.1</junit.version>
     </properties>
 
@@ -86,6 +88,24 @@
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
                 <version>${netty.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
             </dependency>
 
             <dependency>

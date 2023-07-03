@@ -40,7 +40,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
 
     @Override
     public List<Biz> queryBizList() {
-        return ArkClient.queryAllBiz();
+        return ArkClient.getBizManagerService().getBizInOrder();
     }
 
     @Override

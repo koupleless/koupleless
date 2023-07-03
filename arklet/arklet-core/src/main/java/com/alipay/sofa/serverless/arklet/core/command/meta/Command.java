@@ -8,7 +8,4 @@ public interface Command {
 
     String getId();
     String getDesc();
-    String getSample();
-    CommandType getType();
-    boolean concurrentEnabled();
 }
