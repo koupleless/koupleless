@@ -1,0 +1,99 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - module-deployment.serverless.alipay.com
+  resources:
+  - moduledeployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - module-deployment.serverless.alipay.com
+  resources:
+  - moduledeployments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - module-deployment.serverless.alipay.com
+  resources:
+  - moduledeployments/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - module-deployment.serverless.alipay.com
+  resources:
+  - modulereplicasets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - module-deployment.serverless.alipay.com
+  resources:
+  - modulereplicasets/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - module-deployment.serverless.alipay.com
+  resources:
+  - modulereplicasets/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - module-deployment.serverless.alipay.com
+  resources:
+  - modules
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - module-deployment.serverless.alipay.com
+  resources:
+  - modules/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - module-deployment.serverless.alipay.com
+  resources:
+  - modules/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+    - apps
+  resources:
+    - deployments
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: [""]
+  resources:
+    - pods
+  verbs:
+    - get
+    - list
+    - watch
