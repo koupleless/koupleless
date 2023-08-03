@@ -1,0 +1,31 @@
+name: Module Deployment Unit Test
+run-name: ${{ github.actor }} Pushed module-controller Code
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  # enable manually running the workflow
+  workflow_dispatch:
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set Up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20.5'
+      - name: Install Deps
+        run: cd ./module-controller && go mod download
+      - name: Build
+        run: CGO_ENABLED=0 go build -a -o -v manager ./module-controller/cmd/main.go
+      - name: Test
+        run: go test -v -json ./module-controller > TestResults.json
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test-Results
+          path: TestResults.json
+        
