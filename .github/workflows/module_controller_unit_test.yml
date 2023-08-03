@@ -1,5 +1,5 @@
 name: Module Deployment Unit Test
-run-name: ${{ github.actor }} Pushed module-controller Code
+run-name: ${{ github.actor }} pushed module-controller code
 on:
   push:
     branches:
@@ -20,17 +20,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set Up Go
+      - name: Set working directory
+        run: cd module-controller
+      - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: '1.20.5'
-      - name: Install Deps
-        run: cd ./module-controller && go mod download
+          cache-dependency-path: go.sum
+      - name: Install deps
+        run: go mod download
       - name: Build
-        run: cd ./module-controller && go build -a -o manager ./cmd/main.go
+        run: go build -a -o manager ./cmd/main.go
       - name: Test
-        run: cd ./module-controller/internal/controller && go test -v -json ./ > TestResults.json
-      - name: Upload Test Results
+        run: go test -v -json ./internal/controller > TestResults.json
+      - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
           name: Test-Results
