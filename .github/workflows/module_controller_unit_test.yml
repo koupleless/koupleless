@@ -14,7 +14,9 @@ on:
 env:
   CGO_ENABLED: 0
   GOOS: linux
-  WORKING_DIR: module-controller
+defaults:
+  run:
+    working-directory: module-controller
 
 jobs:
   unit-test:
@@ -25,19 +27,16 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.20.5'
-          cache-dependency-path: $WORKING_DIR/go.sum
+          cache-dependency-path: go.sum
       - name: Install deps
-        working-directory: ${{ WORKING_DIR }}
         run: go mod download
       - name: Build
-        working-directory: ${{ WORKING_DIR }}
         run: go build -a -o manager cmd/main.go
       - name: Test
-        working-directory: ${{ WORKING_DIR }}
         run: go test -v -json internal/controller > TestResults.json
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
           name: Test-Results
-          path: $WORKING_DIR/TestResults.json
+          path: TestResults.json
         
