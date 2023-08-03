@@ -27,16 +27,20 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.20.5'
-          cache-dependency-path: go.sum
+          cache-dependency-path: ./
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gocache
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
       - name: Install deps
         run: go mod download
       - name: Build
         run: go build -a -o manager cmd/main.go
       - name: Test
-        run: go test -v -json internal/controller > TestResults.json
+        run: go test -v -json ./internal/controller > TestResults.json
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
           name: Test-Results
           path: TestResults.json
-        
