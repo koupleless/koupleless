@@ -7,6 +7,9 @@ on:
     branches: [ master ]
   # enable manually running the workflow
   workflow_dispatch:
+env:
+  CGO_ENABLED: 0
+  GOOS: linux
 
 jobs:
   unit-test:
