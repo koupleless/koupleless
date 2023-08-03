@@ -2,9 +2,13 @@ name: Module Deployment Unit Test
 run-name: ${{ github.actor }} Pushed module-controller Code
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - 'module-controller/**'
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
+      - 'module-controller/**'
   # enable manually running the workflow
   workflow_dispatch:
 env:
@@ -25,7 +29,7 @@ jobs:
       - name: Build
         run: cd ./module-controller && go build -a -o manager ./cmd/main.go
       - name: Test
-        run: cd ./module-controller && go test -v -json ./ > TestResults.json
+        run: cd ./module-controller/internal/controller && go test -v -json ./ > TestResults.json
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
         with:
