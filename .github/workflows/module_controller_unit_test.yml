@@ -23,9 +23,9 @@ jobs:
       - name: Install Deps
         run: cd ./module-controller && go mod download
       - name: Build
-        run: go build -a -o manager ./module-controller/cmd/main.go
+        run: cd ./module-controller && go build -a -o manager ./cmd/main.go
       - name: Test
-        run: go test -v -json ./module-controller > TestResults.json
+        run: cd ./module-controller && go test -v -json ./ > TestResults.json
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
         with:
