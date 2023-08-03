@@ -14,25 +14,24 @@ on:
 env:
   CGO_ENABLED: 0
   GOOS: linux
+  WORKING_DIR: module-controller
 
 jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set working directory
-        run: cd module-controller
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: '1.20.5'
           cache-dependency-path: go.sum
       - name: Install deps
-        run: cd module-controller && go mod download
+        run: go mod download
       - name: Build
-        run: go build -a -o manager ./cmd/main.go
+        run: go build -a -o manager cmd/main.go
       - name: Test
-        run: go test -v -json ./internal/controller > TestResults.json
+        run: go test -v -json internal/controller > TestResults.json
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
