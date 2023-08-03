@@ -27,13 +27,13 @@ jobs:
           go-version: '1.20.5'
           cache-dependency-path: $WORKING_DIR/go.sum
       - name: Install deps
-        working-directory: $WORKING_DIR
+        working-directory: ${{ WORKING_DIR }}
         run: go mod download
       - name: Build
-        working-directory: $WORKING_DIR
+        working-directory: ${{ WORKING_DIR }}
         run: go build -a -o manager cmd/main.go
       - name: Test
-        working-directory: $WORKING_DIR
+        working-directory: ${{ WORKING_DIR }}
         run: go test -v -json internal/controller > TestResults.json
       - name: Upload test results
         uses: actions/upload-artifact@v3
