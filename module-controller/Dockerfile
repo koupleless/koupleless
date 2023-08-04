@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM golang:1.20 as builder
+FROM registry.aliyuncs.com/google_containers/golang:1.20 as builder
 ARG TARGETOS
 ARG TARGETARCH
 
