@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+    paths:
       - 'module-controller/**'
   pull_request:
     branches:
