@@ -32,7 +32,7 @@ jobs:
       - name: Run go mod
         run: go mod download
       - name: Build
-        run: go build -a -o -v manager cmd/main.go
+        run: go build -v -a -o manager cmd/main.go
       - name: Test
         run: go test -v -json ./internal/controller > TestResults.json
       - name: Upload test results
