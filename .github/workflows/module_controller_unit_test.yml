@@ -17,7 +17,7 @@ env:
   WORK_DIR: module-controller
 defaults:
   run:
-    working-directory: ${{ env.WORK_DIR }}
+    working-directory: module-controller
 
 jobs:
   unit-test:
