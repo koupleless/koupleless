@@ -55,7 +55,7 @@ public class CommandServiceImpl implements CommandService {
 
     @Override
     public void destroy() {
-
+        handlerMap.clear();
     }
 
     @Override
