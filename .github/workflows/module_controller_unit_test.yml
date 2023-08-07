@@ -9,6 +9,7 @@ on:
   pull_request:
     branches:
       - master
+    paths:
       - 'module-controller/**'
   # enable manually running the workflow
   workflow_dispatch:
