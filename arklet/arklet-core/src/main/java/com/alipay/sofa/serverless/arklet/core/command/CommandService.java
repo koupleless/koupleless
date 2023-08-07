@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
+import com.alipay.sofa.serverless.arklet.core.command.meta.CommandType;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 
 /**
@@ -19,6 +21,20 @@ public interface CommandService extends ArkletComponent {
      * @param handler handler
      */
     void registerCommandHandler(AbstractCommandHandler handler);
+
+    /**
+     * get command handler
+     * @param command command
+     * @return handler
+     */
+    AbstractCommandHandler getHandler(Command command);
+
+    /**
+     * get command handler
+     * @param commandId commandId
+     * @return handler
+     */
+    AbstractCommandHandler getHandler(String commandId);
 
     /**
      * core method
