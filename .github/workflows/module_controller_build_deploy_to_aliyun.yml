@@ -1,5 +1,6 @@
 name: Module Controller Build and Deploy to Aliyun
 run-name: ${{ github.actor }} pushed module-controller code
+
 on:
   push:
     branches:
@@ -8,17 +9,15 @@ on:
       - 'module-controller/**'
   # enable manually running the workflow
   workflow_dispatch:
+
 env:
   CGO_ENABLED: 0
   GOOS: linux
   WORK_DIR: module-controller
-  REGION_ID: cn-shanghai
-  REGISTRY: serverless-registry.cn-shanghai.cr.aliyuncs.com
   NAMESPACE: opensource
-  IMAGE: stable/module-controller
-  TAG: stable-${{ github.sha }}
-  ACK_CLUSTER_ID: c2e339e20c149498bb334d079196575eb
-  ACK_DEPLOYMENT_NAME: module-controller
+  IMAGE: test/module-controller
+  TAG: test-${{ github.sha }}
+  
 defaults:
   run:
     working-directory: module-controller
@@ -34,46 +33,22 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-
-    # 1.1 Login to ACR
-    - name: Login to ACR with the AccessKey pair
-      uses: aliyun/acr-login@v1
+      
+    - name: Docker login
+      uses: docker/login-action@v2.2.0
       with:
-        region-id: "${{ env.REGION_ID }}"
-        access-key-id: "${{ secrets.ACCESS_KEY_ID }}"
-        access-key-secret: "${{ secrets.ACCESS_KEY_SECRET }}"
-
-    # 1.2 Buid and push image to ACR
-    - name: Build and push image to ACR
-      run: |
-        docker build --tag "$REGISTRY/$NAMESPACE/$IMAGE:$TAG" .
-        docker push "$REGISTRY/$NAMESPACE/$IMAGE:$TAG"
-
-    # 1.3 Scan image in ACR
-    #- name: Scan image in ACR
-    #  uses: aliyun/acr-scan@v1
-    #  with:
-    #    region-id: "${{ env.REGION_ID }}"
-    #    access-key-id: "${{ secrets.ACCESS_KEY_ID }}"
-    #    access-key-secret: "${{ secrets.ACCESS_KEY_SECRET }}"
-    #    repository: "${{ env.NAMESPACE }}/${{ env.IMAGE }}"
-    #    tag: "${{ env.TAG }}"
-
-    # 3.1 Set ACK context
-    - name: Set K8s context
-      uses: aliyun/ack-set-context@v1
+        registry: ${{ secrets.DOCKERHUB_REGISTRY }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }} 
+        
+    - name: Build the Docker image
+      run: docker build --file Dockerfile -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
+      
+    - name: Push the Docker image
+      run: docker push ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG
+      
+    - name: kubectl-simple
+      uses: steebchen/kubectl@v2.1.1
       with:
-        access-key-id: "${{ secrets.ACCESS_KEY_ID }}"
-        access-key-secret: "${{ secrets.ACCESS_KEY_SECRET }}"
-        cluster-id: "${{ env.ACK_CLUSTER_ID }}"
-
-    # 3.2 Deploy the image to the ACK cluster
-    - name: Set up Kustomize
-      run: |-
-        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash /dev/stdin 3.8.6
-    - name: Deploy
-      run: |-
-        ./kustomize edit set image REGISTRY/NAMESPACE/IMAGE:TAG=$REGISTRY/$NAMESPACE/$IMAGE:$TAG
-        ./kustomize build . | kubectl apply -f -
-        kubectl rollout status deployment/$ACK_DEPLOYMENT_NAME
-        kubectl get services -o wide
+        config: xxx
+        command: xxx
