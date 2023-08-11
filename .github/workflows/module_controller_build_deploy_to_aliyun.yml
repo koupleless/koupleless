@@ -14,8 +14,6 @@ env:
   CGO_ENABLED: 0
   GOOS: linux
   WORK_DIR: module-controller
-  NAMESPACE: opensource
-  IMAGE: test/module-controller
   TAG: test-${{ github.sha }}
   
 defaults:
@@ -42,7 +40,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }} 
         
     - name: Build the Docker image
-      run: docker build --file Dockerfile -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
+      run: docker buildx build --file Dockerfile --platform linux/amd64 -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
       
     - name: Push the Docker image
       run: docker push ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG
@@ -50,5 +48,5 @@ jobs:
     - name: kubectl-simple
       uses: steebchen/kubectl@v2.1.1
       with:
-        config: xxx
-        command: xxx
+        config: ${{ secrets.KUBE_CONFIG }}
+        command: apply -f $WORK_DIR/config/samples/module-deployment-controller.yaml
