@@ -5,15 +5,15 @@
 domain: serverless.alipay.com
 layout:
 - go.kubebuilder.io/v4
-projectName: module-deployment
+projectName: module-controller
 repo: github.com/sofastack/sofa-serverless
 resources:
 - api:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: serverless.alipay.com
-  group: module-deployment
+  domain: lipay.com
+  group: serverless
   kind: ModuleDeployment
   path: github.com/sofastack/sofa-serverless/api/v1alpha1
   version: v1alpha1
@@ -21,8 +21,8 @@ resources:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: serverless.alipay.com
-  group: module-deployment
+  domain: alipay.com
+  group: serverless
   kind: Module
   path: github.com/sofastack/sofa-serverless/api/v1alpha1
   version: v1alpha1
@@ -30,8 +30,8 @@ resources:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: serverless.alipay.com
-  group: module-deployment
+  domain: alipay.com
+  group: serverless
   kind: ModuleReplicaSet
   path: github.com/sofastack/sofa-serverless/api/v1alpha1
   version: v1alpha1

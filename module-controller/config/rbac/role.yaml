@@ -5,7 +5,7 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - moduledeployments
   verbs:
@@ -17,13 +17,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - moduledeployments/finalizers
   verbs:
   - update
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - moduledeployments/status
   verbs:
@@ -31,7 +31,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - modulereplicasets
   verbs:
@@ -43,13 +43,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - modulereplicasets/finalizers
   verbs:
   - update
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - modulereplicasets/status
   verbs:
@@ -57,7 +57,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - modules
   verbs:
@@ -69,13 +69,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - modules/finalizers
   verbs:
   - update
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - modules/status
   verbs:
@@ -94,6 +94,10 @@ rules:
   resources:
     - pods
   verbs:
+    - create
+    - delete
     - get
     - list
+    - patch
+    - update
     - watch
