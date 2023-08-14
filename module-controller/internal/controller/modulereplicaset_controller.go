@@ -39,9 +39,9 @@ type ModuleReplicaSetReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=module-deployment.serverless.alipay.com,resources=modulereplicasets,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=module-deployment.serverless.alipay.com,resources=modulereplicasets/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=module-deployment.serverless.alipay.com,resources=modulereplicasets/finalizers,verbs=update
+//+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -73,6 +73,16 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return ctrl.Result{}, nil
 	}
 
+	if moduleReplicaSet.DeletionTimestamp != nil {
+		for _, existedModule := range existedModuleList.Items {
+			err := r.Client.Delete(ctx, &existedModule)
+			if err != nil {
+				log.Log.Error(err, "Failed to delete module", "moduleName", existedModule.Name)
+				return ctrl.Result{}, err
+			}
+		}
+	}
+
 	// compare replicas
 	if int(moduleReplicaSet.Spec.Replicas) != len(existedModuleList.Items) {
 		// replicas change
@@ -90,7 +100,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			// get allocated pod
 			usedPodNames := make(map[string]bool)
 			for _, module := range existedModuleList.Items {
-				usedPodNames[module.Labels[moduledeploymentv1alpha1.PodNameLabel]] = true
+				usedPodNames[module.Labels[moduledeploymentv1alpha1.BaseInstanceNameLabel]] = true
 			}
 
 			// allocate pod
@@ -106,6 +116,13 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			}
 
 			for _, pod := range toAllocatePod {
+				pod.Labels[fmt.Sprintf("%s/%s", moduledeploymentv1alpha1.ModuleNameLabel, moduleReplicaSet.Spec.Template.Spec.Module.Name)] = moduleReplicaSet.Spec.Template.Spec.Module.Version
+				err := r.Client.Update(ctx, &pod)
+				// TODO add pod finalizer
+				if err != nil {
+					// update pod label
+					return ctrl.Result{}, err
+				}
 				// create module
 				module := r.generateModule(moduleReplicaSet, pod)
 				if err = r.Client.Create(ctx, module); err != nil {
@@ -116,7 +133,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		} else {
 			// scale down
 			count := -deltaReplicas
-			log.Log.Info("scale down")
+			log.Log.Info("scale down replicas", "deltaReplicas", deltaReplicas)
 			for _, existedModule := range existedModuleList.Items {
 				err := r.Client.Delete(ctx, &existedModule)
 				if err != nil {
@@ -163,8 +180,8 @@ func (r *ModuleReplicaSetReconciler) generateModule(moduleReplicaSet *moduledepl
 	moduleLabels := moduleReplicaSet.Labels
 	moduleLabels[moduledeploymentv1alpha1.ModuleNameLabel] = moduleReplicaSet.Spec.Template.Spec.Module.Name
 	moduleLabels[moduledeploymentv1alpha1.ModuleVersionLabel] = moduleReplicaSet.Spec.Template.Spec.Module.Version
-	moduleLabels[moduledeploymentv1alpha1.PodIpLabel] = pod.Status.PodIP
-	moduleLabels[moduledeploymentv1alpha1.PodNameLabel] = pod.Name
+	moduleLabels[moduledeploymentv1alpha1.BaseInstanceIpLabel] = pod.Status.PodIP
+	moduleLabels[moduledeploymentv1alpha1.BaseInstanceNameLabel] = pod.Name
 	moduleLabels[moduledeploymentv1alpha1.ModuleReplicasetLabel] = moduleReplicaSet.Name
 
 	module := &moduledeploymentv1alpha1.Module{
@@ -175,19 +192,20 @@ func (r *ModuleReplicaSetReconciler) generateModule(moduleReplicaSet *moduledepl
 			Namespace:    moduleReplicaSet.Namespace,
 		},
 		Spec: moduledeploymentv1alpha1.ModuleSpec{
-			Module: moduleReplicaSet.Spec.Template.Spec.Module,
+			Selector: moduleReplicaSet.Spec.Selector,
+			Module:   moduleReplicaSet.Spec.Template.Spec.Module,
 		},
 	}
 	// OwnerReference to moduleReplicaSet and Pod
 	owner := []metav1.OwnerReference{
-		{
-			APIVersion:         moduleReplicaSet.APIVersion,
-			Kind:               moduleReplicaSet.Kind,
-			UID:                moduleReplicaSet.UID,
-			Name:               moduleReplicaSet.Name,
-			BlockOwnerDeletion: pointer.Bool(true),
-			Controller:         pointer.Bool(true),
-		},
+		//{
+		//	APIVersion:         moduleReplicaSet.APIVersion,
+		//	Kind:               moduleReplicaSet.Kind,
+		//	UID:                moduleReplicaSet.UID,
+		//	Name:               moduleReplicaSet.Name,
+		//	BlockOwnerDeletion: pointer.Bool(true),
+		//	Controller:         pointer.Bool(true),
+		//},
 		{
 			APIVersion:         pod.APIVersion,
 			Kind:               pod.Kind,
@@ -197,7 +215,6 @@ func (r *ModuleReplicaSetReconciler) generateModule(moduleReplicaSet *moduledepl
 		},
 	}
 	module.SetOwnerReferences(owner)
-
 	return module
 }
 

@@ -17,7 +17,7 @@ spec:
       serviceAccountName: controller-manager
       containers:
         - name: module-deployment
-          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/module-deployment:v0.1
+          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/module-controller:v0.4.2
           resources:
             limits:
               cpu: "1"
