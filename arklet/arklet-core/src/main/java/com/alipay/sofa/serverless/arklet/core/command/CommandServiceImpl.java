@@ -15,6 +15,7 @@ import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.SwitchBizH
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.CommandMutexException;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletInitException;
@@ -54,7 +55,7 @@ public class CommandServiceImpl implements CommandService {
 
     @Override
     public void destroy() {
-
+        handlerMap.clear();
     }
 
     @Override
@@ -83,9 +84,15 @@ public class CommandServiceImpl implements CommandService {
         }
     }
 
-    private AbstractCommandHandler getHandler(String cmdId) {
-        AbstractCommandHandler handler = handlerMap.get(cmdId);
-        AssertUtils.isTrue(handler != null, cmdId + " not found handler");
+    @Override
+    public AbstractCommandHandler getHandler(Command command) {
+        return getHandler(command.getId());
+    }
+
+    @Override
+    public AbstractCommandHandler getHandler(String commandId) {
+        AbstractCommandHandler handler = handlerMap.get(commandId);
+        AssertUtils.isTrue(handler != null, commandId + " not found handler");
         return handler;
     }
 
