@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta content="text/html;charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism.css" />
+    <style type="text/css">
+        body,html{
+            font-family: Consolas, "微软雅黑", serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header{
+            height: 64px;
+            padding: 0 50px;
+            line-height: 64px;
+            background: #001529;
+        }
+        .logo{
+            font-size: 20px;
+            margin: 16px 24px 16px 0;
+            float: left;
+            color: #fff;
+            text-align: center;
+            line-height: 30px;
+        }
+
+        .item-list{
+            background: rgb(255,255,255);
+            padding: 24px;
+            font-size: 18px;
+            min-height: 280px;
+        }
+
+        .request-body, .url-input{
+            width: 400px;
+            padding-left: 10px;
+            padding-top: 5px;
+            padding-bottom: 4px;
+            font-size: 18px;
+            outline: none;
+            border: 0;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .request-body, .response-body {
+            height: 200px;
+            width: 600px;
+            font-family: Consolas,serif;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            word-break: break-all;
+            word-wrap: anywhere;
+            overflow: auto;
+        }
+
+        .response-body {
+            padding: 0;
+        }
+
+        .url-button {
+            padding: 8px 20px;
+            margin-left: 20px;
+            color: #fff;
+            background: #0A6EBD;
+            border: 0px;
+            font-size: 16px;
+            border-radius: 14px;
+        }
+
+        .url:focus {
+            border-bottom: 2px solid #102C57;
+        }
+
+        .main-cnt .name{
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+
+        .main>*{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .main .main-img{
+            position: absolute;
+            left: 12px;
+            top: 11px;
+            width: 50px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div style="width: 80%;margin: 0 auto">
+        <div class="logo">SOFA-SEVERLESS-ARKLET ARKLET-API-TEST</div>
+    </div>
+
+</header>
+
+<div class="main" style="margin-top: 15px;">
+    <div style="width: 80%;margin: 0 auto">
+        <div class="item-list">
+            <form>
+                <label>
+                    POST:
+                    <input class="url-input" type="text" id="url"/>
+                    <input type="button" class="url-button" id="http-request-btn" value="Send">
+                </label>
+                <label>
+                    <div>JSON REQUEST BODY: </div>
+                    <textarea class="request-body" id="request-body"></textarea>
+                </label>
+                <label>
+                    <div>RESPONSE BODY: </div>
+                    <div class="response-body">
+                    <pre style="background: #fff"><code class="language-javascript" id="response-body"></code></pre>
+                    </div>
+                </label>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+    $("#http-request-btn").click(() => {
+        if ($("#request-body").val() !== "") {
+            let data = JSON.parse($("#request-body").val());
+            if (typeof data == 'object' && data) {
+                $("#response-body").html("Loading...");
+                header('Access-Control-Allow-Origin:*');
+                $.ajax({
+                    url: $("#url").val(),
+                    type: "post",
+                    dataType: "json",
+                    data: data,
+                    success: res => {
+                        $("#response-body").html(res.data);
+                    },
+                    error: res => {
+                        $("#response-body").html(res.data);
+                    }
+                });
+            }
+        } else {
+            $("#response-body").html("Json Parsing Error");
+        }
+    })
+</script>
+</body>
+</html>
