@@ -27,7 +27,7 @@ import org.slf4j.Marker;
  */
 public class ArkletLogger implements Logger {
 
-    private Logger logger;
+    private final Logger logger;
 
     public ArkletLogger(Logger logger) {
         this.logger = logger;
