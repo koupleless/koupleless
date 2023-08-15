@@ -36,7 +36,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"time"
 )
 
 const (
@@ -80,6 +79,7 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	ip := module.Labels[moduledeploymentv1alpha1.BaseInstanceIpLabel]
 	moduleInstanceStatus := module.Status.Status
 
+	// new module, resolve module status by ip
 	if moduleInstanceStatus == "" {
 		if ip == "" {
 			moduleInstanceStatus = moduledeploymentv1alpha1.ModuleInstanceStatusPending
@@ -92,6 +92,14 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			return ctrl.Result{}, err
 		}
 		return ctrl.Result{}, nil
+	}
+
+	// uninstall module label
+	if module.Labels[moduledeploymentv1alpha1.DeleteModuleLabel] != "" {
+		err := r.Client.Delete(ctx, module)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
 	}
 
 	if module.DeletionTimestamp != nil {
@@ -111,6 +119,14 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			}
 
 			if targetPod != nil && targetPod.Name != "" {
+				// clean module label
+				delete(targetPod.Labels, fmt.Sprintf("%s/%s", moduledeploymentv1alpha1.ModuleNameLabel, module.Spec.Module.Name))
+				err = r.Client.Update(ctx, targetPod)
+				if err != nil {
+					log.Log.Error(err, "Failed remove module label in pod", "moduleName", module.Spec.Module.Name)
+					return ctrl.Result{}, err
+				}
+
 				// uninstall module
 				log.Log.Info("start to uninstall module", "moduleName", module.Spec.Module.Name, "module", module.Name)
 				url := fmt.Sprintf("http://%s:1238/uninstallBiz", ip)
@@ -127,8 +143,9 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			}
 		}
 
-		if moduleInstanceStatus != moduledeploymentv1alpha1.ModuleInstanceStatusTerminating {
+		if module.Labels[moduledeploymentv1alpha1.DeleteModuleLabel] == "" {
 			// create a new module
+			log.Log.Info("start to create a new module", "moduleName", module.Spec.Module.Name, "module", module.Name)
 			err := r.createNewModule(module)
 			if err != nil {
 				return ctrl.Result{}, err
@@ -149,8 +166,10 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	}
 
 	if moduleInstanceStatus == moduledeploymentv1alpha1.ModuleInstanceStatusPending {
+		log.Log.Info("module is pending", "moduleName", module.Spec.Module.Name, "module", module.Name)
 		if module.Labels[moduledeploymentv1alpha1.BaseInstanceIpLabel] != "" {
 			// already schedule ip
+			log.Log.Info("module is already schedule ip", "moduleName", module.Spec.Module.Name, "module", module.Name, "ip", module.Labels[moduledeploymentv1alpha1.BaseInstanceIpLabel])
 			module.Status.Status = moduledeploymentv1alpha1.ModuleInstanceStatusPrepare
 			err := r.Status().Update(ctx, module)
 			if err != nil {
@@ -158,36 +177,38 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			}
 		}
 
+		log.Log.Info("module wait to schedule ip", "moduleName", module.Spec.Module.Name, "module", module.Name)
+
 		// find a new pod to schedule
 		selector, err := metav1.LabelSelectorAsSelector(&module.Spec.Selector)
 
 		noAllocatePod, _ := labels.NewRequirement(fmt.Sprintf("%s/%s", moduledeploymentv1alpha1.ModuleNameLabel, module.Spec.Module.Name), selection.DoesNotExist, nil)
-		selector.Add(*noAllocatePod)
+		selector = selector.Add(*noAllocatePod)
 
 		selectedPods := &corev1.PodList{}
 		if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: req.Namespace, LabelSelector: selector}); err != nil {
 			log.Log.Error(err, "Failed to list not allocated pod", "moduleName", module.Name)
 		}
 
-		if err != nil || len(selectedPods.Items) == 0 {
-			// not find a new pod, delay reconcile to wait schedule again
-			timeDuration := time.Now().Sub(module.ObjectMeta.CreationTimestamp.Time)
-			var requeueAfter time.Duration
-			if timeDuration.Hours() > 1 {
-				requeueAfter = time.Minute * 10
-			} else if timeDuration.Minutes() > 30 {
-				requeueAfter = time.Minute * 5
-			} else if timeDuration.Minutes() > 10 {
-				requeueAfter = time.Minute * 1
-			} else {
-				requeueAfter = time.Second * 10
+		var pod corev1.Pod
+		existSchedulingPod := false
+		for _, podItr := range selectedPods.Items {
+			if podItr.Status.PodIP != "" {
+				// pod with ip to schedule module
+				pod = podItr
+				existSchedulingPod = true
+				break
 			}
+		}
+
+		if err != nil || !existSchedulingPod {
+			// not find a new pod, delay reconcile to wait schedule again
+			requeueAfter := utils.GetNextReconcileTime(module.ObjectMeta.CreationTimestamp.Time)
 			return ctrl.Result{RequeueAfter: requeueAfter}, nil
 		}
 
 		// find a pod to schedule
 		// TODO 调度策略
-		pod := selectedPods.Items[0]
 
 		// lock the pod, update the label
 		pod.Labels[fmt.Sprintf("%s/%s", moduledeploymentv1alpha1.ModuleNameLabel, module.Spec.Module.Name)] = module.Spec.Module.Version
@@ -268,6 +289,7 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 				return ctrl.Result{}, err
 			}
 		}
+		return ctrl.Result{}, nil
 	}
 
 	if moduleInstanceStatus == moduledeploymentv1alpha1.ModuleInstanceStatusAvailable {

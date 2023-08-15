@@ -12,4 +12,6 @@ const (
 	ModuleReplicasetLabel = "module-replicaset"
 
 	ModuleDeploymentLabel = "module-deployment"
+
+	DeleteModuleLabel = "delete-module"
 )

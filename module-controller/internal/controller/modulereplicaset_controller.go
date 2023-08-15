@@ -19,7 +19,9 @@ package controller
 import (
 	"context"
 	"fmt"
+	"github.com/sofastack/sofa-serverless/internal/controller/utils"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/utils/pointer"
@@ -31,6 +33,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+)
+
+const (
+	ExistingModuleFinalizer = "existing-module"
 )
 
 // ModuleReplicaSetReconciler reconciles a ModuleReplicaSet object
@@ -59,6 +65,10 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{}
 	err := r.Client.Get(ctx, req.NamespacedName, moduleReplicaSet)
 	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Log.Info("moduleReplicaSet is deleted", "moduleReplicaSetName", moduleReplicaSet.Name)
+			return reconcile.Result{}, nil
+		}
 		log.Log.Error(err, "Failed to get moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
 		return ctrl.Result{}, nil
 	}
@@ -74,12 +84,33 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	if moduleReplicaSet.DeletionTimestamp != nil {
-		for _, existedModule := range existedModuleList.Items {
-			err := r.Client.Delete(ctx, &existedModule)
+		if len(existedModuleList.Items) == 0 {
+			if utils.HasFinalizer(&moduleReplicaSet.ObjectMeta, ExistingModuleFinalizer) {
+				// all module is removed, remove module replicaset finalizer
+				log.Log.Info("all modules are deleted, remove moduleReplicaSet finalizer", "moduleReplicaSetName", moduleReplicaSet.Name)
+				utils.RemoveFinalizer(&moduleReplicaSet.ObjectMeta, ExistingModuleFinalizer)
+				err := r.Client.Update(ctx, moduleReplicaSet)
+				if err != nil {
+					return ctrl.Result{}, err
+				}
+			}
+			return ctrl.Result{}, nil
+		} else {
+			var err error
+			for _, existedModule := range existedModuleList.Items {
+				log.Log.Info("moduleReplicaSet is deleting, delete module", "moduleReplicaSetName", moduleReplicaSet.Name, "module", existedModule.Name)
+				existedModule.Labels[moduledeploymentv1alpha1.DeleteModuleLabel] = "true"
+				err = r.Client.Update(ctx, &existedModule)
+			}
 			if err != nil {
-				log.Log.Error(err, "Failed to delete module", "moduleName", existedModule.Name)
+				log.Log.Error(err, "Failed to update uninstall module label")
 				return ctrl.Result{}, err
 			}
+
+			// wait all module deleting
+			log.Log.Info("moduleReplicaSet wait module deleting", "moduleReplicaSetName", moduleReplicaSet.Name, "existedModuleSize", len(existedModuleList.Items))
+			requeueAfter := utils.GetNextReconcileTime(moduleReplicaSet.DeletionTimestamp.Time)
+			return ctrl.Result{RequeueAfter: requeueAfter}, nil
 		}
 	}
 
@@ -135,14 +166,15 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			count := -deltaReplicas
 			log.Log.Info("scale down replicas", "deltaReplicas", deltaReplicas)
 			for _, existedModule := range existedModuleList.Items {
-				err := r.Client.Delete(ctx, &existedModule)
-				if err != nil {
-					log.Log.Error(err, "Failed to delete module", "moduleName", existedModule.Name)
-					return ctrl.Result{}, err
-				}
+				existedModule.Labels[moduledeploymentv1alpha1.DeleteModuleLabel] = "true"
+				err = r.Client.Update(ctx, &existedModule)
 				if count--; count == 0 {
 					break
 				}
+			}
+			if err != nil {
+				log.Log.Error(err, "Failed to delete module")
+				return ctrl.Result{}, err
 			}
 		}
 	}
@@ -198,14 +230,6 @@ func (r *ModuleReplicaSetReconciler) generateModule(moduleReplicaSet *moduledepl
 	}
 	// OwnerReference to moduleReplicaSet and Pod
 	owner := []metav1.OwnerReference{
-		//{
-		//	APIVersion:         moduleReplicaSet.APIVersion,
-		//	Kind:               moduleReplicaSet.Kind,
-		//	UID:                moduleReplicaSet.UID,
-		//	Name:               moduleReplicaSet.Name,
-		//	BlockOwnerDeletion: pointer.Bool(true),
-		//	Controller:         pointer.Bool(true),
-		//},
 		{
 			APIVersion:         pod.APIVersion,
 			Kind:               pod.Kind,

@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/internal/controller/utils"
 	v1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -29,6 +30,11 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+)
+
+const (
+	ExistingModuleReplicaSetFinalizer = "existing-module-replicaset"
 )
 
 // ModuleDeploymentReconciler reconciles a ModuleDeployment object
@@ -59,7 +65,47 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	moduleDeployment := &moduledeploymentv1alpha1.ModuleDeployment{}
 	err := r.Client.Get(ctx, req.NamespacedName, moduleDeployment)
 	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Log.Info("moduleDeployment is deleted", "moduleDeploymentName", moduleDeployment.Name)
+			return reconcile.Result{}, nil
+		}
 		log.Log.Error(err, "Failed to get moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
+		return ctrl.Result{}, nil
+	}
+
+	if moduleDeployment.DeletionTimestamp != nil {
+		if !utils.HasFinalizer(&moduleDeployment.ObjectMeta, ExistingModuleReplicaSetFinalizer) {
+			return ctrl.Result{}, nil
+		}
+
+		moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{}
+		moduleReplicaSetName := getModuleReplicasName(moduleDeployment.Name)
+		err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleReplicaSetName}, moduleReplicaSet)
+		existReplicaset := true
+		if err != nil {
+			if errors.IsNotFound(err) {
+				existReplicaset = false
+			} else {
+				log.Log.Error(err, "Failed to get moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSetName)
+				return ctrl.Result{}, err
+			}
+		}
+		if existReplicaset {
+			err := r.Client.Delete(ctx, moduleReplicaSet)
+			if err != nil {
+				log.Log.Error(err, "Failed to delete moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSetName)
+				return ctrl.Result{}, err
+			}
+			requeueAfter := utils.GetNextReconcileTime(moduleDeployment.DeletionTimestamp.Time)
+			return ctrl.Result{RequeueAfter: requeueAfter}, nil
+		} else {
+			log.Log.Info("moduleReplicaSet is deleted, remove moduleDeployment finalizer", "moduleDeploymentName", moduleDeployment.Name)
+			utils.RemoveFinalizer(&moduleDeployment.ObjectMeta, ExistingModuleReplicaSetFinalizer)
+			err := r.Client.Update(ctx, moduleDeployment)
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+		}
 		return ctrl.Result{}, nil
 	}
 
@@ -88,6 +134,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			Controller:         pointer.Bool(true),
 		})
 		moduleDeployment.SetOwnerReferences(ownerReference)
+		utils.AddFinalizer(&moduleDeployment.ObjectMeta, ExistingModuleReplicaSetFinalizer)
 		err = r.Client.Update(ctx, moduleDeployment)
 		if err != nil {
 			log.Log.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
@@ -194,6 +241,7 @@ func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *mo
 		},
 	}
 	moduleReplicaSet.SetOwnerReferences(owner)
+	utils.AddFinalizer(&moduleReplicaSet.ObjectMeta, ExistingModuleFinalizer)
 
 	return moduleReplicaSet
 }
