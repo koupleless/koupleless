@@ -48,5 +48,5 @@ jobs:
     - name: kubectl-simple
       uses: steebchen/kubectl@v2.1.1
       with:
-        config: ${{ secrets.KUBE_CONFIG }}
+        config: ${{ secrets.CI_KUBE_CONFIG }}
         command: apply -f $WORK_DIR/config/samples/module-deployment-controller.yaml
