@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 属性文件:在properties文件中找到对应的配置项 -->
+    <springProperty scope="context" name="logging.path"  source="logging.path"/>
+    <springProperty scope="context" name="logging.level" source="logging.level.io.sofastack"/>
+
+    <!-- 默认的控制台日志输出，一般生产环境都是后台启动，这个没太大作用 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{HH:mm:ss.SSS} %-5level %logger{80} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+    <!-- 错误日志记录 ： 按照每天生成日志文件 -->
+    <appender name="ERROR-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <!-- 过滤器，只记录 error 级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>error</level>
+        </filter>
+        <!-- 日志名称 -->
+        <file>${logging.path}/common-error.log</file>
+        <!-- 每天生成一个日志文件，保存30天的日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名:按天回滚 daily -->
+            <FileNamePattern>${logging.path}/common-error.log.%d{yyyy-MM-dd}</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <!-- 编码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ROOT-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${logging.level}</level>
+        </filter>
+        <file>${logging.path}/default.log</file>
+        <!-- 每天生成一个日志文件，保存30天的日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名:按天回滚 daily -->
+            <FileNamePattern>${logging.path}/default.log.%d{yyyy-MM-dd}
+            </FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <!-- 编码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- com.alipay.boot.sofaappcenter 包下的日志错误的打印在ERROR-APPENDER  ，info 信息在ROOT-APPENDER -->
+    <logger name="com.alipay.sofa.mng" level="${logging.level}" additivity="false">
+        <appender-ref ref="ROOT-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+    <root level="${logging.level}">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ROOT-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </root>
+
+</configuration>
