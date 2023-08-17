@@ -31,8 +31,12 @@ jobs:
     environment: production
 
     steps:
-    - uses: azure/setup-kubectl@v3
     
+    
+      
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Kuberentes (k8s) cli - kubectl
       uses: tale/kubectl-action@v1
       with:
@@ -40,9 +44,6 @@ jobs:
     
     - name: kubectl test
       run: kubectl rollout status deployment module-controller -n default --timeout=30s
-      
-    - name: Checkout
-      uses: actions/checkout@v3
 
     - name: Docker login
       uses: docker/login-action@v2.2.0
