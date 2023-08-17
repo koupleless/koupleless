@@ -16,6 +16,7 @@ env:
   WORK_DIR: module-controller
   TAG: ci-test-master-latest
   IMAGE_PATH: opensource/test/module-controller
+  POD_NAMESPACE: default
   
 defaults:
   run:
@@ -30,6 +31,14 @@ jobs:
     environment: production
 
     steps:
+    - name: Kuberentes (k8s) cli - kubectl
+      uses: actions-hub/kubectl@v1.24.0
+      with:
+        KUBE_CONFIG: ${{ secrets.CI_KUBE_CONFIG }}
+    
+    - name: kubectl test
+      run: kubectl rollout status deployment module-controller -n default --timeout=30s
+      
     - name: Checkout
       uses: actions/checkout@v3
 
