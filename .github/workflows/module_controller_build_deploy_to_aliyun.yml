@@ -58,7 +58,7 @@ jobs:
         context: ${{ env.WORK_DIR }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
-        file: Dockerfile
+        file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
         push: true
         tags: ${{ env.IMAGE_PATH }}:${{ env.TAG }}
