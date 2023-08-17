@@ -15,6 +15,7 @@ env:
   GOOS: linux
   WORK_DIR: module-controller
   TAG: ci-test-${{ github.sha }}
+  IMAGE_PATH: opensource/test/module-controller
   
 defaults:
   run:
@@ -39,15 +40,35 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
         logout: false
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v4.1.1
+      with:
+        context: ${{ env.WORK_DIR }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache
+        file: ./Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: ${{ env.IMAGE_PATH }}
+        target: ${{ secrets.DOCKERHUB_REGISTRY }}
         
-    - name: Build the Docker image
-      run: docker buildx build --file Dockerfile --platform linux/amd64 -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
+    #- name: Build the Docker image
+      #run: docker buildx build --file Dockerfile --platform linux/amd64 -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
       
-    - name: Push the Docker image
-      run: docker push ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG
+    #- name: Push the Docker image
+      #run: docker push ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG
       
     - name: kubectl-simple
       uses: steebchen/kubectl@v2.1.1
       with:
         config: ${{ secrets.CI_KUBE_CONFIG }}
-        command: apply -f $WORK_DIR/config/samples/module-deployment-controller.yaml
+        command: apply -f ${{ env.WORK_DIR }}/config/samples/module-deployment-controller.yaml
