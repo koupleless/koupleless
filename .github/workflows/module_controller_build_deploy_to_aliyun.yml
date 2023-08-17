@@ -15,7 +15,8 @@ env:
   GOOS: linux
   WORK_DIR: module-controller
   TAG: ci-test-master-latest
-  IMAGE_PATH: opensource/test/module-controller
+  MODULE_CONTROLLER_IMAGE_PATH: opensource/test/module-controller
+  INTEGRATION_TESTS_IMAGE_PATH: opensource/test/module-controller-integration-tests
   POD_NAMESPACE: default
   
 defaults:
@@ -31,19 +32,8 @@ jobs:
     environment: production
 
     steps:
-    
-    
-      
     - name: Checkout
       uses: actions/checkout@v3
-
-    - name: Kuberentes (k8s) cli - kubectl
-      uses: tale/kubectl-action@v1
-      with:
-        base64-kube-config: ${{ secrets.CI_KUBE_CONFIG }}
-    
-    - name: kubectl test
-      run: kubectl rollout status deployment module-controller -n default --timeout=30s
 
     - name: Docker login
       uses: docker/login-action@v2.2.0
@@ -63,23 +53,30 @@ jobs:
     - name: Set up Docker buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Build and push Docker images
+    - name: Build and push module-controller Docker images
       uses: docker/build-push-action@v4.1.1
       with:
         context: ${{ env.WORK_DIR }}
-        cache-from: type=registry,ref=${{ env.IMAGE_PATH }}:${{ env.TAG }}
+        cache-from: type=registry,ref=${{ env.MODULE_CONTROLLER_IMAGE_PATH }}:${{ env.TAG }}
         cache-to: type=inline
         file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
         push: true
         tags: ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:${{ env.TAG }}
-        
-    #- name: Build the Docker image
-      #run: docker buildx build --file Dockerfile --platform linux/amd64 -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
-      
-    #- name: Push the Docker image
-      #run: docker push ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG
-      
+
+    - run: sleep 30
+
+    - name: Build and push module-controller-integration-tests Docker images
+      uses: docker/build-push-action@v4.1.1
+      with:
+        context: ${{ env.WORK_DIR }}
+        cache-from: type=registry,ref=${{ env.INTEGRATION_TESTS_IMAGE_PATH }}:${{ env.TAG }}
+        cache-to: type=inline
+        file: ${{ env.WORK_DIR }}/IntegrationTestsDockerfile
+        platforms: linux/amd64
+        push: true
+        tags: ${{ secrets.INTEGRATION_TESTS_IMAGE_PATH }}:${{ env.TAG }}
+
     #- name: kubectl-simple
     #  uses: steebchen/kubectl@v2.1.1
     #  with:
