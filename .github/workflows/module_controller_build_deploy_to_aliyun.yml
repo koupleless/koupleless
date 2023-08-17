@@ -61,7 +61,7 @@ jobs:
         file: Dockerfile
         platforms: linux/amd64
         push: true
-        tags: ${{ env.IMAGE_PATH }}:${{ env.TAG }}
+        tags: ${{ env.IMAGE_PATH }}:${{ env.TAG }} .
         
     #- name: Build the Docker image
       #run: docker buildx build --file Dockerfile --platform linux/amd64 -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
