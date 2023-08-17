@@ -62,8 +62,8 @@ jobs:
         image_tag: ${{ env.TAG }}
         registry: ${{ env.DOCKERHUB_REGISTRY }}
         context: ${{ env.WORK_DIR }}
-        dockerfile: ${{ env.WORK_DIR }}/Dockerfile
-        build_extra_args: "--compress=true --platforms=linux/amd64"
+        dockerfile: Dockerfile
+        build_extra_args: "--compress=true"
 
     - name: Build and push module-controller Docker images
       uses: docker/build-push-action@v4.1.1
