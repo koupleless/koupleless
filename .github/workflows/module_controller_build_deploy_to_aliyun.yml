@@ -55,12 +55,12 @@ jobs:
       uses: docker/build-push-action@v4.1.1
       with:
         context: ${{ env.WORK_DIR }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
+        cache-from: type=local,src=/tmp/.buildx-cache/${{ runner.os }}-buildx-${{ github.sha }}
+        cache-to: type=local,dest=/tmp/.buildx-cache/${{ runner.os }}-buildx-${{ github.sha }}
         file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
         push: true
-        tags: ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:${{ env.TAG }}
+        tags: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/module-controller:${{ env.TAG }}
         
     #- name: Build the Docker image
       #run: docker buildx build --file Dockerfile --platform linux/amd64 -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
