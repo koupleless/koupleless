@@ -62,7 +62,7 @@ jobs:
         file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
         push: true
-        tags: ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:${{ env.TAG }}
+        tags: ${{ secrets.MODULE_CONTROLLER_IMAGE_PATH }}:${{ env.TAG }}
 
     - run: sleep 30
 
