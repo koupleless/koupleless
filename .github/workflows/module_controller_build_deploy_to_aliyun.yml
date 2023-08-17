@@ -68,8 +68,8 @@ jobs:
     #- name: Push the Docker image
       #run: docker push ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG
       
-    - name: kubectl-simple
-      uses: steebchen/kubectl@v2.1.1
-      with:
-        config: ${{ secrets.CI_KUBE_CONFIG }}
-        command: apply -f ${{ env.WORK_DIR }}/config/samples/module-deployment-controller.yaml
+    #- name: kubectl-simple
+    #  uses: steebchen/kubectl@v2.1.1
+    #  with:
+    #    config: ${{ secrets.CI_KUBE_CONFIG }}
+    #    command: apply -f ${{ env.WORK_DIR }}/config/samples/module-deployment-controller.yaml
