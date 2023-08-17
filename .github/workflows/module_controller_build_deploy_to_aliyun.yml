@@ -54,6 +54,17 @@ jobs:
     - name: Set up Docker buildx
       uses: docker/setup-buildx-action@v2
 
+    - uses: whoan/docker-build-with-cache-action@v5
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        image_name: ${{ env.MODULE_CONTROLLER_IMAGE_PATH }}
+        image_tag: ${{ env.TAG }}
+        registry: ${{ env.DOCKERHUB_REGISTRY }}
+        context: ${{ env.WORK_DIR }}
+        dockerfile: ${{ env.WORK_DIR }}/Dockerfile
+        build_extra_args: "--compress=true --platforms=linux/amd64"
+
     - name: Build and push module-controller Docker images
       uses: docker/build-push-action@v4.1.1
       with:
