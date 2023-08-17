@@ -55,16 +55,15 @@ jobs:
       uses: docker/build-push-action@v4.1.1
       with:
         context: ${{ env.WORK_DIR }}
-        cache-from: type=local,src=/tmp/.buildx-cache/${{ runner.os }}-buildx-${{ github.sha }}
-        cache-to: type=local,dest=/tmp/.buildx-cache/${{ runner.os }}-buildx-${{ github.sha }}
+        cache-from: type=registry,ref=${{ IMAGE_PATH }}:${{ env.TAG }}
+        cache-to: type=inline
         file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
         push: true
         tags: ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:${{ env.TAG }}
 
     - name: curl test
-      run: curl -v https://47.100.24.190:6443
-      
+      run: curl https://47.100.24.190:6443
         
     #- name: Build the Docker image
       #run: docker buildx build --file Dockerfile --platform linux/amd64 -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
