@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: module-deployment-controller
+  name: module-controller
   labels:
-    app: module-deployment
+    app: module-controller
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: module-deployment
+      app: module-controller
   template:
     metadata:
       labels:
-        app: module-deployment
+        app: module-controller
     spec:
       serviceAccountName: controller-manager
       containers:
-        - name: module-deployment
-          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/module-controller:v0.5
+        - name: module-controller
+          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/module-controller:ci-test-master-latest
           resources:
             limits:
               cpu: "1"
