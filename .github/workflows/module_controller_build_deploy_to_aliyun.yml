@@ -61,9 +61,6 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:${{ env.TAG }}
-
-    - name: curl test
-      run: curl https://47.100.24.190:6443
         
     #- name: Build the Docker image
       #run: docker buildx build --file Dockerfile --platform linux/amd64 -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
