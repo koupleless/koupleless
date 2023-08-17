@@ -35,6 +35,7 @@ jobs:
       uses: actions-hub/kubectl@v1.24.0
       with:
         KUBE_CONFIG: ${{ secrets.CI_KUBE_CONFIG }}
+        KUBE_HOST: 47.100.24.190
     
     - name: kubectl test
       run: kubectl rollout status deployment module-controller -n default --timeout=30s
