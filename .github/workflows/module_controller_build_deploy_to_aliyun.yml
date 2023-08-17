@@ -14,7 +14,7 @@ env:
   CGO_ENABLED: 0
   GOOS: linux
   WORK_DIR: module-controller
-  TAG: ci-test-${{ github.sha }}
+  TAG: ci-test-master-latest
   IMAGE_PATH: opensource/test/module-controller
   
 defaults:
@@ -60,7 +60,11 @@ jobs:
         file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
         push: true
-        tags: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/module-controller:${{ env.TAG }}
+        tags: ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:${{ env.TAG }}
+
+    - name: curl test
+      run: curl -v https://47.100.24.190:6443
+      
         
     #- name: Build the Docker image
       #run: docker buildx build --file Dockerfile --platform linux/amd64 -t ${{ secrets.DOCKER_IMAGE_FULL_NAME }}:$TAG .
