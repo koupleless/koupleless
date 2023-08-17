@@ -1,4 +1,4 @@
-name: Module Controller Build and Deploy to Aliyun
+name: Module Controller Build and Deploy Master to Aliyun
 run-name: ${{ github.actor }} pushed module-controller code
 
 on:
@@ -31,6 +31,8 @@ jobs:
     environment: production
 
     steps:
+    - uses: azure/setup-kubectl@v3
+    
     - name: Kuberentes (k8s) cli - kubectl
       uses: tale/kubectl-action@v1
       with:
