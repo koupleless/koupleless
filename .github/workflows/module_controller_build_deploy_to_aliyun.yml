@@ -44,32 +44,21 @@ jobs:
        password: ${{ secrets.DOCKERHUB_PASSWORD }}
        logout: false
 
+    - name: Set up Docker buildx
+      uses: docker/setup-buildx-action@v2
+
     - name: Cache Docker layers
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: ${{ runner.os }}-buildx-${{ github.sha }}
-
-    - name: Set up Docker buildx
-      uses: docker/setup-buildx-action@v2
-
-    - uses: whoan/docker-build-with-cache-action@v5
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        image_name: ${{ env.MODULE_CONTROLLER_IMAGE_PATH }}
-        image_tag: ${{ env.TAG }}
-        registry: ${{ env.DOCKERHUB_REGISTRY }}
-        context: ${{ env.WORK_DIR }}
-        dockerfile: Dockerfile
+        key: ${{ runner.os }}-buildx-${{ hashFiles('${{ env.WORK_DIR }}/*Dockerfile') }}
 
     - name: Build and push module-controller Docker images
       uses: docker/build-push-action@v4.1.1
       with:
         context: ${{ env.WORK_DIR }}
-        cache-from: type=registry,ref=${{ env.MODULE_CONTROLLER_IMAGE_PATH }}:${{ env.TAG }}
-        cache-to: type=inline
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache
         file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
         push: true
@@ -81,8 +70,8 @@ jobs:
       uses: docker/build-push-action@v4.1.1
       with:
         context: ${{ env.WORK_DIR }}
-        cache-from: type=registry,ref=${{ env.INTEGRATION_TESTS_IMAGE_PATH }}:${{ env.TAG }}
-        cache-to: type=inline
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache
         file: ${{ env.WORK_DIR }}/IntegrationTestsDockerfile
         platforms: linux/amd64
         push: true
