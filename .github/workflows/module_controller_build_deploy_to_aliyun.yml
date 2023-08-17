@@ -63,7 +63,6 @@ jobs:
         registry: ${{ env.DOCKERHUB_REGISTRY }}
         context: ${{ env.WORK_DIR }}
         dockerfile: Dockerfile
-        build_extra_args: "--compress=true"
 
     - name: Build and push module-controller Docker images
       uses: docker/build-push-action@v4.1.1
