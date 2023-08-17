@@ -55,10 +55,9 @@ jobs:
     - name: Build and push Docker images
       uses: docker/build-push-action@v4.1.1
       with:
-        context: ${{ env.WORK_DIR }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
-        file: ./Dockerfile
+        file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
         push: true
         tags: ${{ env.IMAGE_PATH }}
