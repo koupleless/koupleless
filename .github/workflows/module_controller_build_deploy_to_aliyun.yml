@@ -32,10 +32,9 @@ jobs:
 
     steps:
     - name: Kuberentes (k8s) cli - kubectl
-      uses: actions-hub/kubectl@v1.24.0
+      uses: tale/kubectl-action@v1
       with:
-        KUBE_CONFIG: ${{ secrets.CI_KUBE_CONFIG }}
-        KUBE_HOST: 47.100.24.190
+        base64-kube-config: ${{ secrets.CI_KUBE_CONFIG }}
     
     - name: kubectl test
       run: kubectl rollout status deployment module-controller -n default --timeout=30s
