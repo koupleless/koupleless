@@ -55,7 +55,7 @@ jobs:
       uses: docker/build-push-action@v4.1.1
       with:
         context: ${{ env.WORK_DIR }}
-        cache-from: type=registry,ref=${{ IMAGE_PATH }}:${{ env.TAG }}
+        cache-from: type=registry,ref=${{ env.IMAGE_PATH }}:${{ env.TAG }}
         cache-to: type=inline
         file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
