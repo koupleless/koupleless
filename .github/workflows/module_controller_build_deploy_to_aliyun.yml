@@ -15,6 +15,7 @@ env:
   GOOS: linux
   WORK_DIR: module-controller
   TAG: ci-test-master-latest
+  DOCKERHUB_REGISTRY: serverless-registry.cn-shanghai.cr.aliyuncs.com
   MODULE_CONTROLLER_IMAGE_PATH: opensource/test/module-controller
   INTEGRATION_TESTS_IMAGE_PATH: opensource/test/module-controller-integration-tests
   POD_NAMESPACE: default
@@ -38,7 +39,7 @@ jobs:
     - name: Docker login
       uses: docker/login-action@v2.2.0
       with:
-       registry: ${{ secrets.DOCKERHUB_REGISTRY }}
+       registry: ${{ env.DOCKERHUB_REGISTRY }}
        username: ${{ secrets.DOCKERHUB_USERNAME }}
        password: ${{ secrets.DOCKERHUB_PASSWORD }}
        logout: false
@@ -62,7 +63,7 @@ jobs:
         file: ${{ env.WORK_DIR }}/Dockerfile
         platforms: linux/amd64
         push: true
-        tags: ${{ secrets.MODULE_CONTROLLER_IMAGE_PATH }}:${{ env.TAG }}
+        tags: ${{ env.DOCKERHUB_REGISTRY }}/${{ env.MODULE_CONTROLLER_IMAGE_PATH }}:${{ env.TAG }}
 
     - run: sleep 30
 
@@ -75,7 +76,7 @@ jobs:
         file: ${{ env.WORK_DIR }}/IntegrationTestsDockerfile
         platforms: linux/amd64
         push: true
-        tags: ${{ secrets.INTEGRATION_TESTS_IMAGE_PATH }}:${{ env.TAG }}
+        tags: ${{ env.DOCKERHUB_REGISTRY }}/${{ env.INTEGRATION_TESTS_IMAGE_PATH }}:${{ env.TAG }}
 
     #- name: kubectl-simple
     #  uses: steebchen/kubectl@v2.1.1
