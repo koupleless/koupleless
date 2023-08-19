@@ -1,6 +1,6 @@
 Welcome to SOFAServerless open source comminity. SOFAServerless is a modularization application architecture patterns for company business rapid development, operation, evolution and cooperation with low cost. Please watch us or join us in DingDing Group: 24970018417 .
 
-欢迎来到 SOFAServerless 开源社区。SOFAServerless 是一种模块化的应用架构模式，能够帮助大中小企业低成本地实现极速研发、运维、微服务演进和人员协作，从而为企业实现降本增效。欢迎加入钉钉群关注我们或者与我们一起共建面向普通应用低成本接入的 Serverless 解决方案，钉钉群号：24970018417 。
+欢迎来到 SOFAServerless 开源社区。SOFAServerless 是一种模块化的应用架构模式，能够帮助大中小企业低成本地实现极速研发、运维、微服务演进和人员协作，从而为企业实现降本增效。欢迎加入钉钉群关注我们或者与我们一起共建面向普通应用低成本接入的 Serverless 解决方案。钉钉群号：24970018417 。
 
 
 ![A4单页_画板 1-01](https://github.com/sofastack/sofa-serverless/assets/101314559/152a0669-2d90-405c-8d5c-fd8c8d901ca0)
