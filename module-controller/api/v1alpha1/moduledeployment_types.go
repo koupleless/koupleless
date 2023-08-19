@@ -46,9 +46,9 @@ const (
 	ModuleDeploymentReleaseProgressWaitingForConfirmation ReleaseProgress = "WaitingForConfirmation"
 	ModuleDeploymentReleaseProgressExecuting              ReleaseProgress = "Executing"
 	ModuleDeploymentReleaseProgressPaused                 ReleaseProgress = "Paused"
-	CafeDeploymentReleaseProgressCompleted                ReleaseProgress = "Completed"
-	CafeDeploymentReleaseProgressAborted                  ReleaseProgress = "Aborted"
-	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
+	ModuleDeploymentReleaseProgressCompleted              ReleaseProgress = "Completed"
+	ModuleDeploymentReleaseProgressAborted                ReleaseProgress = "Aborted"
+	ModuleDeploymentReleaseProgressTermed                 ReleaseProgress = "Terminated"
 )
 
 type ModuleSchedulingType string
