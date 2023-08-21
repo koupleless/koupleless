@@ -26,7 +26,7 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
  * @author mingmen
  * @date 2023/6/14
  */
-public class BizCommandCoordinator {
+public class BizOpsCommandCoordinator {
 
     private static final Map<String, Command> bizIdentityLockMap = new ConcurrentHashMap<>(16);
 
@@ -48,6 +48,11 @@ public class BizCommandCoordinator {
     public static boolean existBizProcessing(String bizName, String bizVersion) {
         String identity = BizIdentityUtils.generateBizIdentity(bizName, bizVersion);
         return bizIdentityLockMap.containsKey(identity);
+    }
+
+    public static Command getCurrentProcessingCommand(String bizName, String bizVersion) {
+        String identity = BizIdentityUtils.generateBizIdentity(bizName, bizVersion);
+        return bizIdentityLockMap.get(identity);
     }
 
 }

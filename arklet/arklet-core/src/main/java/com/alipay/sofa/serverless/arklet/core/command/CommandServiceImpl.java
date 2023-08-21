@@ -23,14 +23,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSONObject;
 
+import com.alipay.sofa.ark.common.util.BizIdentityUtils;
 import com.alipay.sofa.common.utils.StringUtil;
+import com.alipay.sofa.serverless.arklet.core.api.model.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HelpHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryAllBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.SwitchBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler;
+import com.alipay.sofa.serverless.arklet.core.command.coordinate.BizOpsCommandCoordinator;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.CommandMutexException;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
+import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
+import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizOps;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
@@ -64,6 +69,9 @@ public class CommandServiceImpl implements CommandService {
             throw new ArkletInitException("handler id (" + handler.command().getId()
                                           + ") duplicated");
         }
+        if (isBizOpsHandler(handler)) {
+            validateBizOpsHandler(handler);
+        }
         handlerMap.put(handler.command().getId(), handler);
         LOGGER.info("registered command:{}", handler.command().getId());
     }
@@ -84,6 +92,27 @@ public class CommandServiceImpl implements CommandService {
         AbstractCommandHandler handler = getHandler(cmd);
         InputMeta input = toJavaBean(handler.getInputClass(), content);
         handler.validate(input);
+
+        if (isBizOpsHandler(handler)) {
+            ArkBizMeta arkBizMeta = (ArkBizMeta)input;
+            AssertUtils.assertNotNull(arkBizMeta, "when execute bizOpsHandler, arkBizMeta should not be null");
+            boolean conflict = BizOpsCommandCoordinator.existBizProcessing(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+            if (conflict) {
+                return Output.ofFailed(ResponseCode.FAILED.name() + ":" + String.format("%s %s conflict, exist unfinished command(%s) for this biz",
+                    BizIdentityUtils.generateBizIdentity(arkBizMeta.getBizName(),
+                        arkBizMeta.getBizVersion()), handler.command().getId(),
+                    BizOpsCommandCoordinator.getCurrentProcessingCommand(arkBizMeta.getBizName(),
+                        arkBizMeta.getBizVersion()).getId()));
+            }
+            try {
+                BizOpsCommandCoordinator.putBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion(), handler.command());
+                return handler.handle(input);
+            } catch (Throwable e) {
+                throw e;
+            } finally {
+                BizOpsCommandCoordinator.popBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+            }
+        }
         return handler.handle(input);
     }
 
@@ -124,4 +153,16 @@ public class CommandServiceImpl implements CommandService {
         registerCommandHandler(new UninstallBizHandler());
         registerCommandHandler(new SwitchBizHandler());
     }
+
+    private boolean isBizOpsHandler(AbstractCommandHandler handler) {
+        return handler instanceof ArkBizOps;
+    }
+
+    private void validateBizOpsHandler(AbstractCommandHandler handler) {
+        Class inputClass = handler.getInputClass();
+        if (!ArkBizMeta.class.isAssignableFrom(inputClass)) {
+            throw new ArkletInitException("handler id (" + handler.command().getId() + ") is a bizOpsHandler, its input class should inherited from " + ArkBizMeta.class.getCanonicalName());
+        }
+    }
+
 }
