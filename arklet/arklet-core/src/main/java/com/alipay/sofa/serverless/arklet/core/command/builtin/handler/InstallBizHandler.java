@@ -26,7 +26,6 @@ public class InstallBizHandler extends AbstractCommandHandler<Input, Set<BizInfo
     @Override
     public Output<Set<BizInfo>> handle(Input input) {
         try {
-            Thread.sleep(200 * 1000);
             String bizFile = input.getArkBizFilePath();
             ClientResponse res = getOperationService().install(bizFile);
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
