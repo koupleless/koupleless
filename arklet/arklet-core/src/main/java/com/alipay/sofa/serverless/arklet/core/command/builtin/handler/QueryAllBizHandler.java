@@ -57,6 +57,6 @@ public class QueryAllBizHandler extends AbstractCommandHandler<InputMeta, List<B
 
     @Override
     public void validate(InputMeta input) throws CommandValidationException {
-
+        // no need
     }
 }
