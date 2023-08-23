@@ -54,7 +54,7 @@ public class InstallBizHandler extends AbstractCommandHandler<Input, Set<BizInfo
     @Setter
     public static class Input extends ArkBizMeta {
         private String arkBizFilePath;
-        private String downloadUrl;
+        private String remoteUrl;
     }
 
 }

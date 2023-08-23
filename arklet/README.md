@@ -3,6 +3,8 @@
 All of the following instruction apis access the arklet using the POST(application/json) request format
 
 The http protocol is enabled and the default port is 1238
+> You can set `sofa.serverless.arklet.http.port` JVM startup parameters override the default port
+
 
 ## Query the supported commands
 - URL: 127.0.0.1:1238/help
