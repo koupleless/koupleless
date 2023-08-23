@@ -23,6 +23,17 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+type ModuleInstanceStatus string
+
+const (
+	ModuleInstanceStatusPending     ModuleInstanceStatus = "Pending"
+	ModuleInstanceStatusPrepare     ModuleInstanceStatus = "Prepare"
+	ModuleInstanceStatusUpgrading   ModuleInstanceStatus = "Upgrading"
+	ModuleInstanceStatusCompleting  ModuleInstanceStatus = "Completing"
+	ModuleInstanceStatusAvailable   ModuleInstanceStatus = "Available"
+	ModuleInstanceStatusTerminating ModuleInstanceStatus = "Terminating"
+)
+
 // ModuleTemplate describes a template for creating copies of a predefined module.
 type ModuleTemplate struct {
 	metav1.TypeMeta `json:",inline"`
@@ -59,7 +70,7 @@ type ModuleInfo struct {
 type ModuleSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-
+	Selector metav1.LabelSelector `json:"selector,omitempty"`
 	// Foo is an example field of Module. Edit module_types.go to remove/update
 	Module ModuleInfo `json:"module"`
 }
@@ -68,6 +79,8 @@ type ModuleSpec struct {
 type ModuleStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	Status ModuleInstanceStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
