@@ -61,6 +61,14 @@ public class CommandServiceImpl implements CommandService {
         registerBuiltInCommands();
     }
 
+    private void registerBuiltInCommands() {
+        registerCommandHandler(new InstallBizHandler());
+        registerCommandHandler(new HelpHandler());
+        registerCommandHandler(new QueryAllBizHandler());
+        registerCommandHandler(new UninstallBizHandler());
+        registerCommandHandler(new SwitchBizHandler());
+    }
+
     @Override
     public void destroy() {
         handlerMap.clear();
@@ -123,14 +131,6 @@ public class CommandServiceImpl implements CommandService {
         AbstractCommandHandler handler = handlerMap.get(commandId);
         AssertUtils.isTrue(handler != null, commandId + " not found handler");
         return handler;
-    }
-
-    private void registerBuiltInCommands() {
-        registerCommandHandler(new InstallBizHandler());
-        registerCommandHandler(new HelpHandler());
-        registerCommandHandler(new QueryAllBizHandler());
-        registerCommandHandler(new UninstallBizHandler());
-        registerCommandHandler(new SwitchBizHandler());
     }
 
     private boolean isBizOpsHandler(AbstractCommandHandler handler) {
