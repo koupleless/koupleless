@@ -12,6 +12,7 @@
     <modules>
         <module>arklet-core</module>
         <module>arklet-springboot-starter</module>
+        <module>arklet-springboot-demo</module>
     </modules>
 
     <properties>

@@ -12,10 +12,8 @@
     <packaging>pom</packaging>
 
     <groupId>com.example</groupId>
-    <artifactId>sofa-serverless-arklet-springboot-demo</artifactId>
+    <artifactId>arklet-springboot-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sofa-serverless-arklet-springboot-demo</name>
-    <description>sofa-serverless-arklet-springboot-demo</description>
 
     <modules>
         <module>bookstore-manager</module>
