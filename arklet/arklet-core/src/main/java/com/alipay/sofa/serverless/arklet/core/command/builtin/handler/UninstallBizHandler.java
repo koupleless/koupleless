@@ -5,7 +5,6 @@ import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler.Input;
-import com.alipay.sofa.serverless.arklet.core.command.coordinate.BizOpsCommandCoordinator;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
@@ -31,8 +30,6 @@ public class UninstallBizHandler extends AbstractCommandHandler<Input, Void> imp
             }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);
-        } finally {
-            BizOpsCommandCoordinator.popBizExecution(input.getBizName(), input.getBizVersion());
         }
     }
 
