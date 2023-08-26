@@ -2,6 +2,7 @@ package com.alipay.sofa.serverless.arklet.springboot.starter;
 
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.ActuatorRegistry;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.common.util.SpringBootUtil;
 import com.alipay.sofa.serverless.arklet.springboot.starter.command.MasterBizCmdHandlerCollector;
 import com.alipay.sofa.serverless.arklet.springboot.starter.environment.ConditionalOnMasterBiz;
 import org.springframework.context.annotation.Bean;
@@ -32,9 +33,16 @@ public class ArkletAutoConfiguration {
 
     @Bean
     @ConditionalOnMasterBiz
+    public SpringBootUtil springBootUtil() {
+        return new SpringBootUtil();
+    }
+
+    @Bean
+    @ConditionalOnMasterBiz
+    @DependsOn("springBootUtil")
     public ActuatorRegistry actuatorRegistry() {
-        ActuatorRegistry actuatorRegistry = new ActuatorRegistry();
-        actuatorRegistry.initActuator();
-        return actuatorRegistry;
+        ActuatorRegistry registry = new ActuatorRegistry();
+        registry.initActuator();
+        return registry;
     }
 }

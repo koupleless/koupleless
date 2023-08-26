@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.serverless.arklet.core.api.ApiClient;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.command.CommandServiceImpl;
