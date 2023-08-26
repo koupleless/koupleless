@@ -26,8 +26,7 @@ public class InstallBizHandler extends AbstractCommandHandler<Input, Set<BizInfo
     @Override
     public Output<Set<BizInfo>> handle(Input input) {
         try {
-            String bizFile = input.getArkBizFilePath();
-            ClientResponse res = getOperationService().install(bizFile);
+            ClientResponse res = getOperationService().install(input.getBizUrl());
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
                 return Output.ofSuccess(res.getBizInfos());
             } else {
@@ -47,14 +46,13 @@ public class InstallBizHandler extends AbstractCommandHandler<Input, Set<BizInfo
     public void validate(Input input) throws CommandValidationException {
         notBlank(input.getBizName(), "bizName should not be blank");
         notBlank(input.getBizVersion(), "bizVersion should not be blank");
-        notBlank(input.getArkBizFilePath(), "arkBizFilePath should not be blank");
+        notBlank(input.getBizUrl(), "bizUrl should not be blank");
     }
 
     @Getter
     @Setter
     public static class Input extends ArkBizMeta {
-        private String arkBizFilePath;
-        private String remoteUrl;
+        private String bizUrl;
     }
 
 }

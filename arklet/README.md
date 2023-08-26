@@ -48,7 +48,7 @@ The http protocol is enabled and the default port is 1238
 {
     "bizName": "test",
     "bizVersion": "1.0.0",
-    "arkBizFilePath": "/Users/jaimezhang/workspace/github/sofa-ark-dynamic-guides/dynamic-provider/target/dynamic-provider-1.0.0-ark-biz.jar"
+    "arkBizFilePath": "file:///Users/jaimezhang/workspace/github/sofa-ark-dynamic-guides/dynamic-provider/target/dynamic-provider-1.0.0-ark-biz.jar"
 }
 ```
 - output sample:
