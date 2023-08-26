@@ -6,13 +6,13 @@ metadata:
     app.kubernetes.io/name: clusterrole
     app.kubernetes.io/instance: module-viewer-role
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: module-deployment
-    app.kubernetes.io/part-of: module-deployment
+    app.kubernetes.io/created-by: module-controller
+    app.kubernetes.io/part-of: module-controller
     app.kubernetes.io/managed-by: kustomize
   name: module-viewer-role
 rules:
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - modules
   verbs:
@@ -20,7 +20,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - module-deployment.serverless.alipay.com
+  - serverless.alipay.com
   resources:
   - modules/status
   verbs:
