@@ -29,7 +29,7 @@ import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataMod
  */
 public interface UnifiedOperationService extends ArkletComponent {
 
-    ClientResponse install(String bizPath) throws Throwable;
+    ClientResponse install(String bizUrl) throws Throwable;
 
     ClientResponse uninstall(String bizName, String bizVersion) throws Throwable;
 
