@@ -32,11 +32,11 @@ public enum BuiltinCommand implements Command {
 
     SWITCH_BIZ("switchBiz", "switch one ark biz"),
 
-    QUERY_ALL_BIZ("queryAllBiz", "query all ark biz(including master biz)"),
+    QUERY_ALL_BIZ("queryAllBiz",
+        "query all ark biz(including master biz)"),
 
-    QUERY_BIZ_OPS("queryBizOps",
-                          "query ark biz ops"
-    );
+    HEALTH("health",
+            "get master biz health info");
 
     private final String id;
     private final String desc;
