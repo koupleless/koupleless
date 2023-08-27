@@ -20,12 +20,12 @@ import java.util.List;
 
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ClientResponse;
-import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.ark.spi.constant.Constants;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizOperation;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.api.ActuatorClient;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthResponseModel;
 import com.google.inject.Singleton;
 
 /**
@@ -68,7 +68,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     }
 
     @Override
-    public List<HealthModel> health() {
+    public HealthResponseModel health() {
         return ActuatorClient.getAllHealth();
     }
 }

@@ -2,7 +2,8 @@ package com.alipay.sofa.serverless.arklet.springboot.actuator.api;
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.ActuatorComponent;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.HealthActuatorService;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthResponseModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.MoudleInfoService;
 
 import java.util.ArrayList;
@@ -16,11 +17,13 @@ public class ActuatorClient implements ActuatorComponent {
     private static MoudleInfoService moudleInfoService;
     private static HealthActuatorService healthActuatorService;
 
-    public static List<HealthModel> getAllHealth() {
-        List<HealthModel> models = new ArrayList<>();
-        models.add(moudleInfoService.queryMasterBiz());
-        models.add(healthActuatorService.getMasterBizHealth());
-        return models;
+    public static HealthResponseModel getAllHealth() {
+        HealthResponseModel model = new HealthResponseModel();
+        model.putHealthInfo(moudleInfoService.queryMasterBiz());
+        model.putHealthInfo(healthActuatorService.getMasterBizHealth());
+        model.putHealthInfo(healthActuatorService.getCpuHealth());
+        model.putHealthInfo(healthActuatorService.getJvmHealth());
+        return model;
     }
 
     public static void setMoudleInfoService(MoudleInfoService moudleInfoService) {

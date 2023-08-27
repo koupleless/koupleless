@@ -1,16 +1,17 @@
 package com.alipay.sofa.serverless.arklet.springboot.actuator.info;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.Plugin;
-import com.alipay.sofa.ark.spi.service.extension.ArkServiceLoader;
-import com.alipay.sofa.ark.spi.service.plugin.PluginManagerService;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.BizModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.PluginModel;
-import com.sun.webkit.plugin.PluginManager;
 
 import java.util.List;
+
+import static com.alibaba.fastjson.JSON.toJSONString;
 
 /**
  * @author Lunarscave
@@ -27,8 +28,11 @@ public class MoudleInfoServiceImpl implements MoudleInfoService{
     }
 
     @Override
-    public HealthModel queryMasterBiz() {
-        return new HealthModel("master-biz-info", ArkClient.getMasterBiz());
+    public HealthDetailsModel queryMasterBiz() {
+        BizModel bizModel = new BizModel();
+        bizModel.setBizModel(ArkClient.getMasterBiz());
+        return new HealthDetailsModel("masterBizInfo",
+                JSON.parseObject(toJSONString(bizModel), JSONObject.class));
     }
 
     @Override
