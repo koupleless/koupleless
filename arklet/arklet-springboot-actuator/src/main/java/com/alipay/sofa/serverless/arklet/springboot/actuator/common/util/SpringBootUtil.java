@@ -9,6 +9,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 
 
+/**
+ * @author Lunarscave
+ */
 public class SpringBootUtil implements ApplicationContextAware {
 
     private static final ActuatorLogger LOGGER = ActuatorLoggerFactory.getDefaultLogger();

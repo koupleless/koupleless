@@ -3,10 +3,10 @@ package com.alipay.sofa.serverless.arklet.core.ops;
 import java.util.List;
 
 import com.alipay.sofa.ark.api.ClientResponse;
-import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthResponseModel;
 
 /**
  * @author mingmen
@@ -22,6 +22,6 @@ public interface UnifiedOperationService extends ArkletComponent {
 
     ClientResponse switchBiz(String bizName, String bizVersion) throws Throwable;
 
-    List<HealthModel> health();
+    HealthResponseModel health();
 
 }

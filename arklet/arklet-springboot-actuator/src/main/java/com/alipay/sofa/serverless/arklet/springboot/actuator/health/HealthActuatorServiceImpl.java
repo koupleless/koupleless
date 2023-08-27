@@ -1,9 +1,11 @@
 package com.alipay.sofa.serverless.arklet.springboot.actuator.health;
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.common.util.SpringBootUtil;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.ArkletCpuIndicator;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.CpuIndicator;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.JvmIndicator;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.MasterBizIndicator;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
+import org.springframework.boot.actuate.health.Health;
 
 /**
  * @author Lunarscave
@@ -12,7 +14,8 @@ import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.Health
 public class HealthActuatorServiceImpl implements HealthActuatorService {
 
     private MasterBizIndicator masterBizIndicator;
-    private ArkletCpuIndicator arkletCpuIndicator;
+    private CpuIndicator arkletCpuIndicator;
+    private JvmIndicator jvmIndicator;
 
     @Override
     public void init() {
@@ -23,19 +26,26 @@ public class HealthActuatorServiceImpl implements HealthActuatorService {
     }
 
     @Override
-    public HealthModel getMasterBizHealth() {
+    public Health getMasterBizHealth() {
         updateHealthIndicator();
-        return new HealthModel("master-biz-health", masterBizIndicator.health());
+        return masterBizIndicator.health();
     }
 
     @Override
-    public HealthModel getCpuHealth() {
+    public Health getCpuHealth() {
         updateHealthIndicator();
-        return new HealthModel("cpu-health", arkletCpuIndicator.health());
+        return arkletCpuIndicator.health();
+    }
+
+    @Override
+    public Health getJvmHealth() {
+        updateHealthIndicator();
+        return jvmIndicator.health();
     }
 
     private void updateHealthIndicator() {
         this.masterBizIndicator = SpringBootUtil.getBean(MasterBizIndicator.class);
-        this.arkletCpuIndicator = SpringBootUtil.getBean(ArkletCpuIndicator.class);
+        this.arkletCpuIndicator = SpringBootUtil.getBean(CpuIndicator.class);
+        this.jvmIndicator = SpringBootUtil.getBean(JvmIndicator.class);
     }
 }
