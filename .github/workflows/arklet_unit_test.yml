@@ -28,23 +28,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up go
-        uses: actions/setup-go@v4
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v.4.5
         with:
-          go-version: '1.20.5'
-          cache-dependency-path: ${{ env.WORK_DIR }}/go.sum
-
-      - name: Run go mod
-        run: go mod download
-
-      - name: Build
-        run: go build -a -o manager cmd/main.go
+          maven-version: 3.9.4
 
       - name: Test
-        run: go test -v -json ./internal/controller > TestResults.json
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: Test-Results
-          path: ${{ env.WORK_DIR }}/TestResults.json
+        run: mvn test
