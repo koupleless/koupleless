@@ -7,11 +7,13 @@ on:
       - master
     paths:
       - 'arklet/**'
+      
   pull_request:
     branches:
       - master
     paths:
       - 'arklet/**'
+      
   # enable manually running the workflow
   workflow_dispatch:
 
@@ -32,6 +34,12 @@ jobs:
         uses: stCarolas/setup-maven@v.4.5
         with:
           maven-version: 3.9.4
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('{{env.WORK_DIR}}/pom.xml') }}
 
       - name: Test
         run: mvn test
