@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.alipay.sofa</groupId>
         <artifactId>sofa-serverless</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${arklet.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -23,7 +23,7 @@
             <dependency>
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>arklet-core</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>${arklet.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
