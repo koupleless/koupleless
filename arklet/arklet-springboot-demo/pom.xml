@@ -24,7 +24,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <sofa.ark.version>2.1.3</sofa.ark.version>
+        <sofa.ark.version>2.2.2-SNAPSHOT</sofa.ark.version>
         <curator.version>2.9.1</curator.version>
     </properties>
 

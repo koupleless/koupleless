@@ -17,9 +17,9 @@ import static com.alibaba.fastjson.JSON.toJSONString;
  * @author Lunarscave
  */
 public class MoudleInfoServiceImpl implements MoudleInfoService{
+
     @Override
     public void init() {
-
     }
 
     @Override
@@ -29,29 +29,40 @@ public class MoudleInfoServiceImpl implements MoudleInfoService{
 
     @Override
     public HealthDetailsModel queryMasterBiz() {
-        BizModel bizModel = new BizModel();
-        bizModel.setBizModel(ArkClient.getMasterBiz());
+        BizModel bizModel = BizModel.createBizModel(ArkClient.getMasterBiz());
         return new HealthDetailsModel("masterBizInfo",
                 JSON.parseObject(toJSONString(bizModel), JSONObject.class));
     }
 
     @Override
-    public List<Biz> queryBizList() {
-        return ArkClient.getBizManagerService().getBizInOrder();
+    public HealthDetailsModel queryAllBiz() {
+        List<Biz> bizList = ArkClient.getBizManagerService().getBizInOrder();
+        List<BizModel> bizModelList = BizModel.createBizModelList(bizList);
+        return new HealthDetailsModel("allBizInfo",
+                JSON.parseObject(toJSONString(bizModelList), JSONObject.class));
     }
 
     @Override
-    public List<Plugin> queryPluginList() {
-        return null;
+    public HealthDetailsModel queryAllPlugin() {
+        List<Plugin> pluginList = ArkClient.getPluginManagerService().getPluginsInOrder();
+        List<PluginModel> pluginModelList = PluginModel.createPluginModelList(pluginList);
+        return new HealthDetailsModel("allPluginInfo",
+                JSON.parseObject(toJSONString(pluginModelList), JSONObject.class));
     }
 
     @Override
-    public Biz getBizInfo(BizModel biz) {
-        return ArkClient.getBizManagerService().getBiz(biz.getBizName(), biz.getBizVersion());
+    public HealthDetailsModel getBizInfo(BizModel biz) {
+        BizModel bizModel = BizModel.createBizModel(
+                ArkClient.getBizManagerService().getBiz(biz.getBizName(), biz.getBizVersion()));
+        return new HealthDetailsModel("bizInfo",
+                JSON.parseObject(toJSONString(bizModel), JSONObject.class));
     }
 
     @Override
-    public Plugin getPluginInfo(PluginModel plugin) {
-        return null;
+    public HealthDetailsModel getPluginInfo(PluginModel plugin) {
+        PluginModel pluginModel = PluginModel.createPluginModel(
+                ArkClient.getPluginManagerService().getPluginByName(plugin.getPluginName()));
+        return new HealthDetailsModel("pluginInfo",
+                JSON.parseObject(toJSONString(pluginModel), JSONObject.class));
     }
 }

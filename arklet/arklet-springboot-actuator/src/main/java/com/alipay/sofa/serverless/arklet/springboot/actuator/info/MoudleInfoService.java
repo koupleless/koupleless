@@ -16,11 +16,11 @@ public interface MoudleInfoService extends ActuatorComponent {
 
     HealthDetailsModel queryMasterBiz();
 
-    List<Biz> queryBizList();
+    HealthDetailsModel queryAllBiz();
 
-    List<Plugin> queryPluginList();
+    HealthDetailsModel queryAllPlugin();
 
-    Biz getBizInfo(BizModel biz);
+    HealthDetailsModel getBizInfo(BizModel biz);
 
-    Plugin getPluginInfo(PluginModel plugin);
+    HealthDetailsModel getPluginInfo(PluginModel plugin);
 }
