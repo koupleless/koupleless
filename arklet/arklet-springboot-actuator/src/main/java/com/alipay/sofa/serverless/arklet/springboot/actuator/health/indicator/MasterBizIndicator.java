@@ -7,6 +7,8 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.availability.ApplicationAvailability;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * @author Lunarscave
  */
@@ -20,6 +22,11 @@ public class MasterBizIndicator extends ArkletIndicator {
         super("masterBizHealth");
     }
 
+
+    @Override
+    protected Map<String, Object> getHealthDetails() {
+        return null;
+    }
 
     @Override
     protected HealthDetailsModel getHealthInfo() {

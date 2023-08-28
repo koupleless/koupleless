@@ -5,6 +5,9 @@ import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.Health
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Lunarscave
  */
@@ -19,24 +22,24 @@ public class CpuIndicator extends ArkletIndicator {
     }
 
     @Override
-    protected HealthDetailsModel getHealthInfo() {
-        HealthDetailsModel cpuHealthModel = new HealthDetailsModel(getIndicatorId());
+    protected Map<String, Object> getHealthDetails() {
+        Map<String, Object> cpuHealthDetails = new HashMap<>(6);
 
         cpuHandler.collectTicks();
-        cpuHealthModel.putHealthData("count", cpuHandler.getCpuCount());
-        cpuHealthModel.putHealthData("type", cpuHandler.getCpuType());
-        cpuHealthModel.putHealthData("total used (%)", cpuHandler.getTotalUsed());
-        cpuHealthModel.putHealthData("user used (%)", cpuHandler.getUserUsed());
-        cpuHealthModel.putHealthData("system used (%)", cpuHandler.getSystemUsed());
-        cpuHealthModel.putHealthData("free (%)", cpuHandler.getFree());
-        return cpuHealthModel;
+        cpuHealthDetails.put("count", cpuHandler.getCpuCount());
+        cpuHealthDetails.put("type", cpuHandler.getCpuType());
+        cpuHealthDetails.put("total used (%)", cpuHandler.getTotalUsed());
+        cpuHealthDetails.put("user used (%)", cpuHandler.getUserUsed());
+        cpuHealthDetails.put("system used (%)", cpuHandler.getSystemUsed());
+        cpuHealthDetails.put("free (%)", cpuHandler.getFree());
+        return cpuHealthDetails;
     }
 
     @Override
     public Health health() {
         try {
-            HealthDetailsModel cpuHealthModel = getHealthInfo();
-            return Health.up().withDetail(getIndicatorId(), cpuHealthModel).build();
+            Map<String, Object> cpuHealthDetails = getHealthDetails();
+            return Health.up().withDetail(getIndicatorId(), cpuHealthDetails).build();
         } catch (Exception e) {
             return Health.down(e).build();
         }

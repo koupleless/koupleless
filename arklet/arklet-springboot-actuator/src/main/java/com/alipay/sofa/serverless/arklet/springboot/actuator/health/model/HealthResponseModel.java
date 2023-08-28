@@ -40,8 +40,12 @@ public class HealthResponseModel {
         final String healthKey = "health";
         if (this.healthInfo.containsKey(healthKey) && this.healthInfo.get(healthKey).equals(Status.UP)) {
             this.healthInfo.put(healthKey, health.getStatus());
-            this.healthInfo.putAll(health.getDetails());
         }
+            Map<String, Object> healthMap = health.getDetails();
+            for (String key : healthMap.keySet()) {
+                HealthDetailsModel detailsModel = (HealthDetailsModel) healthMap.get(key);
+                this.healthInfo.put(key, detailsModel.getHealthData());
+            }
     }
 
 }

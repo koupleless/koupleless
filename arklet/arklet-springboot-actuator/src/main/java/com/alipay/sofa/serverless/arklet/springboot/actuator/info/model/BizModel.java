@@ -3,6 +3,9 @@ package com.alipay.sofa.serverless.arklet.springboot.actuator.info.model;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizState;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Lunarscave
  */
@@ -48,11 +51,21 @@ public class BizModel {
         this.webContextPath = webContextPath;
     }
 
-    public void setBizModel(Biz biz) {
-        this.bizName = biz.getBizName();
-        this.bizState = biz.getBizState();
-        this.bizVersion = biz.getBizVersion();
-        this.webContextPath = biz.getWebContextPath();
+    public static BizModel createBizModel(Biz biz) {
+        BizModel bizModel = new BizModel();
+        bizModel.bizName = biz.getBizName();
+        bizModel.bizState = biz.getBizState();
+        bizModel.bizVersion = biz.getBizVersion();
+        bizModel.webContextPath = biz.getWebContextPath();
+        return bizModel;
+    }
+
+    public static List<BizModel> createBizModelList(List<Biz> bizList) {
+        List<BizModel> bizModelList = new ArrayList<>();
+        for (Biz biz : bizList) {
+            bizModelList.add(createBizModel(biz));
+        }
+        return bizModelList;
     }
 
 }
