@@ -1,6 +1,7 @@
 package com.alipay.sofa.serverless.arklet.springboot.actuator.health;
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.ActuatorComponent;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
 import org.springframework.boot.actuate.health.Health;
 
 
@@ -9,9 +10,9 @@ import org.springframework.boot.actuate.health.Health;
  */
 public interface HealthActuatorService extends ActuatorComponent {
 
-    Health getMasterBizHealth();
+    HealthDataModel getMasterBizHealth();
 
-    Health getCpuHealth();
+    HealthDataModel getCpuHealth();
 
-    Health getJvmHealth();
+    HealthDataModel getJvmHealth();
 }

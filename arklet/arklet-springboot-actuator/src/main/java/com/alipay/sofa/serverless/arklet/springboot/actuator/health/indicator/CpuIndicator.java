@@ -1,7 +1,6 @@
 package com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator;
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.handler.CpuHandler;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +38,7 @@ public class CpuIndicator extends ArkletIndicator {
     public Health health() {
         try {
             Map<String, Object> cpuHealthDetails = getHealthDetails();
-            return Health.up().withDetail(getIndicatorId(), cpuHealthDetails).build();
+            return Health.up().withDetails(cpuHealthDetails).build();
         } catch (Exception e) {
             return Health.down(e).build();
         }

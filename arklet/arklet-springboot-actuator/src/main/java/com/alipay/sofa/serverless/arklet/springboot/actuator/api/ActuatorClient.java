@@ -2,8 +2,11 @@ package com.alipay.sofa.serverless.arklet.springboot.actuator.api;
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.ActuatorComponent;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.HealthActuatorService;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthResponseModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.MoudleInfoService;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.BizModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.PluginModel;
+
 
 /**
  * @author Lunarscave
@@ -13,15 +16,37 @@ public class ActuatorClient implements ActuatorComponent {
     private static MoudleInfoService moudleInfoService;
     private static HealthActuatorService healthActuatorService;
 
-    public static HealthResponseModel getAllHealth() {
-        HealthResponseModel model = new HealthResponseModel();
-        model.putHealthInfo(moudleInfoService.queryMasterBiz());
-        model.putHealthInfo(moudleInfoService.queryAllBiz());
-        model.putHealthInfo(moudleInfoService.queryAllPlugin());
-        model.putHealthInfo(healthActuatorService.getMasterBizHealth());
-        model.putHealthInfo(healthActuatorService.getCpuHealth());
-        model.putHealthInfo(healthActuatorService.getJvmHealth());
-        return model;
+    public static HealthDataModel getHealth(HealthQueryType queryType) {
+        HealthDataModel healthDataModel = HealthDataModel.createHealthDataModel();
+        if (queryType == HealthQueryType.ALL) {
+            healthDataModel.putAllHealthData(moudleInfoService.queryMasterBiz());
+        }
+        if (queryType == HealthQueryType.ALL || queryType == HealthQueryType.BIZ_LIST) {
+            healthDataModel.putAllHealthData(moudleInfoService.queryAllBiz());
+        }
+        if (queryType == HealthQueryType.ALL || queryType == HealthQueryType.PLUGIN_LIST) {
+            healthDataModel.putAllHealthData(moudleInfoService.queryAllPlugin());
+        }
+        return healthDataModel.putAllHealthData(getSystemHealth());
+    }
+
+    public static HealthDataModel getHealth(BizModel biz) {
+        return HealthDataModel.createHealthDataModel()
+                .putAllHealthData(moudleInfoService.getBizInfo(biz))
+                .putAllHealthData(getSystemHealth());
+    }
+
+    public static HealthDataModel getHealth(PluginModel plugin) {
+        return HealthDataModel.createHealthDataModel()
+                .putAllHealthData(moudleInfoService.getPluginInfo(plugin))
+                .putAllHealthData(getSystemHealth());
+    }
+
+    public static HealthDataModel getSystemHealth() {
+        return HealthDataModel.createHealthDataModel()
+                .putAllHealthData(healthActuatorService.getMasterBizHealth())
+                .putAllHealthData(healthActuatorService.getCpuHealth())
+                .putAllHealthData(healthActuatorService.getJvmHealth());
     }
 
     public static void setMoudleInfoService(MoudleInfoService moudleInfoService) {

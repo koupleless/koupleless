@@ -1,12 +1,12 @@
 package com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator;
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.common.util.AssertUtil;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.availability.ApplicationAvailability;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,22 +25,17 @@ public class MasterBizIndicator extends ArkletIndicator {
 
     @Override
     protected Map<String, Object> getHealthDetails() {
-        return null;
-    }
-
-    @Override
-    protected HealthDetailsModel getHealthInfo() {
         AssertUtil.assertNotNull(applicationAvailability, "applicationAvailability must not null");
-        HealthDetailsModel masterBizHealthModel = new HealthDetailsModel(getIndicatorId());
-        masterBizHealthModel.putHealthData("readinessState", applicationAvailability.getReadinessState());
-        return masterBizHealthModel;
+        Map<String, Object> masterBizHealthDetails = new HashMap<>(1);
+        masterBizHealthDetails.put("readinessState", applicationAvailability.getReadinessState());
+        return masterBizHealthDetails;
     }
 
     @Override
     public Health health() {
         try {
-            HealthDetailsModel masterBizHealthModel = getHealthInfo();
-            return Health.up().withDetail(getIndicatorId(), masterBizHealthModel).build();
+            Map<String, Object> masterBizHealthDetails = getHealthDetails();
+            return Health.up().withDetails(masterBizHealthDetails).build();
         } catch (Exception e) {
             return Health.down(e).build();
         }
