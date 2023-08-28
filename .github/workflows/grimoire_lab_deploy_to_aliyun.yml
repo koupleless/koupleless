@@ -36,20 +36,11 @@ jobs:
     - name: Set up Docker buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ hashFiles('${{ env.WORK_DIR }}/*Dockerfile') }}
-
     - name: Build and push module-controller Docker images
       uses: docker/build-push-action@v4.1.1
       with:
         context: ${{ env.WORK_DIR }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
         file: ${{ env.WORK_DIR }}/GrimoireLabDockerfile
         platforms: linux/amd64
         push: true
         tags: ${{ env.DOCKERHUB_REGISTRY }}/${{ env.GRIMOIRE_LAB_IMAGE_PATH }}:${{ env.TAG }}
-        
