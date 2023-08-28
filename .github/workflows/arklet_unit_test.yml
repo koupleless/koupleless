@@ -34,6 +34,7 @@ jobs:
         uses: actions/setup-java@v2
         with: 
           java-version: 11
+          distribution: openjdk
 
       - name: Setup Maven
         uses: stCarolas/setup-maven@v.4.5
@@ -53,6 +54,7 @@ jobs:
         uses: actions/setup-java@v2
         with: 
           java-version: 17
+          distribution: openjdk
 
       - name: Test
         run: mvn test
