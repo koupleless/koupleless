@@ -33,9 +33,8 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v3.12.0
         with: 
-          distribution: 11
+          distribution: adopt
           java-version: 11
-          java-package: 'adopt'
 
       - name: Setup Maven
         uses: stCarolas/setup-maven@v.4.5
@@ -54,9 +53,8 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v3.12.0
         with: 
-          distribution: 17
+          distribution: adopt
           java-version: 17
-          java-package: 'adopt'
 
       - name: Test
         run: mvn test
