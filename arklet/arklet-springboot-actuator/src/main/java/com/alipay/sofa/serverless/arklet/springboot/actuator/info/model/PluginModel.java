@@ -69,13 +69,18 @@ public class PluginModel {
     }
 
     public static PluginModel createPluginModel(Plugin plugin) {
-        PluginModel pluginModel = new PluginModel();
-        pluginModel.setPluginName(plugin.getPluginName());
+        PluginModel pluginModel = PluginModel.createPluginModel(plugin.getPluginName(), plugin.getVersion());
         pluginModel.setGroupId(plugin.getGroupId());
         pluginModel.setArtifactId(plugin.getArtifactId());
-        pluginModel.setPluginVersion(plugin.getVersion());
         pluginModel.setPluginActivator(plugin.getPluginActivator());
         pluginModel.setPluginUrl(plugin.getPluginURL().getPath());
+        return pluginModel;
+    }
+
+    public static PluginModel createPluginModel(String pluginName, String pluginVersion) {
+        PluginModel pluginModel = new PluginModel();
+        pluginModel.setPluginName(pluginName);
+        pluginModel.setPluginVersion(pluginVersion);
         return pluginModel;
     }
 

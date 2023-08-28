@@ -11,18 +11,18 @@ import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.Health
 /**
  * @author Lunarscave
  */
-public class HealthHandler extends AbstractCommandHandler<InputMeta, HealthDataModel> {
+public class QueryAllPluginHealthHandler extends AbstractCommandHandler<InputMeta, HealthDataModel> {
     @Override
     public void validate(InputMeta inputMeta) throws CommandValidationException {
     }
 
     @Override
     public Output<HealthDataModel> handle(InputMeta inputMeta) {
-        return Output.ofSuccess(getOperationService().health());
+        return Output.ofSuccess(getOperationService().queryAllPluginHealth());
     }
 
     @Override
     public Command command() {
-        return BuiltinCommand.HEALTH;
+        return BuiltinCommand.QUERY_ALL_PLUGIN_HEALTH;
     }
 }

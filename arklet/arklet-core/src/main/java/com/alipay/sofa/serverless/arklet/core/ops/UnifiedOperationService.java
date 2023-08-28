@@ -21,8 +21,8 @@ import java.util.List;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthResponseModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.api.HealthQueryType;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
 
 /**
  * @author mingmen
@@ -38,6 +38,14 @@ public interface UnifiedOperationService extends ArkletComponent {
 
     ClientResponse switchBiz(String bizName, String bizVersion) throws Throwable;
 
-    HealthResponseModel health();
+    HealthDataModel health();
+
+    HealthDataModel queryAllBizHealth();
+
+    HealthDataModel queryAllPluginHealth();
+
+    HealthDataModel queryBizHealth(String bizName, String bizVersion) ;
+
+    HealthDataModel queryPluginHealth(String pluginName, String pluginVersion) ;
 
 }

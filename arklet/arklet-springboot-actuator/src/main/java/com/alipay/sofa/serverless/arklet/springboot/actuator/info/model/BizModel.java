@@ -52,11 +52,16 @@ public class BizModel {
     }
 
     public static BizModel createBizModel(Biz biz) {
-        BizModel bizModel = new BizModel();
-        bizModel.bizName = biz.getBizName();
+        BizModel bizModel = createBizModel(biz.getBizName(), biz.getBizVersion());
         bizModel.bizState = biz.getBizState();
-        bizModel.bizVersion = biz.getBizVersion();
         bizModel.webContextPath = biz.getWebContextPath();
+        return bizModel;
+    }
+
+    public static BizModel createBizModel(String bizName, String bizVersion) {
+        BizModel bizModel = new BizModel();
+        bizModel.bizName = bizName;
+        bizModel.bizVersion = bizVersion;
         return bizModel;
     }
 

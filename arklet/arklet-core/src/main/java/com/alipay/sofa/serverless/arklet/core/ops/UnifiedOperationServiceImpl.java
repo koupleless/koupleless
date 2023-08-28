@@ -24,8 +24,10 @@ import com.alipay.sofa.ark.spi.constant.Constants;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizOperation;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.api.ActuatorClient;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthResponseModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.api.HealthQueryType;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.BizModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.PluginModel;
 import com.google.inject.Singleton;
 
 /**
@@ -68,7 +70,27 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     }
 
     @Override
-    public HealthResponseModel health() {
-        return ActuatorClient.getAllHealth();
+    public HealthDataModel health() {
+        return ActuatorClient.getHealth(HealthQueryType.ALL);
+    }
+
+    @Override
+    public HealthDataModel queryAllBizHealth() {
+        return ActuatorClient.getHealth(HealthQueryType.BIZ_LIST);
+    }
+
+    @Override
+    public HealthDataModel queryAllPluginHealth() {
+        return ActuatorClient.getHealth(HealthQueryType.PLUGIN_LIST);
+    }
+
+    @Override
+    public HealthDataModel queryBizHealth(String bizName, String bizVersion) {
+        return ActuatorClient.getHealth(BizModel.createBizModel(bizName, bizVersion));
+    }
+
+    @Override
+    public HealthDataModel queryPluginHealth(String pluginName, String pluginVersion) {
+        return ActuatorClient.getHealth(PluginModel.createPluginModel(pluginName, pluginVersion));
     }
 }

@@ -4,7 +4,7 @@ import com.alipay.sofa.serverless.arklet.springboot.actuator.common.util.SpringB
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.CpuIndicator;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.JvmIndicator;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.MasterBizIndicator;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDetailsModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
 import org.springframework.boot.actuate.health.Health;
 
 /**
@@ -26,21 +26,24 @@ public class HealthActuatorServiceImpl implements HealthActuatorService {
     }
 
     @Override
-    public Health getMasterBizHealth() {
+    public HealthDataModel getMasterBizHealth() {
         updateHealthIndicator();
-        return masterBizIndicator.health();
+        return HealthDataModel.createHealthDataModel()
+                .putHealthData("masterBiz", masterBizIndicator.health());
     }
 
     @Override
-    public Health getCpuHealth() {
+    public HealthDataModel getCpuHealth() {
         updateHealthIndicator();
-        return arkletCpuIndicator.health();
+        return HealthDataModel.createHealthDataModel()
+                .putHealthData("cpu", arkletCpuIndicator.health());
     }
 
     @Override
-    public Health getJvmHealth() {
+    public HealthDataModel getJvmHealth() {
         updateHealthIndicator();
-        return jvmIndicator.health();
+        return HealthDataModel.createHealthDataModel()
+                .putHealthData("jvm", jvmIndicator.health());
     }
 
     private void updateHealthIndicator() {
