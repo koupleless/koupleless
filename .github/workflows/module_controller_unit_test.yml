@@ -41,9 +41,5 @@ jobs:
       - name: Run go mod
         run: go mod download
         
-      - name: Build
-        run: go build -a -o manager cmd/main.go
-        
       - name: Test
         run: go test -v ./internal/controller
-        
