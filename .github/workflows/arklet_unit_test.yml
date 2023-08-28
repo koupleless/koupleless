@@ -30,6 +30,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.12.0
+        with: 
+          java-version: 1.8.0
+
       - name: Setup Maven
         uses: stCarolas/setup-maven@v.4.5
         with:
@@ -40,6 +45,14 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: Test
+        run: mvn test
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.12.0
+        with: 
+          java-version: 1.17.0
 
       - name: Test
         run: mvn test
