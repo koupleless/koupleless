@@ -1,20 +1,5 @@
 # Build the manager binary
-FROM alpine:latest as builder
+FROM grimoirelab/full:latest
 
-WORKDIR /workspace
-
-RUN apk add git
-RUN git clone https://github.com/chaoss/grimoirelab
-
-
-FROM alpine:latest
-
-WORKDIR /workspace
-
-RUN apk add openrc
-RUN apk add docker
-RUN apk add docker-compose
-
-COPY --from=builder /workspace /workspace
-RUN cd grimoirelab/docker-compose
-CMD ["docker-compose", "up", "-d"]
+echo {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }} > /override.cfg
+sudo echo {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }} > /override.cfg
