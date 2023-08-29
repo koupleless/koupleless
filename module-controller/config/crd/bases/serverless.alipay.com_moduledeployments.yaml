@@ -36,10 +36,14 @@ spec:
             properties:
               deployType:
                 type: string
+                enum:
+                  - symmetric
+                  - asymmetric
               deploymentName:
                 description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
                   Important: Run "make" to regenerate code after modifying this file'
                 type: string
+                minLength: 1
               minReadySeconds:
                 format: int32
                 type: integer
@@ -94,12 +98,15 @@ spec:
                             type: string
                           name:
                             type: string
+                            minLength: 1
                           type:
                             type: string
                           url:
                             type: string
+                            format: uri
                           version:
                             type: string
+                            minLength: 1
                         required:
                         - name
                         - url
