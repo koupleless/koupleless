@@ -1,5 +1,5 @@
 # Build the manager binary
 FROM grimoirelab/full:latest
 
-echo {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }} > /override.cfg
-sudo echo {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }} > /override.cfg
+RUN echo {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }} > /override.cfg
+RUN sudo echo {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }} > /override.cfg
