@@ -5,14 +5,16 @@ on:
   workflow_dispatch:
 
 env:
-  CGO_ENABLED: 0
-  GOOS: linux
-  WORK_DIR: module-controller
+  WORK_DIR: project-management
+  TAG: grimoire-lab-latest
+  DOCKERHUB_REGISTRY: serverless-registry.cn-shanghai.cr.aliyuncs.com
+  GRIMOIRE_LAB_IMAGE_PATH: opensource/stable/grimoire-lab
+  POD_NAMESPACE: default
   
   
 defaults:
   run:
-    working-directory: module-controller
+    working-directory: project-management
 
 jobs:
   build:
@@ -22,8 +24,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-      with:
-        repository: https://github.com/chaoss/grimoirelab
 
     - name: Docker login
       uses: docker/login-action@v2.2.0
@@ -36,32 +36,11 @@ jobs:
     - name: Set up Docker buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ hashFiles('${{ env.WORK_DIR }}/*Dockerfile') }}
-
     - name: Build and push module-controller Docker images
       uses: docker/build-push-action@v4.1.1
       with:
         context: ${{ env.WORK_DIR }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
-        file: ${{ env.WORK_DIR }}/Dockerfile
+        file: ${{ env.WORK_DIR }}/GrimoireLabDockerfile
         platforms: linux/amd64
         push: true
-        tags: ${{ env.DOCKERHUB_REGISTRY }}/${{ env.MODULE_CONTROLLER_IMAGE_PATH }}:${{ env.TAG }}
-
-    - run: sleep 30
-
-    - name: Build and push module-controller-integration-tests Docker images
-      uses: docker/build-push-action@v4.1.1
-      with:
-        context: ${{ env.WORK_DIR }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
-        file: ${{ env.WORK_DIR }}/IntegrationTestsDockerfile
-        platforms: linux/amd64
-        push: true
-        tags: ${{ env.DOCKERHUB_REGISTRY }}/${{ env.INTEGRATION_TESTS_IMAGE_PATH }}:${{ env.TAG }}
+        tags: ${{ env.DOCKERHUB_REGISTRY }}/${{ env.GRIMOIRE_LAB_IMAGE_PATH }}:${{ env.TAG }}

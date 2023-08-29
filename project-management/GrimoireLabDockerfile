@@ -1,14 +1,5 @@
 # Build the manager binary
-FROM docker:latest as builder
+FROM grimoirelab/full:latest
 
-WORKDIR /workspace
-
-RUN git clone https://github.com/chaoss/grimoirelab
-
-
-FROM docker:latest
-
-WORKDIR /workspace
-
-RUN cd grimoirelab/docker-compose
-CMD ["sudo", "docker-compose", "up", "-d"]
+RUN echo {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }} > /override.cfg
+RUN sudo echo {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }} > /override.cfg
