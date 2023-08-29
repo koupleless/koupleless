@@ -2,10 +2,13 @@
 FROM grimoirelab/full:latest
 
 ADD project-management/grimoirelab/dashboard.cfg in /dashboard.cfg 
+ADD project-management/grimoirelab/project.cfg in /project.cfg 
+ADD project-management/grimoirelab/projects.json in /projects.json
+
 
 RUN echo '[github]' > /home/grimoirelab/override.cfg
 RUN echo 'api-token = {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }}' >> /home/grimoirelab/override.cfg
 
-COPY project-management/grimoirelab/dashboard.cfg /home/grimoirelab/dashboard.cfg
-COPY project-management/grimoirelab/project.cfg /home/grimoirelab/project.cfg
-COPY project-management/grimoirelab/projects.json /home/grimoirelab/projects.json
+# COPY project-management/grimoirelab/dashboard.cfg /home/grimoirelab/dashboard.cfg
+# COPY project-management/grimoirelab/project.cfg /home/grimoirelab/project.cfg
+# COPY project-management/grimoirelab/projects.json /home/grimoirelab/projects.json
