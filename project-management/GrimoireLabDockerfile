@@ -1,9 +1,11 @@
 # Build the manager binary
-FROM docker:latest as builder
+FROM alpine:latest as builder
 
 WORKDIR /workspace
 
+RUN apk add openrc
 RUN apk add git
+RUN apk add docker
 RUN apk add docker-compose
 RUN git clone https://github.com/chaoss/grimoirelab
 
