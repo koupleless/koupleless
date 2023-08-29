@@ -6,7 +6,6 @@ WORKDIR /workspace
 RUN mkdir /workspace && cd /workspace
 RUN apt-get update && apt-get install -y git
 RUN git clone https://github.com/chaoss/grimoirelab
-COPY /workspace /workspace
 
 
 FROM siimeon/dockercomposegitlabci:latest
