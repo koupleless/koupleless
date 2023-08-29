@@ -1,16 +1,17 @@
 # Build the manager binary
-FROM ubuntu:latest as builder
+FROM docker:latest as builder
 
 WORKDIR /workspace
 
-RUN apt-get update && apt-get install -y git
+RUN apk add git
+RUN apk add docker-compose
 RUN git clone https://github.com/chaoss/grimoirelab
 
 
-FROM alpinelinux/docker-compose:latest
+FROM docker:latest
 
 WORKDIR /workspace
 
 COPY --from=builder /workspace /workspace
 RUN cd grimoirelab/docker-compose
-CMD ["sudo", "docker-compose", "up", "-d"]
+CMD ["docker-compose", "up", "-d"]
