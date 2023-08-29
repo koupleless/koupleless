@@ -3,16 +3,17 @@ FROM alpine:latest as builder
 
 WORKDIR /workspace
 
-RUN apk add openrc
-RUN apk add git
-RUN apk add docker
-RUN apk add docker-compose
 RUN git clone https://github.com/chaoss/grimoirelab
 
 
 FROM alpine:latest
 
 WORKDIR /workspace
+
+RUN apk add openrc
+RUN apk add git
+RUN apk add docker
+RUN apk add docker-compose
 
 COPY --from=builder /workspace /workspace
 RUN cd grimoirelab/docker-compose
