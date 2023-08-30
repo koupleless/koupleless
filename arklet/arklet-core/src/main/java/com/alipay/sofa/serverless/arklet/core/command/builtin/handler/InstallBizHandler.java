@@ -1,17 +1,14 @@
 package com.alipay.sofa.serverless.arklet.core.command.builtin.handler;
 
-import java.util.Set;
-
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
-import com.alipay.sofa.ark.spi.model.BizInfo;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler.Input;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
-import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
-import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizOps;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
+import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
+import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizOps;
 import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletRuntimeException;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
 import lombok.Getter;
@@ -30,7 +27,7 @@ public class InstallBizHandler extends AbstractCommandHandler<Input, ClientRespo
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
                 return Output.ofSuccess(res);
             } else {
-                return Output.ofFailed(res, res.getCode().name() + ":" + res.getMessage());
+                return Output.ofFailed(res, "install biz not success!");
             }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);

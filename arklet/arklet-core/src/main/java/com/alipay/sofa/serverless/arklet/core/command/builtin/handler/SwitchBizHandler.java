@@ -25,7 +25,7 @@ public class SwitchBizHandler extends AbstractCommandHandler<Input, ClientRespon
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
                 return Output.ofSuccess(res);
             } else {
-                return Output.ofFailed(res, res.getCode().name() + ":" + res.getMessage());
+                return Output.ofFailed(res, "switch biz not success!");
             }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);
