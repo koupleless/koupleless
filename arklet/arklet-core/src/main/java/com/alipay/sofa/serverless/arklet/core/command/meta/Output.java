@@ -31,6 +31,14 @@ public class Output<T> {
         return output;
     }
 
+    public static <T> Output<T> ofFailed(T data, String message) {
+        Output<T> output = new Output<>();
+        output.code = ResponseCode.FAILED;
+        output.data = data;
+        output.message = message;
+        return output;
+    }
+
 
     public String getMessage() {
         return message;

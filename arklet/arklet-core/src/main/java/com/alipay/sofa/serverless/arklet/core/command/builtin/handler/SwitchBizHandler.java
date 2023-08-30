@@ -16,16 +16,16 @@ import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidation
  * @author mingmen
  * @date 2023/6/14
  */
-public class SwitchBizHandler extends AbstractCommandHandler<Input, Void> implements ArkBizOps {
+public class SwitchBizHandler extends AbstractCommandHandler<Input, ClientResponse> implements ArkBizOps {
 
     @Override
-    public Output<Void> handle(Input input) {
+    public Output<ClientResponse> handle(Input input) {
         try {
             ClientResponse res = getOperationService().switchBiz(input.getBizName(), input.getBizVersion());
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
-                return Output.ofSuccess(null);
+                return Output.ofSuccess(res);
             } else {
-                return Output.ofFailed(res.getCode().name() + ":" + res.getMessage());
+                return Output.ofFailed(res, "switch biz not success!");
             }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);

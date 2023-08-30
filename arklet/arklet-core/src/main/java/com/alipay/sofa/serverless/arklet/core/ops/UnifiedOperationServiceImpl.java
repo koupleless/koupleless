@@ -31,9 +31,9 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
 
     }
 
-    public ClientResponse install(String bizPath) throws Throwable {
+    public ClientResponse install(String bizUrl) throws Throwable {
         BizOperation bizOperation = new BizOperation().setOperationType(BizOperation.OperationType.INSTALL);
-        bizOperation.putParameter(Constants.CONFIG_BIZ_URL, "file://" + bizPath);
+        bizOperation.putParameter(Constants.CONFIG_BIZ_URL, bizUrl);
         return ArkClient.installOperation(bizOperation);
     }
 
