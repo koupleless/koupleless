@@ -28,21 +28,21 @@ public class HealthActuatorServiceImpl implements HealthActuatorService {
     public HealthDataModel getMasterBizHealth() {
         updateHealthIndicator();
         return HealthDataModel.createHealthDataModel()
-                .putHealthData("masterBiz", masterBizIndicator.health());
+                .putHealthData(masterBizIndicator.getIndicatorId(), masterBizIndicator.health());
     }
 
     @Override
     public HealthDataModel getCpuHealth() {
         updateHealthIndicator();
         return HealthDataModel.createHealthDataModel()
-                .putHealthData("cpu", arkletCpuIndicator.health());
+                .putHealthData(arkletCpuIndicator.getIndicatorId(), arkletCpuIndicator.health());
     }
 
     @Override
     public HealthDataModel getJvmHealth() {
         updateHealthIndicator();
         return HealthDataModel.createHealthDataModel()
-                .putHealthData("jvm", jvmIndicator.health());
+                .putHealthData(jvmIndicator.getIndicatorId(), jvmIndicator.health());
     }
 
     private void updateHealthIndicator() {
