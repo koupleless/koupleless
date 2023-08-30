@@ -64,10 +64,10 @@ import io.netty.util.CharsetUtil;
 @SuppressWarnings("unchecked")
 public class NettyHttpServer {
 
-    private final int port;
+    private final int            port;
     private final EventLoopGroup bossGroup;
     private final EventLoopGroup workerGroup;
-    private Channel channel;
+    private Channel              channel;
 
     private final CommandService commandService;
 
@@ -82,7 +82,8 @@ public class NettyHttpServer {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024);
         serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-            .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new NettyHttpInitializer(commandService));
+            .handler(new LoggingHandler(LogLevel.INFO))
+            .childHandler(new NettyHttpInitializer(commandService));
         channel = serverBootstrap.bind(port).sync().channel();
     }
 
@@ -122,7 +123,7 @@ public class NettyHttpServer {
 
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request)
-            throws Exception {
+                                                                                       throws Exception {
             try {
                 RequestValidation validation = validate(request);
                 if (!validation.isPass()) {
@@ -131,7 +132,8 @@ public class NettyHttpServer {
                     if (!validation.isCmdSupported()) {
                         returnResponse(ctx, Response.notFound());
                     }
-                    Output<?> output = commandService.process(validation.getCmd(), validation.getCmdContent());
+                    Output<?> output = commandService.process(validation.getCmd(),
+                        validation.getCmdContent());
                     Response response = Response.fromCommandOutput(output);
                     returnResponse(ctx, response);
                 }
@@ -157,10 +159,9 @@ public class NettyHttpServer {
         }
 
         private void returnResponse(ChannelHandlerContext ctx, Response response) {
-            DefaultFullHttpResponse httpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
-                HttpResponseStatus.OK,
-                Unpooled.copiedBuffer(JSONObject.toJSONString(response),
-                    CharsetUtil.UTF_8));
+            DefaultFullHttpResponse httpResponse = new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer(
+                    JSONObject.toJSONString(response), CharsetUtil.UTF_8));
             ChannelFuture future = ctx.writeAndFlush(httpResponse);
             future.addListener(ChannelFutureListener.CLOSE);
         }
@@ -173,8 +174,8 @@ public class NettyHttpServer {
 
         private void ret500(ChannelHandlerContext ctx, String message) {
             FullHttpResponse httpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
-                HttpResponseStatus.INTERNAL_SERVER_ERROR, Unpooled.copiedBuffer(
-                message, CharsetUtil.UTF_8));
+                HttpResponseStatus.INTERNAL_SERVER_ERROR, Unpooled.copiedBuffer(message,
+                    CharsetUtil.UTF_8));
             httpResponse.headers().set("Content_Length", httpResponse.content().readableBytes());
             ChannelFuture future = ctx.writeAndFlush(httpResponse);
             future.addListener(ChannelFutureListener.CLOSE);

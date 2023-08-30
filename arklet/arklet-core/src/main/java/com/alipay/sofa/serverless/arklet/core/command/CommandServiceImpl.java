@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.arklet.core.command;
 
 import java.util.ArrayList;
@@ -29,20 +45,24 @@ import com.google.inject.Singleton;
  * @author mingmen
  * @date 2023/6/8
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Singleton
 public class CommandServiceImpl implements CommandService {
 
-    private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
+    private static final ArkletLogger                 LOGGER     = ArkletLoggerFactory
+                                                                     .getDefaultLogger();
 
     private final Map<String, AbstractCommandHandler> handlerMap = new ConcurrentHashMap<>(16);
 
     @Override
     public void registerCommandHandler(AbstractCommandHandler handler) {
-        AssertUtils.isTrue(StringUtil.isNotBlank(handler.command().getId()), "command handler id should not be blank");
-        AssertUtils.isTrue(StringUtil.isNotBlank(handler.command().getDesc()), "command handler desc should not be blank");
+        AssertUtils.isTrue(StringUtil.isNotBlank(handler.command().getId()),
+            "command handler id should not be blank");
+        AssertUtils.isTrue(StringUtil.isNotBlank(handler.command().getDesc()),
+            "command handler desc should not be blank");
         if (handlerMap.containsKey(handler.command().getId())) {
-            throw new ArkletInitException("handler id (" + handler.command().getId() + ") duplicated");
+            throw new ArkletInitException("handler id (" + handler.command().getId()
+                                          + ") duplicated");
         }
         handlerMap.put(handler.command().getId(), handler);
         LOGGER.info("registered command:{}", handler.command().getId());
@@ -59,7 +79,8 @@ public class CommandServiceImpl implements CommandService {
     }
 
     @Override
-    public Output<?> process(String cmd, Map content) throws CommandValidationException, CommandMutexException {
+    public Output<?> process(String cmd, Map content) throws CommandValidationException,
+                                                     CommandMutexException {
         AbstractCommandHandler handler = getHandler(cmd);
         InputMeta input = toJavaBean(handler.getInputClass(), content);
         handler.validate(input);
