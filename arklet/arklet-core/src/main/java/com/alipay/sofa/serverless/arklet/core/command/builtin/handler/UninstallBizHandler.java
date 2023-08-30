@@ -16,16 +16,16 @@ import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidation
  * @author mingmen
  * @date 2023/6/14
  */
-public class UninstallBizHandler extends AbstractCommandHandler<Input, Void> implements ArkBizOps {
+public class UninstallBizHandler extends AbstractCommandHandler<Input, ClientResponse> implements ArkBizOps {
 
     @Override
-    public Output<Void> handle(Input input) {
+    public Output<ClientResponse> handle(Input input) {
         try {
             ClientResponse res = getOperationService().uninstall(input.getBizName(), input.getBizVersion());
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
-                return Output.ofSuccess(null);
+                return Output.ofSuccess(res);
             } else {
-                return Output.ofFailed(res.getCode().name() + ":" + res.getMessage());
+                return Output.ofFailed(res, res.getCode().name() + ":" + res.getMessage());
             }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);
