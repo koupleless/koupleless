@@ -13,7 +13,7 @@ public abstract class ArkletIndicator implements HealthIndicator {
 
     protected abstract Map<String, Object> getHealthDetails();
 
-    protected String getIndicatorId() {
+    public String getIndicatorId() {
         return indicatorId;
     }
 

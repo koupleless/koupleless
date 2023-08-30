@@ -154,7 +154,7 @@ The http protocol is enabled and the default port is 1238
         "java home": "D:\\******\\jre",
         "run time(s)": 37.605
       },
-      "masterBiz": {
+      "masterBizHealth": {
         "readinessState": "ACCEPTING_TRAFFIC",
         "health": {
           "description": "",
@@ -327,4 +327,72 @@ The http protocol is enabled and the default port is 1238
   }
 }
 ```  
+## api for arklet health endpoint
 
+use endpoint for k8s module to get helath info
+
+**default config**
+* endpoints exposure include: `*`
+* endpoints base path: `/`
+* endpoints sever port: `8080` 
+
+**http code result**
+* `ENDPOINT_HEALTHY(200)`: get health if all health indicator is healthy
+* `ENDPOINT_UNHEALTHY(400)`: get health once a health indicator is unhealthy 
+* `ENDPOINT_NOT_FOUND(404)`: endpoint path or params not found 
+* `ENDPOINT_PROCESS_INTERNAL_ERROR(500)`:  get health process throw an error
+
+### query all health info
+- url: 127.0.0.1:8080/arkletHealth
+- method: GET
+- output sample
+```json  
+{
+    "code": 200,
+    "codeType": "ENDPOINT_HEALTHY",
+    "data": {
+        "jvm": {...},
+        "masterBizHealth": {...},
+        "cpu": {...},
+        "masterBizInfo": {...},
+        "allBizInfo": [...],
+        "allPluginInfo": [...]
+    }
+}
+```  
+
+### query all biz/plugin health info
+- url: 127.0.0.1:8080/arkletHealth/{moduleType} (moduleType must in ['biz', 'plugin'])
+- method: GET
+- output sample
+```json  
+{
+    "code": 200,
+    "codeType": "ENDPOINT_HEALTHY",
+    "data": {
+        "jvm": {...},
+        "masterBizHealth": {...},
+        "cpu": {...},
+        "masterBizInfo": {...},
+        "allBizInfo": [...] / "allPluginInfo": [...]
+    }
+}
+```  
+
+### query single biz/plugin health info
+- url: 127.0.0.1:8080/arkletHealth/{moduleType}/moduleName/moduleVersion (moduleType must in ['biz', 'plugin'])
+- method: GET
+- output sample
+```json  
+{
+    "code": 200,
+    "codeType": "ENDPOINT_HEALTHY",
+    "data": {
+        "bizInfo": [...] / "pluginInfo": [...],
+        "jvm": {...},
+        "masterBizHealth": {...},
+        "cpu": {...},
+        "masterBizInfo": {...}
+    }
+}
+```  
