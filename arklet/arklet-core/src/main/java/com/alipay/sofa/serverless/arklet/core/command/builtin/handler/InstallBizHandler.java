@@ -21,16 +21,16 @@ import lombok.Setter;
  * @author mingmen
  * @date 2023/6/8
  */
-public class InstallBizHandler extends AbstractCommandHandler<Input, Set<BizInfo>> implements ArkBizOps {
+public class InstallBizHandler extends AbstractCommandHandler<Input, ClientResponse> implements ArkBizOps {
 
     @Override
-    public Output<Set<BizInfo>> handle(Input input) {
+    public Output<ClientResponse> handle(Input input) {
         try {
             ClientResponse res = getOperationService().install(input.getBizUrl());
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
-                return Output.ofSuccess(res.getBizInfos());
+                return Output.ofSuccess(res);
             } else {
-                return Output.ofFailed(res.getCode().name() + ":" + res.getMessage());
+                return Output.ofFailed(res, res.getCode().name() + ":" + res.getMessage());
             }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);
