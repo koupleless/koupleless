@@ -48,7 +48,12 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
       - name: Test
-        run: mvn test
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+          && sh ./check_format.sh
+          && mvn test
+
+      - name: Codecov
+        uses: codecov/codecov-action@v1
 
       - name: Setup Java JDK
         uses: actions/setup-java@v3.12.0
@@ -57,4 +62,6 @@ jobs:
           java-version: 17
 
       - name: Test
-        run: mvn test
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+          && sh ./check_format.sh
+          && mvn test
