@@ -26,7 +26,7 @@ public class UninstallBizHandler extends AbstractCommandHandler<Input, ClientRes
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
                 return Output.ofSuccess(res);
             } else {
-                return Output.ofFailed(res, res.getCode().name() + ":" + res.getMessage());
+                return Output.ofFailed(res, "uninstall biz not success!");
             }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);
