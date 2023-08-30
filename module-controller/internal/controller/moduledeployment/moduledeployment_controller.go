@@ -14,13 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controller
+package moduledeployment
 
 import (
 	"context"
 	"fmt"
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/controller/utils"
+	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/utils"
 	v1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,10 +33,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-)
-
-const (
-	ExistingModuleReplicaSetFinalizer = "existing-module-replicaset"
 )
 
 // ModuleDeploymentReconciler reconciles a ModuleDeployment object
@@ -57,9 +55,9 @@ type ModuleDeploymentReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.15.0/pkg/reconcile
 func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	logger := log.FromContext(ctx)
-	logger.Info("start reconcile for moduleDeployment")
-	defer logger.Info("finish reconcile for moduleDeployment")
+
+	log.Log.Info("start reconcile for moduleDeployment", "request", req)
+	defer log.Log.Info("finish reconcile for moduleDeployment", "request", req)
 
 	// get the moduleDeployment
 	moduleDeployment := &moduledeploymentv1alpha1.ModuleDeployment{}
@@ -74,72 +72,14 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	if moduleDeployment.DeletionTimestamp != nil {
-		if !utils.HasFinalizer(&moduleDeployment.ObjectMeta, ExistingModuleReplicaSetFinalizer) {
-			return ctrl.Result{}, nil
-		}
-
-		moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{}
-		moduleReplicaSetName := getModuleReplicasName(moduleDeployment.Name)
-		err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleReplicaSetName}, moduleReplicaSet)
-		existReplicaset := true
-		if err != nil {
-			if errors.IsNotFound(err) {
-				existReplicaset = false
-			} else {
-				log.Log.Error(err, "Failed to get moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSetName)
-				return ctrl.Result{}, err
-			}
-		}
-		if existReplicaset {
-			err := r.Client.Delete(ctx, moduleReplicaSet)
-			if err != nil {
-				log.Log.Error(err, "Failed to delete moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSetName)
-				return ctrl.Result{}, err
-			}
-			requeueAfter := utils.GetNextReconcileTime(moduleDeployment.DeletionTimestamp.Time)
-			return ctrl.Result{RequeueAfter: requeueAfter}, nil
-		} else {
-			log.Log.Info("moduleReplicaSet is deleted, remove moduleDeployment finalizer", "moduleDeploymentName", moduleDeployment.Name)
-			utils.RemoveFinalizer(&moduleDeployment.ObjectMeta, ExistingModuleReplicaSetFinalizer)
-			err := r.Client.Update(ctx, moduleDeployment)
-			if err != nil {
-				return ctrl.Result{}, err
-			}
-		}
-		return ctrl.Result{}, nil
+		// delete moduleDeployment
+		return r.handleDeletingModuleDeployment(moduleDeployment)
 	}
 
 	// update moduleDeployment owner reference
-	moduleDeploymentOwnerReferenceExist := false
-	for _, ownerReference := range moduleDeployment.GetOwnerReferences() {
-		if moduleDeployment.Spec.DeploymentName == ownerReference.Name {
-			moduleDeploymentOwnerReferenceExist = true
-		}
-	}
-
-	if !moduleDeploymentOwnerReferenceExist {
-		deployment := &v1.Deployment{}
-		err := r.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: moduleDeployment.Spec.DeploymentName}, deployment)
-		if err != nil {
-			log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
-			return ctrl.Result{}, err
-		}
-		ownerReference := moduleDeployment.GetOwnerReferences()
-		ownerReference = append(ownerReference, metav1.OwnerReference{
-			APIVersion:         deployment.APIVersion,
-			Kind:               deployment.Kind,
-			UID:                deployment.UID,
-			Name:               deployment.Name,
-			BlockOwnerDeletion: pointer.Bool(true),
-			Controller:         pointer.Bool(true),
-		})
-		moduleDeployment.SetOwnerReferences(ownerReference)
-		utils.AddFinalizer(&moduleDeployment.ObjectMeta, ExistingModuleReplicaSetFinalizer)
-		err = r.Client.Update(ctx, moduleDeployment)
-		if err != nil {
-			log.Log.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
-			return ctrl.Result{}, err
-		}
+	err = r.updateOwnerReference(moduleDeployment)
+	if err != nil {
+		return ctrl.Result{}, err
 	}
 
 	// create moduleReplicaSet
@@ -164,6 +104,80 @@ func getModuleReplicasName(moduleDeploymentName string) string {
 	return fmt.Sprintf(`%s-%s`, moduleDeploymentName, "replicas")
 }
 
+// handle deleting module deployment
+func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (ctrl.Result, error) {
+	if !utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer) {
+		return ctrl.Result{}, nil
+	}
+
+	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{}
+	moduleReplicaSetName := getModuleReplicasName(moduleDeployment.Name)
+	err := r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleReplicaSetName}, moduleReplicaSet)
+	existReplicaset := true
+	if err != nil {
+		if errors.IsNotFound(err) {
+			existReplicaset = false
+		} else {
+			log.Log.Error(err, "Failed to get moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSetName)
+			return ctrl.Result{}, err
+		}
+	}
+	if existReplicaset {
+		err := r.Client.Delete(context.TODO(), moduleReplicaSet)
+		if err != nil {
+			log.Log.Error(err, "Failed to delete moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSetName)
+			return ctrl.Result{}, err
+		}
+		requeueAfter := utils.GetNextReconcileTime(moduleDeployment.DeletionTimestamp.Time)
+		return ctrl.Result{RequeueAfter: requeueAfter}, nil
+	} else {
+		log.Log.Info("moduleReplicaSet is deleted, remove moduleDeployment finalizer", "moduleDeploymentName", moduleDeployment.Name)
+		utils.RemoveFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
+		err := r.Client.Update(context.TODO(), moduleDeployment)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+	return ctrl.Result{}, nil
+}
+
+// update moduleDeployment owner reference
+func (r *ModuleDeploymentReconciler) updateOwnerReference(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) error {
+	moduleDeploymentOwnerReferenceExist := false
+	for _, ownerReference := range moduleDeployment.GetOwnerReferences() {
+		if moduleDeployment.Spec.BaseAppName == ownerReference.Name {
+			moduleDeploymentOwnerReferenceExist = true
+		}
+	}
+
+	if !moduleDeploymentOwnerReferenceExist {
+		deployment := &v1.Deployment{}
+		err := r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseAppName}, deployment)
+		if err != nil {
+			log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
+			return err
+		}
+		ownerReference := moduleDeployment.GetOwnerReferences()
+		ownerReference = append(ownerReference, metav1.OwnerReference{
+			APIVersion:         deployment.APIVersion,
+			Kind:               deployment.Kind,
+			UID:                deployment.UID,
+			Name:               deployment.Name,
+			BlockOwnerDeletion: pointer.Bool(true),
+			Controller:         pointer.Bool(true),
+		})
+		moduleDeployment.SetOwnerReferences(ownerReference)
+		utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
+		err = r.Client.Update(context.TODO(), moduleDeployment)
+		if err != nil {
+			log.Log.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
+			return err
+		}
+	}
+	return nil
+}
+
+// create or get module replicas
 func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
 	var err error
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{}
@@ -175,7 +189,7 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(moduleDeployment 
 			if errors.IsNotFound(err) {
 				log.Log.Info("moduleReplicaSet is not exist", "name", moduleReplicaSetName)
 				deployment := &v1.Deployment{}
-				err := r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.DeploymentName}, deployment)
+				err := r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseAppName}, deployment)
 				if err != nil {
 					log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 					continue
@@ -196,6 +210,7 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(moduleDeployment 
 	return moduleReplicaSet, err
 }
 
+// update module replicas
 func (r *ModuleDeploymentReconciler) updateModuleReplicas(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	moduleSpec := moduleDeployment.Spec.Template.Spec
 	if moduleDeployment.Spec.Replicas != moduleReplicaSet.Spec.Replicas || isModuleChanges(moduleSpec.Module, moduleReplicaSet.Spec.Template.Spec.Module) {
@@ -212,10 +227,11 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(moduleDeployment *modu
 	return nil
 }
 
+// generate module replicas
 func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, deployment *v1.Deployment) *moduledeploymentv1alpha1.ModuleReplicaSet {
 	newLabels := moduleDeployment.Labels
-	newLabels[moduledeploymentv1alpha1.ModuleNameLabel] = moduleDeployment.Spec.Template.Spec.Module.Name
-	newLabels[moduledeploymentv1alpha1.ModuleDeploymentLabel] = moduleDeployment.Name
+	newLabels[label.ModuleNameLabel] = moduleDeployment.Spec.Template.Spec.Module.Name
+	newLabels[label.ModuleDeploymentLabel] = moduleDeployment.Name
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},
@@ -241,7 +257,7 @@ func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *mo
 		},
 	}
 	moduleReplicaSet.SetOwnerReferences(owner)
-	utils.AddFinalizer(&moduleReplicaSet.ObjectMeta, ExistingModuleFinalizer)
+	utils.AddFinalizer(&moduleReplicaSet.ObjectMeta, finalizer.ModuleExistedFinalizer)
 
 	return moduleReplicaSet
 }

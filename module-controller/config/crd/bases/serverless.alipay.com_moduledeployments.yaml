@@ -34,14 +34,11 @@ spec:
           spec:
             description: ModuleDeploymentSpec defines the desired state of ModuleDeployment
             properties:
-              deployType:
-                type: string
-                enum:
-                  - symmetric
-                  - asymmetric
-              deploymentName:
+              baseAppName:
                 description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
                   Important: Run "make" to regenerate code after modifying this file'
+                type: string
+              deployType:
                 type: string
                 minLength: 1
               minReadySeconds:
@@ -165,8 +162,8 @@ spec:
                     type: object
                 type: object
             required:
+            - baseAppName
             - deployType
-            - deploymentName
             type: object
           status:
             description: ModuleDeploymentStatus defines the observed state of ModuleDeployment
