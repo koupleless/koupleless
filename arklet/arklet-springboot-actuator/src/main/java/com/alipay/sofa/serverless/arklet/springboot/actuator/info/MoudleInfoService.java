@@ -1,7 +1,7 @@
 package com.alipay.sofa.serverless.arklet.springboot.actuator.info;
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.ActuatorComponent;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.BizModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.PluginModel;
 
@@ -16,7 +16,7 @@ public interface MoudleInfoService extends ActuatorComponent {
 
     HealthDataModel queryAllPlugin();
 
-    HealthDataModel getBizInfo(BizModel biz);
+    HealthDataModel getBizInfo(BizModel biz) throws Throwable;
 
-    HealthDataModel getPluginInfo(PluginModel plugin);
+    HealthDataModel getPluginInfo(PluginModel plugin) throws Throwable;
 }

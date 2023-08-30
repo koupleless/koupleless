@@ -6,7 +6,7 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +14,8 @@ import lombok.Setter;
  * @author Lunarscave
  */
 public class QueryPluginHealthHandler extends AbstractCommandHandler<QueryPluginHealthHandler.Input, HealthDataModel> {
+    private final String errorString = "error";
+
     @Override
     public void validate(Input input) throws CommandValidationException {
         notBlank(input.getPluginName(), "pluginName should not be blank");
@@ -22,8 +24,12 @@ public class QueryPluginHealthHandler extends AbstractCommandHandler<QueryPlugin
 
     @Override
     public Output<HealthDataModel> handle(Input input) {
-        return Output.ofSuccess(getOperationService().
-                queryPluginHealth(input.getPluginName(), input.getPluginVersion()));
+        HealthDataModel healthData = getOperationService().queryPluginHealth(input.getPluginName(), input.getPluginVersion());
+        if (healthData.getHealthData().containsKey(errorString)) {
+            return Output.ofFailed((String) healthData.getHealthData().get(errorString));
+        } else {
+            return Output.ofSuccess(healthData);
+        }
     }
 
     @Override

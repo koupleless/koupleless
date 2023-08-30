@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.Plugin;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.BizModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.PluginModel;
 
@@ -52,7 +52,7 @@ public class MoudleInfoServiceImpl implements MoudleInfoService{
     }
 
     @Override
-    public HealthDataModel getBizInfo(BizModel biz) {
+    public HealthDataModel getBizInfo(BizModel biz) throws Throwable {
         BizModel bizModel = BizModel.createBizModel(
                 ArkClient.getBizManagerService().getBiz(biz.getBizName(), biz.getBizVersion()));
         return HealthDataModel.createHealthDataModel().putHealthData("bizInfo",
@@ -60,7 +60,7 @@ public class MoudleInfoServiceImpl implements MoudleInfoService{
     }
 
     @Override
-    public HealthDataModel getPluginInfo(PluginModel plugin) {
+    public HealthDataModel getPluginInfo(PluginModel plugin) throws Throwable {
         PluginModel pluginModel = PluginModel.createPluginModel(
                 ArkClient.getPluginManagerService().getPluginByName(plugin.getPluginName()));
         return HealthDataModel.createHealthDataModel().putHealthData("pluginInfo",

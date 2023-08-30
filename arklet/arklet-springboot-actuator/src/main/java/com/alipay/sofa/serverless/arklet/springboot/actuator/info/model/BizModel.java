@@ -2,6 +2,7 @@ package com.alipay.sofa.serverless.arklet.springboot.actuator.info.model;
 
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizState;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.common.util.AssertUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class BizModel {
     }
 
     public static BizModel createBizModel(Biz biz) {
+        AssertUtil.assertNotNull(biz, "can not find biz");
         BizModel bizModel = createBizModel(biz.getBizName(), biz.getBizVersion());
         bizModel.bizState = biz.getBizState();
         bizModel.webContextPath = biz.getWebContextPath();

@@ -6,7 +6,7 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataModel;
 
 /**
  * @author Lunarscave

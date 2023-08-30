@@ -2,10 +2,14 @@ package com.alipay.sofa.serverless.arklet.springboot.actuator.info.model;
 
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.Plugin;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.common.util.AssertUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Lunarscave
+ */
 public class PluginModel {
 
     private String pluginName;
@@ -69,6 +73,7 @@ public class PluginModel {
     }
 
     public static PluginModel createPluginModel(Plugin plugin) {
+        AssertUtil.assertNotNull(plugin, "can not find plugin");
         PluginModel pluginModel = PluginModel.createPluginModel(plugin.getPluginName(), plugin.getVersion());
         pluginModel.setGroupId(plugin.getGroupId());
         pluginModel.setArtifactId(plugin.getArtifactId());
