@@ -1,8 +1,7 @@
 package com.alipay.sofa.serverless.arklet.springboot.actuator.health;
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.ActuatorComponent;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
-import org.springframework.boot.actuate.health.Health;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataModel;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.alipay.sofa.serverless.arklet.springboot.actuator.health.model;
+package com.alipay.sofa.serverless.arklet.springboot.actuator.model;
 
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.common.util.AssertUtil;
@@ -68,5 +68,36 @@ public class HealthDataModel {
 
         this.healthData.put(healthId, healthMap);
         return this;
+    }
+
+    public HealthDataModel putErrorData(String errorCode, String message) {
+        this.healthData.clear();
+        this.healthData.put(errorCode, message);
+        return this;
+    }
+
+    public static boolean containsError(HealthDataModel healthDataModel, String errorCode) {
+        return healthDataModel != null && healthDataModel.healthData.containsKey(errorCode);
+    }
+
+    public static boolean containsUnhealthy(HealthDataModel healthDataModel) {
+        Map<String, Object> healthData = healthDataModel.getHealthData();
+        boolean isUnhealthy = false;
+        for (String key: healthData.keySet()) {
+            Object value = healthData.get(key);
+            if (value instanceof Map) {
+                if (((Map<?, ?>) value).containsKey("health")){
+                    Object health =  ((Map<?, ?>) value).get("health");
+                    if (health instanceof Map) {
+                        String code = (String) ((Map<?, ?>) health).get("code");
+                        if (!code.equals(Status.UP.getCode())) {
+                            isUnhealthy = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return isUnhealthy;
     }
 }

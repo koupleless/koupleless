@@ -147,7 +147,7 @@ public class NettyHttpServer {
         private RequestValidation validate(FullHttpRequest request) throws IOException {
             HttpMethod method = request.method();
             if (HttpMethod.POST != method) {
-                return RequestValidation.notPass("POST http request only supported by arklet");
+                return RequestValidation.notPass("POST http request only    supported by arklet");
             }
             String cmd = new QueryStringDecoder(request.uri()).path().substring(1);
             boolean supported = commandService.supported(cmd);

@@ -4,8 +4,7 @@ import com.alipay.sofa.serverless.arklet.springboot.actuator.common.util.SpringB
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.CpuIndicator;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.JvmIndicator;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.MasterBizIndicator;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
-import org.springframework.boot.actuate.health.Health;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataModel;
 
 /**
  * @author Lunarscave

@@ -1,14 +1,19 @@
 package com.alipay.sofa.serverless.arklet.springboot.actuator.health.handler;
 
+import com.alipay.sofa.serverless.arklet.springboot.actuator.common.util.ConvertUtil;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.Date;
 import java.util.Properties;
 
+/**
+ * @author Lunarscave
+ */
 public class JvmHandler {
-    private Properties properties;
-    private Runtime runtime;
-    private RuntimeMXBean runtimeMxBean;
+    private final Properties properties;
+    private final Runtime runtime;
+    private final RuntimeMXBean runtimeMxBean;
 
     public  JvmHandler() {
         this.properties = System.getProperties();
@@ -36,7 +41,7 @@ public class JvmHandler {
         return this.runtime.freeMemory();
     }
 
-    public Date getduration() {
-        return new Date(runtimeMxBean.getStartTime());
+    public double getduration() {
+        return ConvertUtil.convertMillis2Second(new Date(runtimeMxBean.getStartTime()));
     }
 }

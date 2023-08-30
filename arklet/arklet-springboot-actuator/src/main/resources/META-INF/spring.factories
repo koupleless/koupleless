@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.alipay.sofa.serverless.arklet.springboot.actuator.health.indicator.IndicatorAutoConfiguration,\
+  com.alipay.sofa.serverless.arklet.springboot.actuator.endpoint.ArkletHealthEndpointAutoConfiguration
+
+

@@ -2,7 +2,7 @@ package com.alipay.sofa.serverless.arklet.springboot.actuator.api;
 
 import com.alipay.sofa.serverless.arklet.springboot.actuator.ActuatorComponent;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.health.HealthActuatorService;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.MoudleInfoService;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.BizModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.PluginModel;
@@ -30,16 +30,27 @@ public class ActuatorClient implements ActuatorComponent {
         return healthDataModel.putAllHealthData(getSystemHealth());
     }
 
-    public static HealthDataModel getHealth(BizModel biz) {
-        return HealthDataModel.createHealthDataModel()
-                .putAllHealthData(moudleInfoService.getBizInfo(biz))
-                .putAllHealthData(getSystemHealth());
+    public static HealthDataModel getHealth(BizModel biz){
+        try {
+            return HealthDataModel.createHealthDataModel()
+                    .putAllHealthData(moudleInfoService.getBizInfo(biz))
+                    .putAllHealthData(getSystemHealth());
+        } catch (Throwable e) {
+            return HealthDataModel.createHealthDataModel()
+                    .putHealthData("error", e.getMessage());
+        }
+
     }
 
     public static HealthDataModel getHealth(PluginModel plugin) {
-        return HealthDataModel.createHealthDataModel()
-                .putAllHealthData(moudleInfoService.getPluginInfo(plugin))
-                .putAllHealthData(getSystemHealth());
+        try {
+            return HealthDataModel.createHealthDataModel()
+                    .putAllHealthData(moudleInfoService.getPluginInfo(plugin))
+                    .putAllHealthData(getSystemHealth());
+        } catch (Throwable e) {
+            return HealthDataModel.createHealthDataModel()
+                    .putHealthData("error", e.getMessage());
+        }
     }
 
     public static HealthDataModel getSystemHealth() {

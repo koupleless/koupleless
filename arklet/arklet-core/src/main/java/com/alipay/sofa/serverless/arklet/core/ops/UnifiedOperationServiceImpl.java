@@ -25,7 +25,7 @@ import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizOperation;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.api.ActuatorClient;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.api.HealthQueryType;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.health.model.HealthDataModel;
+import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.BizModel;
 import com.alipay.sofa.serverless.arklet.springboot.actuator.info.model.PluginModel;
 import com.google.inject.Singleton;

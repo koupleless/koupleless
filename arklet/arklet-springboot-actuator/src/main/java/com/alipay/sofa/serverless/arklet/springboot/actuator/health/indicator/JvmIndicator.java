@@ -30,7 +30,7 @@ public class JvmIndicator extends ArkletIndicator {
         jvmHealthDetails.put("total memory(M)", ConvertUtil.convertBytes2Megabyte(jvmHandler.getTotalMemory()));
         jvmHealthDetails.put("max memory(M)", ConvertUtil.convertBytes2Megabyte(jvmHandler.getMaxMemory()));
         jvmHealthDetails.put("free memory(M)", ConvertUtil.convertBytes2Megabyte(jvmHandler.getFreeMemory()));
-        jvmHealthDetails.put("run time", ConvertUtil.convertEndDate2Duration(jvmHandler.getduration()));
+        jvmHealthDetails.put("run time(s)", jvmHandler.getduration());
         return jvmHealthDetails;
     }
 
