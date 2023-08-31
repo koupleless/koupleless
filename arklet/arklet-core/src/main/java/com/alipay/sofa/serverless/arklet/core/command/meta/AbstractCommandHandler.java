@@ -1,24 +1,9 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.alipay.sofa.serverless.arklet.core.command.meta;
 
 import java.lang.reflect.ParameterizedType;
 
 import com.alipay.sofa.common.utils.StringUtil;
+import com.alipay.sofa.serverless.arklet.core.actuator.ActuatorService;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
@@ -32,24 +17,22 @@ import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
 @SuppressWarnings("unchecked")
 public abstract class AbstractCommandHandler<P extends InputMeta, Q> {
 
-    private final UnifiedOperationService unifiedOperationService = ArkletComponentRegistry
-                                                                      .getOperationServiceInstance();
-    private final CommandService          commandService          = ArkletComponentRegistry
-                                                                      .getCommandServiceInstance();
+    private final UnifiedOperationService unifiedOperationService = ArkletComponentRegistry.getOperationServiceInstance();
+    private final CommandService commandService = ArkletComponentRegistry.getCommandServiceInstance();
+    private final ActuatorService actuatorService = ArkletComponentRegistry.getActuatorServiceInstance();
+
 
     public abstract void validate(P p) throws CommandValidationException;
-
     public abstract Output<Q> handle(P p);
-
     public abstract Command command();
 
     public UnifiedOperationService getOperationService() {
         return unifiedOperationService;
     }
-
     public CommandService getCommandService() {
         return commandService;
     }
+    public ActuatorService getActuatorService() {return actuatorService; }
 
     public Class<P> getInputClass() {
         ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
@@ -57,19 +40,21 @@ public abstract class AbstractCommandHandler<P extends InputMeta, Q> {
     }
 
     public static void isTrue(final boolean expression, final String message,
-                              final Object... values) {
+        final Object... values) {
         if (!expression) {
             throw new CommandValidationException(String.format(message, values));
         }
     }
 
-    public static void notBlank(final String check, final String message, final Object... values) {
+    public static void notBlank(final String check, final String message,
+        final Object... values) {
         if (StringUtil.isBlank(check)) {
             throw new CommandValidationException(String.format(message, values));
         }
     }
 
-    public static void notNull(final Object check, final String message, final Object... values) {
+    public static void notNull(final Object check, final String message,
+        final Object... values) {
         if (null == check) {
             throw new CommandValidationException(String.format(message, values));
         }

@@ -21,7 +21,7 @@ import java.util.List;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.model.HealthDataModel;
+import com.alipay.sofa.serverless.arklet.core.actuator.model.HealthModel;
 
 /**
  * @author mingmen
@@ -36,15 +36,5 @@ public interface UnifiedOperationService extends ArkletComponent {
     List<Biz> queryBizList();
 
     ClientResponse switchBiz(String bizName, String bizVersion) throws Throwable;
-
-    HealthDataModel health();
-
-    HealthDataModel queryAllBizHealth();
-
-    HealthDataModel queryAllPluginHealth();
-
-    HealthDataModel queryBizHealth(String bizName, String bizVersion) ;
-
-    HealthDataModel queryPluginHealth(String pluginName, String pluginVersion) ;
 
 }

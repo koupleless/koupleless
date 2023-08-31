@@ -88,10 +88,6 @@ public class CommandServiceImpl implements CommandService {
         registerCommandHandler(new UninstallBizHandler());
         registerCommandHandler(new SwitchBizHandler());
         registerCommandHandler(new HealthHandler());
-        registerCommandHandler(new QueryAllBizHealthHandler());
-        registerCommandHandler(new QueryAllPluginHealthHandler());
-        registerCommandHandler(new QueryBizHealthHandler());
-        registerCommandHandler(new QueryPluginHealthHandler());
     }
 
     @Override

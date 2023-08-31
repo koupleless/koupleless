@@ -36,20 +36,7 @@ public enum BuiltinCommand implements Command {
         "query all ark biz(including master biz)"),
 
     HEALTH("health",
-            "get all health info"),
-
-    QUERY_ALL_BIZ_HEALTH("queryAllBizHealth",
-            "get all biz health info"),
-
-    QUERY_ALL_PLUGIN_HEALTH("queryAllPluginHealth",
-            "get all plugin health info"),
-
-    QUERY_BIZ_HEALTH("queryBizHealth",
-            "get biz health info"),
-
-    QUERY_PLUGIN_HEALTH("queryPluginHealth",
-            "get plugin health info");
-
+            "get all health info");
 
     private final String id;
     private final String desc;

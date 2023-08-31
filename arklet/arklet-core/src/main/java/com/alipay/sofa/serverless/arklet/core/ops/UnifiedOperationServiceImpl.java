@@ -27,6 +27,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
 
     }
 
+    @Override
     public ClientResponse install(String bizUrl) throws Throwable {
         BizOperation bizOperation = new BizOperation().setOperationType(BizOperation.OperationType.INSTALL);
         bizOperation.putParameter(Constants.CONFIG_BIZ_URL, bizUrl);
