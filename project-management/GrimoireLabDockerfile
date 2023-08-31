@@ -1,14 +1,14 @@
 # Build the manager binary
-FROM siimeon/dockercomposegitlabci:latest as builder
+FROM grimoirelab/full:latest
 
-WORKDIR /workspace
+ADD sofa-serverless/project-management/grimoirelab/dashboard.cfg in /dashboard.cfg 
+ADD sofa-serverless/project-management/grimoirelab/project.cfg in /project.cfg 
+ADD sofa-serverless/project-management/grimoirelab/projects.json in /projects.json
 
-RUN git clone https://github.com/chaoss/grimoirelab
 
+RUN echo '[github]' > /home/grimoirelab/override.cfg
+RUN echo 'api-token = {{ secrets.GIT_API_TOKEN_FOR_ANALYSIS }}' >> /home/grimoirelab/override.cfg
 
-FROM gcr.io/distroless/static:latest
-
-WORKDIR /workspace
-
-RUN cd grimoirelab/docker-compose
-CMD ["sudo", "docker-compose", "up", "-d"]
+# COPY project-management/grimoirelab/dashboard.cfg /home/grimoirelab/dashboard.cfg
+# COPY project-management/grimoirelab/project.cfg /home/grimoirelab/project.cfg
+# COPY project-management/grimoirelab/projects.json /home/grimoirelab/projects.json
