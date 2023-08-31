@@ -20,8 +20,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alipay.sofa</groupId>
-            <artifactId>arklet-springboot-actuator</artifactId>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>6.4.5</version>
         </dependency>
 
         <dependency>

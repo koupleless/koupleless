@@ -9,7 +9,6 @@ import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
-import com.alipay.sofa.serverless.arklet.springboot.actuator.ActuatorRegistry;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.context.event.ContextClosedEvent;
@@ -39,10 +38,7 @@ public class ArkletApplicationListener implements ApplicationListener<Applicatio
         }
         if (event instanceof ContextClosedEvent) {
             ArkletComponentRegistry componentRegistry = event.getApplicationContext().getBean(ArkletComponentRegistry.class);
-            ActuatorRegistry actuatorRegistry = event.getApplicationContext().getBean(ActuatorRegistry.class);
             componentRegistry.destroyComponents();
-            actuatorRegistry.destroyActuator();
-
         }
 
     }

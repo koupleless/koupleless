@@ -12,7 +12,6 @@
     <modules>
         <module>arklet-core</module>
         <module>arklet-springboot-starter</module>
-        <module>arklet-springboot-actuator</module>
     </modules>
 
     <properties>
