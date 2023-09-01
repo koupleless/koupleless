@@ -1,4 +1,23 @@
-# API
+# 概览
+Arklet provides an operational interface for delivery of SofaArk bases and modules. With Arklet, the release and operation of Ark Biz can be easily and flexibly operated.
+
+Arklet is internally constructed by **ArkletComponent**
+
+![png](https://user-images.githubusercontent.com/11410549/264982346-6a890bec-0c62-403a-81e4-ee0e6246ad23.png)
+- ApiClient: The core components responsible for interacting with the outside world
+- CommandService: Arklet exposes capability instruction definition and extension
+- OperationService: Ark Biz interacts with SofaArk to add, delete, modify, and encapsulate basic capabilities
+- HealthService: Based on health and stability, base, Biz, system and other indicators are calculated
+
+Of course, you can also extend Arklet's component capabilities by implementing the **ArkletComponent** interface
+
+# Command Extension
+The Arklet exposes the instruction API externally and handles the instruction internally through a CommandHandler mapped from each API.
+> CommandHandler related extensions belong to the unified management of the CommandService component
+
+You can customize extension commands by inheriting **AbstractCommandHandler**
+
+## Build-in Command API
 
 All of the following instruction apis access the arklet using the POST(application/json) request format
 
@@ -48,7 +67,7 @@ The http protocol is enabled and the default port is 1238
 {
     "bizName": "test",
     "bizVersion": "1.0.0",
-    "arkBizFilePath": "file:///Users/jaimezhang/workspace/github/sofa-ark-dynamic-guides/dynamic-provider/target/dynamic-provider-1.0.0-ark-biz.jar"
+    "bizUrl": "file:///Users/jaimezhang/workspace/github/sofa-ark-dynamic-guides/dynamic-provider/target/dynamic-provider-1.0.0-ark-biz.jar"
 }
 ```
 - output sample:
