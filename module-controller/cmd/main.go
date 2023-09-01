@@ -18,9 +18,7 @@ package main
 
 import (
 	"flag"
-	"github.com/sofastack/sofa-serverless/internal/controller/module"
-	"github.com/sofastack/sofa-serverless/internal/controller/moduledeployment"
-	"github.com/sofastack/sofa-serverless/internal/controller/modulereplicaset"
+	"github.com/sofastack/sofa-serverless/internal/controller"
 	"os"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -91,21 +89,21 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&moduledeployment.ModuleDeploymentReconciler{
+	if err = (&controller.ModuleDeploymentReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ModuleDeployment")
 		os.Exit(1)
 	}
-	if err = (&modulereplicaset.ModuleReplicaSetReconciler{
+	if err = (&controller.ModuleReplicaSetReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ModuleReplicaSet")
 		os.Exit(1)
 	}
-	if err = (&module.ModuleReconciler{
+	if err = (&controller.ModuleReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
