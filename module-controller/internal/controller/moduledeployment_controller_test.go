@@ -1,37 +1,30 @@
 package controller
 
 import (
-	"context"
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-var _ = Describe("ModuleDeployment Controller", func() {
-	baseAppName := "testAppName"
-	Context("create module deployment", func() {
-		It("create success", func() {
-			moduleSpec := v1alpha1.ModuleSpec{
-				Module: v1alpha1.ModuleInfo{
-					Name:    "dynamic-provider",
-					Version: "1.0.0",
-					Url:     "http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar",
-				},
-			}
+func TestIsModuleChanges(t *testing.T) {
+	module1 := moduledeploymentv1alpha1.ModuleInfo{
+		Name:    "testModule1",
+		Version: "v1",
+	}
+	module2 := moduledeploymentv1alpha1.ModuleInfo{
+		Name:    "testModule1",
+		Version: "v2",
+	}
+	module3 := moduledeploymentv1alpha1.ModuleInfo{
+		Name:    "testModule2",
+		Version: "v2",
+	}
+	assert.False(t, isModuleChanges(module1, module1))
+	assert.True(t, isModuleChanges(module1, module2))
+	assert.True(t, isModuleChanges(module2, module3))
+}
 
-			moduleTemplate := v1alpha1.ModuleTemplateSpec{
-				Spec: moduleSpec,
-			}
-
-			spec := v1alpha1.ModuleDeploymentSpec{
-				BaseAppName: baseAppName,
-				Template:    moduleTemplate,
-			}
-			mockModuleDeployment := v1alpha1.ModuleDeployment{
-				Spec: spec,
-			}
-
-			Expect(k8sClient.Create(context.TODO(), &mockModuleDeployment)).Should(Succeed())
-		})
-	})
-})
+func TestGetModuleReplicasName(t *testing.T) {
+	moduleDeploymentName := "module-deployment"
+	assert.Equal(t, moduleDeploymentName+"-replicas", getModuleReplicasName(moduleDeploymentName))
+}

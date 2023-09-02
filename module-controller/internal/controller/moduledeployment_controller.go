@@ -55,13 +55,12 @@ type ModuleDeploymentReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.15.0/pkg/reconcile
 func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-
 	log.Log.Info("start reconcile for moduleDeployment", "request", req)
 	defer log.Log.Info("finish reconcile for moduleDeployment", "request", req)
 
 	// get the moduleDeployment
 	moduleDeployment := &moduledeploymentv1alpha1.ModuleDeployment{}
-	err := r.Client.Get(ctx, req.NamespacedName, moduleDeployment)
+	err := r.Client.Get(context.TODO(), req.NamespacedName, moduleDeployment)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			log.Log.Info("moduleDeployment is deleted", "moduleDeploymentName", moduleDeployment.Name)
@@ -76,12 +75,6 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return r.handleDeletingModuleDeployment(moduleDeployment)
 	}
 
-	// update moduleDeployment owner reference
-	err = r.updateOwnerReference(moduleDeployment)
-	if err != nil {
-		return ctrl.Result{}, err
-	}
-
 	// create moduleReplicaSet
 	moduleReplicaSet, err := r.createOrGetModuleReplicas(moduleDeployment)
 	if err != nil {
@@ -93,15 +86,13 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	if err != nil {
 		return ctrl.Result{}, err
 	}
+
+	// update moduleDeployment owner reference
+	err = r.updateOwnerReference(moduleDeployment)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
 	return ctrl.Result{}, nil
-}
-
-func isModuleChanges(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
-	return module1.Name != module2.Name || module1.Version != module2.Version
-}
-
-func getModuleReplicasName(moduleDeploymentName string) string {
-	return fmt.Sprintf(`%s-%s`, moduleDeploymentName, "replicas")
 }
 
 // handle deleting module deployment
@@ -267,4 +258,12 @@ func (r *ModuleDeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&moduledeploymentv1alpha1.ModuleDeployment{}).
 		Complete(r)
+}
+
+func isModuleChanges(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
+	return module1.Name != module2.Name || module1.Version != module2.Version
+}
+
+func getModuleReplicasName(moduleDeploymentName string) string {
+	return fmt.Sprintf(`%s-%s`, moduleDeploymentName, "replicas")
 }
