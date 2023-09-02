@@ -33,6 +33,7 @@
         <logback.version>1.2.9</logback.version>
         <lombok.version>1.18.12</lombok.version>
         <junit.version>4.13.1</junit.version>
+        <oshi.version>6.4.5</oshi.version>
     </properties>
 
 
@@ -64,7 +65,7 @@
             <dependency>
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>sofa-ark-api</artifactId>
-                <version>2.2.2-SNAPSHOT</version>
+                <version>2.2.3-SNAPSHOT</version>
             </dependency>
 
             <dependency>
