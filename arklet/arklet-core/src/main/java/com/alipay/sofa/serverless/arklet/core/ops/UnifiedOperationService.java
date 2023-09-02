@@ -21,7 +21,6 @@ import java.util.List;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
-import com.alipay.sofa.serverless.arklet.core.actuator.model.HealthModel;
 
 /**
  * @author mingmen
