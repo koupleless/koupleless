@@ -1,398 +1,146 @@
-# API
+# 概览
+Arklet provides an operational interface for delivery of SofaArk bases and modules. With Arklet, the release and operation of Ark Biz can be easily and flexibly operated.
+
+Arklet is internally constructed by **ArkletComponent**
+
+![png](https://user-images.githubusercontent.com/11410549/264982346-6a890bec-0c62-403a-81e4-ee0e6246ad23.png)
+- ApiClient: The core components responsible for interacting with the outside world
+- CommandService: Arklet exposes capability instruction definition and extension
+- OperationService: Ark Biz interacts with SofaArk to add, delete, modify, and encapsulate basic capabilities
+- HealthService: Based on health and stability, base, Biz, system and other indicators are calculated
+
+Of course, you can also extend Arklet's component capabilities by implementing the **ArkletComponent** interface
+
+# Command Extension
+The Arklet exposes the instruction API externally and handles the instruction internally through a CommandHandler mapped from each API.
+> CommandHandler related extensions belong to the unified management of the CommandService component
+
+You can customize extension commands by inheriting **AbstractCommandHandler**
+
+## Build-in Command API
 
 All of the following instruction apis access the arklet using the POST(application/json) request format
 
 The http protocol is enabled and the default port is 1238
 > You can set `sofa.serverless.arklet.http.port` JVM startup parameters override the default port
 
-**8.30 updated**
-* add health check commands
-* add health check actuator
-* add health check endpoint
 
 ## Query the supported commands
 - URL: 127.0.0.1:1238/help
 - input sample:
-```json  
-{}  
-```  
+```json
+{}
+```
 - output sample:
-```json  
-{  
-    "code":"SUCCESS",  
-    "data":[  
-        {  
-            "desc":"query all ark biz(including master biz)",  
-            "id":"queryAllBiz"  
-        },  
-        {  
-            "desc":"list all supported commands",  
-            "id":"help"  
-        },  
-        {  
-            "desc":"uninstall one ark biz",  
-            "id":"uninstallBiz"  
-        },  
-        {  
-            "desc":"switch one ark biz",  
-            "id":"switchBiz"  
-        },  
-        {  
-            "desc":"install one ark biz",  
-            "id":"installBiz"  
-        }  
-    ]  
-}  
-```  
+```json
+{
+    "code":"SUCCESS",
+    "data":[
+        {
+            "desc":"query all ark biz(including master biz)",
+            "id":"queryAllBiz"
+        },
+        {
+            "desc":"list all supported commands",
+            "id":"help"
+        },
+        {
+            "desc":"uninstall one ark biz",
+            "id":"uninstallBiz"
+        },
+        {
+            "desc":"switch one ark biz",
+            "id":"switchBiz"
+        },
+        {
+            "desc":"install one ark biz",
+            "id":"installBiz"
+        }
+    ]
+}
+```
 
 ## Install a biz
 - URL: 127.0.0.1:1238/installBiz
 - input sample:
-```json  
-{  
-    "bizName": "test",  
-    "bizVersion": "1.0.0",  
-    "arkBizFilePath": "/Users/jaimezhang/workspace/github/sofa-ark-dynamic-guides/dynamic-provider/target/dynamic-provider-1.0.0-ark-biz.jar"  
-}  
-```  
+```json
+{
+    "bizName": "test",
+    "bizVersion": "1.0.0",
+    "bizUrl": "file:///Users/jaimezhang/workspace/github/sofa-ark-dynamic-guides/dynamic-provider/target/dynamic-provider-1.0.0-ark-biz.jar"
+}
+```
 - output sample:
-```json  
-{  
-  "code":"SUCCESS",  
-  "data":[  
-    {  
-      "bizName":"dynamic-provider",  
-      "bizVersion":"1.0.0",  
-      ...  
-    }  
-  ]  
-}  
-```  
+```json
+{
+  "code":"SUCCESS",
+  "data":[
+    {
+      "bizName":"dynamic-provider",
+      "bizVersion":"1.0.0",
+      ...
+    }
+  ]
+}
+```
 
 ## Uninstall a biz
 - URL: 127.0.0.1:1238/uninstallBiz
 - input sample:
-```json  
-{  
-    "bizName":"dynamic-provider",  
-    "bizVersion":"1.0.0"  
-}  
-```  
+```json
+{
+    "bizName":"dynamic-provider",
+    "bizVersion":"1.0.0"
+}
+```
 - output sample:
-```json  
-{  
-  "code":"SUCCESS"  
-}  
-```  
+```json
+{
+  "code":"SUCCESS"
+}
+```
 
 ## Switch a biz
 - URL: 127.0.0.1:1238/switchBiz
 - input sample:
-```json  
-{  
-    "bizName":"dynamic-provider",  
-    "bizVersion":"1.0.0"  
-}  
-```  
+```json
+{
+    "bizName":"dynamic-provider",
+    "bizVersion":"1.0.0"
+}
+```
 - output sample:
-```json  
-{  
-  "code":"SUCCESS"  
-}  
-```  
+```json
+{
+  "code":"SUCCESS"
+}
+```
 
 ## Query all Biz
 - URL: 127.0.0.1:1238/queryAllBiz
 - input sample:
-```json  
-{}  
-```  
-- output sample:
-```json  
-{  
-  "code":"SUCCESS",  
-  "data":[  
-    {  
-      "bizName":"dynamic-provider",  
-      "bizState":"ACTIVATED",  
-      "bizVersion":"1.0.0",  
-      "mainClass":"io.sofastack.dynamic.provider.ProviderApplication",  
-      "webContextPath":"provider"  
-    },  
-    {  
-      "bizName":"stock-mng",  
-      "bizState":"ACTIVATED",  
-      "bizVersion":"1.0.0",  
-      "mainClass":"embed main",  
-      "webContextPath":"/"  
-    }  
-  ]  
-}  
+```json
+{}
 ```
-
-## Query all health info
-- URL: 127.0.0.1:1238/health
-- input sample:
-```json  
-{}  
-```  
 - output sample:
-```json  
+```json
 {
-  "code": "SUCCESS",
-  "data": {
-    "healthData": {
-      "jvm": {
-        "total memory(M)": 175.0,
-        "free memory(M)": 37.3826904296875,
-        "java version": "1.8.0_331",
-        "max memory(M)": 885.5,
-        "health": {
-          "description": "",
-          "code": "UP"
-        },
-        "java home": "D:\\******\\jre",
-        "run time(s)": 37.605
-      },
-      "masterBizHealth": {
-        "readinessState": "ACCEPTING_TRAFFIC",
-        "health": {
-          "description": "",
-          "code": "UP"
-        }
-      },
-      "cpu": {
-        "user used (%)": 2.348825587206397,
-        "system used (%)": 4.747626186906547,
-        "count": 4,
-        "health": {
-          "description": "",
-          "code": "UP"
-        },
-        "total used (%)": 2001.0,
-        "type": "******* CPU @ ****GHz",
-        "free (%)": 92.10394802598701
-      },
-      "masterBizInfo": {
-        "webContextPath": "/",
-        "bizName": "bookstore-manager",
-        "bizState": "ACTIVATED",
-        "bizVersion": "1.0.0"
-      },
-      "allBizInfo": [
-        {
-          "webContextPath": "/",
-          "bizName": "bookstore-manager",
-          "bizState": "ACTIVATED",
-          "bizVersion": "1.0.0"
-        }
-      ],
-      "allPluginInfo": [
-        {
-          "pluginVersion": "2.2.2-SNAPSHOT",
-          "pluginActivator": "com.alipay.sofa.ark.web.embed.WebPluginActivator",
-          "pluginName": "web-ark-plugin",
-          "groupId": "com.alipay.sofa",
-          "artifactId": "web-ark-plugin",
-          "pluginUrl": "file:/****/web-ark-plugin-2.2.2-SNAPSHOT.jar!/"
-        },
-        {
-          "pluginVersion": "3.11.0",
-          "pluginActivator": "com.alipay.sofa.****.SofaRuntimeActivator",
-          "pluginName": "runtime-sofa-boot-plugin",
-          "groupId": "com.alipay.sofa",
-          "artifactId": "runtime-sofa-boot-plugin",
-          "pluginUrl": "file:/****/runtime-sofa-boot-plugin-3.11.0.jar!/"
-        }
-      ]
+  "code":"SUCCESS",
+  "data":[
+    {
+      "bizName":"dynamic-provider",
+      "bizState":"ACTIVATED",
+      "bizVersion":"1.0.0",
+      "mainClass":"io.sofastack.dynamic.provider.ProviderApplication",
+      "webContextPath":"provider"
+    },
+    {
+      "bizName":"stock-mng",
+      "bizState":"ACTIVATED",
+      "bizVersion":"1.0.0",
+      "mainClass":"embed main",
+      "webContextPath":"/"
     }
-  }
+  ]
 }
-```  
-
-## Query all biz health info
-- URL: 127.0.0.1:1238/queryAllBizHealth
-- input sample:
-```json  
-{}  
-```  
-- output sample:
-```json  
-{
-  "code": "SUCCESS",
-  "data": {
-    "healthData": {
-      "jvm": {...},
-      "cpu": {...},
-      "allBizInfo": [
-        {
-          "webContextPath": "/",
-          "bizName": "bookstore-manager",
-          "bizState": "ACTIVATED",
-          "bizVersion": "1.0.0"
-        }
-      ],
-    }
-  }
-}
-```  
-
-## Query all plugin health info
-- URL: 127.0.0.1:1238/queryAllPluginHealth
-- input sample:
-```json  
-{}  
-```  
-- output sample:
-```json  
-{
-  "code": "SUCCESS",
-  "data": {
-    "healthData": {
-      "jvm": {...},
-      "cpu": {...},
-      "allPluginInfo": [
-        {
-          "pluginName": "web-ark-plugin",
-          "groupId": "com.alipay.sofa",
-          "artifactId": "web-ark-plugin",
-          ...,
-        },
-        {
-          "pluginName": "runtime-sofa-boot-plugin",
-          "groupId": "com.alipay.sofa",
-          "artifactId": "runtime-sofa-boot-plugin",
-          ...,
-        }
-      ]
-    }
-  }
-}
-```  
-
-## Query single biz health info
-- URL: 127.0.0.1:1238/queryBizHealth
-- input sample:
-```json  
-{
-  "bizname": "bookstore-manager",
-  "bizversion": "1.0.0"
-}
-```  
-- output sample:
-```json  
-{
-  "code": "SUCCESS",
-  "data": {
-    "healthData": {
-      "jvm": {...},
-      "bizInfo": {
-         "webContextPath": "/",
-         "bizName": "bookstore-manager",
-         "bizState": "ACTIVATED",
-         "bizVersion": "1.0.0"
-       },
-      "cpu": {...},
-    }
-  }
-}
-```  
-
-## Query single plugin health info
-- URL: 127.0.0.1:1238/queryPluginHealth
-- input sample:
-```json  
-{
-  "pluginVersion": "2.2.2-SNAPSHOT",
-  "pluginName": "web-ark-plugin"
-}
-```  
-- output sample:
-```json  
-{
-  "code": "SUCCESS",
-  "data": {
-    "healthData": {
-      "jvm": {...},
-      "pluginInfo": {
-        "pluginVersion": "2.2.2-SNAPSHOT",
-        "pluginActivator": "com.alipay.sofa.ark.web.embed.WebPluginActivator",
-        "pluginName": "web-ark-plugin",
-        "groupId": "com.alipay.sofa",
-        "artifactId": "web-ark-plugin",
-        "pluginUrl": "file:/****/web-ark-plugin-2.2.2-SNAPSHOT.jar!/"
-      },
-      "cpu": {...},
-    }
-  }
-}
-```  
-## api for arklet health endpoint
-
-use endpoint for k8s module to get helath info
-
-**default config**
-* endpoints exposure include: `*`
-* endpoints base path: `/`
-* endpoints sever port: `8080` 
-
-**http code result**
-* `ENDPOINT_HEALTHY(200)`: get health if all health indicator is healthy
-* `ENDPOINT_UNHEALTHY(400)`: get health once a health indicator is unhealthy 
-* `ENDPOINT_NOT_FOUND(404)`: endpoint path or params not found 
-* `ENDPOINT_PROCESS_INTERNAL_ERROR(500)`:  get health process throw an error
-
-### query all health info
-- url: 127.0.0.1:8080/arkletHealth
-- method: GET
-- output sample
-```json  
-{
-    "code": 200,
-    "codeType": "ENDPOINT_HEALTHY",
-    "data": {
-        "jvm": {...},
-        "masterBizHealth": {...},
-        "cpu": {...},
-        "masterBizInfo": {...},
-        "allBizInfo": [...],
-        "allPluginInfo": [...]
-    }
-}
-```  
-
-### query all biz/plugin health info
-- url: 127.0.0.1:8080/arkletHealth/{moduleType} (moduleType must in ['biz', 'plugin'])
-- method: GET
-- output sample
-```json  
-{
-    "code": 200,
-    "codeType": "ENDPOINT_HEALTHY",
-    "data": {
-        "jvm": {...},
-        "masterBizHealth": {...},
-        "cpu": {...},
-        "masterBizInfo": {...},
-        "allBizInfo": [...] / "allPluginInfo": [...]
-    }
-}
-```  
-
-### query single biz/plugin health info
-- url: 127.0.0.1:8080/arkletHealth/{moduleType}/moduleName/moduleVersion (moduleType must in ['biz', 'plugin'])
-- method: GET
-- output sample
-```json  
-{
-    "code": 200,
-    "codeType": "ENDPOINT_HEALTHY",
-    "data": {
-        "bizInfo": [...] / "pluginInfo": [...],
-        "jvm": {...},
-        "masterBizHealth": {...},
-        "cpu": {...},
-        "masterBizInfo": {...}
-    }
-}
-```  
+```
