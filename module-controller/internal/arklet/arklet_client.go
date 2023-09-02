@@ -45,19 +45,40 @@ type ArkletResponse struct {
 }
 
 var instance *ArkletClient
+var installPath, uninstallPath, switchPath string
+var port int
+var mockUrl string
 
 var once sync.Once
 
+func init() {
+	installPath = DefaultInstallPath
+	uninstallPath = DefaultUninstallPath
+	switchPath = DefaultSwitchPath
+	port = DefaultPort
+}
+
+func MockClient(customMockUrl string) {
+	mockUrl = customMockUrl
+}
+
 func Client() *ArkletClient {
-	once.Do(func() {
-		instance = &ArkletClient{installPath: DefaultInstallPath, uninstallPath: DefaultUninstallPath, switchPath: DefaultSwitchPath, port: DefaultPort}
-	})
+	if instance == nil {
+		once.Do(func() {
+			instance = &ArkletClient{installPath: installPath, uninstallPath: uninstallPath, switchPath: switchPath, port: port}
+		})
+	}
 	return instance
 }
 
 func (client *ArkletClient) InstallBiz(ip string, moduleInfo v1alpha1.ModuleInfo) (*ArkletResponse, error) {
 	log.Log.Info("start to install module", "ip", ip, "moduleInfo", moduleInfo)
-	url := fmt.Sprintf("http://%s:%s/%s", ip, strconv.Itoa(client.port), client.installPath)
+	var url string
+	if mockUrl != "" {
+		url = mockUrl
+	} else {
+		url = fmt.Sprintf("http://%s:%s/%s", ip, strconv.Itoa(client.port), client.installPath)
+	}
 	data := []byte(fmt.Sprintf(`{"bizName": "%s", "bizVersion": "%s", "arkBizFilePath": "%s"}`, moduleInfo.Name, moduleInfo.Version, moduleInfo.Url))
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
@@ -86,7 +107,13 @@ func (client *ArkletClient) InstallBiz(ip string, moduleInfo v1alpha1.ModuleInfo
 
 func (client *ArkletClient) UninstallBiz(ip string, moduleName string, moduleVersion string) (*ArkletResponse, error) {
 	log.Log.Info("start to uninstall module", "ip", ip, "moduleName", moduleName, "moduleVersion", moduleVersion)
-	url := fmt.Sprintf("http://%s:%s/%s", ip, strconv.Itoa(client.port), client.uninstallPath)
+	var url string
+	if mockUrl != "" {
+		url = mockUrl
+	} else {
+		url = fmt.Sprintf("http://%s:%s/%s", ip, strconv.Itoa(client.port), client.uninstallPath)
+	}
+
 	data := []byte(fmt.Sprintf(`{"bizName": "%s", "bizVersion": "%s"}`, moduleName, moduleVersion))
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {

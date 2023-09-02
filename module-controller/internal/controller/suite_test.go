@@ -17,12 +17,19 @@ limitations under the License.
 package controller
 
 import (
+	"context"
+	"fmt"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"os"
 	"path/filepath"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	v1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -63,14 +70,13 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(cfg).NotTo(BeNil())
 
+	err = scheme.AddToScheme(scheme.Scheme)
+	Expect(err).NotTo(HaveOccurred())
+
 	err = moduledeploymentv1alpha1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	//+kubebuilder:scaffold:scheme
-
-	k8sClient, err = client.New(cfg, client.Options{Scheme: scheme.Scheme})
-	Expect(err).NotTo(HaveOccurred())
-	Expect(k8sClient).NotTo(BeNil())
 
 	k8sManager, err := ctrl.NewManager(cfg, ctrl.Options{
 		Scheme: scheme.Scheme,
@@ -94,10 +100,92 @@ var _ = BeforeSuite(func() {
 		Scheme: k8sManager.GetScheme(),
 	}).SetupWithManager(k8sManager)
 	Expect(err).ToNot(HaveOccurred())
+
+	go func() {
+		err = k8sManager.Start(ctrl.SetupSignalHandler())
+		Expect(err).ToNot(HaveOccurred())
+	}()
+
+	k8sClient = k8sManager.GetClient()
+	Expect(k8sClient).ToNot(BeNil())
+
+	deployment := prepareDeployment()
+	err = k8sClient.Create(context.TODO(), &deployment)
+	pod := preparePod("fake-pod-1")
+	pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
+	err = k8sClient.Create(context.TODO(), &pod)
+	if err != nil {
+		fmt.Printf("Failed to prepare resource: %v", err)
+		os.Exit(1)
+	}
 })
+
+func prepareDeployment() v1.Deployment {
+	var deployment v1.Deployment
+	replicas := int32(1)
+	deployment = v1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "dynamic-stock-deployment",
+			Namespace: "default",
+		},
+		Spec: v1.DeploymentSpec{
+			Replicas: &replicas,
+			Selector: &metav1.LabelSelector{
+				MatchLabels: map[string]string{
+					"app": "dynamic-stock",
+				},
+			},
+			Template: corev1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{
+						"app": "dynamic-stock",
+					},
+				},
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Name:  "dynamic-stock-deployment",
+							Image: "serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/dynamic-stock-mng:v0.8",
+							Ports: []corev1.ContainerPort{
+								{
+									ContainerPort: 8080,
+								},
+								{
+									ContainerPort: 1238,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	return deployment
+}
+
+func preparePod(podName string) corev1.Pod {
+	pod := corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      podName,
+			Namespace: "default",
+			Labels: map[string]string{
+				"app": "dynamic-stock",
+			},
+		},
+		Spec: corev1.PodSpec{
+			Containers: []corev1.Container{
+				{
+					Name:  "dynamic-stock-deployment",
+					Image: "serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/dynamic-stock-mng:v0.8",
+				},
+			},
+		},
+	}
+	return pod
+}
 
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")
-	err := testEnv.Stop()
-	Expect(err).NotTo(HaveOccurred())
+	//err := testEnv.Stop()
+	//Expect(err).NotTo(HaveOccurred())
 })

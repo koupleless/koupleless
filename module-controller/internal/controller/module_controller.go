@@ -131,13 +131,9 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(module *v1alpha1.Modu
 
 			targetPod := &corev1.Pod{}
 			err := r.Client.Get(context.TODO(), types.NamespacedName{Name: podName, Namespace: module.Namespace}, targetPod)
-			if err != nil {
-				if errors.IsNotFound(err) {
-					log.Log.Info("pod is deleted", "podName", podName)
-				} else {
-					log.Log.Error(err, "Failed to get pod", "podName", podName)
-					return ctrl.Result{}, nil
-				}
+			if err != nil && !errors.IsNotFound(err) {
+				log.Log.Error(err, "Failed to get pod", "podName", podName)
+				return ctrl.Result{}, nil
 			}
 
 			if targetPod != nil && targetPod.Name != "" {
@@ -173,9 +169,7 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(module *v1alpha1.Modu
 		log.Log.Info("start clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 		utils.RemoveFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
 		err := r.Client.Update(context.TODO(), module)
-
 		if err != nil {
-			log.Log.Error(err, "Failed remove module installed finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 			return ctrl.Result{}, err
 		}
 		log.Log.Info("finish clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
@@ -211,7 +205,7 @@ func (r *ModuleReconciler) handlePendingModuleInstance(module *v1alpha1.Module) 
 
 	selectedPods := &corev1.PodList{}
 	if err = r.List(context.TODO(), selectedPods, &client.ListOptions{Namespace: module.Namespace, LabelSelector: selector}); err != nil {
-		log.Log.Error(err, "Failed to list not allocated pod", "moduleName", module.Name)
+		log.Log.Error(err, "Failed to list unallocated pod", "moduleName", module.Name)
 	}
 
 	var pod corev1.Pod
@@ -323,7 +317,6 @@ func (r *ModuleReconciler) handleCompletingModuleInstance(module *v1alpha1.Modul
 		module.Status.Status = v1alpha1.ModuleInstanceStatusAvailable
 		err := r.Status().Update(context.TODO(), module)
 		if err != nil {
-			log.Log.Error(err, "Failed add module installed finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 			return ctrl.Result{}, err
 		}
 	}
