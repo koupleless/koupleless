@@ -21,8 +21,10 @@ public enum BuiltinCommand implements Command {
         "switch one ark biz"),
 
     QUERY_ALL_BIZ("queryAllBiz",
-        "query all ark biz(including master biz)"
-    );
+        "query all ark biz(including master biz)"),
+
+    HEALTH("health",
+            "get all health info");
 
     private final String id;
     private final String desc;

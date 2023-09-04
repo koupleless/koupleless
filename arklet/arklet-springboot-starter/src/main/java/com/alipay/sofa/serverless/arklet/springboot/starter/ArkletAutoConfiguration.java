@@ -29,5 +29,4 @@ public class ArkletAutoConfiguration {
         return new MasterBizCmdHandlerCollector();
     }
 
-
 }

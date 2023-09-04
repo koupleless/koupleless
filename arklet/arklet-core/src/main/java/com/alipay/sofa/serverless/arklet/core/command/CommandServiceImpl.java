@@ -10,11 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.sofa.ark.common.util.BizIdentityUtils;
 import com.alipay.sofa.common.utils.StringUtil;
 import com.alipay.sofa.serverless.arklet.core.api.model.ResponseCode;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HelpHandler;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryAllBizHandler;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.SwitchBizHandler;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.*;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.BizOpsCommandCoordinator;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.CommandMutexException;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
@@ -67,6 +63,7 @@ public class CommandServiceImpl implements CommandService {
         registerCommandHandler(new QueryAllBizHandler());
         registerCommandHandler(new UninstallBizHandler());
         registerCommandHandler(new SwitchBizHandler());
+        registerCommandHandler(new HealthHandler());
     }
 
     @Override

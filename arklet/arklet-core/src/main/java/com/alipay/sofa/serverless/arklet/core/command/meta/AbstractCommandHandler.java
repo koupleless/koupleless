@@ -3,6 +3,7 @@ package com.alipay.sofa.serverless.arklet.core.command.meta;
 import java.lang.reflect.ParameterizedType;
 
 import com.alipay.sofa.common.utils.StringUtil;
+import com.alipay.sofa.serverless.arklet.core.health.HealthService;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
@@ -18,6 +19,8 @@ public abstract class AbstractCommandHandler<P extends InputMeta, Q> {
 
     private final UnifiedOperationService unifiedOperationService = ArkletComponentRegistry.getOperationServiceInstance();
     private final CommandService commandService = ArkletComponentRegistry.getCommandServiceInstance();
+    private final HealthService healthService = ArkletComponentRegistry.getHealthServiceInstance();
+
 
     public abstract void validate(P p) throws CommandValidationException;
     public abstract Output<Q> handle(P p);
@@ -29,7 +32,7 @@ public abstract class AbstractCommandHandler<P extends InputMeta, Q> {
     public CommandService getCommandService() {
         return commandService;
     }
-
+    public HealthService getHealthService() {return healthService; }
 
     public Class<P> getInputClass() {
         ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
