@@ -19,11 +19,8 @@ package controller
 import (
 	"context"
 	"fmt"
-	v1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/arklet"
-	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
-	"github.com/sofastack/sofa-serverless/internal/utils"
+	"strconv"
+
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -36,7 +33,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"strconv"
+
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/internal/arklet"
+	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/utils"
+)
+
+const (
+	ProtectModuleFinalizer = "module-installed"
 )
 
 // ModuleReconciler reconciles a Module object
@@ -48,6 +54,9 @@ type ModuleReconciler struct {
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=modules,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=modules/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=modules/finalizers,verbs=update
+
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
+//+kubebuilder:rbac:groups=,resources=pods,verbs=create;delete;get;list;patch;update;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
