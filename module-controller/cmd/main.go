@@ -18,6 +18,7 @@ package main
 
 import (
 	"flag"
+	"github.com/sofastack/sofa-serverless/internal/controller"
 	"os"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -32,7 +33,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/controller"
 	//+kubebuilder:scaffold:imports
 )
 
