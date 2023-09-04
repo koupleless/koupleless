@@ -60,7 +60,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 
 	// get the moduleDeployment
 	moduleDeployment := &moduledeploymentv1alpha1.ModuleDeployment{}
-	err := r.Client.Get(context.TODO(), req.NamespacedName, moduleDeployment)
+	err := r.Client.Get(ctx, req.NamespacedName, moduleDeployment)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			log.Log.Info("moduleDeployment is deleted", "moduleDeploymentName", moduleDeployment.Name)
@@ -72,23 +72,23 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 
 	if moduleDeployment.DeletionTimestamp != nil {
 		// delete moduleDeployment
-		return r.handleDeletingModuleDeployment(moduleDeployment)
+		return r.handleDeletingModuleDeployment(ctx, moduleDeployment)
 	}
 
 	// create moduleReplicaSet
-	moduleReplicaSet, err := r.createOrGetModuleReplicas(moduleDeployment)
+	moduleReplicaSet, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
 
 	// update moduleReplicaSet
-	err = r.updateModuleReplicas(moduleDeployment, moduleReplicaSet)
+	err = r.updateModuleReplicas(ctx, moduleDeployment, moduleReplicaSet)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
 
 	// update moduleDeployment owner reference
-	err = r.updateOwnerReference(moduleDeployment)
+	err = r.updateOwnerReference(ctx, moduleDeployment)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -96,14 +96,14 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 }
 
 // handle deleting module deployment
-func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (ctrl.Result, error) {
+func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (ctrl.Result, error) {
 	if !utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer) {
 		return ctrl.Result{}, nil
 	}
 
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{}
 	moduleReplicaSetName := getModuleReplicasName(moduleDeployment.Name)
-	err := r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleReplicaSetName}, moduleReplicaSet)
+	err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleReplicaSetName}, moduleReplicaSet)
 	existReplicaset := true
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -114,7 +114,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(moduleDeploy
 		}
 	}
 	if existReplicaset {
-		err := r.Client.Delete(context.TODO(), moduleReplicaSet)
+		err := r.Client.Delete(ctx, moduleReplicaSet)
 		if err != nil {
 			log.Log.Error(err, "Failed to delete moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSetName)
 			return ctrl.Result{}, err
@@ -124,7 +124,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(moduleDeploy
 	} else {
 		log.Log.Info("moduleReplicaSet is deleted, remove moduleDeployment finalizer", "moduleDeploymentName", moduleDeployment.Name)
 		utils.RemoveFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
-		err := r.Client.Update(context.TODO(), moduleDeployment)
+		err := r.Client.Update(ctx, moduleDeployment)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -133,7 +133,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(moduleDeploy
 }
 
 // update moduleDeployment owner reference
-func (r *ModuleDeploymentReconciler) updateOwnerReference(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) error {
+func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) error {
 	moduleDeploymentOwnerReferenceExist := false
 	for _, ownerReference := range moduleDeployment.GetOwnerReferences() {
 		if moduleDeployment.Spec.BaseAppName == ownerReference.Name {
@@ -143,7 +143,7 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(moduleDeployment *modu
 
 	if !moduleDeploymentOwnerReferenceExist {
 		deployment := &v1.Deployment{}
-		err := r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseAppName}, deployment)
+		err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseAppName}, deployment)
 		if err != nil {
 			log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 			return err
@@ -159,7 +159,7 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(moduleDeployment *modu
 		})
 		moduleDeployment.SetOwnerReferences(ownerReference)
 		utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
-		err = r.Client.Update(context.TODO(), moduleDeployment)
+		err = r.Client.Update(ctx, moduleDeployment)
 		if err != nil {
 			log.Log.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
 			return err
@@ -169,24 +169,24 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(moduleDeployment *modu
 }
 
 // create or get module replicas
-func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
+func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
 	var err error
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{}
 	moduleReplicaSetName := getModuleReplicasName(moduleDeployment.Name)
 	for i := 0; i < 3; i++ {
-		err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleReplicaSetName}, moduleReplicaSet)
+		err = r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleReplicaSetName}, moduleReplicaSet)
 		if err != nil {
 			log.Log.Info("get module replicaSet failed", "name", moduleReplicaSetName, "error", err)
 			if errors.IsNotFound(err) {
 				log.Log.Info("moduleReplicaSet is not exist", "name", moduleReplicaSetName)
 				deployment := &v1.Deployment{}
-				err := r.Client.Get(context.TODO(), types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseAppName}, deployment)
+				err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseAppName}, deployment)
 				if err != nil {
 					log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 					continue
 				}
 				moduleReplicaSet := r.generateModuleReplicas(moduleDeployment, deployment)
-				err = r.Client.Create(context.TODO(), moduleReplicaSet)
+				err = r.Client.Create(ctx, moduleReplicaSet)
 				if err != nil {
 					log.Log.Error(err, "Failed to create moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
 					continue
@@ -202,13 +202,13 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(moduleDeployment 
 }
 
 // update module replicas
-func (r *ModuleDeploymentReconciler) updateModuleReplicas(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+func (r *ModuleDeploymentReconciler) updateModuleReplicas(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	moduleSpec := moduleDeployment.Spec.Template.Spec
 	if moduleDeployment.Spec.Replicas != moduleReplicaSet.Spec.Replicas || isModuleChanges(moduleSpec.Module, moduleReplicaSet.Spec.Template.Spec.Module) {
 		log.Log.Info("prepare to update moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
 		moduleReplicaSet.Spec.Replicas = moduleDeployment.Spec.Replicas
 		moduleReplicaSet.Spec.Template.Spec.Module = moduleSpec.Module
-		err := r.Client.Update(context.TODO(), moduleReplicaSet)
+		err := r.Client.Update(ctx, moduleReplicaSet)
 		if err != nil {
 			log.Log.Error(err, "Failed to update moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
 			return err
