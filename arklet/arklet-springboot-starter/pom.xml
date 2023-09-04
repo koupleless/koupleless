@@ -13,7 +13,7 @@
     <artifactId>arklet-springboot-starter</artifactId>
 
     <properties>
-        <spring.boot.version>2.5.12</spring.boot.version>
+        <spring.boot.version>2.5.15</spring.boot.version>
     </properties>
 
 
