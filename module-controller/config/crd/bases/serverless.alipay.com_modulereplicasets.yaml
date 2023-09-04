@@ -95,8 +95,6 @@ spec:
                     description: Specification of the desired behavior of the module
                     properties:
                       module:
-                        description: Foo is an example field of Module. Edit module_types.go
-                          to remove/update
                         properties:
                           md5:
                             type: string
@@ -116,10 +114,21 @@ spec:
                         - url
                         - version
                         type: object
+                      scheduling:
+                        properties:
+                          limit:
+                            type: integer
+                          strategy:
+                            type: string
+                        required:
+                        - limit
+                        - strategy
+                        type: object
                       selector:
-                        description: 'INSERT ADDITIONAL SPEC FIELDS - desired state
-                          of cluster Important: Run "make" to regenerate code after
-                          modifying this file'
+                        description: A label selector is a label query over a set
+                          of resources. The result of matchLabels and matchExpressions
+                          are ANDed. An empty label selector matches all objects.
+                          A null label selector matches no objects.
                         properties:
                           matchExpressions:
                             description: matchExpressions is a list of label selector
@@ -166,6 +175,7 @@ spec:
                         x-kubernetes-map-type: atomic
                     required:
                     - module
+                    - scheduling
                     type: object
                 type: object
             type: object

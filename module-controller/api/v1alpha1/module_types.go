@@ -34,6 +34,13 @@ const (
 	ModuleInstanceStatusTerminating ModuleInstanceStatus = "Terminating"
 )
 
+type ModuleSchedulingStrategy string
+
+const (
+	Scatter  ModuleSchedulingStrategy = "Scatter"
+	Stacking ModuleSchedulingStrategy = "Stacking"
+)
+
 // ModuleTemplate describes a template for creating copies of a predefined module.
 type ModuleTemplate struct {
 	metav1.TypeMeta `json:",inline"`
@@ -69,13 +76,16 @@ type ModuleInfo struct {
 	Md5  string `json:"md5,omitempty"`
 }
 
+type SchedulingInfo struct {
+	Strategy       ModuleSchedulingStrategy `json:"strategy"`
+	MaxModuleCount int                      `json:"maxModuleCount"`
+}
+
 // ModuleSpec defines the desired state of Module
 type ModuleSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	Selector metav1.LabelSelector `json:"selector,omitempty"`
-	// Foo is an example field of Module. Edit module_types.go to remove/update
-	Module ModuleInfo `json:"module"`
+	Selector   metav1.LabelSelector `json:"selector,omitempty"`
+	Module     ModuleInfo           `json:"module"`
+	Scheduling SchedulingInfo       `json:"scheduling"`
 }
 
 // ModuleStatus defines the observed state of Module

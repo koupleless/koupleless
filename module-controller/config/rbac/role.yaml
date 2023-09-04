@@ -4,101 +4,100 @@ kind: ClusterRole
 metadata:
   name: manager-role
 rules:
-- apiGroups:
-  - serverless.alipay.com
-  resources:
-  - moduledeployments
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - serverless.alipay.com
-  resources:
-  - moduledeployments/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - serverless.alipay.com
-  resources:
-  - moduledeployments/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - serverless.alipay.com
-  resources:
-  - modulereplicasets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - serverless.alipay.com
-  resources:
-  - modulereplicasets/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - serverless.alipay.com
-  resources:
-  - modulereplicasets/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - serverless.alipay.com
-  resources:
-  - modules
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - serverless.alipay.com
-  resources:
-  - modules/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - serverless.alipay.com
-  resources:
-  - modules/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-    - apps
-  resources:
-    - deployments
-  verbs:
-    - get
-    - list
-    - watch
-- apiGroups: [""]
-  resources:
-    - pods
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-
+  - apiGroups:
+      - serverless.alipay.com
+    resources:
+      - moduledeployments
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - serverless.alipay.com
+    resources:
+      - moduledeployments/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - serverless.alipay.com
+    resources:
+      - moduledeployments/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - serverless.alipay.com
+    resources:
+      - modulereplicasets
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - serverless.alipay.com
+    resources:
+      - modulereplicasets/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - serverless.alipay.com
+    resources:
+      - modulereplicasets/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - serverless.alipay.com
+    resources:
+      - modules
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - serverless.alipay.com
+    resources:
+      - modules/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - serverless.alipay.com
+    resources:
+      - modules/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups: [ "" ]
+    resources:
+      - pods
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
