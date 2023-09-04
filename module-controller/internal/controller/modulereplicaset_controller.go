@@ -82,7 +82,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	if moduleReplicaSet.DeletionTimestamp != nil {
-		return r.handleDeletingModuleReplicaSet(existedModuleList, moduleReplicaSet)
+		return r.handleDeletingModuleReplicaSet(ctx, existedModuleList, moduleReplicaSet)
 	}
 
 	// compare replicas
@@ -91,13 +91,13 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
 		if deltaReplicas > 0 {
 			// scale up
-			err = r.scaleup(existedModuleList, moduleReplicaSet)
+			err = r.scaleup(ctx, existedModuleList, moduleReplicaSet)
 			if err != nil {
 				return reconcile.Result{}, err
 			}
 		} else {
 			// scale down
-			err = r.scaledown(existedModuleList, moduleReplicaSet)
+			err = r.scaledown(ctx, existedModuleList, moduleReplicaSet)
 			if err != nil {
 				return reconcile.Result{}, err
 			}
@@ -105,7 +105,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	// compare and update module
-	err = r.compareAndUpdateModule(existedModuleList, moduleReplicaSet)
+	err = r.compareAndUpdateModule(ctx, existedModuleList, moduleReplicaSet)
 	if err != nil {
 		return reconcile.Result{}, err
 	}
@@ -114,11 +114,11 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 }
 
 // scale up module
-func (r *ModuleReplicaSetReconciler) scaleup(existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
 	selector, err := metav1.LabelSelectorAsSelector(&moduleReplicaSet.Spec.Selector)
 	selectedPods := &corev1.PodList{}
-	if err = r.List(context.TODO(), selectedPods, &client.ListOptions{Namespace: moduleReplicaSet.Namespace, LabelSelector: selector}); err != nil {
+	if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: moduleReplicaSet.Namespace, LabelSelector: selector}); err != nil {
 		log.Log.Error(err, "Failed to list pod", "moduleReplicaSetName", moduleReplicaSet.Name)
 		return err
 	}
@@ -152,7 +152,7 @@ func (r *ModuleReplicaSetReconciler) scaleup(existedModuleList *moduledeployment
 		} else {
 			pod.Labels[label.ModuleInstanceCount] = "1"
 		}
-		err := r.Client.Update(context.TODO(), &pod)
+		err := r.Client.Update(ctx, &pod)
 		// TODO add pod finalizer
 		if err != nil {
 			// update pod label
@@ -160,7 +160,7 @@ func (r *ModuleReplicaSetReconciler) scaleup(existedModuleList *moduledeployment
 		}
 		// create module
 		module := r.generateModule(moduleReplicaSet, pod)
-		if err = r.Client.Create(context.TODO(), module); err != nil {
+		if err = r.Client.Create(ctx, module); err != nil {
 			log.Log.Error(err, "Failed to create module", "moduleName", module.Name)
 			return err
 		}
@@ -169,14 +169,14 @@ func (r *ModuleReplicaSetReconciler) scaleup(existedModuleList *moduledeployment
 }
 
 // scale down module
-func (r *ModuleReplicaSetReconciler) scaledown(existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+func (r *ModuleReplicaSetReconciler) scaledown(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
 	count := -deltaReplicas
 	log.Log.Info("scale down replicas", "deltaReplicas", deltaReplicas)
 	var err error
 	for _, existedModule := range existedModuleList.Items {
 		existedModule.Labels[label.DeleteModuleLabel] = "true"
-		err = r.Client.Update(context.TODO(), &existedModule)
+		err = r.Client.Update(ctx, &existedModule)
 		if err != nil {
 			log.Log.Error(err, "Failed to delete module", "module", existedModule)
 		}
@@ -189,7 +189,7 @@ func (r *ModuleReplicaSetReconciler) scaledown(existedModuleList *moduledeployme
 }
 
 // compare and update module
-func (r *ModuleReplicaSetReconciler) compareAndUpdateModule(existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+func (r *ModuleReplicaSetReconciler) compareAndUpdateModule(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	desiredModule := moduleReplicaSet.Spec.Template.Spec.Module
 	for _, existedModule := range existedModuleList.Items {
 
@@ -199,14 +199,14 @@ func (r *ModuleReplicaSetReconciler) compareAndUpdateModule(existedModuleList *m
 			existedModule.Spec.Module.Name = desiredModule.Name
 			existedModule.Spec.Module.Version = desiredModule.Version
 			existedModule.Spec.Module.Url = desiredModule.Url
-			err := r.Client.Update(context.TODO(), &existedModule)
+			err := r.Client.Update(ctx, &existedModule)
 			if err != nil {
 				log.Log.Error(err, "Failed to update module", "moduleName", existedModule.Name)
 				return err
 			}
 		}
 		if needUninstallModule {
-			err := r.Client.Delete(context.TODO(), &existedModule)
+			err := r.Client.Delete(ctx, &existedModule)
 			if err != nil {
 				log.Log.Error(err, "Failed to delete module", "moduleName", existedModule.Name)
 				return err
@@ -217,13 +217,13 @@ func (r *ModuleReplicaSetReconciler) compareAndUpdateModule(existedModuleList *m
 }
 
 // handle deleting moduleReplicaSet
-func (r *ModuleReplicaSetReconciler) handleDeletingModuleReplicaSet(existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) (ctrl.Result, error) {
+func (r *ModuleReplicaSetReconciler) handleDeletingModuleReplicaSet(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) (ctrl.Result, error) {
 	if len(existedModuleList.Items) == 0 {
 		if utils.HasFinalizer(&moduleReplicaSet.ObjectMeta, finalizer.ModuleExistedFinalizer) {
 			// all module is removed, remove module replicaset finalizer
 			log.Log.Info("all modules are deleted, remove moduleReplicaSet finalizer", "moduleReplicaSetName", moduleReplicaSet.Name)
 			utils.RemoveFinalizer(&moduleReplicaSet.ObjectMeta, finalizer.ModuleExistedFinalizer)
-			err := r.Client.Update(context.TODO(), moduleReplicaSet)
+			err := r.Client.Update(ctx, moduleReplicaSet)
 			if err != nil {
 				return ctrl.Result{}, err
 			}
@@ -234,7 +234,7 @@ func (r *ModuleReplicaSetReconciler) handleDeletingModuleReplicaSet(existedModul
 		for _, existedModule := range existedModuleList.Items {
 			log.Log.Info("moduleReplicaSet is deleting, delete module", "moduleReplicaSetName", moduleReplicaSet.Name, "module", existedModule.Name)
 			existedModule.Labels[label.DeleteModuleLabel] = "true"
-			err = r.Client.Update(context.TODO(), &existedModule)
+			err = r.Client.Update(ctx, &existedModule)
 		}
 		if err != nil {
 			log.Log.Error(err, "Failed to update uninstall module label")

@@ -77,7 +77,7 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 
 	if module.Status.Status == "" {
 		// status is unknown, parse module instance status
-		return r.parseModuleInstanceStatus(module)
+		return r.parseModuleInstanceStatus(ctx, module)
 	}
 
 	if module.Labels[label.DeleteModuleLabel] != "" || module.DeletionTimestamp != nil {
@@ -88,24 +88,24 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	// handle by the status
 	switch moduleInstanceStatus {
 	case v1alpha1.ModuleInstanceStatusTerminating:
-		return r.handleTerminatingModuleInstance(module)
+		return r.handleTerminatingModuleInstance(ctx, module)
 	case v1alpha1.ModuleInstanceStatusPending:
-		return r.handlePendingModuleInstance(module)
+		return r.handlePendingModuleInstance(ctx, module)
 	case v1alpha1.ModuleInstanceStatusPrepare:
-		return r.handlePrepareModuleInstance(module)
+		return r.handlePrepareModuleInstance(ctx, module)
 	case v1alpha1.ModuleInstanceStatusUpgrading:
-		return r.handleUpgradingModuleInstance(module)
+		return r.handleUpgradingModuleInstance(ctx, module)
 	case v1alpha1.ModuleInstanceStatusCompleting:
-		return r.handleCompletingModuleInstance(module)
+		return r.handleCompletingModuleInstance(ctx, module)
 	case v1alpha1.ModuleInstanceStatusAvailable:
-		return r.handleAvailableModuleInstance(module)
+		return r.handleAvailableModuleInstance(ctx, module)
 	default:
 		return ctrl.Result{}, fmt.Errorf("invalid status %s, key=%s", moduleInstanceStatus, utils.Key(req))
 	}
 }
 
 // module instance status is null, parse it
-func (r *ModuleReconciler) parseModuleInstanceStatus(module *v1alpha1.Module) (ctrl.Result, error) {
+func (r *ModuleReconciler) parseModuleInstanceStatus(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	ip := module.Labels[label.BaseInstanceIpLabel]
 	moduleInstanceStatus := module.Status.Status
 	if ip == "" {
@@ -114,7 +114,7 @@ func (r *ModuleReconciler) parseModuleInstanceStatus(module *v1alpha1.Module) (c
 		moduleInstanceStatus = v1alpha1.ModuleInstanceStatusPrepare
 	}
 	module.Status.Status = moduleInstanceStatus
-	err := r.Status().Update(context.TODO(), module)
+	err := r.Status().Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -122,7 +122,7 @@ func (r *ModuleReconciler) parseModuleInstanceStatus(module *v1alpha1.Module) (c
 }
 
 // handle terminating module instance
-func (r *ModuleReconciler) handleTerminatingModuleInstance(module *v1alpha1.Module) (ctrl.Result, error) {
+func (r *ModuleReconciler) handleTerminatingModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	ip := module.Labels[label.BaseInstanceIpLabel]
 	if module.DeletionTimestamp != nil {
 		log.Log.Info("start to delete module", "moduleName", module.Spec.Module.Name, "module", module.Name)
@@ -130,7 +130,7 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(module *v1alpha1.Modu
 			podName := module.Labels[label.BaseInstanceNameLabel]
 
 			targetPod := &corev1.Pod{}
-			err := r.Client.Get(context.TODO(), types.NamespacedName{Name: podName, Namespace: module.Namespace}, targetPod)
+			err := r.Client.Get(ctx, types.NamespacedName{Name: podName, Namespace: module.Namespace}, targetPod)
 			if err != nil && !errors.IsNotFound(err) {
 				log.Log.Error(err, "Failed to get pod", "podName", podName)
 				return ctrl.Result{}, nil
@@ -139,7 +139,7 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(module *v1alpha1.Modu
 			if targetPod != nil && targetPod.Name != "" {
 				// clean module label
 				delete(targetPod.Labels, fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name))
-				err = r.Client.Update(context.TODO(), targetPod)
+				err = r.Client.Update(ctx, targetPod)
 				if err != nil {
 					log.Log.Error(err, "Failed remove module label in pod", "moduleName", module.Spec.Module.Name)
 					return ctrl.Result{}, err
@@ -159,7 +159,7 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(module *v1alpha1.Modu
 		if module.Labels[label.DeleteModuleLabel] == "" {
 			// create a new module
 			log.Log.Info("start to create a new module", "moduleName", module.Spec.Module.Name, "module", module.Name)
-			err := r.createNewModule(module)
+			err := r.createNewModule(ctx, module)
 			if err != nil {
 				return ctrl.Result{}, err
 			}
@@ -168,13 +168,13 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(module *v1alpha1.Modu
 		// remove finalizer
 		log.Log.Info("start clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 		utils.RemoveFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
-		err := r.Client.Update(context.TODO(), module)
+		err := r.Client.Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
 		log.Log.Info("finish clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 	} else if module.Labels[label.DeleteModuleLabel] != "" {
-		err := r.Client.Delete(context.TODO(), module)
+		err := r.Client.Delete(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -183,13 +183,13 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(module *v1alpha1.Modu
 }
 
 // handle pending module instance
-func (r *ModuleReconciler) handlePendingModuleInstance(module *v1alpha1.Module) (ctrl.Result, error) {
+func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	log.Log.Info("module is pending", "moduleName", module.Spec.Module.Name, "module", module.Name)
 	if module.Labels[label.BaseInstanceIpLabel] != "" {
 		// already schedule ip
 		log.Log.Info("module is already schedule ip", "moduleName", module.Spec.Module.Name, "module", module.Name, "ip", module.Labels[label.BaseInstanceIpLabel])
 		module.Status.Status = v1alpha1.ModuleInstanceStatusPrepare
-		err := r.Status().Update(context.TODO(), module)
+		err := r.Status().Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -204,7 +204,7 @@ func (r *ModuleReconciler) handlePendingModuleInstance(module *v1alpha1.Module) 
 	selector = selector.Add(*noAllocatePod)
 
 	selectedPods := &corev1.PodList{}
-	if err = r.List(context.TODO(), selectedPods, &client.ListOptions{Namespace: module.Namespace, LabelSelector: selector}); err != nil {
+	if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: module.Namespace, LabelSelector: selector}); err != nil {
 		log.Log.Error(err, "Failed to list unallocated pod", "moduleName", module.Name)
 	}
 
@@ -240,7 +240,7 @@ func (r *ModuleReconciler) handlePendingModuleInstance(module *v1alpha1.Module) 
 	} else {
 		pod.Labels[label.ModuleInstanceCount] = "1"
 	}
-	err = r.Client.Update(context.TODO(), &pod)
+	err = r.Client.Update(ctx, &pod)
 	// TODO add pod finalizer
 	if err != nil {
 		return ctrl.Result{}, err
@@ -260,7 +260,7 @@ func (r *ModuleReconciler) handlePendingModuleInstance(module *v1alpha1.Module) 
 	}
 	module.SetOwnerReferences(owner)
 
-	err = r.Client.Update(context.TODO(), module)
+	err = r.Client.Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -268,10 +268,10 @@ func (r *ModuleReconciler) handlePendingModuleInstance(module *v1alpha1.Module) 
 }
 
 // handle prepare module instance
-func (r *ModuleReconciler) handlePrepareModuleInstance(module *v1alpha1.Module) (ctrl.Result, error) {
+func (r *ModuleReconciler) handlePrepareModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	// TODO pre hook
 	module.Status.Status = v1alpha1.ModuleInstanceStatusUpgrading
-	err := r.Status().Update(context.TODO(), module)
+	err := r.Status().Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -279,7 +279,7 @@ func (r *ModuleReconciler) handlePrepareModuleInstance(module *v1alpha1.Module) 
 }
 
 // handle upgrading module instance
-func (r *ModuleReconciler) handleUpgradingModuleInstance(module *v1alpha1.Module) (ctrl.Result, error) {
+func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	moduleInfo := v1alpha1.ModuleInfo{Name: module.Spec.Module.Name, Version: module.Spec.Module.Version, Url: module.Spec.Module.Url}
 	ip := module.Labels[label.BaseInstanceIpLabel]
 	installResult, err := arklet.Client().InstallBiz(ip, moduleInfo)
@@ -295,7 +295,7 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(module *v1alpha1.Module
 
 	// update status
 	module.Status.Status = v1alpha1.ModuleInstanceStatusCompleting
-	err = r.Status().Update(context.TODO(), module)
+	err = r.Status().Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -303,19 +303,19 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(module *v1alpha1.Module
 }
 
 // handle completing module instance
-func (r *ModuleReconciler) handleCompletingModuleInstance(module *v1alpha1.Module) (ctrl.Result, error) {
+func (r *ModuleReconciler) handleCompletingModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	// TODO post hook
 	if !utils.HasFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer) {
 		// add installed module finalizer
 		utils.AddFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
-		err := r.Client.Update(context.TODO(), module)
+		err := r.Client.Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
 	} else {
 		// update to available status
 		module.Status.Status = v1alpha1.ModuleInstanceStatusAvailable
-		err := r.Status().Update(context.TODO(), module)
+		err := r.Status().Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -324,13 +324,13 @@ func (r *ModuleReconciler) handleCompletingModuleInstance(module *v1alpha1.Modul
 }
 
 // handle available module instance
-func (r *ModuleReconciler) handleAvailableModuleInstance(module *v1alpha1.Module) (ctrl.Result, error) {
+func (r *ModuleReconciler) handleAvailableModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	// do nothing
 	return ctrl.Result{}, nil
 }
 
 // create a new module
-func (r *ModuleReconciler) createNewModule(module *v1alpha1.Module) error {
+func (r *ModuleReconciler) createNewModule(ctx context.Context, module *v1alpha1.Module) error {
 	moduleLabels := module.Labels
 	delete(moduleLabels, label.BaseInstanceIpLabel)
 	delete(moduleLabels, label.BaseInstanceNameLabel)
@@ -347,7 +347,7 @@ func (r *ModuleReconciler) createNewModule(module *v1alpha1.Module) error {
 			Selector: module.Spec.Selector,
 		},
 	}
-	return r.Create(context.TODO(), newModule)
+	return r.Create(ctx, newModule)
 }
 
 // SetupWithManager sets up the controller with the Manager.
