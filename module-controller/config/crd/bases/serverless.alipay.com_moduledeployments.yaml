@@ -34,7 +34,7 @@ spec:
           spec:
             description: ModuleDeploymentSpec defines the desired state of ModuleDeployment
             properties:
-              baseAppName:
+              BaseDeploymentName:
                 description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
                   Important: Run "make" to regenerate code after modifying this file'
                 type: string
@@ -158,7 +158,7 @@ spec:
                     type: object
                 type: object
             required:
-            - baseAppName
+            - BaseDeploymentName
             - deployType
             type: object
           status:
