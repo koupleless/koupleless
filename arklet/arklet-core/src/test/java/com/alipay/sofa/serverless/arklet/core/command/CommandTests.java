@@ -37,9 +37,11 @@ public class CommandTests {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ArkletComponentRegistry registry = new ArkletComponentRegistry();
-        registry.initComponents();
-        commandService = ArkletComponentRegistry.getCommandServiceInstance();
+        if (commandService == null) {
+            ArkletComponentRegistry registry = new ArkletComponentRegistry();
+            registry.initComponents();
+            commandService = ArkletComponentRegistry.getCommandServiceInstance();
+        }
     }
 
     @Test
