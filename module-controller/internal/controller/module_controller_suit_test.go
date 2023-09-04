@@ -56,7 +56,7 @@ var _ = Describe("Module Controller", func() {
 		}))
 		arklet.MockClient(svr.URL)
 
-		It("should be scheduling status", func() {
+		It("should be available status", func() {
 			pod := preparePod("fake-pod-2")
 			k8sClient.Create(context.TODO(), &pod)
 			pod.Status.PodIP = "127.0.0.1"
@@ -76,31 +76,7 @@ var _ = Describe("Module Controller", func() {
 		})
 	})
 
-	//module := prepareModule()
-	//module.Labels[label.BaseInstanceIpLabel] = "127.0.0.1"
-	//module.Labels[label.BaseInstanceNameLabel] = "fake-pod-1"
-	//module.Labels[label.ModuleReplicasetLabel] = "test-modulereplicaset"
-	//module.Labels[label.ModuleNameLabel] = "test-module"
-	//
-	//Context("create module deployment with ip", func() {
-	//
-	//
-	//	It("should be available status", func() {
-	//		Expect(k8sClient.Create(context.TODO(), &module)).Should(Succeed())
-	//
-	//		key := types.NamespacedName{
-	//			Name:      moduleName,
-	//			Namespace: namespace,
-	//		}
-	//		Eventually(func() bool {
-	//			k8sClient.Get(context.TODO(), key, &module)
-	//			log.Log.Info("module status", "status", module.Status.Status)
-	//			return module.Status.Status == v1alpha1.ModuleInstanceStatusAvailable
-	//		}, timeout, interval).Should(BeTrue())
-	//	})
-	//})
-
-	Context("delete module deployment with ip", func() {
+	Context("delete module deployment with ip by deleting module", func() {
 
 		It("should be deleted and recreate a new one", func() {
 			module.Labels[label.ModuleReplicasetLabel] = "test-modulereplicaset"
@@ -127,7 +103,7 @@ var _ = Describe("Module Controller", func() {
 		})
 	})
 
-	Context("delete module deployment with ip", func() {
+	Context("delete module deployment with ip by patching delete label", func() {
 		It("should be deleted", func() {
 			module.Labels[label.DeleteModuleLabel] = "true"
 			utils.AddFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
