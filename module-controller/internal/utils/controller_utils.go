@@ -11,6 +11,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
 )
 
 type ModuleReplicaSetsByCreationTimestamp []*moduledeploymentv1alpha1.ModuleReplicaSet
@@ -102,7 +103,7 @@ func ScaleUp(pods *corev1.PodList, existedModuleList *moduledeploymentv1alpha1.M
 	// get allocated pod
 	usedPodNames := make(map[string]bool)
 	for _, module := range existedModuleList.Items {
-		usedPodNames[module.Labels[moduledeploymentv1alpha1.BaseInstanceNameLabel]] = true
+		usedPodNames[module.Labels[label.BaseInstanceNameLabel]] = true
 	}
 
 	// allocate pod
@@ -140,7 +141,7 @@ func ScaleUp(pods *corev1.PodList, existedModuleList *moduledeploymentv1alpha1.M
 func ScaleDown(pods *corev1.PodList, existedModuleList *moduledeploymentv1alpha1.ModuleList, delta int, strategy moduledeploymentv1alpha1.ModuleSchedulingStrategy) []moduledeploymentv1alpha1.Module {
 	usedPodNames := make(map[string]int)
 	for idx, module := range existedModuleList.Items {
-		usedPodNames[module.Labels[moduledeploymentv1alpha1.BaseInstanceNameLabel]] = idx
+		usedPodNames[module.Labels[label.BaseInstanceNameLabel]] = idx
 	}
 
 	var filteredPods []PodWithModuleCount
@@ -173,7 +174,7 @@ func ScaleDown(pods *corev1.PodList, existedModuleList *moduledeploymentv1alpha1
 
 func GetModuleCountFromPod(pod *corev1.Pod) (count int) {
 	for k, _ := range pod.Labels {
-		if strings.HasPrefix(k, moduledeploymentv1alpha1.ModuleNameLabel) {
+		if strings.HasPrefix(k, label.ModuleNameLabel) {
 			count += 1
 		}
 	}

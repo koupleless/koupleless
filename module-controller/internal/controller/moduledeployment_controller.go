@@ -19,6 +19,7 @@ package controller
 import (
 	"context"
 	"fmt"
+
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
@@ -34,9 +35,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/controller/utils"
 )
 
 // ModuleDeploymentReconciler reconciles a ModuleDeployment object
