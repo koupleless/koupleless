@@ -116,12 +116,12 @@ spec:
                         type: object
                       scheduling:
                         properties:
-                          limit:
+                          maxModuleCount:
                             type: integer
                           strategy:
                             type: string
                         required:
-                        - limit
+                        - maxModuleCount
                         - strategy
                         type: object
                       selector:
