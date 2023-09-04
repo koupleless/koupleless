@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.arklet.springboot.starter.health.extension.indicator;
 
 import com.alipay.sofa.serverless.arklet.core.health.indicator.ArkletBaseIndicator;
@@ -15,7 +31,7 @@ public class MasterBizHealthIndicator extends ArkletBaseIndicator {
 
     private ApplicationAvailability applicationAvailability;
 
-    private final static String MASTER_BIZ_HEALTH_INDICATOR_ID = Constants.MASTER_BIZ_HEALTH;
+    private final static String     MASTER_BIZ_HEALTH_INDICATOR_ID = Constants.MASTER_BIZ_HEALTH;
 
     public MasterBizHealthIndicator() {
         super(MASTER_BIZ_HEALTH_INDICATOR_ID);
@@ -25,7 +41,8 @@ public class MasterBizHealthIndicator extends ArkletBaseIndicator {
     protected Map<String, Object> getHealthDetails() {
         AssertUtils.assertNotNull(applicationAvailability, "applicationAvailability must not null");
         Map<String, Object> masterBizHealthDetails = new HashMap<>(1);
-        masterBizHealthDetails.put(MasterBizHealthMetrics.READINESS_STATE.getId(), applicationAvailability.getReadinessState());
+        masterBizHealthDetails.put(MasterBizHealthMetrics.READINESS_STATE.getId(),
+            applicationAvailability.getReadinessState());
         return masterBizHealthDetails;
     }
 
@@ -43,7 +60,7 @@ public class MasterBizHealthIndicator extends ArkletBaseIndicator {
             this.id = desc;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         };
     }

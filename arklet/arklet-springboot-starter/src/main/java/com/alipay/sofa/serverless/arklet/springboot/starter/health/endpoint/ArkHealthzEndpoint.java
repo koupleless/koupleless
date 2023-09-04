@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint;
 
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
@@ -23,8 +39,8 @@ public class ArkHealthzEndpoint {
     @ReadOperation
     public EndpointResponse<Map<String, Object>> getHealth() {
         return ArkHealthzEndpoint.ofResponse(Health.createHealth()
-                .putAllHealthData(healthService.getHealth())
-                .putAllHealthData(healthService.queryModuleInfo()));
+            .putAllHealthData(healthService.getHealth())
+            .putAllHealthData(healthService.queryModuleInfo()));
     }
 
     @ReadOperation
@@ -33,19 +49,25 @@ public class ArkHealthzEndpoint {
     }
 
     @ReadOperation
-    public EndpointResponse<Map<String, Object>> getModuleInfo(@Selector String moduleType, @Selector String name, @Selector String version) {
-        return ArkHealthzEndpoint.ofResponse(healthService.queryModuleInfo(moduleType, name, version));
+    public EndpointResponse<Map<String, Object>> getModuleInfo(@Selector String moduleType,
+                                                               @Selector String name,
+                                                               @Selector String version) {
+        return ArkHealthzEndpoint.ofResponse(healthService.queryModuleInfo(moduleType, name,
+            version));
     }
 
     private static EndpointResponse<Map<String, Object>> ofResponse(Health health) {
         Map<String, Object> healthData = health.getHealthData();
         EndpointResponse<Map<String, Object>> endpointResponse;
         if (Health.containsError(health, Constants.HEALTH_ENDPOINT_ERROR)) {
-            endpointResponse = EndpointResponse.ofFailed(EndpointResponseCode.ENDPOINT_NOT_FOUND, healthData);
+            endpointResponse = EndpointResponse.ofFailed(EndpointResponseCode.ENDPOINT_NOT_FOUND,
+                healthData);
         } else if (Health.containsError(health, Constants.HEALTH_ERROR)) {
-            endpointResponse = EndpointResponse.ofFailed(EndpointResponseCode.ENDPOINT_PROCESS_INTERNAL_ERROR, healthData);
+            endpointResponse = EndpointResponse.ofFailed(
+                EndpointResponseCode.ENDPOINT_PROCESS_INTERNAL_ERROR, healthData);
         } else if (Health.containsUnhealthy(health, Constants.READINESS_HEALTHY)) {
-            endpointResponse = EndpointResponse.ofFailed(EndpointResponseCode.UNHEALTHY, healthData);
+            endpointResponse = EndpointResponse
+                .ofFailed(EndpointResponseCode.UNHEALTHY, healthData);
         } else {
             endpointResponse = EndpointResponse.ofSuccess(healthData);
         }
