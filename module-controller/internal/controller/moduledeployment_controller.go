@@ -136,14 +136,14 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) error {
 	moduleDeploymentOwnerReferenceExist := false
 	for _, ownerReference := range moduleDeployment.GetOwnerReferences() {
-		if moduleDeployment.Spec.BaseAppName == ownerReference.Name {
+		if moduleDeployment.Spec.BaseDeploymentName == ownerReference.Name {
 			moduleDeploymentOwnerReferenceExist = true
 		}
 	}
 
 	if !moduleDeploymentOwnerReferenceExist {
 		deployment := &v1.Deployment{}
-		err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseAppName}, deployment)
+		err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}, deployment)
 		if err != nil {
 			log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 			return err
@@ -180,7 +180,7 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 			if errors.IsNotFound(err) {
 				log.Log.Info("moduleReplicaSet is not exist", "name", moduleReplicaSetName)
 				deployment := &v1.Deployment{}
-				err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseAppName}, deployment)
+				err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}, deployment)
 				if err != nil {
 					log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 					continue

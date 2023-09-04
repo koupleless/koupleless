@@ -103,7 +103,7 @@ type ModuleDeploymentStrategy struct {
 type ModuleDeploymentSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	BaseAppName string `json:"baseAppName"`
+	BaseDeploymentName string `json:"baseDeploymentName"`
 
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
