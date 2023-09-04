@@ -45,6 +45,15 @@ public class Output<T> {
         return output;
     }
 
+    public boolean success() {
+        return ResponseCode.SUCCESS.equals(code);
+    }
+
+    public boolean failed() {
+        return ResponseCode.FAILED.equals(code);
+    }
+
+
     public String getMessage() {
         return message;
     }

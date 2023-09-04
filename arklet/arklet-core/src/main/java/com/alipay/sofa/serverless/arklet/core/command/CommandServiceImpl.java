@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -33,12 +34,15 @@ import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.SwitchBizH
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.BizOpsCommandCoordinator;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.CommandMutexException;
+import com.alipay.sofa.serverless.arklet.core.command.executor.ExecutorServiceManager;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizOps;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
+import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord;
+import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecordHolder;
 import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletInitException;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
@@ -104,13 +108,42 @@ public class CommandServiceImpl implements CommandService {
                     BizOpsCommandCoordinator.getCurrentProcessingCommand(arkBizMeta.getBizName(),
                         arkBizMeta.getBizVersion()).getId()));
             }
-            try {
-                BizOpsCommandCoordinator.putBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion(), handler.command());
-                return handler.handle(input);
-            } catch (Throwable e) {
-                throw e;
-            } finally {
-                BizOpsCommandCoordinator.popBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+            if (arkBizMeta.isAync()) {
+                String requestId = arkBizMeta.getRequestId();
+                if (ProcessRecordHolder.getProcessRecord(requestId) != null) {
+                    // 该requestId对应指令，已经有执行记录，不可重复执行
+                    return Output.ofFailed(String.format("The request corresponding to the requestId(%s) has been executed.", requestId));
+                }
+                final ProcessRecord processRecord = ProcessRecordHolder.createProcessRecord(requestId);
+                ThreadPoolExecutor executor = ExecutorServiceManager.getArkBizOpsExecutor();
+                executor.submit(() -> {
+                    try {
+                        BizOpsCommandCoordinator.putBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion(), handler.command());
+                        processRecord.start();
+                        Output output = handler.handle(input);
+                        if (output.success()) {
+                            processRecord.success();
+                        } else {
+                            processRecord.fail(output.getMessage());
+                        }
+                    } catch (Throwable throwable) {
+                        processRecord.fail(throwable.getMessage(), throwable);
+                        LOGGER.error("Error happened when handling command, requestId=" + requestId, throwable);
+                    } finally {
+                        processRecord.markFinishTime();
+                        BizOpsCommandCoordinator.popBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+                    }
+                });
+                return Output.ofSuccess(processRecord);
+            } else {
+                try {
+                    BizOpsCommandCoordinator.putBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion(), handler.command());
+                    return handler.handle(input);
+                } catch (Throwable e) {
+                    throw e;
+                } finally {
+                    BizOpsCommandCoordinator.popBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+                }
             }
         }
         return handler.handle(input);
