@@ -2,19 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.alipay.sofa</groupId>
+    <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>arklet</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>arklet-core</module>
-        <module>arklet-springboot-starter</module>
-    </modules>
-
+    <version>${revision}</version>
+    <modelVersion>4.0.0</modelVersion>
     <properties>
+        <revision>1.0.0-SNAPSHOT</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -31,41 +24,42 @@
         <guice.version>4.0</guice.version>
         <netty.version>4.1.42.Final</netty.version>
         <logback.version>1.2.9</logback.version>
-        <lombok.version>1.18.12</lombok.version>
+        <lombok.version>1.18.22</lombok.version>
         <junit.version>4.13.1</junit.version>
+        <mockito.version>4.8.1</mockito.version>
+        <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
+        <sofa.ark.version>2.2.3-SNAPSHOT</sofa.ark.version>
         <oshi.version>6.4.5</oshi.version>
+        <guava.version>16.0.1</guava.version>
+        <fastjson.version>1.2.69</fastjson.version>
     </properties>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>todo</description>
+    <url>https://github.com/sofastack/sofa-serverless/arklet</url>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>arklet-core</module>
+        <module>arklet-springboot-starter</module>
+    </modules>
 
 
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <dependencyManagement>
         <dependencies>
-
-            <dependency>
-                <groupId>com.alipay.sofa</groupId>
-                <artifactId>arklet-core</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alipay.sofa</groupId>
-                <artifactId>arklet-springboot-actuator</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-
-            <!--            内部模块依赖-->
-            <dependency>
-                <groupId>com.alipay.sofa</groupId>
-                <artifactId>arklet</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-
             <!--            sofa-ark依赖-->
             <dependency>
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>sofa-ark-api</artifactId>
-                <version>2.2.3-SNAPSHOT</version>
+                <version>${sofa.ark.version}</version>
             </dependency>
 
             <dependency>
@@ -83,13 +77,13 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>16.0.1</version>
+                <version>${guava.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                <version>1.2.69</version>
+                <version>${fastjson.version}</version>
             </dependency>
 
             <dependency>
@@ -116,71 +110,110 @@
                 <version>${lombok.version}</version>
             </dependency>
 
+            <!--            内部依赖-->
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>arklet-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>arklet-springboot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!--            测试-->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <name>${project.groupId}:${project.artifactId}</name>
-    <description>todo</description>
-    <url>https://github.com/sofastack/sofa-serverless</url>
-
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
 
     <build>
         <plugins>
-            <!--            <plugin>-->
-            <!--                <groupId>com.mycila</groupId>-->
-            <!--                <artifactId>license-maven-plugin</artifactId>-->
-            <!--                <version>${license.maven.plugin}</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <phase>generate-sources</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>remove</goal>-->
-            <!--                            <goal>format</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--                <configuration>-->
-            <!--                    <quiet>true</quiet>-->
-            <!--                    <header>${user.dir}/HEADER</header>-->
-            <!--                    <includes>-->
-            <!--                        <include>**/src/main/java/**</include>-->
-            <!--                        <include>**/src/test/java/**</include>-->
-            <!--                    </includes>-->
-            <!--                    <strictCheck>true</strictCheck>-->
-            <!--                    <mapping>-->
-            <!--                        <java>SLASHSTAR_STYLE</java>-->
-            <!--                    </mapping>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${license.maven.plugin}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>remove</goal>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <quiet>true</quiet>
+                    <header>${user.dir}/HEADER</header>
+                    <includes>
+                        <include>**/src/main/java/**</include>
+                        <include>**/src/test/java/**</include>
+                    </includes>
+                    <strictCheck>true</strictCheck>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                    </mapping>
+                </configuration>
+            </plugin>
 
-            <!--            <plugin>-->
-            <!--                <groupId>com.googlecode.maven-java-formatter-plugin</groupId>-->
-            <!--                <artifactId>maven-java-formatter-plugin</artifactId>-->
-            <!--                <version>${maven.java.formatter.plugin}</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <goals>-->
-            <!--                            <goal>format</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--                <configuration>-->
-            <!--                    <configFile>${user.dir}/Formatter.xml</configFile>-->
-            <!--                    <encoding>${project.encoding}</encoding>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
+            <plugin>
+                <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+                <artifactId>maven-java-formatter-plugin</artifactId>
+                <version>${maven.java.formatter.plugin}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configFile>${user.dir}/Formatter.xml</configFile>
+                    <encoding>${project.encoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <inherited>true</inherited>
+                <configuration>
+                    <!-- 避免IDE将 .flattened-pom.xml 自动识别为功能模块 -->
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -190,9 +223,6 @@
                     <encoding>${project.encoding}</encoding>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
 
@@ -209,25 +239,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-javadoc-plugin</artifactId>-->
-            <!--                <version>${maven.javadoc.plugin}</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>attach-javadocs</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>jar</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <docencoding>UTF-8</docencoding>-->
-            <!--                            <charset>UTF-8</charset>-->
-            <!--                            <encoding>UTF-8</encoding>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
 
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -360,6 +371,5 @@
             </pluginRepositories>
         </profile>
     </profiles>
-
 
 </project>
