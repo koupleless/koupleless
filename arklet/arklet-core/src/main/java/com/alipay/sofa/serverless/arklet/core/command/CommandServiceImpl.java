@@ -28,7 +28,6 @@ import com.alipay.sofa.common.utils.StringUtil;
 import com.alipay.sofa.serverless.arklet.core.api.model.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.*;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.BizOpsCommandCoordinator;
-import com.alipay.sofa.serverless.arklet.core.command.coordinate.CommandMutexException;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizOps;
@@ -92,8 +91,7 @@ public class CommandServiceImpl implements CommandService {
     }
 
     @Override
-    public Output<?> process(String cmd, Map content) throws CommandValidationException,
-                                                     CommandMutexException {
+    public Output<?> process(String cmd, Map content) throws CommandValidationException {
         AbstractCommandHandler handler = getHandler(cmd);
         InputMeta input = toJavaBean(handler.getInputClass(), content);
         handler.validate(input);
@@ -102,9 +100,9 @@ public class CommandServiceImpl implements CommandService {
             ArkBizMeta arkBizMeta = (ArkBizMeta) input;
             AssertUtils.assertNotNull(arkBizMeta,
                 "when execute bizOpsHandler, arkBizMeta should not be null");
-            boolean conflict = BizOpsCommandCoordinator.existBizProcessing(arkBizMeta.getBizName(),
-                arkBizMeta.getBizVersion());
-            if (conflict) {
+            boolean canProcess = BizOpsCommandCoordinator.checkAndLock(arkBizMeta.getBizName(),
+                arkBizMeta.getBizVersion(), handler.command());
+            if (!canProcess) {
                 return Output
                     .ofFailed(ResponseCode.FAILED.name()
                               + ":"
@@ -117,14 +115,10 @@ public class CommandServiceImpl implements CommandService {
                                       arkBizMeta.getBizName(), arkBizMeta.getBizVersion()).getId()));
             }
             try {
-                BizOpsCommandCoordinator.putBizExecution(arkBizMeta.getBizName(),
-                    arkBizMeta.getBizVersion(), handler.command());
-                return handler.handle(input);
-            } catch (Throwable e) {
-                throw e;
+                handler.handle(input);
             } finally {
-                BizOpsCommandCoordinator.popBizExecution(arkBizMeta.getBizName(),
-                    arkBizMeta.getBizVersion());
+                BizOpsCommandCoordinator
+                    .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
             }
         }
         return handler.handle(input);

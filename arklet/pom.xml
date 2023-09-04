@@ -26,6 +26,7 @@
         <logback.version>1.2.9</logback.version>
         <lombok.version>1.18.22</lombok.version>
         <junit.version>4.13.1</junit.version>
+        <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <sofa.ark.version>2.2.3-SNAPSHOT</sofa.ark.version>
         <oshi.version>6.4.5</oshi.version>
@@ -109,13 +110,7 @@
                 <version>${lombok.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-            </dependency>
-
-<!--            内部依赖-->
+            <!--            内部依赖-->
             <dependency>
                 <groupId>com.alipay.sofa.serverless</groupId>
                 <artifactId>arklet-core</artifactId>
@@ -126,6 +121,21 @@
                 <groupId>com.alipay.sofa.serverless</groupId>
                 <artifactId>arklet-springboot-starter</artifactId>
                 <version>${revision}</version>
+            </dependency>
+
+            <!--            测试-->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

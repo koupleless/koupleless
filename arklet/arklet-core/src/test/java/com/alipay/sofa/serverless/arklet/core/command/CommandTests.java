@@ -16,24 +16,45 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command;
 
+import java.util.HashMap;
+
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 
 /**
  * @author mingmen
  * @date 2023/6/26
  */
-public class CommandTest {
+public class CommandTests {
+
+    private static CommandService commandService;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        ArkletComponentRegistry registry = new ArkletComponentRegistry();
+        registry.initComponents();
+        commandService = ArkletComponentRegistry.getCommandServiceInstance();
+    }
 
     @Test
     public void registerCustomCommand() {
-        ArkletComponentRegistry registry = new ArkletComponentRegistry();
-        registry.initComponents();
-        ArkletComponentRegistry.getCommandServiceInstance().registerCommandHandler(
+        commandService.registerCommandHandler(
             new CustomCommandHandler());
-        CustomCommandHandler handler = (CustomCommandHandler) ArkletComponentRegistry
-            .getCommandServiceInstance().getHandler(CustomCommand.HELLO);
+        CustomCommandHandler handler = (CustomCommandHandler) commandService.getHandler(CustomCommand.HELLO);
         Assert.assertNotNull(handler);
     }
+
+    @Test
+    public void process() throws Exception {
+        Output output = commandService.process(BuiltinCommand.HELP.getId(), new HashMap());
+        Assert.assertNotNull(output);
+    }
+
+
 }
