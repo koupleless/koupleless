@@ -1,0 +1,67 @@
+name: Arklet Unit Test
+run-name: ${{ github.actor }} pushed arklet code
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'arklet/**'
+      
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'arklet/**'
+      
+  # enable manually running the workflow
+  workflow_dispatch:
+
+env:
+  WORK_DIR: arklet
+
+defaults:
+  run:
+    working-directory: arklet
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.12.0
+        with: 
+          distribution: adopt
+          java-version: 8
+
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v.4.5
+        with:
+          maven-version: 3.9.4
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: Test
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+          && sh ./check_format.sh
+          && mvn test
+
+      - name: Codecov
+        uses: codecov/codecov-action@v1
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.12.0
+        with: 
+          distribution: adopt
+          java-version: 17
+
+      - name: Test
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+          && sh ./check_format.sh
+          && mvn test
