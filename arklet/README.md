@@ -68,22 +68,45 @@ The http protocol is enabled and the default port is 1238
 {
     "bizName": "test",
     "bizVersion": "1.0.0",
+    // local path should start with file://, alse support remote url which can be downloaded
     "bizUrl": "file:///Users/jaimezhang/workspace/github/sofa-ark-dynamic-guides/dynamic-provider/target/dynamic-provider-1.0.0-ark-biz.jar"
 }
 ```
-- output sample:
+
+- output sample(success):
 ```json
 {
   "code":"SUCCESS",
-  "data":[
-    {
-      "bizName":"dynamic-provider",
-      "bizVersion":"1.0.0",
-      ...
-    }
-  ]
+  "data":{
+    "bizInfos":[
+      {
+        "bizName":"dynamic-provider",
+        "bizState":"ACTIVATED",
+        "bizVersion":"1.0.0",
+        "declaredMode":true,
+        "identity":"dynamic-provider:1.0.0",
+        "mainClass":"io.sofastack.dynamic.provider.ProviderApplication",
+        "priority":100,
+        "webContextPath":"provider"
+      }
+    ],
+    "code":"SUCCESS",
+    "message":"Install Biz: dynamic-provider:1.0.0 success, cost: 1092 ms, started at: 16:07:47,769"
+  }
 }
 ```
+
+- output sample(failed):
+```json
+{
+  "code":"FAILED",
+  "data":{
+    "code":"REPEAT_BIZ",
+    "message":"Biz: dynamic-provider:1.0.0 has been installed or registered."
+  }
+}
+```
+
 
 ## Uninstall a biz
 - URL: 127.0.0.1:1238/uninstallBiz
@@ -94,10 +117,21 @@ The http protocol is enabled and the default port is 1238
     "bizVersion":"1.0.0"
 }
 ```
-- output sample:
+- output sample(success):
 ```json
 {
   "code":"SUCCESS"
+}
+```
+
+- output sample(failed):
+```json
+{
+  "code":"FAILED",
+  "data":{
+    "code":"NOT_FOUND_BIZ",
+    "message":"Uninstall biz: test:1.0.0 not found."
+  }
 }
 ```
 
