@@ -2,6 +2,7 @@ package com.alipay.sofa.serverless.arklet.core.command.builtin.handler;
 
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
+import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.SwitchBizHandler.Input;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
@@ -41,6 +42,7 @@ public class SwitchBizHandler extends AbstractCommandHandler<Input, Void> implem
     public void validate(Input input) throws CommandValidationException {
         notBlank(input.getBizName(), "bizName should not be blank");
         notBlank(input.getBizVersion(), "bizVersion should not be blank");
+        isTrue(!input.isAync() || !StringUtils.isEmpty(input.getRequestId()), "requestId should not be blank when aync is true");
     }
 
     public static class Input extends ArkBizMeta {

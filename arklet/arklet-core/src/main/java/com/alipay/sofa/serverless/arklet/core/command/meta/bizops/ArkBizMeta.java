@@ -9,6 +9,8 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 public class ArkBizMeta extends InputMeta {
     private String bizName;
     private String bizVersion;
+    private String requestId;
+    private boolean aync;
 
     public String getBizName() {
         return bizName;
@@ -24,5 +26,21 @@ public class ArkBizMeta extends InputMeta {
 
     public void setBizVersion(String bizVersion) {
         this.bizVersion = bizVersion;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public boolean isAync() {
+        return aync;
+    }
+
+    public void setAync(boolean aync) {
+        this.aync = aync;
     }
 }
