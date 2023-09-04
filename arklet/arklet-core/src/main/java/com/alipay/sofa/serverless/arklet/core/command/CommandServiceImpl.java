@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.arklet.core.command;
 
 import java.util.ArrayList;
@@ -30,20 +46,24 @@ import com.google.inject.Singleton;
  * @author mingmen
  * @date 2023/6/8
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Singleton
 public class CommandServiceImpl implements CommandService {
 
-    private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
+    private static final ArkletLogger                 LOGGER     = ArkletLoggerFactory
+                                                                     .getDefaultLogger();
 
     private final Map<String, AbstractCommandHandler> handlerMap = new ConcurrentHashMap<>(16);
 
     @Override
     public void registerCommandHandler(AbstractCommandHandler handler) {
-        AssertUtils.isTrue(StringUtil.isNotBlank(handler.command().getId()), "command handler id should not be blank");
-        AssertUtils.isTrue(StringUtil.isNotBlank(handler.command().getDesc()), "command handler desc should not be blank");
+        AssertUtils.isTrue(StringUtil.isNotBlank(handler.command().getId()),
+            "command handler id should not be blank");
+        AssertUtils.isTrue(StringUtil.isNotBlank(handler.command().getDesc()),
+            "command handler desc should not be blank");
         if (handlerMap.containsKey(handler.command().getId())) {
-            throw new ArkletInitException("handler id (" + handler.command().getId() + ") duplicated");
+            throw new ArkletInitException("handler id (" + handler.command().getId()
+                                          + ") duplicated");
         }
         if (isBizOpsHandler(handler)) {
             validateBizOpsHandler(handler);
@@ -72,29 +92,39 @@ public class CommandServiceImpl implements CommandService {
     }
 
     @Override
-    public Output<?> process(String cmd, Map content) throws CommandValidationException, CommandMutexException {
+    public Output<?> process(String cmd, Map content) throws CommandValidationException,
+                                                     CommandMutexException {
         AbstractCommandHandler handler = getHandler(cmd);
         InputMeta input = toJavaBean(handler.getInputClass(), content);
         handler.validate(input);
 
         if (isBizOpsHandler(handler)) {
-            ArkBizMeta arkBizMeta = (ArkBizMeta)input;
-            AssertUtils.assertNotNull(arkBizMeta, "when execute bizOpsHandler, arkBizMeta should not be null");
-            boolean conflict = BizOpsCommandCoordinator.existBizProcessing(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+            ArkBizMeta arkBizMeta = (ArkBizMeta) input;
+            AssertUtils.assertNotNull(arkBizMeta,
+                "when execute bizOpsHandler, arkBizMeta should not be null");
+            boolean conflict = BizOpsCommandCoordinator.existBizProcessing(arkBizMeta.getBizName(),
+                arkBizMeta.getBizVersion());
             if (conflict) {
-                return Output.ofFailed(ResponseCode.FAILED.name() + ":" + String.format("%s %s conflict, exist unfinished command(%s) for this biz",
-                    BizIdentityUtils.generateBizIdentity(arkBizMeta.getBizName(),
-                        arkBizMeta.getBizVersion()), handler.command().getId(),
-                    BizOpsCommandCoordinator.getCurrentProcessingCommand(arkBizMeta.getBizName(),
-                        arkBizMeta.getBizVersion()).getId()));
+                return Output
+                    .ofFailed(ResponseCode.FAILED.name()
+                              + ":"
+                              + String.format(
+                                  "%s %s conflict, exist unfinished command(%s) for this biz",
+                                  BizIdentityUtils.generateBizIdentity(arkBizMeta.getBizName(),
+                                      arkBizMeta.getBizVersion()),
+                                  handler.command().getId(),
+                                  BizOpsCommandCoordinator.getCurrentProcessingCommand(
+                                      arkBizMeta.getBizName(), arkBizMeta.getBizVersion()).getId()));
             }
             try {
-                BizOpsCommandCoordinator.putBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion(), handler.command());
+                BizOpsCommandCoordinator.putBizExecution(arkBizMeta.getBizName(),
+                    arkBizMeta.getBizVersion(), handler.command());
                 return handler.handle(input);
             } catch (Throwable e) {
                 throw e;
             } finally {
-                BizOpsCommandCoordinator.popBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+                BizOpsCommandCoordinator.popBizExecution(arkBizMeta.getBizName(),
+                    arkBizMeta.getBizVersion());
             }
         }
         return handler.handle(input);
@@ -137,7 +167,10 @@ public class CommandServiceImpl implements CommandService {
     private void validateBizOpsHandler(AbstractCommandHandler handler) {
         Class inputClass = handler.getInputClass();
         if (!ArkBizMeta.class.isAssignableFrom(inputClass)) {
-            throw new ArkletInitException("handler id (" + handler.command().getId() + ") is a bizOpsHandler, its input class should inherited from " + ArkBizMeta.class.getCanonicalName());
+            throw new ArkletInitException(
+                "handler id (" + handler.command().getId()
+                        + ") is a bizOpsHandler, its input class should inherited from "
+                        + ArkBizMeta.class.getCanonicalName());
         }
     }
 

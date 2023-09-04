@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.arklet.core.health.indicator;
 
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
@@ -14,7 +30,7 @@ public class CpuIndicator extends ArkletBaseIndicator {
 
     private final CpuIndicatorHandler cpuIndicatorHandler;
 
-    private static final String CPU_INDICATOR_ID = Constants.CPU;
+    private static final String       CPU_INDICATOR_ID = Constants.CPU;
 
     public CpuIndicator() {
         super(CPU_INDICATOR_ID);
@@ -30,7 +46,8 @@ public class CpuIndicator extends ArkletBaseIndicator {
         cpuHealthDetails.put(CpuMetrics.CPU_TYPE.getId(), cpuIndicatorHandler.getCpuType());
         cpuHealthDetails.put(CpuMetrics.CPU_TOTAL_USED.getId(), cpuIndicatorHandler.getTotalUsed());
         cpuHealthDetails.put(CpuMetrics.CPU_USER_USED.getId(), cpuIndicatorHandler.getUserUsed());
-        cpuHealthDetails.put(CpuMetrics.CPU_SYSTEM_USED.getId(), cpuIndicatorHandler.getSystemUsed());
+        cpuHealthDetails.put(CpuMetrics.CPU_SYSTEM_USED.getId(),
+            cpuIndicatorHandler.getSystemUsed());
         cpuHealthDetails.put(CpuMetrics.CPU_FREE.getId(), cpuIndicatorHandler.getFree());
         return cpuHealthDetails;
     }
@@ -39,9 +56,9 @@ public class CpuIndicator extends ArkletBaseIndicator {
 
         private final CentralProcessor cpu;
 
-        private long[] prevTicks;
+        private long[]                 prevTicks;
 
-        private long[] nextTicks;
+        private long[]                 nextTicks;
 
         public CpuIndicatorHandler() {
             this.cpu = new SystemInfo().getHardware().getProcessor();
@@ -54,7 +71,7 @@ public class CpuIndicator extends ArkletBaseIndicator {
 
         public double getTotalUsed() {
             Set<CentralProcessor.TickType> tickTypeSet = new HashSet<CentralProcessor.TickType>(
-                    Arrays.asList(CentralProcessor.TickType.class.getEnumConstants()));
+                Arrays.asList(CentralProcessor.TickType.class.getEnumConstants()));
             double totalUsed = 0;
             for (CentralProcessor.TickType tickType : tickTypeSet) {
                 totalUsed += nextTicks[tickType.getIndex()] - prevTicks[tickType.getIndex()];
@@ -96,12 +113,10 @@ public class CpuIndicator extends ArkletBaseIndicator {
 
     enum CpuMetrics {
 
-        CPU_COUNT("count"),
-        CPU_TYPE("type"),
-        CPU_TOTAL_USED("total used (%)"),
-        CPU_USER_USED("user used (%)"),
-        CPU_SYSTEM_USED("system used (%)"),
-        CPU_FREE("free (%)");
+        CPU_COUNT("count"), CPU_TYPE("type"), CPU_TOTAL_USED("total used (%)"), CPU_USER_USED(
+                                                                                              "user used (%)"), CPU_SYSTEM_USED(
+                                                                                                                                "system used (%)"), CPU_FREE(
+                                                                                                                                                             "free (%)");
 
         private final String id;
 
@@ -109,7 +124,7 @@ public class CpuIndicator extends ArkletBaseIndicator {
             this.id = desc;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         };
     }
