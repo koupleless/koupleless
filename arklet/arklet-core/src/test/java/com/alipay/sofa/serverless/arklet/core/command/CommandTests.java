@@ -44,9 +44,9 @@ public class CommandTests {
 
     @Test
     public void registerCustomCommand() {
-        commandService.registerCommandHandler(
-            new CustomCommandHandler());
-        CustomCommandHandler handler = (CustomCommandHandler) commandService.getHandler(CustomCommand.HELLO);
+        commandService.registerCommandHandler(new CustomCommandHandler());
+        CustomCommandHandler handler = (CustomCommandHandler) commandService
+            .getHandler(CustomCommand.HELLO);
         Assert.assertNotNull(handler);
     }
 
@@ -55,6 +55,5 @@ public class CommandTests {
         Output output = commandService.process(BuiltinCommand.HELP.getId(), new HashMap());
         Assert.assertNotNull(output);
     }
-
 
 }
