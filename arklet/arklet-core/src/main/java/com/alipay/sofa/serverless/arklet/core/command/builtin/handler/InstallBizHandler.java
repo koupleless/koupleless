@@ -20,7 +20,6 @@ import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler.Input;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
@@ -35,8 +34,10 @@ import lombok.Setter;
  * @author mingmen
  * @date 2023/6/8
  */
-public class InstallBizHandler extends AbstractCommandHandler<Input, ClientResponse> implements
-                                                                                    ArkBizOps {
+public class InstallBizHandler extends
+                              AbstractCommandHandler<InstallBizHandler.Input, ClientResponse>
+                                                                                             implements
+                                                                                             ArkBizOps {
 
     @Override
     public Output<ClientResponse> handle(Input input) {

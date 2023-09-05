@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command;
+package com.alipay.sofa.serverless.arklet.core.command.custom;
 
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 

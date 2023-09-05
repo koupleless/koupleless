@@ -14,34 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command;
+package com.alipay.sofa.serverless.arklet.core.command.custom;
 
-import com.alipay.sofa.ark.common.util.StringUtils;
-import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
-import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
-import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
-import com.alipay.sofa.serverless.arklet.core.util.AssertUtils;
 
 /**
  * @author mingmen
- * @date 2023/8/6
+ * @date 2023/6/14
  */
-public class CustomCommandHandler extends AbstractCommandHandler<Input, String> {
+public enum CustomCommand implements Command {
 
-    @Override
-    public void validate(Input input) throws CommandValidationException {
-        AssertUtils.isTrue(input.id > 0, "input id should larger than 0");
-        AssertUtils.isTrue(!StringUtils.isEmpty(input.userName), "input name should not be emptu");
+    HELLO("hello", "say hello");
+
+    private final String id;
+    private final String desc;
+
+    CustomCommand(String id, String desc) {
+        this.id = id;
+        this.desc = desc;
     }
 
     @Override
-    public Output<String> handle(Input input) {
-        return Output.ofSuccess("hello world");
+    public String getId() {
+        return this.id;
     }
 
     @Override
-    public Command command() {
-        return CustomCommand.HELLO;
+    public String getDesc() {
+        return this.desc;
     }
 }
