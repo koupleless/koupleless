@@ -5,6 +5,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -97,7 +98,7 @@ func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.Mo
 	moduleDeployment := v1alpha1.ModuleDeployment{
 		Spec: v1alpha1.ModuleDeploymentSpec{
 			BaseDeploymentName: baseDeploymentName,
-			DeployType:         "symmetric",
+			DeployType:         moduledeploymentv1alpha1.ModuleDeploymentDeployTypeSymmetric,
 			Template: v1alpha1.ModuleTemplateSpec{
 				Spec: v1alpha1.ModuleSpec{
 					Module: v1alpha1.ModuleInfo{

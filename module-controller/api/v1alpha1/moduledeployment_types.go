@@ -51,6 +51,13 @@ const (
 	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
 )
 
+type DeployType string
+
+const (
+	ModuleDeploymentDeployTypeSymmetric  DeployType = "symmetric"
+	ModuleDeploymentDeployTypeAsymmetric DeployType = "asymmetric"
+)
+
 type ReleaseStatus struct {
 	// Records the latest revision.
 	// +optional
@@ -109,7 +116,7 @@ type ModuleDeploymentSpec struct {
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
 	// +kubebuilder:validation:Enum={"symmetric","asymmetric"}
-	DeployType string `json:"deployType"`
+	DeployType DeployType `json:"deployType"`
 
 	Replicas int32 `json:"replicas,omitempty"`
 
