@@ -5,11 +5,13 @@ const (
 
 	ModuleVersionLabel = "module-version"
 
-	PodIpLabel = "pod-ip"
+	BaseInstanceIpLabel = "base-instance-ip"
 
-	PodNameLabel = "pod-name"
+	BaseInstanceNameLabel = "base-instance-name"
 
 	ModuleReplicasetLabel = "module-replicaset"
 
 	ModuleDeploymentLabel = "module-deployment"
+
+	DeleteModuleLabel = "delete-module"
 )

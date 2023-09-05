@@ -1,8 +1,30 @@
-# API
+# Overview
+
+Arklet provides an operational interface for delivery of SofaArk bases and modules. With Arklet, the release and operation of Ark Biz can be easily and flexibly operated.
+
+Arklet is internally constructed by **ArkletComponent**
+
+![png](https://user-images.githubusercontent.com/11410549/264982346-6a890bec-0c62-403a-81e4-ee0e6246ad23.png)
+- ApiClient: The core components responsible for interacting with the outside world
+- CommandService: Arklet exposes capability instruction definition and extension
+- OperationService: Ark Biz interacts with SofaArk to add, delete, modify, and encapsulate basic capabilities
+- HealthService: Based on health and stability, base, Biz, system and other indicators are calculated
+
+Of course, you can also extend Arklet's component capabilities by implementing the **ArkletComponent** interface
+
+# Command Extension
+The Arklet exposes the instruction API externally and handles the instruction internally through a CommandHandler mapped from each API.
+> CommandHandler related extensions belong to the unified management of the CommandService component
+
+You can customize extension commands by inheriting **AbstractCommandHandler**
+
+## Build-in Command API
 
 All of the following instruction apis access the arklet using the POST(application/json) request format
 
 The http protocol is enabled and the default port is 1238
+> You can set `sofa.serverless.arklet.http.port` JVM startup parameters override the default port
+
 
 ## Query the supported commands
 - URL: 127.0.0.1:1238/help
@@ -46,22 +68,45 @@ The http protocol is enabled and the default port is 1238
 {
     "bizName": "test",
     "bizVersion": "1.0.0",
-    "arkBizFilePath": "/Users/jaimezhang/workspace/github/sofa-ark-dynamic-guides/dynamic-provider/target/dynamic-provider-1.0.0-ark-biz.jar"
+    // local path should start with file://, alse support remote url which can be downloaded
+    "bizUrl": "file:///Users/jaimezhang/workspace/github/sofa-ark-dynamic-guides/dynamic-provider/target/dynamic-provider-1.0.0-ark-biz.jar"
 }
 ```
-- output sample:
+
+- output sample(success):
 ```json
 {
   "code":"SUCCESS",
-  "data":[
-    {
-      "bizName":"dynamic-provider",
-      "bizVersion":"1.0.0",
-      ...
-    }
-  ]
+  "data":{
+    "bizInfos":[
+      {
+        "bizName":"dynamic-provider",
+        "bizState":"ACTIVATED",
+        "bizVersion":"1.0.0",
+        "declaredMode":true,
+        "identity":"dynamic-provider:1.0.0",
+        "mainClass":"io.sofastack.dynamic.provider.ProviderApplication",
+        "priority":100,
+        "webContextPath":"provider"
+      }
+    ],
+    "code":"SUCCESS",
+    "message":"Install Biz: dynamic-provider:1.0.0 success, cost: 1092 ms, started at: 16:07:47,769"
+  }
 }
 ```
+
+- output sample(failed):
+```json
+{
+  "code":"FAILED",
+  "data":{
+    "code":"REPEAT_BIZ",
+    "message":"Biz: dynamic-provider:1.0.0 has been installed or registered."
+  }
+}
+```
+
 
 ## Uninstall a biz
 - URL: 127.0.0.1:1238/uninstallBiz
@@ -72,10 +117,21 @@ The http protocol is enabled and the default port is 1238
     "bizVersion":"1.0.0"
 }
 ```
-- output sample:
+- output sample(success):
 ```json
 {
   "code":"SUCCESS"
+}
+```
+
+- output sample(failed):
+```json
+{
+  "code":"FAILED",
+  "data":{
+    "code":"NOT_FOUND_BIZ",
+    "message":"Uninstall biz: test:1.0.0 not found."
+  }
 }
 ```
 
