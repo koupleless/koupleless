@@ -92,11 +92,11 @@ var _ = Describe("ModuleDeployment Controller", func() {
 })
 
 func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.ModuleDeployment {
-	baseAppName := "dynamic-stock-deployment"
+	baseDeploymentName := "dynamic-stock-deployment"
 
 	moduleDeployment := v1alpha1.ModuleDeployment{
 		Spec: v1alpha1.ModuleDeploymentSpec{
-			BaseDeploymentName: baseAppName,
+			BaseDeploymentName: baseDeploymentName,
 			DeployType:         "symmetric",
 			Template: v1alpha1.ModuleTemplateSpec{
 				Spec: v1alpha1.ModuleSpec{
