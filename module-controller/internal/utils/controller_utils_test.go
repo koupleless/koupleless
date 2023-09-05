@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -9,27 +10,40 @@ import (
 	"time"
 )
 
-const (
-	ExistingModuleReplicaSetFinalizer = "existing-module-replicaset"
-)
-
-func TestFinalizerFunTrue(t *testing.T) {
+func TestAddNotExistedFinalizer(t *testing.T) {
 	meta := &metav1.ObjectMeta{}
-	assert.True(t, AddFinalizer(meta, ExistingModuleReplicaSetFinalizer))
-	assert.True(t, HasFinalizer(meta, ExistingModuleReplicaSetFinalizer))
-	assert.True(t, RemoveFinalizer(meta, ExistingModuleReplicaSetFinalizer))
+	assert.True(t, AddFinalizer(meta, finalizer.ModuleReplicaSetExistedFinalizer))
 }
 
-func TestFinalizerFunFalse(t *testing.T) {
+func TestHasNotExistedFinalizer(t *testing.T) {
 	meta := &metav1.ObjectMeta{}
-	meta.Finalizers = []string{ExistingModuleReplicaSetFinalizer}
-	assert.False(t, AddFinalizer(meta, ExistingModuleReplicaSetFinalizer))
-	assert.False(t, RemoveFinalizer(meta, "test"))
-	RemoveFinalizer(meta, ExistingModuleReplicaSetFinalizer)
-	assert.False(t, HasFinalizer(meta, ExistingModuleReplicaSetFinalizer))
+	assert.False(t, HasFinalizer(meta, finalizer.ModuleReplicaSetExistedFinalizer))
 }
 
-func TestKeyFun(t *testing.T) {
+func TestRemoveNotExistedFinalizer(t *testing.T) {
+	meta := &metav1.ObjectMeta{}
+	assert.False(t, RemoveFinalizer(meta, finalizer.ModuleReplicaSetExistedFinalizer))
+}
+
+func TestAddExistedFinalizer(t *testing.T) {
+	meta := &metav1.ObjectMeta{}
+	meta.Finalizers = []string{finalizer.ModuleReplicaSetExistedFinalizer}
+	assert.False(t, AddFinalizer(meta, finalizer.ModuleReplicaSetExistedFinalizer))
+}
+
+func TestHasExistedFinalizer(t *testing.T) {
+	meta := &metav1.ObjectMeta{}
+	meta.Finalizers = []string{finalizer.ModuleReplicaSetExistedFinalizer}
+	assert.True(t, HasFinalizer(meta, finalizer.ModuleReplicaSetExistedFinalizer))
+}
+
+func TestRemoveExistedFinalizer(t *testing.T) {
+	meta := &metav1.ObjectMeta{}
+	meta.Finalizers = []string{finalizer.ModuleReplicaSetExistedFinalizer}
+	assert.True(t, RemoveFinalizer(meta, finalizer.ModuleReplicaSetExistedFinalizer))
+}
+
+func TestKeyEqual(t *testing.T) {
 	request := ctrl.Request{NamespacedName: types.NamespacedName{Namespace: "default", Name: "test"}}
 	key := Key(request)
 	assert.Equal(t, "default/test", key)
