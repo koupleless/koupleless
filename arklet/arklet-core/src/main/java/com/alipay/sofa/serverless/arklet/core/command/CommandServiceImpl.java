@@ -30,6 +30,7 @@ import com.alipay.sofa.serverless.arklet.core.api.model.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HelpHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryAllBizHandler;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryBizOpsHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.SwitchBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.BizOpsCommandCoordinator;
@@ -185,6 +186,7 @@ public class CommandServiceImpl implements CommandService {
         registerCommandHandler(new QueryAllBizHandler());
         registerCommandHandler(new UninstallBizHandler());
         registerCommandHandler(new SwitchBizHandler());
+        registerCommandHandler(new QueryBizOpsHandler());
     }
 
     private boolean isBizOpsHandler(AbstractCommandHandler handler) {
