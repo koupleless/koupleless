@@ -68,7 +68,6 @@
         <dependency>
             <groupId>com.alipay.sofa</groupId>
             <artifactId>sofa-ark-springboot-starter</artifactId>
-            <version>${sofa.ark.version}</version>
             <scope>test</scope>
         </dependency>
 
