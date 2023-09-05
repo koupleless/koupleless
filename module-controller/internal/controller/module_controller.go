@@ -146,7 +146,7 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(ctx context.Context, 
 				}
 
 				// uninstall module
-				_, err = arklet.Client().UninstallBiz(ip, module.Spec.Module.Name, module.Name)
+				_, err = arklet.Client().UninstallBiz(ip, module.Spec.Module.Name, module.Spec.Module.Version)
 				if err != nil {
 					log.Log.Error(err, "Failed post module", "moduleName", module.Spec.Module.Name)
 					return ctrl.Result{}, err
