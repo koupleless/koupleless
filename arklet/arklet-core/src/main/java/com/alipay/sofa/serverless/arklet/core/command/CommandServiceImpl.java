@@ -159,7 +159,7 @@ public class CommandServiceImpl implements CommandService {
                                             arkBizMeta.getBizName(), arkBizMeta.getBizVersion()).getId()));
                 }
                 try {
-                    handler.handle(input);
+                    return handler.handle(input);
                 } finally {
                     BizOpsCommandCoordinator
                             .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
