@@ -51,6 +51,13 @@ const (
 	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
 )
 
+type DeployType string
+
+const (
+	ModuleDeploymentDeployTypeSymmetric  DeployType = "symmetric"
+	ModuleDeploymentDeployTypeAsymmetric DeployType = "asymmetric"
+)
+
 type ReleaseStatus struct {
 	// Records the latest revision.
 	// +optional
@@ -103,11 +110,13 @@ type ModuleDeploymentStrategy struct {
 type ModuleDeploymentSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	// +kubebuilder:validation:MinLength=1
 	BaseDeploymentName string `json:"baseDeploymentName"`
 
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
-	DeployType string `json:"deployType"`
+	// +kubebuilder:validation:Enum={"symmetric","asymmetric"}
+	DeployType DeployType `json:"deployType"`
 
 	Replicas int32 `json:"replicas,omitempty"`
 

@@ -59,11 +59,14 @@ type ModuleTemplateSpec struct {
 }
 
 type ModuleInfo struct {
-	Name    string `json:"name"`
+	// +kubebuilder:validation:MinLength=1
+	Name string `json:"name"`
+	// +kubebuilder:validation:MinLength=1
 	Version string `json:"version"`
-	Url     string `json:"url"`
-	Type    string `json:"type,omitempty"`
-	Md5     string `json:"md5,omitempty"`
+	// +kubebuilder:validation:Format=uri
+	Url  string `json:"url"`
+	Type string `json:"type,omitempty"`
+	Md5  string `json:"md5,omitempty"`
 }
 
 // ModuleSpec defines the desired state of Module
