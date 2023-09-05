@@ -20,20 +20,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import com.alibaba.fastjson.JSONObject;
-
 import com.alipay.sofa.ark.common.util.BizIdentityUtils;
 import com.alipay.sofa.common.utils.StringUtil;
 import com.alipay.sofa.serverless.arklet.core.api.model.ResponseCode;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HelpHandler;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryAllBizHandler;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryBizOpsHandler;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.SwitchBizHandler;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.*;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.BizOpsCommandCoordinator;
+import com.alipay.sofa.serverless.arklet.core.command.executor.ExecutorServiceManager;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizOps;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
+import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord;
+import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecordHolder;
 import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletInitException;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
@@ -83,6 +92,7 @@ public class CommandServiceImpl implements CommandService {
         registerCommandHandler(new UninstallBizHandler());
         registerCommandHandler(new SwitchBizHandler());
         registerCommandHandler(new HealthHandler());
+        registerCommandHandler(new QueryBizOpsHandler());
     }
 
     @Override
@@ -99,26 +109,62 @@ public class CommandServiceImpl implements CommandService {
         if (isBizOpsHandler(handler)) {
             ArkBizMeta arkBizMeta = (ArkBizMeta) input;
             AssertUtils.assertNotNull(arkBizMeta,
-                "when execute bizOpsHandler, arkBizMeta should not be null");
-            boolean canProcess = BizOpsCommandCoordinator.checkAndLock(arkBizMeta.getBizName(),
-                arkBizMeta.getBizVersion(), handler.command());
-            if (!canProcess) {
-                return Output
-                    .ofFailed(ResponseCode.FAILED.name()
-                              + ":"
-                              + String.format(
-                                  "%s %s conflict, exist unfinished command(%s) for this biz",
-                                  BizIdentityUtils.generateBizIdentity(arkBizMeta.getBizName(),
-                                      arkBizMeta.getBizVersion()),
-                                  handler.command().getId(),
-                                  BizOpsCommandCoordinator.getCurrentProcessingCommand(
-                                      arkBizMeta.getBizName(), arkBizMeta.getBizVersion()).getId()));
-            }
-            try {
-                handler.handle(input);
-            } finally {
-                BizOpsCommandCoordinator
-                    .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+                    "when execute bizOpsHandler, arkBizMeta should not be null");
+            if (arkBizMeta.isAync()) {
+                String requestId = arkBizMeta.getRequestId();
+                if (ProcessRecordHolder.getProcessRecord(requestId) != null) {
+                    // 该requestId对应指令，已经有执行记录，不可重复执行
+                    return Output.ofFailed(String.format("The request corresponding to the requestId(%s) has been executed.", requestId));
+                }
+                final ProcessRecord processRecord = ProcessRecordHolder.createProcessRecord(requestId);
+                ThreadPoolExecutor executor = ExecutorServiceManager.getArkBizOpsExecutor();
+                executor.submit(() -> {
+                    try {
+                        boolean canProcess = BizOpsCommandCoordinator.checkAndLock(arkBizMeta.getBizName(),
+                                arkBizMeta.getBizVersion(), handler.command());
+                        if (!canProcess) {
+                            processRecord.fail("command conflict, exist unfinished command for this biz");
+                        } else {
+                            processRecord.start();
+                            Output output = handler.handle(input);
+                            if (output.success()) {
+                                processRecord.success();
+                            } else {
+                                processRecord.fail(output.getMessage());
+                            }
+                        }
+                    } catch (Throwable throwable) {
+                        processRecord.fail(throwable.getMessage(), throwable);
+                        LOGGER.error("Error happened when handling command, requestId=" + requestId, throwable);
+                    } finally {
+                        processRecord.markFinishTime();
+                        BizOpsCommandCoordinator
+                                .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+                    }
+                });
+                return Output.ofSuccess(processRecord);
+            } else {
+                boolean canProcess = BizOpsCommandCoordinator.checkAndLock(arkBizMeta.getBizName(),
+                        arkBizMeta.getBizVersion(), handler.command());
+                if (!canProcess) {
+                    return Output
+                            .ofFailed(ResponseCode.FAILED.name()
+                                    + ":"
+                                    + String.format(
+                                    "%s %s conflict, exist unfinished command(%s) for this biz",
+                                    BizIdentityUtils.generateBizIdentity(arkBizMeta.getBizName(),
+                                            arkBizMeta.getBizVersion()),
+                                    handler.command().getId(),
+                                    BizOpsCommandCoordinator.getCurrentProcessingCommand(
+                                            arkBizMeta.getBizName(), arkBizMeta.getBizVersion()).getId()));
+                }
+                try {
+                    handler.handle(input);
+                } finally {
+                    BizOpsCommandCoordinator
+                            .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+
+                }
             }
         }
         return handler.handle(input);

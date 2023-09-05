@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.arklet.core.command.record;
 
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
@@ -20,24 +36,23 @@ public class ProcessRecord {
 
     private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
 
-    private String                  requestId;
+    private String                    requestId;
 
-    private String                  threadName;
+    private String                    threadName;
 
-    private Status                  status;
+    private Status                    status;
 
-    private Throwable               throwable;
+    private Throwable                 throwable;
 
-    private String             errorCode;
+    private String                    errorCode;
 
-    private String             message;
+    private String                    message;
 
-    private long               startTimestamp;
+    private long                      startTimestamp;
 
-    private long               endTimestamp;
+    private long                      endTimestamp;
 
-    private long               elapsedTime;
-
+    private long                      elapsedTime;
 
     public enum Status {
 
@@ -49,7 +64,7 @@ public class ProcessRecord {
 
         FAILED("FAILED");
 
-        private String             name;
+        private String name;
 
         Status(String name) {
             this.name = name;

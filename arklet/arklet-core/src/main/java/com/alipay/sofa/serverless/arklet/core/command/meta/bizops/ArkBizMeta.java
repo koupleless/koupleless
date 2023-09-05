@@ -9,9 +9,9 @@ import lombok.Setter;
  * @date 2023/8/21
  */
 public class ArkBizMeta extends InputMeta {
-    private String bizName;
-    private String bizVersion;
-    private String requestId;
+    private String  bizName;
+    private String  bizVersion;
+    private String  requestId;
     private boolean aync;
 
     public String getBizName() {
