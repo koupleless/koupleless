@@ -46,7 +46,7 @@ public class QueryBizOpsHandler extends
         String requestId = input.getRequestId();
         ProcessRecord processRecord = ProcessRecordHolder.getProcessRecord(requestId);
         if (processRecord == null) {
-            Output.ofFailed("Not found the corresponding ops record.");
+            return Output.ofFailed("Not found the corresponding ops record.");
         }
         return Output.ofSuccess(processRecord);
     }
