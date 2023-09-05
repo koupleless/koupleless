@@ -116,10 +116,11 @@ public class CommandServiceImpl implements CommandService {
                     // 该requestId对应指令，已经有执行记录，不可重复执行
                     return Output.ofFailed(String.format("The request corresponding to the requestId(%s) has been executed.", requestId));
                 }
-                final ProcessRecord processRecord = ProcessRecordHolder.createProcessRecord(requestId);
+                final ProcessRecord processRecord = ProcessRecordHolder.createProcessRecord(requestId, arkBizMeta);
                 ThreadPoolExecutor executor = ExecutorServiceManager.getArkBizOpsExecutor();
                 executor.submit(() -> {
                     try {
+                        processRecord.setThreadName(Thread.currentThread().getName());
                         boolean canProcess = BizOpsCommandCoordinator.checkAndLock(arkBizMeta.getBizName(),
                                 arkBizMeta.getBizVersion(), handler.command());
                         if (!canProcess) {
