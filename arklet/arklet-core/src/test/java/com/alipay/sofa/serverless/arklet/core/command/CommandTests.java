@@ -17,10 +17,15 @@
 package com.alipay.sofa.serverless.arklet.core.command;
 
 import java.util.HashMap;
+import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryBizOpsHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
+import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +61,29 @@ public class CommandTests {
     public void process() throws Exception {
         Output output = commandService.process(BuiltinCommand.HELP.getId(), new HashMap());
         Assert.assertNotNull(output);
+    }
+
+    @Test
+    public void testInstallHandler() throws InterruptedException {
+        String rid = "testRequestId";
+
+        InstallBizHandler.Input input = new InstallBizHandler.Input();
+        input.setBizName("testBizName");
+        input.setBizVersion("testBizVersion");
+        input.setAync(true);
+        input.setRequestId(rid);
+        input.setBizUrl("testBizUrl");
+        Map map = JSONObject.parseObject(JSONObject.toJSONString(input), Map.class);
+        Output<?> output = commandService.process(BuiltinCommand.INSTALL_BIZ.getId(), map);
+        Assert.assertNotNull(output);
+        ProcessRecord processRecord = (ProcessRecord) output.getData();
+        Assert.assertNotNull(processRecord);
+
+        QueryBizOpsHandler.Input input1 = new QueryBizOpsHandler.Input();
+        input1.setRequestId(rid);
+        Map map1 = JSONObject.parseObject(JSONObject.toJSONString(input1), Map.class);
+        Output<?> output1 = commandService.process(BuiltinCommand.QUERY_BIZ_OPS.getId(), map1);
+        Assert.assertNotNull(output1);
     }
 
 }
