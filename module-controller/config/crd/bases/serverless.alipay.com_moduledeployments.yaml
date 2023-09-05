@@ -37,10 +37,13 @@ spec:
               BaseDeploymentName:
                 description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
                   Important: Run "make" to regenerate code after modifying this file'
+                minLength: 1
                 type: string
               deployType:
+                enum:
+                - symmetric
+                - asymmetric
                 type: string
-                minLength: 1
               minReadySeconds:
                 format: int32
                 type: integer
@@ -94,16 +97,16 @@ spec:
                           md5:
                             type: string
                           name:
-                            type: string
                             minLength: 1
+                            type: string
                           type:
                             type: string
                           url:
-                            type: string
                             format: uri
-                          version:
                             type: string
+                          version:
                             minLength: 1
+                            type: string
                         required:
                         - name
                         - url
