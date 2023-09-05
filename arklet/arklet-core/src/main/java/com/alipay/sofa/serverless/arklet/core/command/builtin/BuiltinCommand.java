@@ -22,6 +22,10 @@ public enum BuiltinCommand implements Command {
 
     QUERY_ALL_BIZ("queryAllBiz",
         "query all ark biz(including master biz)"
+    ),
+
+    QUERY_BIZ_OPS("queryBizOps",
+                          "query ark biz ops"
     );
 
     private final String id;

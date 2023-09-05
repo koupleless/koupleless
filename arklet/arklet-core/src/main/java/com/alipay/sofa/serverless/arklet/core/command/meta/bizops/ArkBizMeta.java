@@ -1,6 +1,8 @@
 package com.alipay.sofa.serverless.arklet.core.command.meta.bizops;
 
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author mingmen
