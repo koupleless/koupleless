@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.alibaba.fastjson.JSONObject;
-
 import com.alipay.sofa.ark.common.util.BizIdentityUtils;
 import com.alipay.sofa.common.utils.StringUtil;
 import com.alipay.sofa.serverless.arklet.core.api.model.ResponseCode;
@@ -35,7 +34,6 @@ import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.SwitchBizH
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.*;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.BizOpsCommandCoordinator;
-import com.alipay.sofa.serverless.arklet.core.command.coordinate.CommandMutexException;
 import com.alipay.sofa.serverless.arklet.core.command.executor.ExecutorServiceManager;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
@@ -111,26 +109,7 @@ public class CommandServiceImpl implements CommandService {
         if (isBizOpsHandler(handler)) {
             ArkBizMeta arkBizMeta = (ArkBizMeta) input;
             AssertUtils.assertNotNull(arkBizMeta,
-                "when execute bizOpsHandler, arkBizMeta should not be null");
-            boolean canProcess = BizOpsCommandCoordinator.checkAndLock(arkBizMeta.getBizName(),
-                arkBizMeta.getBizVersion(), handler.command());
-            if (!canProcess) {
-                return Output
-                    .ofFailed(ResponseCode.FAILED.name()
-                              + ":"
-                              + String.format(
-                                  "%s %s conflict, exist unfinished command(%s) for this biz",
-                                  BizIdentityUtils.generateBizIdentity(arkBizMeta.getBizName(),
-                                      arkBizMeta.getBizVersion()),
-                                  handler.command().getId(),
-                                  BizOpsCommandCoordinator.getCurrentProcessingCommand(
-                                      arkBizMeta.getBizName(), arkBizMeta.getBizVersion()).getId()));
-            }
-            try {
-                handler.handle(input);
-            } finally {
-                BizOpsCommandCoordinator
-                    .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+                    "when execute bizOpsHandler, arkBizMeta should not be null");
             if (arkBizMeta.isAync()) {
                 String requestId = arkBizMeta.getRequestId();
                 if (ProcessRecordHolder.getProcessRecord(requestId) != null) {
@@ -141,31 +120,50 @@ public class CommandServiceImpl implements CommandService {
                 ThreadPoolExecutor executor = ExecutorServiceManager.getArkBizOpsExecutor();
                 executor.submit(() -> {
                     try {
-                        BizOpsCommandCoordinator.putBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion(), handler.command());
-                        processRecord.start();
-                        Output output = handler.handle(input);
-                        if (output.success()) {
-                            processRecord.success();
+                        boolean canProcess = BizOpsCommandCoordinator.checkAndLock(arkBizMeta.getBizName(),
+                                arkBizMeta.getBizVersion(), handler.command());
+                        if (!canProcess) {
+                            processRecord.fail("command conflict, exist unfinished command for this biz");
                         } else {
-                            processRecord.fail(output.getMessage());
+                            processRecord.start();
+                            Output output = handler.handle(input);
+                            if (output.success()) {
+                                processRecord.success();
+                            } else {
+                                processRecord.fail(output.getMessage());
+                            }
                         }
                     } catch (Throwable throwable) {
                         processRecord.fail(throwable.getMessage(), throwable);
                         LOGGER.error("Error happened when handling command, requestId=" + requestId, throwable);
                     } finally {
                         processRecord.markFinishTime();
-                        BizOpsCommandCoordinator.popBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+                        BizOpsCommandCoordinator
+                                .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
                     }
                 });
                 return Output.ofSuccess(processRecord);
             } else {
+                boolean canProcess = BizOpsCommandCoordinator.checkAndLock(arkBizMeta.getBizName(),
+                        arkBizMeta.getBizVersion(), handler.command());
+                if (!canProcess) {
+                    return Output
+                            .ofFailed(ResponseCode.FAILED.name()
+                                    + ":"
+                                    + String.format(
+                                    "%s %s conflict, exist unfinished command(%s) for this biz",
+                                    BizIdentityUtils.generateBizIdentity(arkBizMeta.getBizName(),
+                                            arkBizMeta.getBizVersion()),
+                                    handler.command().getId(),
+                                    BizOpsCommandCoordinator.getCurrentProcessingCommand(
+                                            arkBizMeta.getBizName(), arkBizMeta.getBizVersion()).getId()));
+                }
                 try {
-                    BizOpsCommandCoordinator.putBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion(), handler.command());
-                    return handler.handle(input);
-                } catch (Throwable e) {
-                    throw e;
+                    handler.handle(input);
                 } finally {
-                    BizOpsCommandCoordinator.popBizExecution(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+                    BizOpsCommandCoordinator
+                            .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
+
                 }
             }
         }

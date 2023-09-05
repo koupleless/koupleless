@@ -60,7 +60,8 @@ public class SwitchBizHandler extends AbstractCommandHandler<Input, ClientRespon
     public void validate(Input input) throws CommandValidationException {
         notBlank(input.getBizName(), "bizName should not be blank");
         notBlank(input.getBizVersion(), "bizVersion should not be blank");
-        isTrue(!input.isAync() || !StringUtils.isEmpty(input.getRequestId()), "requestId should not be blank when aync is true");
+        isTrue(!input.isAync() || !StringUtils.isEmpty(input.getRequestId()),
+            "requestId should not be blank when aync is true");
     }
 
     public static class Input extends ArkBizMeta {
