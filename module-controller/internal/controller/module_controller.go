@@ -17,11 +17,13 @@ limitations under the License.
 package controller
 
 import (
-	"bytes"
 	"context"
 	"fmt"
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/controller/utils"
+	v1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/internal/arklet"
+	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/utils"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -29,17 +31,12 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/selection"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/json"
 	"k8s.io/utils/pointer"
-	"net/http"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-)
-
-const (
-	ProtectModuleFinalizer = "module-installed"
+	"strconv"
 )
 
 // ModuleReconciler reconciles a Module object
@@ -62,9 +59,9 @@ type ModuleReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.15.0/pkg/reconcile
 func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
 
-	module := &moduledeploymentv1alpha1.Module{}
+	// get module
+	module := &v1alpha1.Module{}
 	err := r.Client.Get(ctx, req.NamespacedName, module)
 
 	if err != nil {
@@ -76,51 +73,72 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 		return ctrl.Result{}, nil
 	}
 
-	ip := module.Labels[moduledeploymentv1alpha1.BaseInstanceIpLabel]
 	moduleInstanceStatus := module.Status.Status
 
-	// new module, resolve module status by ip
-	if moduleInstanceStatus == "" {
-		if ip == "" {
-			moduleInstanceStatus = moduledeploymentv1alpha1.ModuleInstanceStatusPending
-		} else {
-			moduleInstanceStatus = moduledeploymentv1alpha1.ModuleInstanceStatusPrepare
-		}
-		module.Status.Status = moduleInstanceStatus
-		err = r.Status().Update(ctx, module)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
-		return ctrl.Result{}, nil
+	if module.Status.Status == "" {
+		// status is unknown, parse module instance status
+		return r.parseModuleInstanceStatus(ctx, module)
 	}
 
-	// uninstall module label
-	if module.Labels[moduledeploymentv1alpha1.DeleteModuleLabel] != "" {
-		err := r.Client.Delete(ctx, module)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
+	if module.Labels[label.DeleteModuleLabel] != "" || module.DeletionTimestamp != nil {
+		// module is deleting, set module instance status
+		moduleInstanceStatus = v1alpha1.ModuleInstanceStatusTerminating
 	}
 
+	// handle by the status
+	switch moduleInstanceStatus {
+	case v1alpha1.ModuleInstanceStatusTerminating:
+		return r.handleTerminatingModuleInstance(ctx, module)
+	case v1alpha1.ModuleInstanceStatusPending:
+		return r.handlePendingModuleInstance(ctx, module)
+	case v1alpha1.ModuleInstanceStatusPrepare:
+		return r.handlePrepareModuleInstance(ctx, module)
+	case v1alpha1.ModuleInstanceStatusUpgrading:
+		return r.handleUpgradingModuleInstance(ctx, module)
+	case v1alpha1.ModuleInstanceStatusCompleting:
+		return r.handleCompletingModuleInstance(ctx, module)
+	case v1alpha1.ModuleInstanceStatusAvailable:
+		return r.handleAvailableModuleInstance(ctx, module)
+	default:
+		return ctrl.Result{}, fmt.Errorf("invalid status %s, key=%s", moduleInstanceStatus, utils.Key(req))
+	}
+}
+
+// module instance status is null, parse it
+func (r *ModuleReconciler) parseModuleInstanceStatus(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
+	ip := module.Labels[label.BaseInstanceIpLabel]
+	moduleInstanceStatus := module.Status.Status
+	if ip == "" {
+		moduleInstanceStatus = v1alpha1.ModuleInstanceStatusPending
+	} else {
+		moduleInstanceStatus = v1alpha1.ModuleInstanceStatusPrepare
+	}
+	module.Status.Status = moduleInstanceStatus
+	err := r.Status().Update(ctx, module)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	return ctrl.Result{}, nil
+}
+
+// handle terminating module instance
+func (r *ModuleReconciler) handleTerminatingModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
+	ip := module.Labels[label.BaseInstanceIpLabel]
 	if module.DeletionTimestamp != nil {
 		log.Log.Info("start to delete module", "moduleName", module.Spec.Module.Name, "module", module.Name)
 		if ip != "" {
-			podName := module.Labels[moduledeploymentv1alpha1.BaseInstanceNameLabel]
+			podName := module.Labels[label.BaseInstanceNameLabel]
 
 			targetPod := &corev1.Pod{}
-			err := r.Client.Get(ctx, types.NamespacedName{Name: podName, Namespace: req.Namespace}, targetPod)
-			if err != nil {
-				if errors.IsNotFound(err) {
-					log.Log.Info("pod is deleted", "podName", podName)
-				} else {
-					log.Log.Error(err, "Failed to get pod", "podName", podName)
-					return ctrl.Result{}, nil
-				}
+			err := r.Client.Get(ctx, types.NamespacedName{Name: podName, Namespace: module.Namespace}, targetPod)
+			if err != nil && !errors.IsNotFound(err) {
+				log.Log.Error(err, "Failed to get pod", "podName", podName)
+				return ctrl.Result{}, nil
 			}
 
 			if targetPod != nil && targetPod.Name != "" {
 				// clean module label
-				delete(targetPod.Labels, fmt.Sprintf("%s/%s", moduledeploymentv1alpha1.ModuleNameLabel, module.Spec.Module.Name))
+				delete(targetPod.Labels, fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name))
 				err = r.Client.Update(ctx, targetPod)
 				if err != nil {
 					log.Log.Error(err, "Failed remove module label in pod", "moduleName", module.Spec.Module.Name)
@@ -128,25 +146,20 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 				}
 
 				// uninstall module
-				log.Log.Info("start to uninstall module", "moduleName", module.Spec.Module.Name, "module", module.Name)
-				url := fmt.Sprintf("http://%s:1238/uninstallBiz", ip)
-				body := fmt.Sprintf(`{"bizName": "%s", "bizVersion": "%s"}`, module.Spec.Module.Name, module.Spec.Module.Version)
-				uninstallResult, err := http.Post(url, "application/json", bytes.NewReader([]byte(body)))
+				_, err = arklet.Client().UninstallBiz(ip, module.Spec.Module.Name, module.Spec.Module.Version)
 				if err != nil {
-					log.Log.Error(err, "Failed post module", "moduleName", module.Spec.Module.Name, "url", url, "body", body)
+					log.Log.Error(err, "Failed post module", "moduleName", module.Spec.Module.Name)
 					return ctrl.Result{}, err
 				}
-				uninstallResultJson, _ := json.Marshal(uninstallResult)
-				log.Log.Info("uninstall module success", "ip", ip, "result", uninstallResultJson)
 			} else {
 				log.Log.Info("pod not exist", "moduleName", module.Spec.Module.Name, "module", module.Name)
 			}
 		}
 
-		if module.Labels[moduledeploymentv1alpha1.DeleteModuleLabel] == "" {
+		if module.Labels[label.DeleteModuleLabel] == "" {
 			// create a new module
 			log.Log.Info("start to create a new module", "moduleName", module.Spec.Module.Name, "module", module.Name)
-			err := r.createNewModule(module)
+			err := r.createNewModule(ctx, module)
 			if err != nil {
 				return ctrl.Result{}, err
 			}
@@ -154,176 +167,192 @@ func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 
 		// remove finalizer
 		log.Log.Info("start clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
-		utils.RemoveFinalizer(&module.ObjectMeta, ProtectModuleFinalizer)
-		err = r.Client.Update(ctx, module)
-
+		utils.RemoveFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
+		err := r.Client.Update(ctx, module)
 		if err != nil {
-			log.Log.Error(err, "Failed remove module installed finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 			return ctrl.Result{}, err
 		}
 		log.Log.Info("finish clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
-		return ctrl.Result{}, nil
-	}
-
-	if moduleInstanceStatus == moduledeploymentv1alpha1.ModuleInstanceStatusPending {
-		log.Log.Info("module is pending", "moduleName", module.Spec.Module.Name, "module", module.Name)
-		if module.Labels[moduledeploymentv1alpha1.BaseInstanceIpLabel] != "" {
-			// already schedule ip
-			log.Log.Info("module is already schedule ip", "moduleName", module.Spec.Module.Name, "module", module.Name, "ip", module.Labels[moduledeploymentv1alpha1.BaseInstanceIpLabel])
-			module.Status.Status = moduledeploymentv1alpha1.ModuleInstanceStatusPrepare
-			err := r.Status().Update(ctx, module)
-			if err != nil {
-				return ctrl.Result{}, err
-			}
-		}
-
-		log.Log.Info("module wait to schedule ip", "moduleName", module.Spec.Module.Name, "module", module.Name)
-
-		// find a new pod to schedule
-		selector, err := metav1.LabelSelectorAsSelector(&module.Spec.Selector)
-
-		noAllocatePod, _ := labels.NewRequirement(fmt.Sprintf("%s/%s", moduledeploymentv1alpha1.ModuleNameLabel, module.Spec.Module.Name), selection.DoesNotExist, nil)
-		selector = selector.Add(*noAllocatePod)
-
-		selectedPods := &corev1.PodList{}
-		if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: req.Namespace, LabelSelector: selector}); err != nil {
-			log.Log.Error(err, "Failed to list not allocated pod", "moduleName", module.Name)
-		}
-
-		var pod corev1.Pod
-		existSchedulingPod := false
-		for _, podItr := range selectedPods.Items {
-			if podItr.Status.PodIP != "" {
-				// pod with ip to schedule module
-				pod = podItr
-				existSchedulingPod = true
-				break
-			}
-		}
-
-		if err != nil || !existSchedulingPod {
-			// not find a new pod, delay reconcile to wait schedule again
-			requeueAfter := utils.GetNextReconcileTime(module.ObjectMeta.CreationTimestamp.Time)
-			return ctrl.Result{RequeueAfter: requeueAfter}, nil
-		}
-
-		// find a pod to schedule
-		// TODO 调度策略
-
-		// lock the pod, update the label
-		pod.Labels[fmt.Sprintf("%s/%s", moduledeploymentv1alpha1.ModuleNameLabel, module.Spec.Module.Name)] = module.Spec.Module.Version
-		err = r.Client.Update(ctx, &pod)
-		// TODO add pod finalizer
+	} else if module.Labels[label.DeleteModuleLabel] != "" {
+		err := r.Client.Delete(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
-
-		// schedule the ip to the module
-		module.Labels[moduledeploymentv1alpha1.BaseInstanceIpLabel] = pod.Status.PodIP
-		module.Labels[moduledeploymentv1alpha1.BaseInstanceNameLabel] = pod.Name
-		owner := []metav1.OwnerReference{
-			{
-				APIVersion:         pod.APIVersion,
-				Kind:               pod.Kind,
-				UID:                pod.UID,
-				Name:               pod.Name,
-				BlockOwnerDeletion: pointer.Bool(true),
-			},
-		}
-		module.SetOwnerReferences(owner)
-
-		err = r.Client.Update(ctx, module)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
-		return ctrl.Result{}, nil
 	}
+	return ctrl.Result{}, nil
+}
 
-	if moduleInstanceStatus == moduledeploymentv1alpha1.ModuleInstanceStatusPrepare {
-		// TODO pre hook
-
-		module.Status.Status = moduledeploymentv1alpha1.ModuleInstanceStatusUpgrading
+// handle pending module instance
+func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
+	log.Log.Info("module is pending", "moduleName", module.Spec.Module.Name, "module", module.Name)
+	if module.Labels[label.BaseInstanceIpLabel] != "" {
+		// already schedule ip
+		log.Log.Info("module is already schedule ip", "moduleName", module.Spec.Module.Name, "module", module.Name, "ip", module.Labels[label.BaseInstanceIpLabel])
+		module.Status.Status = v1alpha1.ModuleInstanceStatusPrepare
 		err := r.Status().Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
-		return ctrl.Result{}, nil
 	}
 
-	if moduleInstanceStatus == moduledeploymentv1alpha1.ModuleInstanceStatusUpgrading {
-		url := fmt.Sprintf("http://%s:1238/installBiz", ip)
-		body := fmt.Sprintf(`{"bizName": "%s", "bizVersion": "%s", "arkBizFilePath": "%s"}`, module.Spec.Module.Name, module.Spec.Module.Version, module.Spec.Module.Url)
-		installResult, err := http.Post(url, "application/json", bytes.NewReader([]byte(body)))
-		if err != nil {
-			log.Log.Error(err, "Failed post module", "moduleName", module.Spec.Module.Name, "url", url, "body", body)
-			return ctrl.Result{}, err
-		}
-		installResultJson, _ := json.Marshal(installResult)
-		log.Log.Info("install module success", "ip", ip, "result", installResultJson)
+	log.Log.Info("module wait to schedule ip", "moduleName", module.Spec.Module.Name, "module", module.Name)
 
-		// update status
-		module.Status.Status = moduledeploymentv1alpha1.ModuleInstanceStatusCompleting
-		err = r.Status().Update(ctx, module)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
-		return ctrl.Result{}, nil
+	// find a new pod to schedule
+	selector, err := metav1.LabelSelectorAsSelector(&module.Spec.Selector)
+
+	noAllocatePod, _ := labels.NewRequirement(fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name), selection.DoesNotExist, nil)
+	selector = selector.Add(*noAllocatePod)
+
+	selectedPods := &corev1.PodList{}
+	if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: module.Namespace, LabelSelector: selector}); err != nil {
+		log.Log.Error(err, "Failed to list unallocated pod", "moduleName", module.Name)
 	}
 
-	if moduleInstanceStatus == moduledeploymentv1alpha1.ModuleInstanceStatusCompleting {
-		// TODO post hook
+	var pod corev1.Pod
+	existSchedulingPod := false
+	for _, podItr := range selectedPods.Items {
+		if podItr.Status.PodIP != "" {
+			// pod with ip to schedule module
+			pod = podItr
+			existSchedulingPod = true
+			break
+		}
+	}
 
-		if !utils.HasFinalizer(&module.ObjectMeta, ProtectModuleFinalizer) {
-			// add installed module finalizer
-			utils.AddFinalizer(&module.ObjectMeta, ProtectModuleFinalizer)
-			err := r.Client.Update(ctx, module)
-			if err != nil {
-				return ctrl.Result{}, err
-			}
+	if err != nil || !existSchedulingPod {
+		// not find a new pod, delay reconcile to wait schedule again
+		requeueAfter := utils.GetNextReconcileTime(module.ObjectMeta.CreationTimestamp.Time)
+		return ctrl.Result{RequeueAfter: requeueAfter}, nil
+	}
+
+	// find a pod to schedule
+	// TODO scheduling strategy
+
+	// lock the pod, update the label
+	pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name)] = module.Spec.Module.Version
+	if _, exist := pod.Labels[label.ModuleInstanceCount]; exist {
+		count, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
+		if err != nil {
+			log.Log.Error(err, "failed to update module count")
 		} else {
-			// update available
-			module.Status.Status = moduledeploymentv1alpha1.ModuleInstanceStatusAvailable
-			err = r.Status().Update(ctx, module)
-			if err != nil {
-				log.Log.Error(err, "Failed add module installed finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
-				return ctrl.Result{}, err
-			}
+			pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(count + 1)
 		}
-		return ctrl.Result{}, nil
+	} else {
+		pod.Labels[label.ModuleInstanceCount] = "1"
+	}
+	err = r.Client.Update(ctx, &pod)
+	// TODO add pod finalizer
+	if err != nil {
+		return ctrl.Result{}, err
 	}
 
-	if moduleInstanceStatus == moduledeploymentv1alpha1.ModuleInstanceStatusAvailable {
-		// do nothing
-		return ctrl.Result{}, nil
+	// schedule the ip to the module
+	module.Labels[label.BaseInstanceIpLabel] = pod.Status.PodIP
+	module.Labels[label.BaseInstanceNameLabel] = pod.Name
+	owner := []metav1.OwnerReference{
+		{
+			APIVersion:         pod.APIVersion,
+			Kind:               pod.Kind,
+			UID:                pod.UID,
+			Name:               pod.Name,
+			BlockOwnerDeletion: pointer.Bool(true),
+		},
 	}
+	module.SetOwnerReferences(owner)
 
-	return ctrl.Result{}, fmt.Errorf("invalid status %s, key=%s", moduleInstanceStatus, utils.Key(req))
-
+	err = r.Client.Update(ctx, module)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	return ctrl.Result{}, nil
 }
 
-func (r *ModuleReconciler) createNewModule(module *moduledeploymentv1alpha1.Module) error {
-	moduleLabels := module.Labels
-	delete(moduleLabels, moduledeploymentv1alpha1.BaseInstanceIpLabel)
-	delete(moduleLabels, moduledeploymentv1alpha1.BaseInstanceNameLabel)
+// handle prepare module instance
+func (r *ModuleReconciler) handlePrepareModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
+	// TODO pre hook
+	module.Status.Status = v1alpha1.ModuleInstanceStatusUpgrading
+	err := r.Status().Update(ctx, module)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	return ctrl.Result{}, nil
+}
 
-	newModule := &moduledeploymentv1alpha1.Module{
+// handle upgrading module instance
+func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
+	moduleInfo := v1alpha1.ModuleInfo{Name: module.Spec.Module.Name, Version: module.Spec.Module.Version, Url: module.Spec.Module.Url}
+	ip := module.Labels[label.BaseInstanceIpLabel]
+	installResult, err := arklet.Client().InstallBiz(ip, moduleInfo)
+	if err != nil {
+		log.Log.Error(err, "Failed install module", "moduleInfo", moduleInfo)
+		return ctrl.Result{}, err
+	}
+	if installResult.Code != arklet.Success {
+		log.Log.Error(err, "Failed install module", "moduleInfo", moduleInfo, "result", installResult)
+		// TODO update install result
+		return ctrl.Result{}, nil
+	}
+
+	// update status
+	module.Status.Status = v1alpha1.ModuleInstanceStatusCompleting
+	err = r.Status().Update(ctx, module)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	return ctrl.Result{}, nil
+}
+
+// handle completing module instance
+func (r *ModuleReconciler) handleCompletingModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
+	// TODO post hook
+	if !utils.HasFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer) {
+		// add installed module finalizer
+		utils.AddFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
+		err := r.Client.Update(ctx, module)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	} else {
+		// update to available status
+		module.Status.Status = v1alpha1.ModuleInstanceStatusAvailable
+		err := r.Status().Update(ctx, module)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+	return ctrl.Result{}, nil
+}
+
+// handle available module instance
+func (r *ModuleReconciler) handleAvailableModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
+	// do nothing
+	return ctrl.Result{}, nil
+}
+
+// create a new module
+func (r *ModuleReconciler) createNewModule(ctx context.Context, module *v1alpha1.Module) error {
+	moduleLabels := module.Labels
+	delete(moduleLabels, label.BaseInstanceIpLabel)
+	delete(moduleLabels, label.BaseInstanceNameLabel)
+
+	newModule := &v1alpha1.Module{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations:  map[string]string{},
 			Labels:       moduleLabels,
-			GenerateName: fmt.Sprintf("%s-%s-", moduleLabels[moduledeploymentv1alpha1.ModuleReplicasetLabel], moduleLabels[moduledeploymentv1alpha1.ModuleNameLabel]),
+			GenerateName: fmt.Sprintf("%s-%s-", moduleLabels[label.ModuleReplicasetLabel], moduleLabels[label.ModuleNameLabel]),
 			Namespace:    module.Namespace,
 		},
-		Spec: moduledeploymentv1alpha1.ModuleSpec{
+		Spec: v1alpha1.ModuleSpec{
 			Module:   module.Spec.Module,
 			Selector: module.Spec.Selector,
 		},
 	}
-	return r.Create(context.TODO(), newModule)
+	return r.Create(ctx, newModule)
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ModuleReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&moduledeploymentv1alpha1.Module{}).
+		For(&v1alpha1.Module{}).
 		Complete(r)
 }

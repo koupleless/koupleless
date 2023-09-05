@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/created-by: module-controller
   name: moduledeployment-sample
 spec:
-  deploymentName: dynamic-stock-deployment
+  baseDeploymentName: dynamic-stock-deployment
   template:
     spec:
       module:
