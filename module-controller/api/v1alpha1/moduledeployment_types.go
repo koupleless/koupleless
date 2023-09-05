@@ -103,10 +103,12 @@ type ModuleDeploymentStrategy struct {
 type ModuleDeploymentSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	// +kubebuilder:validation:MinLength=1
 	BaseDeploymentName string `json:"baseDeploymentName"`
 
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
+	// +kubebuilder:validation:Enum={"symmetric","asymmetric"}
 	DeployType string `json:"deployType"`
 
 	Replicas int32 `json:"replicas,omitempty"`

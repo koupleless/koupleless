@@ -97,6 +97,7 @@ func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.Mo
 	moduleDeployment := v1alpha1.ModuleDeployment{
 		Spec: v1alpha1.ModuleDeploymentSpec{
 			BaseDeploymentName: baseAppName,
+			DeployType:         "symmetric",
 			Template: v1alpha1.ModuleTemplateSpec{
 				Spec: v1alpha1.ModuleSpec{
 					Module: v1alpha1.ModuleInfo{
