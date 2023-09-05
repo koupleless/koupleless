@@ -20,34 +20,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
+
+import com.alipay.sofa.serverless.arklet.core.BaseTest;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryBizOpsHandler;
+import com.alipay.sofa.serverless.arklet.core.command.custom.CustomCommand;
+import com.alipay.sofa.serverless.arklet.core.command.custom.CustomCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 /**
  * @author mingmen
  * @date 2023/6/26
  */
-public class CommandTests {
-
-    private static CommandService commandService;
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        if (commandService == null) {
-            ArkletComponentRegistry registry = new ArkletComponentRegistry();
-            registry.initComponents();
-            commandService = ArkletComponentRegistry.getCommandServiceInstance();
-        }
-    }
+public class CommandTests extends BaseTest {
 
     @Test
     public void registerCustomCommand() {
@@ -58,7 +47,7 @@ public class CommandTests {
     }
 
     @Test
-    public void process() throws Exception {
+    public void commandProcess() throws Exception {
         Output output = commandService.process(BuiltinCommand.HELP.getId(), new HashMap());
         Assert.assertNotNull(output);
     }
