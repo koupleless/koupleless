@@ -16,9 +16,12 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.record;
 
+import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
+import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,12 +56,14 @@ public class ProcessRecordHolder {
         return processRecords.values().stream().filter(record -> StringUtils.equals(record.getStatus().name(), status)).collect(Collectors.toList());
     }
 
-    public static ProcessRecord createProcessRecord(String rid) {
+    public static ProcessRecord createProcessRecord(String rid, ArkBizMeta arkBizMeta) {
         ProcessRecord pr = new ProcessRecord();
         pr.setRequestId(rid);
-        pr.setThreadName(Thread.currentThread().getName());
+        pr.setArkBizMeta(arkBizMeta);
         pr.setStatus(INITIALIZED);
-        pr.setStartTimestamp(System.currentTimeMillis());
+        Date date = new Date();
+        pr.setStartTime(date);
+        pr.setStartTimestamp(date.getTime());
         processRecords.put(rid, pr);
         return pr;
     }

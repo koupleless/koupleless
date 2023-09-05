@@ -16,10 +16,13 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.record;
 
+import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.EXECUTING;
 import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.FAILED;
@@ -38,6 +41,8 @@ public class ProcessRecord {
 
     private String                    requestId;
 
+    private ArkBizMeta                arkBizMeta;
+
     private String                    threadName;
 
     private Status                    status;
@@ -48,7 +53,11 @@ public class ProcessRecord {
 
     private String                    message;
 
+    private Date                      startTime;
+
     private long                      startTimestamp;
+
+    private Date                      endTime;
 
     private long                      endTimestamp;
 
@@ -80,9 +89,10 @@ public class ProcessRecord {
     }
 
     public void markFinishTime() {
-        long end = System.currentTimeMillis();
-        setEndTimestamp(end);
-        setElapsedTime(end - startTimestamp);
+        Date date = new Date();
+        setEndTime(date);
+        setEndTimestamp(date.getTime());
+        setElapsedTime(date.getTime() - startTimestamp);
     }
 
     public boolean finished() {
