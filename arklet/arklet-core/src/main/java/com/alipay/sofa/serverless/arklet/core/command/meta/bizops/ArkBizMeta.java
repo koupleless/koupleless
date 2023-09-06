@@ -1,8 +1,6 @@
 package com.alipay.sofa.serverless.arklet.core.command.meta.bizops;
 
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author mingmen
@@ -12,7 +10,7 @@ public class ArkBizMeta extends InputMeta {
     private String  bizName;
     private String  bizVersion;
     private String  requestId;
-    private boolean aync;
+    private boolean async;
 
     public String getBizName() {
         return bizName;
@@ -38,11 +36,11 @@ public class ArkBizMeta extends InputMeta {
         this.requestId = requestId;
     }
 
-    public boolean isAync() {
-        return aync;
+    public boolean isAsync() {
+        return async;
     }
 
-    public void setAync(boolean aync) {
-        this.aync = aync;
+    public void setAsync(boolean async) {
+        this.async = async;
     }
 }

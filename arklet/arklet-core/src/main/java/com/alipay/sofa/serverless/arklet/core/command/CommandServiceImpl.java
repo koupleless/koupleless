@@ -110,7 +110,7 @@ public class CommandServiceImpl implements CommandService {
             ArkBizMeta arkBizMeta = (ArkBizMeta) input;
             AssertUtils.assertNotNull(arkBizMeta,
                     "when execute bizOpsHandler, arkBizMeta should not be null");
-            if (arkBizMeta.isAync()) {
+            if (arkBizMeta.isAsync()) {
                 String requestId = arkBizMeta.getRequestId();
                 if (ProcessRecordHolder.getProcessRecord(requestId) != null) {
                     // 该requestId对应指令，已经有执行记录，不可重复执行

@@ -16,21 +16,12 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command;
 
-import com.alipay.sofa.ark.api.ClientResponse;
-import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.BaseTest;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler.Input;
-import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
 import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 /**
  * @author mingmen
@@ -38,13 +29,6 @@ import static org.mockito.Mockito.when;
  */
 public class InstallBizHandlerTests extends BaseTest {
 
-    ///**
-    // * 测试用例编号：InstallBizHandlerTests001
-    // * 测试方法：handle
-    // * 测试目的：验证当获取到的ClientResponse的code为SUCCESS时，handle方法返回的Output是否为成功状态
-    // * 测试数据：Input对象，其中bizUrl属性为任意非空字符串
-    // * 预期结果：handle方法返回的Output对象为成功状态
-    // */
     //@Test
     //public void testHandle_Success() throws Throwable {
     //
@@ -68,13 +52,6 @@ public class InstallBizHandlerTests extends BaseTest {
     //    assertTrue(result.success());
     //}
 
-    ///**
-    // * 测试用例编号：InstallBizHandlerTests002
-    // * 测试方法：handle
-    // * 测试目的：验证当获取到的ClientResponse的code不为SUCCESS时，handle方法返回的Output是否为失败状态
-    // * 测试数据：Input对象，其中bizUrl属性为任意非空字符串
-    // * 预期结果：handle方法返回的Output对象为失败状态
-    // */
     //@Test
     //public void testHandle_Failure() throws Throwable {
     //
@@ -99,13 +76,6 @@ public class InstallBizHandlerTests extends BaseTest {
     //    assertFalse(result.failed());
     //}
 
-    /**
-     * 测试用例编号：InstallBizHandlerTests003
-     * 测试方法：validate
-     * 测试目的：验证当input的bizName属性为空字符串时，validate方法会抛出CommandValidationException异常
-     * 测试数据：Input对象，其中bizName属性为空字符串
-     * 预期结果：validate方法抛出CommandValidationException异常
-     */
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizName() throws CommandValidationException {
 
@@ -119,13 +89,6 @@ public class InstallBizHandlerTests extends BaseTest {
         handler.validate(input);
     }
 
-    /**
-     * 测试用例编号：InstallBizHandlerTests004
-     * 测试方法：validate
-     * 测试目的：验证当input的bizVersion属性为空字符串时，validate方法会抛出CommandValidationException异常
-     * 测试数据：Input对象，其中bizVersion属性为空字符串
-     * 预期结果：validate方法抛出CommandValidationException异常
-     */
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizVersion() throws CommandValidationException {
 
@@ -139,13 +102,6 @@ public class InstallBizHandlerTests extends BaseTest {
         handler.validate(input);
     }
 
-    /**
-     * 测试用例编号：InstallBizHandlerTests005
-     * 测试方法：validate
-     * 测试目的：验证当input的isAync属性为true且requestId为空字符串时，validate方法会抛出CommandValidationException异常
-     * 测试数据：Input对象，其中isAync属性为true，requestId属性为空字符串
-     * 预期结果：validate方法抛出CommandValidationException异常
-     */
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankRequestId() throws CommandValidationException {
 
@@ -154,20 +110,13 @@ public class InstallBizHandlerTests extends BaseTest {
 
         // 准备测试数据
         Input input = new Input();
-        input.setAync(true);
+        input.setAsync(true);
         input.setRequestId("");
 
         // 执行测试
         handler.validate(input);
     }
 
-    /**
-     * 测试用例编号：InstallBizHandlerTests006
-     * 测试方法：validate
-     * 测试目的：验证当input的bizUrl属性为空字符串时，validate方法会抛出CommandValidationException异常
-     * 测试数据：Input对象，其中bizUrl属性为空字符串
-     * 预期结果：validate方法抛出CommandValidationException异常
-     */
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizUrl() throws CommandValidationException {
         InstallBizHandler handler = (InstallBizHandler) commandService
