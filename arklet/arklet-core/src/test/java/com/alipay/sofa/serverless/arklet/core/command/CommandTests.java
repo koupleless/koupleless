@@ -59,7 +59,7 @@ public class CommandTests extends BaseTest {
         InstallBizHandler.Input input = new InstallBizHandler.Input();
         input.setBizName("testBizName");
         input.setBizVersion("testBizVersion");
-        input.setAync(true);
+        input.setAsync(true);
         input.setRequestId(rid);
         input.setBizUrl("testBizUrl");
         Map map = JSONObject.parseObject(JSONObject.toJSONString(input), Map.class);
