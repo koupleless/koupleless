@@ -33,10 +33,10 @@ import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidation
  */
 
 @SuppressWarnings("rawtypes")
-public class HelpHandler extends AbstractCommandHandler<InputMeta, List> {
+public class HelpHandler extends AbstractCommandHandler<InputMeta, List<CommandModel>> {
 
     @Override
-    public Output<List> handle(InputMeta inputMeta) {
+    public Output<List<CommandModel>> handle(InputMeta inputMeta) {
         List<AbstractCommandHandler> list = getCommandService().listAllHandlers();
         List<CommandModel> models = new ArrayList<>(list.size());
         for (AbstractCommandHandler handler : list) {

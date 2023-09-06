@@ -22,7 +22,6 @@ import java.util.Map;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
-import com.alipay.sofa.serverless.arklet.core.command.meta.CommandType;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 
 /**
