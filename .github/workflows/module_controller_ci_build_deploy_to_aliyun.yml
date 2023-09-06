@@ -33,6 +33,12 @@ jobs:
     environment: production
 
     steps:
+    - name: kubectl-simple
+      uses: steebchen/kubectl@v2.1.1
+      with:
+        config: ${{ secrets.CI_KUBE_CONFIG }}
+        command: apply -f ${{ env.WORK_DIR }}/config/samples/module-deployment-controller.yaml
+    
     - name: Checkout
       uses: actions/checkout@v3
 
