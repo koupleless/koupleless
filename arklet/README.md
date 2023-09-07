@@ -10,6 +10,10 @@ Arklet is internally constructed by **ArkletComponent**
 - OperationService: Ark Biz interacts with SofaArk to add, delete, modify, and encapsulate basic capabilities
 - HealthService: Based on health and stability, base, Biz, system and other indicators are calculated
 
+The collaboration between them is shown in the figure
+![overview](https://user-images.githubusercontent.com/11410549/266193839-7865e417-6909-4e89-bd48-c926162eaf83.jpg)
+
+
 Of course, you can also extend Arklet's component capabilities by implementing the **ArkletComponent** interface
 
 # Command Extension
