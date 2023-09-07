@@ -30,7 +30,7 @@ import com.alipay.sofa.serverless.arklet.core.health.model.BizHealthMeta;
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
 import com.alipay.sofa.serverless.arklet.core.health.model.PluginHealthMeta;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.model.BizModel;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.model.BizInfo;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.model.PluginModel;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
@@ -99,7 +99,7 @@ public class HealthServiceImpl implements HealthService {
     @Override
     public Health queryModuleInfo() {
         return Health.createHealth().putAllHealthData(queryMasterBiz())
-            .putAllHealthData(queryModuleInfo(new BizModel()))
+            .putAllHealthData(queryModuleInfo(new BizInfo()))
             .putAllHealthData(queryModuleInfo(new PluginModel()));
     }
 
@@ -110,10 +110,10 @@ public class HealthServiceImpl implements HealthService {
             AssertUtils.isTrue(StringUtils.isEmpty(type) || Constants.typeOfInfo(type),
                 "illegal type: %s", type);
             if (StringUtils.isEmpty(type) || Constants.BIZ.equals(type)) {
-                BizModel bizModel = new BizModel();
-                bizModel.setBizName(name);
-                bizModel.setBizVersion(version);
-                health.putAllHealthData(queryModuleInfo(bizModel));
+                BizInfo bizInfo = new BizInfo();
+                bizInfo.setBizName(name);
+                bizInfo.setBizVersion(version);
+                health.putAllHealthData(queryModuleInfo(bizInfo));
             }
             if (StringUtils.isEmpty(type) || Constants.PLUGIN.equals(type)) {
                 PluginModel pluginModel = new PluginModel();
@@ -128,8 +128,8 @@ public class HealthServiceImpl implements HealthService {
     }
 
     @Override
-    public Health queryModuleInfo(BizModel bizModel) {
-        String bizName = bizModel.getBizName(), bizVersion = bizModel.getBizVersion();
+    public Health queryModuleInfo(BizInfo bizInfo) {
+        String bizName = bizInfo.getBizName(), bizVersion = bizInfo.getBizVersion();
         Health health = Health.createHealth();
         try {
             if (StringUtils.isEmpty(bizName) && StringUtils.isEmpty(bizVersion)) {
