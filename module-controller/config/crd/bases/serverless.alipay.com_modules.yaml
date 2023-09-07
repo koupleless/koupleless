@@ -109,7 +109,17 @@ spec:
             description: ModuleStatus defines the observed state of Module
             properties:
               status:
-                type: string
+                properties:
+                  last_transition_time:
+                    description: Last time the ModuleInstanceStatus transitioned from
+                      one status to another.
+                    format: date-time
+                    type: string
+                  status:
+                    description: Status of the ModuleInstanceStatus, one of Pending,
+                      Prepare, Upgrading, Completing, Available, Terminating.
+                    type: string
+                type: object
             type: object
         type: object
     served: true
