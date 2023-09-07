@@ -128,16 +128,6 @@ undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/confi
 .PHONY: dev
 dev: ## create all resource
 	@cat config/dev/dev.txt | xargs -I {} $(KUBECTL) apply -f {}
-	sleep 5
-	minikube service dynamic-stock-service
-
-.PHONY: undev
-undev: ## patch all crd finalizers to empty and clean resource
-	$(KUBECTL) delete --ignore-not-found=$(ignore-not-found) -f config/samples/dynamic-stock-deployment.yaml
-
-.PHONY: dev
-dev: ## create all resource
-	@cat config/dev/dev.txt | xargs -I {} $(KUBECTL) apply -f {}
 #	sleep 5
 #	minikube service dynamic-stock-service
 
