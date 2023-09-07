@@ -4,7 +4,7 @@ Arklet provides an operational interface for delivery of SofaArk bases and modul
 
 Arklet is internally constructed by **ArkletComponent**
 
-![png](https://user-images.githubusercontent.com/11410549/264982346-6a890bec-0c62-403a-81e4-ee0e6246ad23.png)
+![image](https://github.com/sofastack/sofa-serverless/assets/11410549/a2740422-569e-4dd3-9c9a-1503996bd2f1)
 - ApiClient: The core components responsible for interacting with the outside world
 - CommandService: Arklet exposes capability instruction definition and extension
 - OperationService: Ark Biz interacts with SofaArk to add, delete, modify, and encapsulate basic capabilities
