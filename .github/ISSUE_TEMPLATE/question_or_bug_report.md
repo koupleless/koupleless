@@ -33,7 +33,7 @@ If applicable, add screenshots to help explain your problem.
 
 ### Environment
 
-- SOFAServerless version (see current_version.txt):
+- SOFAServerless version (see CURRENT_VERSION.txt):
 - SOFAArk version:
 - JVM version (e.g. `java -version`):
 - OS version (e.g. `uname -a`):
