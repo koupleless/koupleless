@@ -33,8 +33,8 @@ If applicable, add screenshots to help explain your problem.
 
 ### Environment
 
+- SOFAServerless version (see current_version.txt):
 - SOFAArk version:
 - JVM version (e.g. `java -version`):
 - OS version (e.g. `uname -a`):
-- Maven version:
-- IDE version:
+- Kubernetes version:
