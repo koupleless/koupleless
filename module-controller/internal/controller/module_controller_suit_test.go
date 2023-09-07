@@ -38,7 +38,7 @@ var _ = Describe("Module Controller", func() {
 			Eventually(func() bool {
 				k8sClient.Get(context.TODO(), key, &module)
 				log.Log.Info("module status", "status", module.Status.Status)
-				return module.Status.Status == v1alpha1.ModuleInstanceStatusPending
+				return module.Status.Status.Status == v1alpha1.ModuleInstanceStatusPending
 			}, timeout, interval).Should(BeTrue())
 
 			Expect(k8sClient.Delete(context.TODO(), &module)).Should(Succeed())
@@ -71,7 +71,7 @@ var _ = Describe("Module Controller", func() {
 			Eventually(func() bool {
 				k8sClient.Get(context.TODO(), key, &module)
 				log.Log.Info("module status", "status", module.Status.Status)
-				return module.Status.Status == v1alpha1.ModuleInstanceStatusAvailable
+				return module.Status.Status.Status == v1alpha1.ModuleInstanceStatusAvailable
 			}, timeout, interval).Should(BeTrue())
 		})
 	})
