@@ -125,6 +125,17 @@ deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	$(KUSTOMIZE) build config/default | $(KUBECTL) delete --ignore-not-found=$(ignore-not-found) -f -
 
+.PHONY: dev
+dev: ## create all resource
+	@cat config/dev/dev.txt | xargs -I {} $(KUBECTL) apply -f {}
+	sleep 5
+	minikube service dynamic-stock-service
+
+.PHONY: undev
+undev: ## patch all crd finalizers to empty and clean resource
+	$(KUBECTL) delete --ignore-not-found=$(ignore-not-found) -f config/samples/dynamic-stock-deployment.yaml
+
+
 ##@ Build Dependencies
 
 ## Location to install dependencies to

@@ -58,7 +58,8 @@ type ModuleReplicaSetReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.15.0/pkg/reconcile
 func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-
+	log.Log.Info("start reconcile for moduleReplicaSet", "request", req)
+	defer log.Log.Info("finish reconcile for moduleReplicaSet", "request", req)
 	// get the moduleReplicaSet
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{}
 	err := r.Client.Get(ctx, req.NamespacedName, moduleReplicaSet)
@@ -115,6 +116,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 
 // scale up module
 func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+	log.Log.Info("start scaleup module", "moduleReplicaSetName", moduleReplicaSet.Name)
 	deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
 	selector, err := metav1.LabelSelectorAsSelector(&moduleReplicaSet.Spec.Selector)
 	selectedPods := &corev1.PodList{}
@@ -165,6 +167,7 @@ func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleL
 			return err
 		}
 	}
+	log.Log.Info("finish scaleup module", "moduleReplicaSetName", moduleReplicaSet.Name)
 	return nil
 }
 
