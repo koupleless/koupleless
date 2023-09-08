@@ -23,20 +23,15 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-type ModuleInstanceStatus struct {
-	// Status of the ModuleInstanceStatus, one of Pending, Prepare, Upgrading, Completing, Available, Terminating.
-	Status string `json:"status,omitempty"`
-	// Last time the ModuleInstanceStatus transitioned from one status to another.
-	LastTransitionTime metav1.Time `json:"last_transition_time,omitempty"`
-}
+type ModuleInstanceStatus string
 
 const (
-	ModuleInstanceStatusPending     = "Pending"
-	ModuleInstanceStatusPrepare     = "Prepare"
-	ModuleInstanceStatusUpgrading   = "Upgrading"
-	ModuleInstanceStatusCompleting  = "Completing"
-	ModuleInstanceStatusAvailable   = "Available"
-	ModuleInstanceStatusTerminating = "Terminating"
+	ModuleInstanceStatusPending     ModuleInstanceStatus = "Pending"
+	ModuleInstanceStatusPrepare     ModuleInstanceStatus = "Prepare"
+	ModuleInstanceStatusUpgrading   ModuleInstanceStatus = "Upgrading"
+	ModuleInstanceStatusCompleting  ModuleInstanceStatus = "Completing"
+	ModuleInstanceStatusAvailable   ModuleInstanceStatus = "Available"
+	ModuleInstanceStatusTerminating ModuleInstanceStatus = "Terminating"
 )
 
 // ModuleTemplate describes a template for creating copies of a predefined module.
@@ -89,6 +84,8 @@ type ModuleStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	Status ModuleInstanceStatus `json:"status,omitempty"`
+	// Last time the ModuleStatus transitioned from one status to another.
+	LastTransitionTime metav1.Time `json:"last_transition_time,omitempty"`
 }
 
 //+kubebuilder:object:root=true
