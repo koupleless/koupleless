@@ -67,11 +67,11 @@ public class HealthServiceImpl implements HealthService {
 
     @Override
     public Health getHealth() {
-        healthBuilder.init();
+        HealthBuilder builder = new HealthBuilder();
         for (ArkletBaseIndicator indicator : this.indicators.values()) {
-            healthBuilder.putAllHealthData(indicator.getHealthModel(new HealthBuilder()));
+            builder.putAllHealthData(indicator.getHealthModel(healthBuilder));
         }
-        return healthBuilder.build();
+        return builder.build();
     }
 
     @Override
@@ -79,8 +79,8 @@ public class HealthServiceImpl implements HealthService {
         try {
             healthBuilder.init();
             AssertUtils.assertNotNull(indicators.get(indicatorId), "indicator not registered");
-            healthBuilder.putAllHealthData(indicators.get(indicatorId).getHealthModel(
-                new HealthBuilder()));
+            healthBuilder.putAllHealthData(indicators.get(indicatorId)
+                .getHealthModel(healthBuilder));
         } catch (Throwable e) {
             healthBuilder.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
         }
@@ -89,15 +89,15 @@ public class HealthServiceImpl implements HealthService {
 
     @Override
     public Health getHealth(String[] indicatorIds) {
-        healthBuilder.init();
+        HealthBuilder builder = new HealthBuilder();
         if (ArrayUtil.isEmpty(indicatorIds)) {
-            healthBuilder.putAllHealthData(getHealth());
+            builder.putAllHealthData(getHealth());
         } else {
             for (String indicatorId : indicatorIds) {
-                healthBuilder.putAllHealthData(getHealth(indicatorId));
+                builder.putAllHealthData(getHealth(indicatorId));
             }
         }
-        return healthBuilder.build();
+        return builder.build();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class HealthServiceImpl implements HealthService {
 
     @Override
     public Health queryModuleInfo(String type, String name, String version) {
-        healthBuilder.init();
+        HealthBuilder builder = new HealthBuilder();
         try {
             AssertUtils.isTrue(StringUtils.isEmpty(type) || Constants.typeOfInfo(type),
                 "illegal type: %s", type);
@@ -118,18 +118,18 @@ public class HealthServiceImpl implements HealthService {
                 BizModel bizModel = new BizModel();
                 bizModel.setBizName(name);
                 bizModel.setBizVersion(version);
-                healthBuilder.putAllHealthData(queryModuleInfo(bizModel));
+                builder.putAllHealthData(queryModuleInfo(bizModel));
             }
             if (StringUtils.isEmpty(type) || Constants.PLUGIN.equals(type)) {
                 PluginModel pluginModel = new PluginModel();
                 pluginModel.setPluginName(name);
                 pluginModel.setPluginVersion(version);
-                healthBuilder.putAllHealthData(queryModuleInfo(pluginModel));
+                builder.putAllHealthData(queryModuleInfo(pluginModel));
             }
         } catch (Throwable e) {
-            healthBuilder.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
+            builder.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
         }
-        return healthBuilder.build();
+        return builder.build();
     }
 
     @Override
