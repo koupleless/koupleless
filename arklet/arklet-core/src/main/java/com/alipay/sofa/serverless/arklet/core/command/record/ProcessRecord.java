@@ -22,12 +22,10 @@ import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.management.MemoryPoolMXBean;
 import java.util.Date;
 
-import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.EXECUTING;
-import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.FAILED;
-import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.INITIALIZED;
-import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.SUCCEEDED;
+import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.*;
 
 /**
  * @author: yuanyuan
@@ -38,6 +36,8 @@ import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecor
 public class ProcessRecord {
 
     private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
+
+    private MemoryPoolMXBean metaSpaceMXBean;
 
     private String                    requestId;
 
@@ -55,13 +55,19 @@ public class ProcessRecord {
 
     private Date                      startTime;
 
+    private long                      startSpace;
+
     private long                      startTimestamp;
 
     private Date                      endTime;
 
+    private long                      endSpace;
+
     private long                      endTimestamp;
 
     private long                      elapsedTime;
+
+    private long                      elapsedSpace;
 
     public enum Status {
 
@@ -89,6 +95,8 @@ public class ProcessRecord {
     }
 
     public void markFinishTime() {
+        setEndSpace(getMetaSpaceMXBean().getUsage().getUsed());
+        setElapsedSpace(getEndSpace() - getStartSpace());
         Date date = new Date();
         setEndTime(date);
         setEndTimestamp(date.getTime());
