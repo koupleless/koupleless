@@ -1,6 +1,7 @@
 package com.alipay.sofa.serverless.arklet.core.health.indicator;
 
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
+import com.alipay.sofa.serverless.arklet.core.health.model.Health.HealthBuilder;
 
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public abstract class ArkletBaseIndicator {
         return indicatorId;
     }
 
-    public Health getHealthModel() {
-        return Health.createHealth().putHealthData(getIndicatorId(), getHealthDetails());
+    public Health getHealthModel(HealthBuilder builder) {
+        return builder.init().putHealthData(getIndicatorId(), getHealthDetails()).build();
     }
 }

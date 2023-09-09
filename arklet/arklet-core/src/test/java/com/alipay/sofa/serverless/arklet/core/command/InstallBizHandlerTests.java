@@ -16,12 +16,20 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command;
 
+import com.alipay.sofa.ark.api.ClientResponse;
+import com.alipay.sofa.ark.api.ResponseCode;
+import com.alipay.sofa.ark.exception.ArkRuntimeException;
 import com.alipay.sofa.serverless.arklet.core.BaseTest;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler.Input;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
+import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletRuntimeException;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
+import org.junit.Assert;
 import org.junit.Test;
+
+import static org.mockito.Mockito.when;
 
 /**
  * @author mingmen
@@ -52,29 +60,29 @@ public class InstallBizHandlerTests extends BaseTest {
     //    assertTrue(result.success());
     //}
 
-    //@Test
-    //public void testHandle_Failure() throws Throwable {
-    //
-    //    InstallBizHandler handler = (InstallBizHandler)commandService.getHandler(BuiltinCommand.INSTALL_BIZ);
-    //
-    //
-    //    // 准备测试数据
-    //    Input input = new Input();
-    //    input.setBizUrl("testUrl");
-    //
-    //    ClientResponse response = new ClientResponse();
-    //    response.setCode(ResponseCode.FAILED);
-    //
-    //    // 设置Mock行为
-    //    when(operationService.install(anyString())).thenReturn(response);
-    //
-    //    // 执行测试
-    //    Output<ClientResponse> result = handler.handle(input);
-    //
-    //    // 验证结果
-    //    assertSame(response, result.getData());
-    //    assertFalse(result.failed());
-    //}
+    @Test(expected = ArkRuntimeException.class)
+    public void testHandle_Failure() throws Throwable {
+
+        InstallBizHandler handler = (InstallBizHandler) commandService
+            .getHandler(BuiltinCommand.INSTALL_BIZ);
+
+        // 准备测试数据
+        Input input = new Input();
+        input.setBizUrl("testUrl");
+
+        ClientResponse response = new ClientResponse();
+        response.setCode(ResponseCode.FAILED);
+
+        // 设置Mock行为
+        when(operationService.install(input.getBizUrl())).thenReturn(response);
+
+        // 执行测试
+        Output<ClientResponse> result = handler.handle(input);
+
+        // 验证结果
+        Assert.assertSame(response, result.getData());
+        Assert.assertTrue(result.failed());
+    }
 
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizName() throws CommandValidationException {

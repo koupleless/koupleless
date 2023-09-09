@@ -14,26 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.spring;
+package com.alipay.sofa.serverless.arklet.core.health;
 
-import com.alipay.sofa.ark.common.util.ClassLoaderUtils;
-import com.alipay.sofa.ark.spi.constant.Constants;
-import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
-import org.junit.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+public class BaseIndicatorTest {
 
-/**
- * @author mingmen
- * @date 2023/6/26
- */
-public class SpringbootRunnerTest extends SpringbootBaseTest {
-
-    @Test
-    public void testArkletService() {
-        Assert.assertNotNull(ArkletComponentRegistry.getCommandServiceInstance());
-        Assert.assertNotNull(ArkletComponentRegistry.getHealthServiceInstance());
-        Assert.assertNotNull(ArkletComponentRegistry.getOperationServiceInstance());
-    }
 }

@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.arklet.core.health;
 
 import com.alibaba.fastjson.JSON;
@@ -13,6 +29,7 @@ import com.alipay.sofa.serverless.arklet.core.health.indicator.JvmIndicator;
 import com.alipay.sofa.serverless.arklet.core.health.model.BizHealthMeta;
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
+import com.alipay.sofa.serverless.arklet.core.health.model.Health.HealthBuilder;
 import com.alipay.sofa.serverless.arklet.core.health.model.PluginHealthMeta;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.model.BizModel;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.model.PluginModel;
@@ -32,13 +49,16 @@ import static com.alibaba.fastjson.JSON.toJSONString;
 @Singleton
 public class HealthServiceImpl implements HealthService {
 
-    private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
+    private static final ArkletLogger              LOGGER        = ArkletLoggerFactory
+                                                                     .getDefaultLogger();
+    private final HealthBuilder                    healthBuilder = new HealthBuilder();
 
-    private final Map<String, ArkletBaseIndicator> indicators = new ConcurrentHashMap<>(3);
+    private final Map<String, ArkletBaseIndicator> indicators    = new ConcurrentHashMap<>(3);
 
     @Override
     public void init() {
         initIndicators();
+        healthBuilder.init();
     }
 
     @Override
@@ -47,120 +67,128 @@ public class HealthServiceImpl implements HealthService {
 
     @Override
     public Health getHealth() {
-        Health health = Health.createHealth();
+        healthBuilder.init();
         for (ArkletBaseIndicator indicator : this.indicators.values()) {
-            health.putAllHealthData(indicator.getHealthModel());
+            healthBuilder.putAllHealthData(indicator.getHealthModel(new HealthBuilder()));
         }
-        return health;
+        return healthBuilder.build();
     }
 
     @Override
     public Health getHealth(String indicatorId) {
-        Health health = Health.createHealth();
         try {
+            healthBuilder.init();
             AssertUtils.assertNotNull(indicators.get(indicatorId), "indicator not registered");
-            health.putAllHealthData(indicators.get(indicatorId).getHealthModel());
+            healthBuilder.putAllHealthData(indicators.get(indicatorId).getHealthModel(
+                new HealthBuilder()));
         } catch (Throwable e) {
-            health.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
+            healthBuilder.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
         }
-        return health;
+        return healthBuilder.build();
     }
 
     @Override
     public Health getHealth(String[] indicatorIds) {
-        Health health = Health.createHealth();
+        healthBuilder.init();
         if (ArrayUtil.isEmpty(indicatorIds)) {
-            health.putAllHealthData(getHealth());
+            healthBuilder.putAllHealthData(getHealth());
         } else {
             for (String indicatorId : indicatorIds) {
-                health.putAllHealthData(getHealth(indicatorId));
+                healthBuilder.putAllHealthData(getHealth(indicatorId));
             }
         }
-        return health;
+        return healthBuilder.build();
     }
 
     @Override
     public Health queryModuleInfo() {
-        return Health.createHealth()
-                .putAllHealthData(queryMasterBiz())
-                .putAllHealthData(queryModuleInfo(new BizModel()))
-                .putAllHealthData(queryModuleInfo(new PluginModel()));
+        HealthBuilder builder = new HealthBuilder();
+        return builder.init().putAllHealthData(queryMasterBiz())
+            .putAllHealthData(queryModuleInfo(new BizModel()))
+            .putAllHealthData(queryModuleInfo(new PluginModel())).build();
     }
 
     @Override
     public Health queryModuleInfo(String type, String name, String version) {
-        Health health = Health.createHealth();
+        healthBuilder.init();
         try {
-            AssertUtils.isTrue(StringUtils.isEmpty(type) || Constants.typeOfInfo(type), "illegal type: %s", type);
+            AssertUtils.isTrue(StringUtils.isEmpty(type) || Constants.typeOfInfo(type),
+                "illegal type: %s", type);
             if (StringUtils.isEmpty(type) || Constants.BIZ.equals(type)) {
                 BizModel bizModel = new BizModel();
                 bizModel.setBizName(name);
                 bizModel.setBizVersion(version);
-                health.putAllHealthData(queryModuleInfo(bizModel));
+                healthBuilder.putAllHealthData(queryModuleInfo(bizModel));
             }
             if (StringUtils.isEmpty(type) || Constants.PLUGIN.equals(type)) {
                 PluginModel pluginModel = new PluginModel();
                 pluginModel.setPluginName(name);
                 pluginModel.setPluginVersion(version);
-                health.putAllHealthData(queryModuleInfo(pluginModel));
+                healthBuilder.putAllHealthData(queryModuleInfo(pluginModel));
             }
         } catch (Throwable e) {
-            health.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
+            healthBuilder.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
         }
-        return health;
+        return healthBuilder.build();
     }
 
     @Override
     public Health queryModuleInfo(BizModel bizModel) {
-        String bizName = bizModel.getBizName(),
-                bizVersion = bizModel.getBizVersion();
-        Health health = Health.createHealth();
+        String bizName = bizModel.getBizName(), bizVersion = bizModel.getBizVersion();
+        healthBuilder.init();
         try {
             if (StringUtils.isEmpty(bizName) && StringUtils.isEmpty(bizVersion)) {
-                List<BizHealthMeta> bizHealthMetaList = BizHealthMeta.createBizMetaList(
-                        ArkClient.getBizManagerService().getBizInOrder());
-                health.putHealthData("bizListInfo", bizHealthMetaList);
+                List<BizHealthMeta> bizHealthMetaList = BizHealthMeta.createBizMetaList(ArkClient
+                    .getBizManagerService().getBizInOrder());
+                healthBuilder.putHealthData(Constants.BIZ_LIST_INFO, bizHealthMetaList);
             } else if (StringUtils.isEmpty(bizVersion)) {
-                List<Biz> bizList =  ArkClient.getBizManagerService().getBiz(bizName);
+                List<Biz> bizList = ArkClient.getBizManagerService().getBiz(bizName);
                 AssertUtils.isTrue(bizList.size() > 0, "can not find biz: %s", bizName);
                 List<BizHealthMeta> bizHealthMetaList = BizHealthMeta.createBizMetaList(bizList);
-                health.putHealthData("bizListInfo", bizHealthMetaList);
+                healthBuilder.putHealthData(Constants.BIZ_LIST_INFO, bizHealthMetaList);
             } else {
-                BizHealthMeta bizHealthMeta = BizHealthMeta.createBizMeta(
-                        ArkClient.getBizManagerService().getBiz(bizName, bizVersion));
-                health.putHealthData("bizInfo", bizHealthMeta);
+                BizHealthMeta bizHealthMeta = BizHealthMeta.createBizMeta(ArkClient
+                    .getBizManagerService().getBiz(bizName, bizVersion));
+                healthBuilder.putHealthData(Constants.BIZ_INFO, bizHealthMeta);
             }
         } catch (Throwable e) {
-            health.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
+            healthBuilder.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
         }
-        return health;
+        return healthBuilder.build();
     }
 
     @Override
     public Health queryModuleInfo(PluginModel pluginModel) {
         String pluginName = pluginModel.getPluginName();
-        Health health = Health.createHealth();
+        healthBuilder.init();
         try {
             if (StringUtils.isEmpty(pluginName)) {
-                List<PluginHealthMeta> pluginHealthMetaList = PluginHealthMeta.createPluginMetaList(
-                        ArkClient.getPluginManagerService().getPluginsInOrder());
-                health.putHealthData("pluginListInfo", pluginHealthMetaList);
+                List<PluginHealthMeta> pluginHealthMetaList = PluginHealthMeta
+                    .createPluginMetaList(ArkClient.getPluginManagerService().getPluginsInOrder());
+                healthBuilder.putHealthData(Constants.PLUGIN_LIST_INFO, pluginHealthMetaList);
             } else {
-                PluginHealthMeta pluginHealthMeta = PluginHealthMeta.createPluginMeta(
-                        ArkClient.getPluginManagerService().getPluginByName(pluginName));
-                health.putHealthData("pluginInfo", pluginHealthMeta);
+                PluginHealthMeta pluginHealthMeta = PluginHealthMeta.createPluginMeta(ArkClient
+                    .getPluginManagerService().getPluginByName(pluginName));
+                healthBuilder.putHealthData(Constants.PLUGIN_INFO, pluginHealthMeta);
             }
         } catch (Throwable e) {
-            health.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
+            healthBuilder.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
         }
-        return health;
+        return healthBuilder.build();
     }
 
     @Override
     public Health queryMasterBiz() {
         BizHealthMeta bizHealthMeta = BizHealthMeta.createBizMeta(ArkClient.getMasterBiz());
-        return Health.createHealth().putHealthData("masterBizInfo",
-                JSON.parseObject(toJSONString(bizHealthMeta), JSONObject.class));
+        return healthBuilder
+            .init()
+            .putHealthData(Constants.MASTER_BIZ_INFO,
+                JSON.parseObject(toJSONString(bizHealthMeta), JSONObject.class)).build();
+    }
+
+    @Override
+    public ArkletBaseIndicator getIndicator(String indicatorId) {
+        return indicators.get(indicatorId);
     }
 
     @Override
@@ -170,7 +198,7 @@ public class HealthServiceImpl implements HealthService {
     }
 
     public Health getHealth(ArkletBaseIndicator indicator) {
-        return indicator.getHealthModel();
+        return indicator.getHealthModel(new HealthBuilder());
     }
 
     private void initIndicators() {
