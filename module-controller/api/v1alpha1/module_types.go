@@ -69,16 +69,10 @@ type ModuleInfo struct {
 	Md5  string `json:"md5,omitempty"`
 }
 
-type SchedulingInfo struct {
-	Strategy       ModuleSchedulingStrategy `json:"strategy"`
-	MaxModuleCount int                      `json:"maxModuleCount"`
-}
-
 // ModuleSpec defines the desired state of Module
 type ModuleSpec struct {
 	Selector metav1.LabelSelector `json:"selector,omitempty"`
 	Module   ModuleInfo           `json:"module"`
-	//Scheduling SchedulingInfo       `json:"scheduling"`
 }
 
 // ModuleStatus defines the observed state of Module
