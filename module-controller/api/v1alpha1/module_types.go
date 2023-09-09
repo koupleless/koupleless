@@ -34,13 +34,6 @@ const (
 	ModuleInstanceStatusTerminating ModuleInstanceStatus = "Terminating"
 )
 
-type ModuleSchedulingStrategy string
-
-const (
-	Scatter  ModuleSchedulingStrategy = "Scatter"
-	Stacking ModuleSchedulingStrategy = "Stacking"
-)
-
 // ModuleTemplate describes a template for creating copies of a predefined module.
 type ModuleTemplate struct {
 	metav1.TypeMeta `json:",inline"`
@@ -83,9 +76,9 @@ type SchedulingInfo struct {
 
 // ModuleSpec defines the desired state of Module
 type ModuleSpec struct {
-	Selector   metav1.LabelSelector `json:"selector,omitempty"`
-	Module     ModuleInfo           `json:"module"`
-	Scheduling SchedulingInfo       `json:"scheduling"`
+	Selector metav1.LabelSelector `json:"selector,omitempty"`
+	Module   ModuleInfo           `json:"module"`
+	//Scheduling SchedulingInfo       `json:"scheduling"`
 }
 
 // ModuleStatus defines the observed state of Module

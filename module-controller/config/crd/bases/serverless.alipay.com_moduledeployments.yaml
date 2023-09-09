@@ -60,6 +60,16 @@ spec:
               revisionHistoryLimit:
                 format: int32
                 type: integer
+              schedulingStrategy:
+                properties:
+                  maxModuleCount:
+                    type: integer
+                  schedulingType:
+                    type: string
+                required:
+                - maxModuleCount
+                - schedulingType
+                type: object
               strategy:
                 properties:
                   batchCount:
@@ -109,16 +119,6 @@ spec:
                         - name
                         - url
                         - version
-                        type: object
-                      scheduling:
-                        properties:
-                          maxModuleCount:
-                            type: integer
-                          strategy:
-                            type: string
-                        required:
-                        - maxModuleCount
-                        - strategy
                         type: object
                       selector:
                         description: A label selector is a label query over a set
@@ -171,7 +171,6 @@ spec:
                         x-kubernetes-map-type: atomic
                     required:
                     - module
-                    - scheduling
                     type: object
                 type: object
             required:
