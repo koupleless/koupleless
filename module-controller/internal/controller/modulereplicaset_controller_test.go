@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -101,7 +102,8 @@ func TestModuleReplicaSetReconciler_getScaleUpCandidatePods(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run("", func(t *testing.T) {
-			actualPods := r.getScaleUpCandidatePods(tt.moduleList, tt.podList, tt.moduleReplicaSet)
+			actualPods, err := r.getScaleUpCandidatePods(tt.moduleList, tt.podList, tt.moduleReplicaSet)
+			assert.NoError(t, err)
 			if err := cmp(tt.expectedPodNames, actualPods); err != nil {
 				t.Error(err)
 			}
@@ -203,17 +205,18 @@ func generateModuleList(moduleName string, pods []podWithModules) *v1alpha1.Modu
 }
 
 // generate moduleReplicaSet
-func generateModuleReplicaSet(strategy v1alpha1.ModuleSchedulingStrategy, replicas, maxModuleCount int) *v1alpha1.ModuleReplicaSet {
+func generateModuleReplicaSet(strategy v1alpha1.ModuleSchedulingType, replicas, maxModuleCount int) *v1alpha1.ModuleReplicaSet {
 	return &v1alpha1.ModuleReplicaSet{
+		ObjectMeta: metav1.ObjectMeta{
+			Labels: map[string]string{
+				label.ModuleSchedulingStrategy: string(strategy),
+				label.MaxModuleCount:           strconv.Itoa(maxModuleCount),
+			},
+		},
 		Spec: v1alpha1.ModuleReplicaSetSpec{
 			Replicas: int32(replicas),
 			Template: v1alpha1.ModuleTemplateSpec{
-				Spec: v1alpha1.ModuleSpec{
-					Scheduling: v1alpha1.SchedulingInfo{
-						Strategy:       strategy,
-						MaxModuleCount: maxModuleCount,
-					},
-				},
+				Spec: v1alpha1.ModuleSpec{},
 			},
 		},
 	}

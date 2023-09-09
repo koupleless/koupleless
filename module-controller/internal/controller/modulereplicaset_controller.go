@@ -233,7 +233,11 @@ func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleL
 		return err
 	}
 
-	toAllocatePod := r.getScaleUpCandidatePods(existedModuleList, selectedPods, moduleReplicaSet)
+	toAllocatePod, err := r.getScaleUpCandidatePods(existedModuleList, selectedPods, moduleReplicaSet)
+	if err != nil {
+		log.Log.Error(err, "Failed to get the candidate pods for scaling up")
+		return err
+	}
 	for _, pod := range toAllocatePod {
 		pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, moduleReplicaSet.Spec.Template.Spec.Module.Name)] = moduleReplicaSet.Spec.Template.Spec.Module.Version
 		if _, exist := pod.Labels[label.ModuleInstanceCount]; exist {
@@ -295,15 +299,22 @@ func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(
 	existedModuleList *moduledeploymentv1alpha1.ModuleList,
 	selectedPods *corev1.PodList,
 	moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet,
-) []corev1.Pod {
+) ([]corev1.Pod, error) {
 	deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
 	usedPodNames := make(map[string]bool)
 	for _, module := range existedModuleList.Items {
 		usedPodNames[module.Labels[label.BaseInstanceNameLabel]] = true
 	}
 
-	strategy := moduleReplicaSet.Spec.Template.Spec.Scheduling.Strategy
-	maxModuleCount := moduleReplicaSet.Spec.Template.Spec.Scheduling.MaxModuleCount
+	// get strategy, maxModuleCount from replicaSet Labels
+	strategyLabel := moduleReplicaSet.Labels[label.ModuleSchedulingStrategy]
+	strategy := moduledeploymentv1alpha1.ModuleSchedulingType(strategyLabel)
+
+	maxModuleCountLabel := moduleReplicaSet.Labels[label.MaxModuleCount]
+	maxModuleCount, err := strconv.Atoi(maxModuleCountLabel)
+	if err != nil {
+		return nil, err
+	}
 
 	if strategy == moduledeploymentv1alpha1.Scatter {
 		sort.Slice(selectedPods.Items, func(i, j int) bool {
@@ -349,7 +360,7 @@ func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(
 			}
 		}
 	}
-	return toAllocatePod
+	return toAllocatePod, nil
 }
 
 // get the candidate modules to be deleted when scaling down
@@ -371,7 +382,9 @@ func (r *ModuleReplicaSetReconciler) getScaleDownCandidateModules(
 		}
 	}
 
-	strategy := moduleReplicaSet.Spec.Template.Spec.Scheduling.Strategy
+	// get strategy, maxModuleCount from replicaSet Labels
+	strategyLabel := moduleReplicaSet.Labels[label.ModuleSchedulingStrategy]
+	strategy := moduledeploymentv1alpha1.ModuleSchedulingType(strategyLabel)
 
 	if strategy == moduledeploymentv1alpha1.Scatter {
 		sort.Slice(filteredPods, func(i, j int) bool {

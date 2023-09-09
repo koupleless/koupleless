@@ -13,6 +13,7 @@ import (
 
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
 	"github.com/sofastack/sofa-serverless/internal/utils"
 )
 
@@ -173,10 +174,6 @@ func prepareModuleReplicaSet(namespace, moduleReplicaSetName string) v1alpha1.Mo
 						Version: "1.0.0",
 						Url:     "http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar",
 					},
-					Scheduling: v1alpha1.SchedulingInfo{
-						Strategy:       v1alpha1.Scatter,
-						MaxModuleCount: 10,
-					},
 				},
 			},
 		},
@@ -184,7 +181,9 @@ func prepareModuleReplicaSet(namespace, moduleReplicaSetName string) v1alpha1.Mo
 			Name:      moduleReplicaSetName,
 			Namespace: namespace,
 			Labels: map[string]string{
-				"app": "dynamic-stock",
+				"app":                          "dynamic-stock",
+				label.MaxModuleCount:           "10",
+				label.ModuleSchedulingStrategy: string(v1alpha1.Scatter),
 			},
 			Annotations: map[string]string{},
 		},

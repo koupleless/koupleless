@@ -114,16 +114,6 @@ spec:
                         - url
                         - version
                         type: object
-                      scheduling:
-                        properties:
-                          maxModuleCount:
-                            type: integer
-                          strategy:
-                            type: string
-                        required:
-                        - maxModuleCount
-                        - strategy
-                        type: object
                       selector:
                         description: A label selector is a label query over a set
                           of resources. The result of matchLabels and matchExpressions
@@ -175,7 +165,6 @@ spec:
                         x-kubernetes-map-type: atomic
                     required:
                     - module
-                    - scheduling
                     type: object
                 type: object
             type: object
