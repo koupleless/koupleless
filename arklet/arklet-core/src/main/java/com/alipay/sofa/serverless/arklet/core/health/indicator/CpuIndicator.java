@@ -3,6 +3,7 @@ package com.alipay.sofa.serverless.arklet.core.health.indicator;
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
+import oshi.util.GlobalConfig;
 import oshi.util.Util;
 
 import java.util.HashMap;
@@ -49,10 +50,10 @@ public class CpuIndicator extends ArkletBaseIndicator {
 
         public CpuIndicatorHandler() {
             this.cpu = new SystemInfo().getHardware().getProcessor();
+            prevTicks = cpu.getSystemCpuLoadTicks();
         }
 
         public void collectTicks() {
-            prevTicks = cpu.getSystemCpuLoadTicks();
             nextTicks = cpu.getSystemCpuLoadTicks();
         }
 
