@@ -17,6 +17,8 @@
 package com.alipay.sofa.serverless.arklet.core;
 
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
+import com.alipay.sofa.serverless.arklet.core.health.HealthService;
+import com.alipay.sofa.serverless.arklet.core.health.model.Health;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
 import org.junit.Before;
 
@@ -28,6 +30,7 @@ public class BaseTest {
     public static ArkletComponentRegistry componentRegistry;
     public static CommandService          commandService;
     public static UnifiedOperationService operationService;
+    public static HealthService           healthService;
 
     @Before
     public void setup() {
@@ -37,6 +40,7 @@ public class BaseTest {
             componentRegistry = registry;
             commandService = ArkletComponentRegistry.getCommandServiceInstance();
             operationService = ArkletComponentRegistry.getOperationServiceInstance();
+            healthService = ArkletComponentRegistry.getHealthServiceInstance();
         }
     }
 }

@@ -33,9 +33,19 @@ public class Constants {
 
     public static final String MASTER_BIZ_HEALTH     = "masterBizHealth";
 
+    public static final String MASTER_BIZ_INFO       = "masterBizInfo";
+
     public static final String HEALTH_ERROR          = "error";
 
     public static final String HEALTH_ENDPOINT_ERROR = "endpointError";
+
+    public static final String BIZ_INFO              = "bizInfo";
+
+    public static final String BIZ_LIST_INFO         = "bizListInfo";
+
+    public static final String PLUGIN_INFO           = "pluginInfo";
+
+    public static final String PLUGIN_LIST_INFO      = "pluginListInfo";
 
     public static final String READINESS_HEALTHY     = "ACCEPTING_TRAFFIC";
 

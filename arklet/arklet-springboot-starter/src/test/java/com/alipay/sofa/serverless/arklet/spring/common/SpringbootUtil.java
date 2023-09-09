@@ -14,31 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.health.indicator;
+package com.alipay.sofa.serverless.arklet.spring.common;
 
-import com.alipay.sofa.serverless.arklet.core.health.model.Health;
-import com.alipay.sofa.serverless.arklet.core.health.model.Health.HealthBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 
-import java.util.Map;
+public class SpringbootUtil {
 
-/**
- * @author Lunarscave
- */
-public abstract class ArkletBaseIndicator {
+    private static ApplicationContext context;
 
-    private final String indicatorId;
+    private static Environment        environment;
 
-    public ArkletBaseIndicator(String indicatorId) {
-        this.indicatorId = indicatorId;
+    public static void initSpringbootUtil(ApplicationContext applicationContext) {
+        context = applicationContext;
+        environment = context.getEnvironment();
     }
 
-    protected abstract Map<String, Object> getHealthDetails();
-
-    public String getIndicatorId() {
-        return indicatorId;
+    public static ApplicationContext getContext() {
+        return context;
     }
 
-    public Health getHealthModel(HealthBuilder builder) {
-        return builder.init().putHealthData(getIndicatorId(), getHealthDetails()).build();
+    public static Environment getEnvironment() {
+        return environment;
+    }
+
+    public static <T> T getBean(Class<T> clazz) {
+        return context.getBean(clazz);
+    }
+
+    public static String getProperty(String key) {
+        return environment.getProperty(key);
     }
 }

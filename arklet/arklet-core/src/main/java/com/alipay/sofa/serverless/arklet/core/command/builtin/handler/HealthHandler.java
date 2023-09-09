@@ -19,6 +19,7 @@ package com.alipay.sofa.serverless.arklet.core.command.builtin.handler;
 import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
+import com.alipay.sofa.serverless.arklet.core.health.model.Health.HealthBuilder;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
@@ -44,24 +45,26 @@ public class HealthHandler extends AbstractCommandHandler<HealthHandler.Input, H
 
     @Override
     public Output<Health> handle(Input input) {
-        Health health = Health.createHealth();
+
         input = input == null ? new Input() : input;
         String type = input.getType();
+        HealthBuilder builder = new HealthBuilder();
 
         // set query strategy
         if (StringUtils.isEmpty(type)) {
-            health.putAllHealthData(getHealthService().queryMasterBiz());
+            builder.putAllHealthData(getHealthService().queryMasterBiz());
         }
         if (StringUtils.isEmpty(type) || Constants.SYSTEM.equals(type)) {
-            health.putAllHealthData(getHealthService().getHealth(input.getMetrics()));
+            builder.putAllHealthData(getHealthService().getHealth(input.getMetrics()));
         }
         if (StringUtils.isEmpty(type) || Constants.typeOfInfo(type)) {
             String name = input.getModuleName();
             String version = input.getModuleVersion();
-            health.putAllHealthData(getHealthService().queryModuleInfo(type, name, version));
+            builder.putAllHealthData(getHealthService().queryModuleInfo(type, name, version));
         }
+        Health health = builder.build();
 
-        if (Health.containsError(health, Constants.HEALTH_ERROR)) {
+        if (health.containsError(Constants.HEALTH_ERROR)) {
             return Output.ofFailed(health.getHealthData().get(Constants.HEALTH_ERROR).toString());
         } else {
             return Output.ofSuccess(health);
