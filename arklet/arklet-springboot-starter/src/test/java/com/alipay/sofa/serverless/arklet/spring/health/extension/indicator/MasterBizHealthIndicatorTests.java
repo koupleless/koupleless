@@ -16,6 +16,8 @@
  */
 package com.alipay.sofa.serverless.arklet.spring.health.extension.indicator;
 
+import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
+import com.alipay.sofa.serverless.arklet.core.health.HealthService;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
 import com.alipay.sofa.serverless.arklet.spring.SpringbootBaseTest;
 import com.alipay.sofa.serverless.arklet.spring.common.SpringbootUtil;
@@ -34,7 +36,7 @@ import java.util.Map;
 /**
  * @author Lunarscave
  */
-public class MasterBizHealthIndicatorTest extends SpringbootBaseTest {
+public class MasterBizHealthIndicatorTests extends SpringbootBaseTest {
 
     private static MasterBizHealthIndicator indicator;
 
@@ -51,6 +53,12 @@ public class MasterBizHealthIndicatorTest extends SpringbootBaseTest {
         Assert.assertTrue(health.getHealthData().get(indicator.getIndicatorId()) instanceof Map);
         Map<?, ?> healthData = (Map<?, ?>) health.getHealthData().get(indicator.getIndicatorId());
         Assert.assertTrue(!healthData.isEmpty() && healthData.containsKey("readinessState"));
+    }
+
+    @Test
+    public void testRegisterMasterBizIndicator() {
+        HealthService healthService = ArkletComponentRegistry.getHealthServiceInstance();
+        Assert.assertNotNull(healthService.getIndicator(indicator.getIndicatorId()));
     }
 
 }
