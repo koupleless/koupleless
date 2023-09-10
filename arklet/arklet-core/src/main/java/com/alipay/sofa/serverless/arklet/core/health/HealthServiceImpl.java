@@ -197,10 +197,6 @@ public class HealthServiceImpl implements HealthService {
         LOGGER.info("register indicator " + indicator.getIndicatorId());
     }
 
-    public Health getHealth(ArkletBaseIndicator indicator) {
-        return indicator.getHealthModel(new HealthBuilder());
-    }
-
     private void initIndicators() {
         registerIndicator(new CpuIndicator());
         registerIndicator(new JvmIndicator());

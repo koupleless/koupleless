@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * @author Lunarscave
  */
-public class ArkHealthzEndpointTest extends SpringbootBaseTest {
+public class ArkHealthzEndpointTests extends SpringbootBaseTest {
 
     private static ArkHealthzEndpoint arkHealthzEndpoint;
     private static String             bizName;

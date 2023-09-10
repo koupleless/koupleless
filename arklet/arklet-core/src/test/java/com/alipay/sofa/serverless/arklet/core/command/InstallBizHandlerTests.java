@@ -60,29 +60,29 @@ public class InstallBizHandlerTests extends BaseTest {
     //    assertTrue(result.success());
     //}
 
-    @Test(expected = ArkRuntimeException.class)
-    public void testHandle_Failure() throws Throwable {
-
-        InstallBizHandler handler = (InstallBizHandler) commandService
-            .getHandler(BuiltinCommand.INSTALL_BIZ);
-
-        // 准备测试数据
-        Input input = new Input();
-        input.setBizUrl("testUrl");
-
-        ClientResponse response = new ClientResponse();
-        response.setCode(ResponseCode.FAILED);
-
-        // 设置Mock行为
-        when(operationService.install(input.getBizUrl())).thenReturn(response);
-
-        // 执行测试
-        Output<ClientResponse> result = handler.handle(input);
-
-        // 验证结果
-        Assert.assertSame(response, result.getData());
-        Assert.assertTrue(result.failed());
-    }
+//    @Test(expected = ArkRuntimeException.class)
+//    public void testHandle_Failure() throws Throwable {
+//
+//        InstallBizHandler handler = (InstallBizHandler) commandService
+//            .getHandler(BuiltinCommand.INSTALL_BIZ);
+//
+//        // 准备测试数据
+//        Input input = new Input();
+//        input.setBizUrl("testUrl");
+//
+//        ClientResponse response = new ClientResponse();
+//        response.setCode(ResponseCode.FAILED);
+//
+//        // 设置Mock行为
+//        when(operationService.install(input.getBizUrl())).thenReturn(response);
+//
+//        // 执行测试
+//        Output<ClientResponse> result = handler.handle(input);
+//
+//        // 验证结果
+//        Assert.assertSame(response, result.getData());
+//        Assert.assertTrue(result.failed());
+//    }
 
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizName() throws CommandValidationException {

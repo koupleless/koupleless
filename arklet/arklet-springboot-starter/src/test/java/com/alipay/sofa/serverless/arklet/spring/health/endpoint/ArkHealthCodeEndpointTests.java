@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * @author Lunarscave
  */
-public class ArkHealthCodeEndpointTest extends SpringbootBaseTest {
+public class ArkHealthCodeEndpointTests extends SpringbootBaseTest {
     private static ArkHealthCodeEndpoint arkHealthCodeEndpoint;
     private static String                bizName;
     private static String                bizVersion;
