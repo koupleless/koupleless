@@ -19,7 +19,7 @@ package com.alipay.sofa.serverless.arklet.core.health;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
 import com.alipay.sofa.serverless.arklet.core.health.indicator.ArkletBaseIndicator;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.model.BizModel;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.model.BizInfo;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.model.PluginModel;
 
 /**
@@ -37,7 +37,7 @@ public interface HealthService extends ArkletComponent {
 
     Health queryModuleInfo(String type, String name, String version);
 
-    Health queryModuleInfo(BizModel bizModel);
+    Health queryModuleInfo(BizInfo bizInfo);
 
     Health queryModuleInfo(PluginModel pluginModel);
 

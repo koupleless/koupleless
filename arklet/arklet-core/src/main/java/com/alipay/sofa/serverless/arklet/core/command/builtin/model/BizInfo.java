@@ -22,7 +22,7 @@ import com.alipay.sofa.ark.spi.model.BizState;
  * @author mingmen
  * @date 2023/6/14
  */
-public class BizModel {
+public class BizInfo {
     private String   bizName;
 
     private String   bizVersion;
