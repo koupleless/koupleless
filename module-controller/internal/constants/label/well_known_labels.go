@@ -16,4 +16,6 @@ const (
 	DeleteModuleLabel = "serverless.alipay.com/delete-module"
 
 	ModuleInstanceCount = "serverless.alipay.com/module-instance-count"
+
+	NewReplicatedModuleLabel = "serverless.alipay.com/new-replicated-module"
 )

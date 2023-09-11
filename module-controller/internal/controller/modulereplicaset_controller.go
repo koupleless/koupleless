@@ -26,6 +26,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/pointer"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"strconv"
@@ -67,7 +68,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			log.Log.Info("moduleReplicaSet is deleted", "moduleReplicaSetName", moduleReplicaSet.Name)
 			return reconcile.Result{}, nil
 		}
-		log.Log.Error(err, "Failed to get moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
+		utils.Error(err, "Failed to get moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
 		return ctrl.Result{}, nil
 	}
 
@@ -77,7 +78,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		label.ModuleReplicasetLabel: moduleReplicaSet.Name,
 	})})
 	if err != nil {
-		log.Log.Error(err, "Failed to list existedModuleList", "moduleReplicaSetName", moduleReplicaSet.Name)
+		utils.Error(err, "Failed to list existedModuleList", "moduleReplicaSetName", moduleReplicaSet.Name)
 		return ctrl.Result{}, nil
 	}
 
@@ -105,9 +106,16 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	// compare and update module
-	err = r.compareAndUpdateModule(ctx, existedModuleList, moduleReplicaSet)
-	if err != nil {
-		return reconcile.Result{}, err
+	if moduledeploymentv1alpha1.ScaleUpThenScaleDownUpgradePolicy == moduleReplicaSet.Spec.SchedulingStrategy.UpgradePolicy {
+		err = r.scaleUpThenScaleDownModule(ctx, existedModuleList, moduleReplicaSet)
+		if err != nil {
+			return reconcile.Result{}, err
+		}
+	} else {
+		err = r.compareAndUpdateModule(ctx, existedModuleList, moduleReplicaSet)
+		if err != nil {
+			return reconcile.Result{}, err
+		}
 	}
 
 	return ctrl.Result{}, nil
@@ -119,8 +127,7 @@ func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleL
 	selector, err := metav1.LabelSelectorAsSelector(&moduleReplicaSet.Spec.Selector)
 	selectedPods := &corev1.PodList{}
 	if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: moduleReplicaSet.Namespace, LabelSelector: selector}); err != nil {
-		log.Log.Error(err, "Failed to list pod", "moduleReplicaSetName", moduleReplicaSet.Name)
-		return err
+		return utils.Error(err, "Failed to list pod", "moduleReplicaSetName", moduleReplicaSet.Name)
 	}
 
 	usedPodNames := make(map[string]bool)
@@ -152,8 +159,9 @@ func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleL
 		} else {
 			pod.Labels[label.ModuleInstanceCount] = "1"
 		}
+		// add pod finalizer
+		utils.AddFinalizer(&pod.ObjectMeta, fmt.Sprintf("%s-%s", finalizer.ModuleNameFinalizer, moduleReplicaSet.Spec.Template.Spec.Module.Name))
 		err := r.Client.Update(ctx, &pod)
-		// TODO add pod finalizer
 		if err != nil {
 			// update pod label
 			return err
@@ -161,8 +169,7 @@ func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleL
 		// create module
 		module := r.generateModule(moduleReplicaSet, pod)
 		if err = r.Client.Create(ctx, module); err != nil {
-			log.Log.Error(err, "Failed to create module", "moduleName", module.Name)
-			return err
+			return utils.Error(err, "Failed to create module", "moduleName", module.Name)
 		}
 	}
 	return nil
@@ -201,15 +208,36 @@ func (r *ModuleReplicaSetReconciler) compareAndUpdateModule(ctx context.Context,
 			existedModule.Spec.Module.Url = desiredModule.Url
 			err := r.Client.Update(ctx, &existedModule)
 			if err != nil {
-				log.Log.Error(err, "Failed to update module", "moduleName", existedModule.Name)
-				return err
+				return utils.Error(err, "Failed to update module", "moduleName", existedModule.Name)
 			}
 		}
 		if needUninstallModule {
 			err := r.Client.Delete(ctx, &existedModule)
 			if err != nil {
-				log.Log.Error(err, "Failed to delete module", "moduleName", existedModule.Name)
-				return err
+				return utils.Error(err, "Failed to delete module", "moduleName", existedModule.Name)
+			}
+		}
+	}
+	return nil
+}
+
+// compare and update module
+func (r *ModuleReplicaSetReconciler) scaleUpThenScaleDownModule(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+	desiredModule := moduleReplicaSet.Spec.Template.Spec.Module
+	for _, existedModule := range existedModuleList.Items {
+
+		needUpgradeModule := existedModule.Spec.Module.Name != desiredModule.Name || existedModule.Spec.Module.Version != desiredModule.Version || existedModule.Spec.Module.Url != desiredModule.Url
+		if needUpgradeModule {
+			// delete pod
+			podName := existedModule.Labels[label.BaseInstanceNameLabel]
+			targetPod := &corev1.Pod{}
+			err := r.Client.Get(ctx, types.NamespacedName{Name: podName, Namespace: existedModule.Namespace}, targetPod)
+			if err != nil {
+				return utils.Error(err, "Failed to get pod when scaleUpThenScaleDownModule", "moduleName", existedModule.Name, "podName", podName)
+			}
+			err = r.Client.Delete(ctx, targetPod)
+			if err != nil {
+				return utils.Error(err, "Failed to delete pod", "podName", targetPod.Name)
 			}
 		}
 	}
@@ -266,8 +294,9 @@ func (r *ModuleReplicaSetReconciler) generateModule(moduleReplicaSet *moduledepl
 			Namespace:    moduleReplicaSet.Namespace,
 		},
 		Spec: moduledeploymentv1alpha1.ModuleSpec{
-			Selector: moduleReplicaSet.Spec.Selector,
-			Module:   moduleReplicaSet.Spec.Template.Spec.Module,
+			Selector:      moduleReplicaSet.Spec.Selector,
+			Module:        moduleReplicaSet.Spec.Template.Spec.Module,
+			UpgradePolicy: moduleReplicaSet.Spec.SchedulingStrategy.UpgradePolicy,
 		},
 	}
 	// OwnerReference to moduleReplicaSet and Pod

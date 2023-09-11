@@ -83,22 +83,28 @@ rules:
   - patch
   - update
 - apiGroups:
-    - apps
+  - serverless.alipay.com
   resources:
-    - deployments
+  - pods
   verbs:
-    - get
-    - list
-    - watch
-- apiGroups: [""]
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - serverless.alipay.com
   resources:
-    - pods
+  - pods/finalizers
   verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-
+  - update
+- apiGroups:
+  - serverless.alipay.com
+  resources:
+  - pods/status
+  verbs:
+  - get
+  - patch
+  - update

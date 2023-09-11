@@ -51,11 +51,19 @@ const (
 	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
 )
 
-type DeployType string
+type DeployPolicy string
 
 const (
-	ModuleDeploymentDeployTypeSymmetric  DeployType = "symmetric"
-	ModuleDeploymentDeployTypeAsymmetric DeployType = "asymmetric"
+	ModuleDeploymentDeployPolicySymmetric  DeployPolicy = "symmetric"
+	ModuleDeploymentDeployPolicyAsymmetric DeployPolicy = "asymmetric"
+)
+
+type UpgradePolicy string
+
+const (
+	InstallThenUninstallUpgradePolicy UpgradePolicy = "install_then_uninstall"
+	UninstallThenInstallUpgradePolicy UpgradePolicy = "uninstall_then_install"
+	ScaleUpThenScaleDownUpgradePolicy UpgradePolicy = "scaleup_then_scaledown"
 )
 
 type ReleaseStatus struct {
@@ -92,9 +100,7 @@ type ModuleDeploymentCondition struct {
 	Message string `json:"message,omitempty"`
 }
 
-type ModuleDeploymentStrategy struct {
-	UpgradeType string `json:"upgradeType"`
-
+type OperationStrategy struct {
 	NeedConfirm bool `json:"needConfirm,omitempty"`
 
 	UseBeta bool `json:"useBeta,omitempty"`
@@ -104,6 +110,10 @@ type ModuleDeploymentStrategy struct {
 	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty"`
 
 	GrayTimeBetweenBatchSeconds int32 `json:"grayTimeBetweenBatchSeconds,omitempty"`
+}
+
+type SchedulingStrategy struct {
+	UpgradePolicy UpgradePolicy `json:"UpgradePolicy,omitempty"`
 }
 
 // ModuleDeploymentSpec defines the desired state of ModuleDeployment
@@ -116,7 +126,7 @@ type ModuleDeploymentSpec struct {
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
 	// +kubebuilder:validation:Enum={"symmetric","asymmetric"}
-	DeployType DeployType `json:"deployType"`
+	DeployPolicy DeployPolicy `json:"deployPolicy"`
 
 	Replicas int32 `json:"replicas,omitempty"`
 
@@ -131,7 +141,9 @@ type ModuleDeploymentSpec struct {
 	// +optional
 	Pause bool `json:"pause,omitempty"`
 
-	Strategy ModuleDeploymentStrategy `json:"strategy,omitempty"`
+	OperationStrategy OperationStrategy `json:"operationStrategy,omitempty"`
+
+	SchedulingStrategy SchedulingStrategy `json:"schedulingStrategy,omitempty"`
 }
 
 // ModuleDeploymentStatus defines the observed state of ModuleDeployment

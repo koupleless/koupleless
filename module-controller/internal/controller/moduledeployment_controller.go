@@ -145,8 +145,7 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, m
 		deployment := &v1.Deployment{}
 		err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}, deployment)
 		if err != nil {
-			log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
-			return err
+			return utils.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 		}
 		ownerReference := moduleDeployment.GetOwnerReferences()
 		ownerReference = append(ownerReference, metav1.OwnerReference{
@@ -161,8 +160,7 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, m
 		utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
 		err = r.Client.Update(ctx, moduleDeployment)
 		if err != nil {
-			log.Log.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
-			return err
+			return utils.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
 		}
 	}
 	return nil
@@ -210,8 +208,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(ctx context.Context, m
 		moduleReplicaSet.Spec.Template.Spec.Module = moduleSpec.Module
 		err := r.Client.Update(ctx, moduleReplicaSet)
 		if err != nil {
-			log.Log.Error(err, "Failed to update moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
-			return err
+			return utils.Error(err, "Failed to update moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
 		}
 		log.Log.Info("finish to update moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
 	}
@@ -231,10 +228,12 @@ func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *mo
 			Namespace:   moduleDeployment.Namespace,
 		},
 		Spec: moduledeploymentv1alpha1.ModuleReplicaSetSpec{
-			Selector:        *deployment.Spec.Selector,
-			Replicas:        moduleDeployment.Spec.Replicas,
-			Template:        moduleDeployment.Spec.Template,
-			MinReadySeconds: moduleDeployment.Spec.MinReadySeconds,
+			Selector:           *deployment.Spec.Selector,
+			Replicas:           moduleDeployment.Spec.Replicas,
+			Template:           moduleDeployment.Spec.Template,
+			OperationStrategy:  moduleDeployment.Spec.OperationStrategy,
+			SchedulingStrategy: moduleDeployment.Spec.SchedulingStrategy,
+			MinReadySeconds:    moduleDeployment.Spec.MinReadySeconds,
 		},
 	}
 	owner := []metav1.OwnerReference{

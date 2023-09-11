@@ -16,18 +16,23 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	const timeout = time.Second * 30
 	const interval = time.Second * 5
 
-	namespace := "default"
+	namespaceName := "moduledeployment-controller-namespace"
 	moduleDeploymentName := "module-deployment-test-demo"
-	moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
+
+	moduleDeployment := prepareModuleDeployment(namespaceName, moduleDeploymentName)
 	Context("create module deployment", func() {
 		It("create module replicaset", func() {
+			namespace := prepareNamespace(namespaceName)
+			Expect(k8sClient.Create(context.TODO(), &namespace)).Should(Succeed())
+			deployment := prepareDeployment(namespaceName)
+			Expect(k8sClient.Create(context.TODO(), &deployment)).Should(Succeed())
 			Expect(k8sClient.Create(context.TODO(), &moduleDeployment)).Should(Succeed())
 
 			moduleReplicaSet := &v1alpha1.ModuleReplicaSet{}
 
 			key := types.NamespacedName{
 				Name:      getModuleReplicasName(moduleDeploymentName),
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 
 			Eventually(func() bool {
@@ -41,7 +46,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		It("update module replicaset", func() {
 			key := types.NamespacedName{
 				Name:      moduleDeploymentName,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			var newModuleDeployment v1alpha1.ModuleDeployment
 			Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
@@ -52,7 +57,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 
 			moduleReplicaSetKey := types.NamespacedName{
 				Name:      getModuleReplicasName(moduleDeploymentName),
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 
 			Eventually(func() bool {
@@ -66,7 +71,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		It("clean module replicaset and deployment", func() {
 			key := types.NamespacedName{
 				Name:      moduleDeploymentName,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			var newModuleDeployment v1alpha1.ModuleDeployment
 			Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
@@ -75,7 +80,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 			moduleReplicaSet := &v1alpha1.ModuleReplicaSet{}
 			moduleReplicaSetKey := types.NamespacedName{
 				Name:      getModuleReplicasName(moduleDeploymentName),
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 
 			Eventually(func() bool {
@@ -92,13 +97,13 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	})
 })
 
-func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.ModuleDeployment {
+func prepareModuleDeployment(namespaceName, moduleDeploymentName string) v1alpha1.ModuleDeployment {
 	baseDeploymentName := "dynamic-stock-deployment"
 
 	moduleDeployment := v1alpha1.ModuleDeployment{
 		Spec: v1alpha1.ModuleDeploymentSpec{
 			BaseDeploymentName: baseDeploymentName,
-			DeployType:         moduledeploymentv1alpha1.ModuleDeploymentDeployTypeSymmetric,
+			DeployPolicy:       moduledeploymentv1alpha1.ModuleDeploymentDeployPolicySymmetric,
 			Template: v1alpha1.ModuleTemplateSpec{
 				Spec: v1alpha1.ModuleSpec{
 					Module: v1alpha1.ModuleInfo{
@@ -111,7 +116,7 @@ func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.Mo
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      moduleDeploymentName,
-			Namespace: namespace,
+			Namespace: namespaceName,
 			Labels: map[string]string{
 				"app": "dynamic-stock",
 			},

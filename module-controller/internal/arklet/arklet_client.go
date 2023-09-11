@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"io"
+	"k8s.io/utils/env"
 	"net/http"
+	"net/http/httptest"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"strconv"
 	"sync"
@@ -56,6 +58,18 @@ func init() {
 	uninstallPath = DefaultUninstallPath
 	switchPath = DefaultSwitchPath
 	port = DefaultPort
+
+	testEnv, _ := env.GetBool("test", false)
+	if testEnv {
+		svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			data := ArkletResponse{
+				Code: Success,
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(data)
+		}))
+		MockClient(svr.URL)
+	}
 }
 
 func MockClient(customMockUrl string) {

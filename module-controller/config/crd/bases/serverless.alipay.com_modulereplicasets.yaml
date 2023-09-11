@@ -37,9 +37,32 @@ spec:
               minReadySeconds:
                 format: int32
                 type: integer
+              operationStrategy:
+                properties:
+                  batchCount:
+                    format: int32
+                    type: integer
+                  grayTimeBetweenBatchSeconds:
+                    format: int32
+                    type: integer
+                  maxUnavailable:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    x-kubernetes-int-or-string: true
+                  needConfirm:
+                    type: boolean
+                  useBeta:
+                    type: boolean
+                type: object
               replicas:
                 format: int32
                 type: integer
+              schedulingStrategy:
+                properties:
+                  UpgradePolicy:
+                    type: string
+                type: object
               selector:
                 description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
                   Important: Run "make" to regenerate code after modifying this file'
@@ -164,6 +187,8 @@ spec:
                             type: object
                         type: object
                         x-kubernetes-map-type: atomic
+                      upgradePolicy:
+                        type: string
                     required:
                     - module
                     type: object
