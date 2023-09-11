@@ -14,24 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command.coordinate;
+package com.alipay.sofa.serverless.arklet.spring;
 
-import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
+import com.alipay.sofa.ark.common.util.ClassLoaderUtils;
+import com.alipay.sofa.ark.spi.constant.Constants;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 /**
- * @author mingmen
- * @date 2023/6/14
+ * @author Lunarscave
  */
-public class ExecutionLock {
-    private Command command;
+public class SpringbootBaseTest {
 
-    public static ExecutionLock newInstance(Command command) {
-        ExecutionLock executionLock = new ExecutionLock();
-        executionLock.command = command;
-        return executionLock;
+    @BeforeClass
+    public static void initSpringbootTest() {
+        ClassLoaderUtils.pushContextClassLoader(ClassLoader.getSystemClassLoader());
+        System.setProperty(Constants.EMBED_ENABLE, "true");
+        BaseSpringApplication.main(new String[] {});
     }
 
-    public Command getCommand() {
-        return command;
+    @AfterClass
+    public static void destroySpringbootTest() {
+        System.setProperty(Constants.EMBED_ENABLE, "");
     }
 }

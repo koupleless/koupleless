@@ -14,34 +14,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command;
+package com.alipay.sofa.serverless.arklet.core.command.builtin.handler;
 
-import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
+import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
+import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord;
+import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecordHolder;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
-import com.alipay.sofa.serverless.arklet.core.util.AssertUtils;
+import lombok.Getter;
+import lombok.Setter;
+
+import static com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand.QUERY_BIZ_OPS;
 
 /**
- * @author mingmen
- * @date 2023/8/6
+ * @author: yuanyuan
+ * @date: 2023/9/4 9:50 下午
  */
-public class CustomCommandHandler extends AbstractCommandHandler<Input, String> {
+public class QueryBizOpsHandler extends
+                               AbstractCommandHandler<QueryBizOpsHandler.Input, ProcessRecord> {
 
     @Override
     public void validate(Input input) throws CommandValidationException {
-        AssertUtils.isTrue(input.id > 0, "input id should larger than 0");
-        AssertUtils.isTrue(!StringUtils.isEmpty(input.userName), "input name should not be emptu");
+        notNull(input, "request is null");
+        notBlank(input.getRequestId(), "requestId is blank");
     }
 
     @Override
-    public Output<String> handle(Input input) {
-        return Output.ofSuccess("hello world");
+    public Output<ProcessRecord> handle(Input input) {
+        String requestId = input.getRequestId();
+        ProcessRecord processRecord = ProcessRecordHolder.getProcessRecord(requestId);
+        if (processRecord == null) {
+            return Output.ofFailed("Not found the corresponding ops record.");
+        }
+        return Output.ofSuccess(processRecord);
     }
 
     @Override
     public Command command() {
-        return CustomCommand.HELLO;
+        return QUERY_BIZ_OPS;
+    }
+
+    @Getter
+    @Setter
+    public static class Input extends InputMeta {
+        private String requestId;
     }
 }

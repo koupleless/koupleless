@@ -14,26 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command;
+package com.alipay.sofa.serverless.arklet.core.command.custom;
 
-import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
-import org.junit.Assert;
-import org.junit.Test;
+import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 
 /**
  * @author mingmen
- * @date 2023/6/26
+ * @date 2023/8/6
  */
-public class CommandTest {
-
-    @Test
-    public void registerCustomCommand() {
-        ArkletComponentRegistry registry = new ArkletComponentRegistry();
-        registry.initComponents();
-        ArkletComponentRegistry.getCommandServiceInstance().registerCommandHandler(
-            new CustomCommandHandler());
-        CustomCommandHandler handler = (CustomCommandHandler) ArkletComponentRegistry
-            .getCommandServiceInstance().getHandler(CustomCommand.HELLO);
-        Assert.assertNotNull(handler);
-    }
+public class Input extends InputMeta {
+    public int    id;
+    public String userName;
 }

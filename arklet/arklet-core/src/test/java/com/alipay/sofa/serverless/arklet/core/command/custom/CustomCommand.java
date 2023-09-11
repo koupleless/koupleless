@@ -14,10 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command.coordinate;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.alipay.sofa.serverless.arklet.core.command.custom;
 
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 
@@ -25,15 +22,25 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
  * @author mingmen
  * @date 2023/6/14
  */
-public class CoordinatorConfig {
-    private List<List<Command>> mutexCmds = new ArrayList<>();
+public enum CustomCommand implements Command {
 
-    public List<List<Command>> getMutexCmds() {
-        return mutexCmds;
+    HELLO("hello", "say hello");
+
+    private final String id;
+    private final String desc;
+
+    CustomCommand(String id, String desc) {
+        this.id = id;
+        this.desc = desc;
     }
 
-    public CoordinatorConfig addMutex(List<Command> commands) {
-        mutexCmds.add(commands);
-        return this;
+    @Override
+    public String getId() {
+        return this.id;
+    }
+
+    @Override
+    public String getDesc() {
+        return this.desc;
     }
 }

@@ -45,6 +45,22 @@ public class Output<T> {
         return output;
     }
 
+    public boolean success() {
+        return ResponseCode.SUCCESS.equals(code);
+    }
+
+    public boolean failed() {
+        return ResponseCode.FAILED.equals(code);
+    }
+
+    public static <T> Output<T> ofFailed(T data, String message) {
+        Output<T> output = new Output<>();
+        output.code = ResponseCode.FAILED;
+        output.data = data;
+        output.message = message;
+        return output;
+    }
+
     public String getMessage() {
         return message;
     }
