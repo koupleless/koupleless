@@ -43,5 +43,7 @@ public interface HealthService extends ArkletComponent {
 
     Health queryMasterBiz();
 
+    ArkletBaseIndicator getIndicator(String indicatorId);
+
     void registerIndicator(ArkletBaseIndicator arkletBaseIndicator);
 }

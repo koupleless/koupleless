@@ -18,6 +18,7 @@ package com.alipay.sofa.serverless.arklet.core.health.model;
 
 import com.alipay.sofa.serverless.arklet.core.util.AssertUtils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,19 +27,15 @@ import java.util.Map;
  */
 public class Health {
 
-    private final Map<String, Object> healthData = new HashMap<>();
-
-    public Health() {
-    }
+    private final Map<String, Object> healthData;
 
     public Health(Map<String, Object> healthData) {
         AssertUtils.assertNotNull(healthData, "health data must not null");
-        Health health = Health.createHealth();
-        health.setHealthData(healthData);
+        this.healthData = healthData;
     }
 
-    public static Health createHealth() {
-        return new Health();
+    public Health(HealthBuilder builder) {
+        this.healthData = Collections.unmodifiableMap(builder.healthData);
     }
 
     public Map<String, Object> getHealthData() {
@@ -51,34 +48,12 @@ public class Health {
         this.healthData.putAll(healthData);
     }
 
-    public Health putHealthData(String key, Object value) {
-        this.healthData.put(key, value);
-        return this;
+    public boolean containsError(String errorCode) {
+        return this.healthData.containsKey(errorCode);
     }
 
-    public Health putAllHealthData(Map<String, ?> healthData) {
-        AssertUtils.assertNotNull(healthData, "health data must not null");
-        this.healthData.putAll(healthData);
-        return this;
-    }
-
-    public Health putAllHealthData(Health healthData) {
-        this.healthData.putAll(healthData.getHealthData());
-        return this;
-    }
-
-    public Health putErrorData(String errorCode, String message) {
-        this.healthData.clear();
-        this.healthData.put(errorCode, message);
-        return this;
-    }
-
-    public static boolean containsError(Health health, String errorCode) {
-        return health != null && health.healthData.containsKey(errorCode);
-    }
-
-    public static boolean containsUnhealthy(Health healthDataModel, String healthyCode) {
-        Map<String, Object> healthData = healthDataModel.getHealthData();
+    public boolean containsUnhealthy(String healthyCode) {
+        Map<String, Object> healthData = this.getHealthData();
         boolean isUnhealthy = false;
         for (String key : healthData.keySet()) {
             Object value = healthData.get(key);
@@ -98,4 +73,38 @@ public class Health {
         return isUnhealthy;
     }
 
+    public static class HealthBuilder {
+        private final Map<String, Object> healthData = new HashMap<>();
+
+        public Health build() {
+            return new Health(this);
+        }
+
+        public HealthBuilder init() {
+            this.healthData.clear();
+            return this;
+        }
+
+        public HealthBuilder putAllHealthData(Health healthData) {
+            this.healthData.putAll(healthData.getHealthData());
+            return this;
+        }
+
+        public HealthBuilder putHealthData(String key, Object value) {
+            this.healthData.put(key, value);
+            return this;
+        }
+
+        public HealthBuilder putErrorData(String errorCode, String message) {
+            this.healthData.clear();
+            this.healthData.put(errorCode, message);
+            return this;
+        }
+
+        public HealthBuilder putAllHealthData(Map<String, ?> healthData) {
+            AssertUtils.assertNotNull(healthData, "health data must not null");
+            this.healthData.putAll(healthData);
+            return this;
+        }
+    }
 }

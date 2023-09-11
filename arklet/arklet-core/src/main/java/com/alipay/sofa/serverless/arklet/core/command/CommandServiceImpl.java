@@ -32,7 +32,7 @@ import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryAllBi
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.QueryBizOpsHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.SwitchBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.*;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HealthHandler;
 import com.alipay.sofa.serverless.arklet.core.command.coordinate.BizOpsCommandCoordinator;
 import com.alipay.sofa.serverless.arklet.core.command.executor.ExecutorServiceManager;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;

@@ -16,6 +16,10 @@
  */
 package com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint.model;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Lunarscave
  */
@@ -31,5 +35,25 @@ public enum EndpointResponseCode {
 
     public int getCode() {
         return code;
+    }
+
+    public static EndpointResponseCode getEndpointResponseCode(int code) {
+        Set<EndpointResponseCode> codes = new HashSet<>(Arrays.asList(values()));
+        EndpointResponseCode endpointResponseCode = null;
+        for (EndpointResponseCode codeType : codes) {
+            if (codeType.getCode() == code) {
+                endpointResponseCode = codeType;
+            }
+        }
+        return endpointResponseCode;
+    }
+
+    public static boolean existCode(int code) {
+        Set<EndpointResponseCode> codes = new HashSet<>(Arrays.asList(values()));
+        boolean exists = false;
+        for (EndpointResponseCode codeType : codes) {
+            exists |= codeType.getCode() == code;
+        }
+        return exists;
     }
 }

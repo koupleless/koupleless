@@ -18,22 +18,23 @@ package com.alipay.sofa.serverless.arklet.spring;
 
 import com.alipay.sofa.ark.common.util.ClassLoaderUtils;
 import com.alipay.sofa.ark.spi.constant.Constants;
-import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
-import org.junit.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 /**
- * @author mingmen
- * @date 2023/6/26
+ * @author Lunarscave
  */
-public class SpringbootRunnerTest extends SpringbootBaseTest {
+public class SpringbootBaseTest {
 
-    @Test
-    public void testArkletService() {
-        Assert.assertNotNull(ArkletComponentRegistry.getCommandServiceInstance());
-        Assert.assertNotNull(ArkletComponentRegistry.getHealthServiceInstance());
-        Assert.assertNotNull(ArkletComponentRegistry.getOperationServiceInstance());
+    @BeforeClass
+    public static void initSpringbootTest() {
+        ClassLoaderUtils.pushContextClassLoader(ClassLoader.getSystemClassLoader());
+        System.setProperty(Constants.EMBED_ENABLE, "true");
+        BaseSpringApplication.main(new String[] {});
+    }
+
+    @AfterClass
+    public static void destroySpringbootTest() {
+        System.setProperty(Constants.EMBED_ENABLE, "");
     }
 }
