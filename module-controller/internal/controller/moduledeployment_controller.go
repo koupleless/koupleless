@@ -19,10 +19,13 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strconv"
+
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 	"github.com/sofastack/sofa-serverless/internal/utils"
+
 	v1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -44,6 +47,9 @@ type ModuleDeploymentReconciler struct {
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=moduledeployments,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=moduledeployments/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=moduledeployments/finalizers,verbs=update
+
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
+//+kubebuilder:rbac:groups=,resources=pods,verbs=create;delete;get;list;patch;update;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -223,6 +229,8 @@ func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *mo
 	newLabels := moduleDeployment.Labels
 	newLabels[label.ModuleNameLabel] = moduleDeployment.Spec.Template.Spec.Module.Name
 	newLabels[label.ModuleDeploymentLabel] = moduleDeployment.Name
+	newLabels[label.ModuleSchedulingStrategy] = string(moduleDeployment.Spec.SchedulingStrategy.SchedulingType)
+	newLabels[label.MaxModuleCount] = strconv.Itoa(moduleDeployment.Spec.SchedulingStrategy.MaxModuleCount)
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},

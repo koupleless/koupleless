@@ -35,8 +35,6 @@ spec:
             description: ModuleSpec defines the desired state of Module
             properties:
               module:
-                description: Foo is an example field of Module. Edit module_types.go
-                  to remove/update
                 properties:
                   md5:
                     type: string
@@ -57,8 +55,10 @@ spec:
                 - version
                 type: object
               selector:
-                description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-                  Important: Run "make" to regenerate code after modifying this file'
+                description: A label selector is a label query over a set of resources.
+                  The result of matchLabels and matchExpressions are ANDed. An empty
+                  label selector matches all objects. A null label selector matches
+                  no objects.
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.

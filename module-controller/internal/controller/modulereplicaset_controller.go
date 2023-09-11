@@ -19,16 +19,19 @@ package controller
 import (
 	"context"
 	"fmt"
-	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
-	label "github.com/sofastack/sofa-serverless/internal/constants/label"
-	"github.com/sofastack/sofa-serverless/internal/utils"
+	"sort"
+	"strconv"
+
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/utils/pointer"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"strconv"
+
+	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/utils"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -47,6 +50,9 @@ type ModuleReplicaSetReconciler struct {
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets/finalizers,verbs=update
+
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
+//+kubebuilder:rbac:groups=,resources=pods,verbs=create;delete;get;list;patch;update;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -112,83 +118,6 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	return ctrl.Result{}, nil
-}
-
-// scale up module
-func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
-	log.Log.Info("start scaleup module", "moduleReplicaSetName", moduleReplicaSet.Name)
-	deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
-	selector, err := metav1.LabelSelectorAsSelector(&moduleReplicaSet.Spec.Selector)
-	selectedPods := &corev1.PodList{}
-	if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: moduleReplicaSet.Namespace, LabelSelector: selector}); err != nil {
-		log.Log.Error(err, "Failed to list pod", "moduleReplicaSetName", moduleReplicaSet.Name)
-		return err
-	}
-
-	usedPodNames := make(map[string]bool)
-	for _, module := range existedModuleList.Items {
-		usedPodNames[module.Labels[label.BaseInstanceNameLabel]] = true
-	}
-
-	// allocate pod
-	var toAllocatePod []corev1.Pod
-	count := deltaReplicas
-	for _, pod := range selectedPods.Items {
-		if _, ok := usedPodNames[pod.Name]; !ok {
-			toAllocatePod = append(toAllocatePod, pod)
-			if count--; count == 0 {
-				break
-			}
-		}
-	}
-
-	for _, pod := range toAllocatePod {
-		pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, moduleReplicaSet.Spec.Template.Spec.Module.Name)] = moduleReplicaSet.Spec.Template.Spec.Module.Version
-		if _, exist := pod.Labels[label.ModuleInstanceCount]; exist {
-			count, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
-			if err != nil {
-				log.Log.Error(err, "failed to update module count")
-			} else {
-				pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(count + 1)
-			}
-		} else {
-			pod.Labels[label.ModuleInstanceCount] = "1"
-		}
-		err := r.Client.Update(ctx, &pod)
-		// TODO add pod finalizer
-		if err != nil {
-			// update pod label
-			return err
-		}
-		// create module
-		module := r.generateModule(moduleReplicaSet, pod)
-		if err = r.Client.Create(ctx, module); err != nil {
-			log.Log.Error(err, "Failed to create module", "moduleName", module.Name)
-			return err
-		}
-	}
-	log.Log.Info("finish scaleup module", "moduleReplicaSetName", moduleReplicaSet.Name)
-	return nil
-}
-
-// scale down module
-func (r *ModuleReplicaSetReconciler) scaledown(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
-	deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
-	count := -deltaReplicas
-	log.Log.Info("scale down replicas", "deltaReplicas", deltaReplicas)
-	var err error
-	for _, existedModule := range existedModuleList.Items {
-		existedModule.Labels[label.DeleteModuleLabel] = "true"
-		err = r.Client.Update(ctx, &existedModule)
-		if err != nil {
-			log.Log.Error(err, "Failed to delete module", "module", existedModule)
-		}
-		if count--; count == 0 {
-			break
-		}
-
-	}
-	return err
 }
 
 // compare and update module
@@ -292,4 +221,207 @@ func (r *ModuleReplicaSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&moduledeploymentv1alpha1.ModuleReplicaSet{}).
 		Complete(r)
+}
+
+// scale up module
+func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+	log.Log.Info("start scaleup module", "moduleReplicaSetName", moduleReplicaSet.Name)
+	selector, err := metav1.LabelSelectorAsSelector(&moduleReplicaSet.Spec.Selector)
+	selectedPods := &corev1.PodList{}
+	if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: moduleReplicaSet.Namespace, LabelSelector: selector}); err != nil {
+		log.Log.Error(err, "Failed to list pod", "moduleReplicaSetName", moduleReplicaSet.Name)
+		return err
+	}
+
+	toAllocatePod, err := r.getScaleUpCandidatePods(existedModuleList, selectedPods, moduleReplicaSet)
+	if err != nil {
+		log.Log.Error(err, "Failed to get the candidate pods for scaling up")
+		return err
+	}
+	for _, pod := range toAllocatePod {
+		pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, moduleReplicaSet.Spec.Template.Spec.Module.Name)] = moduleReplicaSet.Spec.Template.Spec.Module.Version
+		if _, exist := pod.Labels[label.ModuleInstanceCount]; exist {
+			count, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
+			if err != nil {
+				log.Log.Error(err, "failed to update module count")
+			} else {
+				pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(count + 1)
+			}
+		} else {
+			pod.Labels[label.ModuleInstanceCount] = "1"
+		}
+		err := r.Client.Update(ctx, &pod)
+		// TODO add pod finalizer
+		if err != nil {
+			// update pod label
+			return err
+		}
+		// create module
+		module := r.generateModule(moduleReplicaSet, pod)
+		if err = r.Client.Create(ctx, module); err != nil {
+			log.Log.Error(err, "Failed to create module", "moduleName", module.Name)
+			return err
+		}
+	}
+	log.Log.Info("finish scaleup module", "moduleReplicaSetName", moduleReplicaSet.Name)
+	return nil
+}
+
+// scale down module
+func (r *ModuleReplicaSetReconciler) scaledown(ctx context.Context, existedModuleList *moduledeploymentv1alpha1.ModuleList, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+	deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
+	count := -deltaReplicas
+	log.Log.Info("scale down replicas", "deltaReplicas", deltaReplicas)
+
+	selector, err := metav1.LabelSelectorAsSelector(&moduleReplicaSet.Spec.Selector)
+	selectedPods := &corev1.PodList{}
+	if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: moduleReplicaSet.Namespace, LabelSelector: selector}); err != nil {
+		log.Log.Error(err, "Failed to list pod", "moduleReplicaSetName", moduleReplicaSet.Name)
+		return err
+	}
+	toDeletedModules := r.getScaleDownCandidateModules(existedModuleList, selectedPods, moduleReplicaSet)
+	for _, module := range toDeletedModules {
+		module.Labels[label.DeleteModuleLabel] = "true"
+		err = r.Client.Update(ctx, &module)
+		if err != nil {
+			log.Log.Error(err, "Failed to delete module", "module", module)
+		}
+		if count--; count == 0 {
+			break
+		}
+	}
+
+	return err
+}
+
+// get the candidate pods used to install modules when scaling up
+func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(
+	existedModuleList *moduledeploymentv1alpha1.ModuleList,
+	selectedPods *corev1.PodList,
+	moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet,
+) ([]corev1.Pod, error) {
+	deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
+	usedPodNames := make(map[string]bool)
+	for _, module := range existedModuleList.Items {
+		usedPodNames[module.Labels[label.BaseInstanceNameLabel]] = true
+	}
+
+	// get strategy, maxModuleCount from replicaSet Labels
+	strategyLabel := moduleReplicaSet.Labels[label.ModuleSchedulingStrategy]
+	strategy := moduledeploymentv1alpha1.ModuleSchedulingType(strategyLabel)
+
+	maxModuleCountLabel := moduleReplicaSet.Labels[label.MaxModuleCount]
+	maxModuleCount, err := strconv.Atoi(maxModuleCountLabel)
+	if err != nil {
+		return nil, err
+	}
+
+	if strategy == moduledeploymentv1alpha1.Scatter {
+		sort.Slice(selectedPods.Items, func(i, j int) bool {
+			count_i, err := strconv.Atoi(selectedPods.Items[i].Labels[label.ModuleInstanceCount])
+			if err != nil {
+				return true
+			}
+			count_j, err := strconv.Atoi(selectedPods.Items[j].Labels[label.ModuleInstanceCount])
+			if err != nil {
+				return true
+			}
+
+			return count_i < count_j
+		})
+	} else if strategy == moduledeploymentv1alpha1.Stacking {
+		sort.Slice(selectedPods.Items, func(i, j int) bool {
+			count_i, err := strconv.Atoi(selectedPods.Items[i].Labels[label.ModuleInstanceCount])
+			if err != nil {
+				return true
+			}
+			count_j, err := strconv.Atoi(selectedPods.Items[j].Labels[label.ModuleInstanceCount])
+			if err != nil {
+				return true
+			}
+
+			return count_i > count_j
+		})
+	}
+
+	// allocate pod
+	var toAllocatePod []corev1.Pod
+	count := deltaReplicas
+	for _, pod := range selectedPods.Items {
+		instanceCount, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
+		if err != nil {
+			log.Log.Error(err, fmt.Sprintf("invalid ModuleInstanceCount in pod %v", pod.Name))
+			continue
+		}
+		if _, ok := usedPodNames[pod.Name]; !ok && instanceCount < maxModuleCount {
+			toAllocatePod = append(toAllocatePod, pod)
+			if count--; count == 0 {
+				break
+			}
+		}
+	}
+	return toAllocatePod, nil
+}
+
+// get the candidate modules to be deleted when scaling down
+func (r *ModuleReplicaSetReconciler) getScaleDownCandidateModules(
+	existedModuleList *moduledeploymentv1alpha1.ModuleList,
+	selectedPods *corev1.PodList,
+	moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet,
+) []moduledeploymentv1alpha1.Module {
+	deltaReplicas := int(moduleReplicaSet.Spec.Replicas) - len(existedModuleList.Items)
+	usedPodNames := make(map[string]int)
+	for idx, module := range existedModuleList.Items {
+		usedPodNames[module.Labels[label.BaseInstanceNameLabel]] = idx
+	}
+
+	var filteredPods []*corev1.Pod
+	for i := 0; i < len(selectedPods.Items); i++ {
+		if _, ok := usedPodNames[selectedPods.Items[i].Name]; ok {
+			filteredPods = append(filteredPods, &selectedPods.Items[i])
+		}
+	}
+
+	// get strategy, maxModuleCount from replicaSet Labels
+	strategyLabel := moduleReplicaSet.Labels[label.ModuleSchedulingStrategy]
+	strategy := moduledeploymentv1alpha1.ModuleSchedulingType(strategyLabel)
+
+	if strategy == moduledeploymentv1alpha1.Scatter {
+		sort.Slice(filteredPods, func(i, j int) bool {
+			count_i, err := strconv.Atoi(filteredPods[i].Labels[label.ModuleInstanceCount])
+			if err != nil {
+				return true
+			}
+			count_j, err := strconv.Atoi(filteredPods[j].Labels[label.ModuleInstanceCount])
+			if err != nil {
+				return false
+			}
+
+			return count_i > count_j
+		})
+	} else if strategy == moduledeploymentv1alpha1.Stacking {
+		sort.Slice(filteredPods, func(i, j int) bool {
+			count_i, err := strconv.Atoi(filteredPods[i].Labels[label.ModuleInstanceCount])
+			if err != nil {
+				return true
+			}
+			count_j, err := strconv.Atoi(filteredPods[j].Labels[label.ModuleInstanceCount])
+			if err != nil {
+				return false
+			}
+
+			return count_i < count_j
+		})
+	}
+
+	var candidateModules []moduledeploymentv1alpha1.Module
+	i := 0
+	count := -deltaReplicas
+	for count > 0 && i < len(filteredPods) {
+		idx := usedPodNames[filteredPods[i].Name]
+		candidateModules = append(candidateModules, existedModuleList.Items[idx])
+		count -= 1
+		i += 1
+	}
+	return candidateModules
 }

@@ -2,16 +2,19 @@ package controller
 
 import (
 	"context"
+	"time"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
-	"github.com/sofastack/sofa-serverless/internal/utils"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"time"
+
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/utils"
 )
 
 var _ = Describe("ModuleReplicaSet Controller", func() {
@@ -178,7 +181,9 @@ func prepareModuleReplicaSet(namespace, moduleReplicaSetName string) v1alpha1.Mo
 			Name:      moduleReplicaSetName,
 			Namespace: namespace,
 			Labels: map[string]string{
-				"app": "dynamic-stock",
+				"app":                          "dynamic-stock",
+				label.MaxModuleCount:           "10",
+				label.ModuleSchedulingStrategy: string(v1alpha1.Scatter),
 			},
 			Annotations: map[string]string{},
 		},

@@ -71,11 +71,8 @@ type ModuleInfo struct {
 
 // ModuleSpec defines the desired state of Module
 type ModuleSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 	Selector metav1.LabelSelector `json:"selector,omitempty"`
-	// Foo is an example field of Module. Edit module_types.go to remove/update
-	Module ModuleInfo `json:"module"`
+	Module   ModuleInfo           `json:"module"`
 }
 
 // ModuleStatus defines the observed state of Module

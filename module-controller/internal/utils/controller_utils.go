@@ -2,10 +2,15 @@ package utils
 
 import (
 	"fmt"
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"strings"
+	"time"
+
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
-	"time"
+
+	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
 )
 
 type ModuleReplicaSetsByCreationTimestamp []*moduledeploymentv1alpha1.ModuleReplicaSet
@@ -84,4 +89,13 @@ func GetNextReconcileTime(currentTime time.Time) time.Duration {
 		nextDuration = time.Second * 10
 	}
 	return nextDuration
+}
+
+func GetModuleCountFromPod(pod *corev1.Pod) (count int) {
+	for k, _ := range pod.Labels {
+		if strings.HasPrefix(k, label.ModuleNameLabel) {
+			count += 1
+		}
+	}
+	return count
 }

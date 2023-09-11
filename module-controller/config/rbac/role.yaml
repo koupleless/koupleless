@@ -4,6 +4,24 @@ kind: ClusterRole
 metadata:
   name: manager-role
 rules:
+- resources:
+  - pods
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
 - apiGroups:
   - serverless.alipay.com
   resources:
@@ -82,23 +100,3 @@ rules:
   - get
   - patch
   - update
-- apiGroups:
-    - apps
-  resources:
-    - deployments
-  verbs:
-    - get
-    - list
-    - watch
-- apiGroups: [""]
-  resources:
-    - pods
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-
