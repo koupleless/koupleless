@@ -19,8 +19,6 @@ package com.alipay.sofa.serverless.arklet.core.common.log;
 import com.alipay.sofa.common.log.LoggerSpaceManager;
 
 /**
- * LoggerFactory for SOFAArk
- /**
  * @author mingmen
  * @date 2023/6/14
  */

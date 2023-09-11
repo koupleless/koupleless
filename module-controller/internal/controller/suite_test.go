@@ -18,11 +18,14 @@ package controller
 
 import (
 	"fmt"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"path/filepath"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"testing"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
+
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -179,7 +182,8 @@ func preparePod(namespaceName string, podName string) corev1.Pod {
 			Name:      podName,
 			Namespace: namespaceName,
 			Labels: map[string]string{
-				"app": "dynamic-stock",
+				"app":                     "dynamic-stock",
+				label.ModuleInstanceCount: "0",
 			},
 		},
 		Spec: corev1.PodSpec{

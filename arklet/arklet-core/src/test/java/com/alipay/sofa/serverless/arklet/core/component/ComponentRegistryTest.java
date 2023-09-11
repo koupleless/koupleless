@@ -33,6 +33,7 @@ public class ComponentRegistryTest {
         Assert.assertNotNull(ArkletComponentRegistry.getCommandServiceInstance());
         Assert.assertNotNull(ArkletComponentRegistry.getOperationServiceInstance());
         Assert.assertNotNull(ArkletComponentRegistry.getApiClientInstance());
+        Assert.assertNotNull(ArkletComponentRegistry.getHealthServiceInstance());
         Assert.assertTrue(ArkletComponentRegistry.getApiClientInstance().getTunnels().size() > 0);
         registry.destroyComponents();
     }

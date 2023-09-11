@@ -19,11 +19,8 @@ package controller
 import (
 	"context"
 	"fmt"
-	v1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/arklet"
-	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
-	"github.com/sofastack/sofa-serverless/internal/utils"
+	"strconv"
+
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -36,7 +33,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"strconv"
+
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/internal/arklet"
+	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/utils"
+)
+
+const (
+	ProtectModuleFinalizer = "module-installed"
 )
 
 // ModuleReconciler reconciles a Module object
@@ -49,6 +55,9 @@ type ModuleReconciler struct {
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=modules/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=modules/finalizers,verbs=update
 
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
+//+kubebuilder:rbac:groups=,resources=pods,verbs=create;delete;get;list;patch;update;watch
+
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
@@ -59,7 +68,8 @@ type ModuleReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.15.0/pkg/reconcile
 func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-
+	log.Log.Info("start reconcile for module", "request", req)
+	defer log.Log.Info("finish reconcile for module", "request", req)
 	// get module
 	module := &v1alpha1.Module{}
 	err := r.Client.Get(ctx, req.NamespacedName, module)
@@ -114,6 +124,8 @@ func (r *ModuleReconciler) parseModuleInstanceStatus(ctx context.Context, module
 		moduleInstanceStatus = v1alpha1.ModuleInstanceStatusPrepare
 	}
 	module.Status.Status = moduleInstanceStatus
+	module.Status.LastTransitionTime = metav1.Now()
+	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", moduleInstanceStatus))
 	err := r.Status().Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
@@ -278,6 +290,8 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 		// already schedule ip
 		log.Log.Info("module is already schedule ip", "moduleName", module.Spec.Module.Name, "module", module.Name, "ip", module.Labels[label.BaseInstanceIpLabel])
 		module.Status.Status = v1alpha1.ModuleInstanceStatusPrepare
+		module.Status.LastTransitionTime = metav1.Now()
+		log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusPrepare))
 		err := r.Status().Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
@@ -361,6 +375,8 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 func (r *ModuleReconciler) handlePrepareModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	// TODO pre hook
 	module.Status.Status = v1alpha1.ModuleInstanceStatusUpgrading
+	module.Status.LastTransitionTime = metav1.Now()
+	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusUpgrading))
 	err := r.Status().Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
@@ -385,6 +401,8 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, mo
 
 	// update status
 	module.Status.Status = v1alpha1.ModuleInstanceStatusCompleting
+	module.Status.LastTransitionTime = metav1.Now()
+	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusCompleting))
 	err = r.Status().Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
@@ -398,6 +416,7 @@ func (r *ModuleReconciler) handleCompletingModuleInstance(ctx context.Context, m
 	if !utils.HasFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer) {
 		// add installed module finalizer
 		utils.AddFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
+		log.Log.Info(fmt.Sprintf("%s%s", "module add finalizers value is ", finalizer.ModuleInstalledFinalizer))
 		err := r.Client.Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
@@ -405,6 +424,8 @@ func (r *ModuleReconciler) handleCompletingModuleInstance(ctx context.Context, m
 	} else {
 		// update to available status
 		module.Status.Status = v1alpha1.ModuleInstanceStatusAvailable
+		module.Status.LastTransitionTime = metav1.Now()
+		log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusAvailable))
 		err := r.Status().Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err

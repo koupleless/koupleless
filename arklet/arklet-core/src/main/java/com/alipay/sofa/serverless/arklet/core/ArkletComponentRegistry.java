@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import com.alipay.sofa.serverless.arklet.core.health.HealthService;
+import com.alipay.sofa.serverless.arklet.core.health.HealthServiceImpl;
 import com.alipay.sofa.serverless.arklet.core.api.ApiClient;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.command.CommandServiceImpl;
@@ -92,6 +94,10 @@ public class ArkletComponentRegistry {
         return componentInjector.getInstance(CommandService.class);
     }
 
+    public static HealthService getHealthServiceInstance() {
+        return componentInjector.getInstance(HealthService.class);
+    }
+
     public static ApiClient getApiClientInstance() {
         return componentInjector.getInstance(ApiClient.class);
     }
@@ -104,10 +110,11 @@ public class ArkletComponentRegistry {
             componentMultibinder.addBinding().to(CommandServiceImpl.class);
             componentMultibinder.addBinding().to(ApiClient.class);
             componentMultibinder.addBinding().to(UnifiedOperationServiceImpl.class);
+            componentMultibinder.addBinding().to(HealthServiceImpl.class);
 
             bind(CommandService.class).to(CommandServiceImpl.class);
             bind(UnifiedOperationService.class).to(UnifiedOperationServiceImpl.class);
-
+            bind(HealthService.class).to(HealthServiceImpl.class);
         }
     }
 }

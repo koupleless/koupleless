@@ -17,5 +17,9 @@ const (
 
 	ModuleInstanceCount = "serverless.alipay.com/module-instance-count"
 
+	ModuleSchedulingStrategy = "serverless.alipay.com/module-scheduling-strategy"
+
+	MaxModuleCount = "serverless.alipay.com/max-module-count"
+
 	NewReplicatedModuleLabel = "serverless.alipay.com/new-replicated-module"
 )

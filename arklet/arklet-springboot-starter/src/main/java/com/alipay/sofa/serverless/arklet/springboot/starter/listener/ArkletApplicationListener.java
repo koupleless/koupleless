@@ -54,8 +54,9 @@ public class ArkletApplicationListener implements ApplicationListener<Applicatio
             LOGGER.info("total supported commands:{}", commands);
         }
         if (event instanceof ContextClosedEvent) {
-            ArkletComponentRegistry registry = event.getApplicationContext().getBean(ArkletComponentRegistry.class);
-            registry.destroyComponents();
+            // destroy arklet components
+            ArkletComponentRegistry componentRegistry = event.getApplicationContext().getBean(ArkletComponentRegistry.class);
+            componentRegistry.destroyComponents();
         }
 
     }

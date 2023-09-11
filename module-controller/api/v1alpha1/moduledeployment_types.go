@@ -66,6 +66,13 @@ const (
 	ScaleUpThenScaleDownUpgradePolicy UpgradePolicy = "scaleup_then_scaledown"
 )
 
+type ModuleSchedulingType string
+
+const (
+	Scatter  ModuleSchedulingType = "Scatter"
+	Stacking ModuleSchedulingType = "Stacking"
+)
+
 type ReleaseStatus struct {
 	// Records the latest revision.
 	// +optional
@@ -99,6 +106,12 @@ type ModuleDeploymentCondition struct {
 	// A human readable message indicating details about the transition.
 	Message string `json:"message,omitempty"`
 }
+
+type ModuleSchedulingStrategy struct {
+	SchedulingType ModuleSchedulingType `json:"schedulingType"`
+	MaxModuleCount int                  `json:"maxModuleCount"`
+}
+
 
 type OperationStrategy struct {
 	NeedConfirm bool `json:"needConfirm,omitempty"`

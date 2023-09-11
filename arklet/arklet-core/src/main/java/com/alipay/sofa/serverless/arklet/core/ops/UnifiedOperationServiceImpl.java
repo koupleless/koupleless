@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ClientResponse;
-import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.ark.spi.constant.Constants;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizOperation;
@@ -43,10 +42,11 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
 
     }
 
-    public ClientResponse install(String bizPath) throws Throwable {
+    @Override
+    public ClientResponse install(String bizUrl) throws Throwable {
         BizOperation bizOperation = new BizOperation()
             .setOperationType(BizOperation.OperationType.INSTALL);
-        bizOperation.putParameter(Constants.CONFIG_BIZ_URL, "file://" + bizPath);
+        bizOperation.putParameter(Constants.CONFIG_BIZ_URL, bizUrl);
         return ArkClient.installOperation(bizOperation);
     }
 
