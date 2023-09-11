@@ -39,6 +39,11 @@ spec:
                   Important: Run "make" to regenerate code after modifying this file'
                 minLength: 1
                 type: string
+              deployPolicy:
+                enum:
+                - symmetric
+                - asymmetric
+                type: string
               minReadySeconds:
                 format: int32
                 type: integer
@@ -57,12 +62,8 @@ spec:
                     x-kubernetes-int-or-string: true
                   needConfirm:
                     type: boolean
-                  upgradeType:
-                    type: string
                   useBeta:
                     type: boolean
-                required:
-                - upgradeType
                 type: object
               pause:
                 description: Indicates that the moduleDeployment is paused and will
@@ -73,21 +74,14 @@ spec:
                 type: integer
               replicas:
                 format: int32
-                minimum: -1
                 type: integer
               revisionHistoryLimit:
                 format: int32
                 type: integer
               schedulingStrategy:
                 properties:
-                  schedulingType:
-                    default: scatter
-                    enum:
-                    - scatter
-                    - stacking
+                  UpgradePolicy:
                     type: string
-                required:
-                - schedulingType
                 type: object
               template:
                 properties:
@@ -98,6 +92,8 @@ spec:
                     description: Specification of the desired behavior of the module
                     properties:
                       module:
+                        description: Foo is an example field of Module. Edit module_types.go
+                          to remove/update
                         properties:
                           md5:
                             type: string
@@ -118,10 +114,9 @@ spec:
                         - version
                         type: object
                       selector:
-                        description: A label selector is a label query over a set
-                          of resources. The result of matchLabels and matchExpressions
-                          are ANDed. An empty label selector matches all objects.
-                          A null label selector matches no objects.
+                        description: 'INSERT ADDITIONAL SPEC FIELDS - desired state
+                          of cluster Important: Run "make" to regenerate code after
+                          modifying this file'
                         properties:
                           matchExpressions:
                             description: matchExpressions is a list of label selector
@@ -166,12 +161,15 @@ spec:
                             type: object
                         type: object
                         x-kubernetes-map-type: atomic
+                      upgradePolicy:
+                        type: string
                     required:
                     - module
                     type: object
                 type: object
             required:
             - baseDeploymentName
+            - deployPolicy
             type: object
           status:
             description: ModuleDeploymentStatus defines the observed state of ModuleDeployment

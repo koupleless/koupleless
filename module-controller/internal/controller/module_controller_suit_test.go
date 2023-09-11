@@ -24,16 +24,19 @@ var _ = Describe("Module Controller", func() {
 	const timeout = time.Second * 30
 	const interval = time.Second * 3
 	moduleName := "test-module-name"
-	namespace := "default"
+	namespaceName := "module-controller-namespace"
+	podName := "test-pod-name"
 
 	Context("create module deployment without pod", func() {
 		It("should be pending status", func() {
-			module := prepareModule()
+			namespace := prepareNamespace(namespaceName)
+			Expect(k8sClient.Create(context.TODO(), &namespace)).Should(Succeed())
+			module := prepareModule(namespaceName, moduleName)
 			Expect(k8sClient.Create(context.TODO(), &module)).Should(Succeed())
 
 			key := types.NamespacedName{
 				Name:      moduleName,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			Eventually(func() bool {
 				k8sClient.Get(context.TODO(), key, &module)
@@ -45,7 +48,7 @@ var _ = Describe("Module Controller", func() {
 		})
 	})
 
-	module := prepareModule()
+	module := prepareModule(namespaceName, moduleName)
 	Context("create module deployment with pod", func() {
 		svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			data := arklet.ArkletResponse{
@@ -57,7 +60,7 @@ var _ = Describe("Module Controller", func() {
 		arklet.MockClient(svr.URL)
 
 		It("should be available status", func() {
-			pod := preparePod("fake-pod-2")
+			pod := preparePod(namespaceName, podName)
 			k8sClient.Create(context.TODO(), &pod)
 			pod.Status.PodIP = "127.0.0.1"
 			k8sClient.Status().Update(context.TODO(), &pod)
@@ -66,7 +69,7 @@ var _ = Describe("Module Controller", func() {
 
 			key := types.NamespacedName{
 				Name:      moduleName,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			Eventually(func() bool {
 				k8sClient.Get(context.TODO(), key, &module)
@@ -89,7 +92,7 @@ var _ = Describe("Module Controller", func() {
 			Expect(k8sClient.Create(context.TODO(), &moduleReplicaSet)).Should(Succeed())
 			key := types.NamespacedName{
 				Name:      moduleName,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			Eventually(func() bool {
 				err := k8sClient.Get(context.TODO(), key, &module)
@@ -114,7 +117,7 @@ var _ = Describe("Module Controller", func() {
 			Expect(k8sClient.Update(context.TODO(), &module)).Should(Succeed())
 			key := types.NamespacedName{
 				Name:      module.Name,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			Eventually(func() bool {
 				err := k8sClient.Get(context.TODO(), key, &module)
@@ -127,9 +130,7 @@ var _ = Describe("Module Controller", func() {
 	})
 })
 
-func prepareModule() v1alpha1.Module {
-	moduleName := "test-module-name"
-	namespace := "default"
+func prepareModule(namespace string, moduleName string) v1alpha1.Module {
 	module := v1alpha1.Module{
 		Spec: v1alpha1.ModuleSpec{
 			Selector: metav1.LabelSelector{

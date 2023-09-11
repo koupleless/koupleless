@@ -102,6 +102,8 @@ spec:
                     type: object
                 type: object
                 x-kubernetes-map-type: atomic
+              upgradePolicy:
+                type: string
             required:
             - module
             type: object

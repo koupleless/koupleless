@@ -33,6 +33,10 @@ type ModuleReplicaSetSpec struct {
 
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
+	OperationStrategy OperationStrategy `json:"operationStrategy,omitempty"`
+
+	SchedulingStrategy SchedulingStrategy `json:"schedulingStrategy,omitempty"`
+
 	MinReadySeconds int32 `json:"minReadySeconds,omitempty"`
 }
 

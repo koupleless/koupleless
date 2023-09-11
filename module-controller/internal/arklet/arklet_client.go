@@ -4,16 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"io"
+	"k8s.io/utils/env"
 	"net/http"
 	"net/http/httptest"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 	"strconv"
 	"sync"
-
-	"k8s.io/utils/env"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 )
 
 const (

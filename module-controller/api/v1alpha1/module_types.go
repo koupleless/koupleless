@@ -71,8 +71,13 @@ type ModuleInfo struct {
 
 // ModuleSpec defines the desired state of Module
 type ModuleSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
 	Selector metav1.LabelSelector `json:"selector,omitempty"`
-	Module   ModuleInfo           `json:"module"`
+	// Foo is an example field of Module. Edit module_types.go to remove/update
+	Module ModuleInfo `json:"module"`
+
+	UpgradePolicy UpgradePolicy `json:"upgradePolicy,omitempty"`
 }
 
 // ModuleStatus defines the observed state of Module
@@ -81,8 +86,6 @@ type ModuleStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	Status ModuleInstanceStatus `json:"status,omitempty"`
-	// Last time the ModuleStatus transitioned from one status to another.
-	LastTransitionTime metav1.Time `json:"last_transition_time,omitempty"`
 }
 
 //+kubebuilder:object:root=true

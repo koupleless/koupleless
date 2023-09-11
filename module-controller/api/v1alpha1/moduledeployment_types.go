@@ -46,16 +46,24 @@ const (
 	ModuleDeploymentReleaseProgressWaitingForConfirmation ReleaseProgress = "WaitingForConfirmation"
 	ModuleDeploymentReleaseProgressExecuting              ReleaseProgress = "Executing"
 	ModuleDeploymentReleaseProgressPaused                 ReleaseProgress = "Paused"
-	ModuleDeploymentReleaseProgressCompleted              ReleaseProgress = "Completed"
-	ModuleDeploymentReleaseProgressAborted                ReleaseProgress = "Aborted"
-	ModuleDeploymentReleaseProgressTermed                 ReleaseProgress = "Terminated"
+	CafeDeploymentReleaseProgressCompleted                ReleaseProgress = "Completed"
+	CafeDeploymentReleaseProgressAborted                  ReleaseProgress = "Aborted"
+	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
 )
 
-type ModuleSchedulingType string
+type DeployPolicy string
 
 const (
-	Scatter  ModuleSchedulingType = "scatter"
-	Stacking ModuleSchedulingType = "stacking"
+	ModuleDeploymentDeployPolicySymmetric  DeployPolicy = "symmetric"
+	ModuleDeploymentDeployPolicyAsymmetric DeployPolicy = "asymmetric"
+)
+
+type UpgradePolicy string
+
+const (
+	InstallThenUninstallUpgradePolicy UpgradePolicy = "install_then_uninstall"
+	UninstallThenInstallUpgradePolicy UpgradePolicy = "uninstall_then_install"
+	ScaleUpThenScaleDownUpgradePolicy UpgradePolicy = "scaleup_then_scaledown"
 )
 
 type ReleaseStatus struct {
@@ -92,16 +100,7 @@ type ModuleDeploymentCondition struct {
 	Message string `json:"message,omitempty"`
 }
 
-type ModuleSchedulingStrategy struct {
-	// +kubebuilder:validation:Enum={"scatter","stacking"}
-	// +kubebuilder:default="scatter"
-	SchedulingType ModuleSchedulingType `json:"schedulingType"`
-	//MaxModuleCount int                  `json:"maxModuleCount"`
-}
-
-type ModuleDeploymentStrategy struct {
-	UpgradeType string `json:"upgradeType"`
-
+type OperationStrategy struct {
 	NeedConfirm bool `json:"needConfirm,omitempty"`
 
 	UseBeta bool `json:"useBeta,omitempty"`
@@ -113,6 +112,10 @@ type ModuleDeploymentStrategy struct {
 	GrayTimeBetweenBatchSeconds int32 `json:"grayTimeBetweenBatchSeconds,omitempty"`
 }
 
+type SchedulingStrategy struct {
+	UpgradePolicy UpgradePolicy `json:"UpgradePolicy,omitempty"`
+}
+
 // ModuleDeploymentSpec defines the desired state of ModuleDeployment
 type ModuleDeploymentSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
@@ -122,7 +125,9 @@ type ModuleDeploymentSpec struct {
 
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
-	// +kubebuilder:validation:Minimum=-1
+	// +kubebuilder:validation:Enum={"symmetric","asymmetric"}
+	DeployPolicy DeployPolicy `json:"deployPolicy"`
+
 	Replicas int32 `json:"replicas,omitempty"`
 
 	MinReadySeconds int32 `json:"minReadySeconds,omitempty"`
@@ -136,9 +141,9 @@ type ModuleDeploymentSpec struct {
 	// +optional
 	Pause bool `json:"pause,omitempty"`
 
-	OperationStrategy ModuleDeploymentStrategy `json:"operationStrategy,omitempty"`
+	OperationStrategy OperationStrategy `json:"operationStrategy,omitempty"`
 
-	SchedulingStrategy ModuleSchedulingStrategy `json:"schedulingStrategy,omitempty"`
+	SchedulingStrategy SchedulingStrategy `json:"schedulingStrategy,omitempty"`
 }
 
 // ModuleDeploymentStatus defines the observed state of ModuleDeployment
