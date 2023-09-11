@@ -14,25 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core;
+package com.alipay.sofa.serverless.arklet.core.health.custom;
 
-/**
- *  * Arklet component interface, managed by registry
- *  * @see ArkletComponentRegistry
- * @author mingmen
- * @date 2023/6/8
- */
-public interface ArkletComponent {
+import com.alipay.sofa.serverless.arklet.core.health.indicator.ArkletBaseIndicator;
 
-    /**
-     * ArkletComponent init method, called when arklet try to start
-     * the extended custom component should use this method to do some initialization
-     */
-    void init();
+import java.util.HashMap;
+import java.util.Map;
 
-    /**
-     * ArkletComponent destroy method, called when arklet try to stop
-     * the extended custom component should use this method to destroy itself
-     */
-    void destroy();
+public class CustomIndicator extends ArkletBaseIndicator {
+    public CustomIndicator() {
+        super("custom");
+    }
+
+    @Override
+    protected Map<String, Object> getHealthDetails() {
+        Map<String, Object> cpuHealthDetails = new HashMap<>();
+        cpuHealthDetails.put("key", "value");
+        return cpuHealthDetails;
+    }
 }

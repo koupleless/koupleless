@@ -46,6 +46,7 @@ public class JvmIndicator extends ArkletBaseIndicator {
     protected Map<String, Object> getHealthDetails() {
         Map<String, Object> jvmHealthDetails = new HashMap<>(6);
 
+        jvmIndicatorHandler.updateHandler();
         jvmHealthDetails.put(JvmMetrics.JAVA_VERSION.getId(), jvmIndicatorHandler.getJvmVersion());
         jvmHealthDetails.put(JvmMetrics.JAVA_HOME.getId(), jvmIndicatorHandler.getJavaHome());
         jvmHealthDetails.put(JvmMetrics.JAVA_TOTAL_MEMORY.getId(),
@@ -82,25 +83,29 @@ public class JvmIndicator extends ArkletBaseIndicator {
 
     static class JvmIndicatorHandler {
 
-        private final Properties         properties;
+        private Properties         properties;
 
-        private final Runtime            runtime;
+        private Runtime            runtime;
 
-        private final RuntimeMXBean      runtimeMxBean;
+        private RuntimeMXBean      runtimeMxBean;
 
-        private final MemoryUsage        heapMemoryUsed;
+        private MemoryUsage        heapMemoryUsed;
 
-        private final MemoryUsage        nonHeapMemoryUsed;
+        private MemoryUsage        nonHeapMemoryUsed;
 
-        private final ClassLoadingMXBean classLoadingMXBean;
+        private ClassLoadingMXBean classLoadingMxBean;
 
         public JvmIndicatorHandler() {
+            updateHandler();
+        }
+
+        public void updateHandler() {
             this.properties = System.getProperties();
             this.runtime = Runtime.getRuntime();
             this.runtimeMxBean = ManagementFactory.getRuntimeMXBean();
             this.heapMemoryUsed = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
             this.nonHeapMemoryUsed = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
-            this.classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
+            this.classLoadingMxBean = ManagementFactory.getClassLoadingMXBean();
         }
 
         public String getJvmVersion() {
@@ -160,15 +165,15 @@ public class JvmIndicator extends ArkletBaseIndicator {
         }
 
         public long getLoadedClassCount() {
-            return this.classLoadingMXBean.getLoadedClassCount();
+            return this.classLoadingMxBean.getLoadedClassCount();
         }
 
         public long getUnloadClassCount() {
-            return this.classLoadingMXBean.getUnloadedClassCount();
+            return this.classLoadingMxBean.getUnloadedClassCount();
         }
 
         public long getTotalClassCount() {
-            return this.classLoadingMXBean.getTotalLoadedClassCount();
+            return this.classLoadingMxBean.getTotalLoadedClassCount();
         }
 
     }

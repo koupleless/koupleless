@@ -108,6 +108,11 @@ spec:
           status:
             description: ModuleStatus defines the observed state of Module
             properties:
+              last_transition_time:
+                description: Last time the ModuleStatus transitioned from one status
+                  to another.
+                format: date-time
+                type: string
               status:
                 type: string
             type: object

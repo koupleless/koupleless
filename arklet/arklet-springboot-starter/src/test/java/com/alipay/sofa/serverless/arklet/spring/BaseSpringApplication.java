@@ -16,9 +16,10 @@
  */
 package com.alipay.sofa.serverless.arklet.spring;
 
+import com.alipay.sofa.serverless.arklet.spring.common.SpringbootUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * @author mingmen
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.ImportResource;
 public class BaseSpringApplication {
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(BaseSpringApplication.class);
-        springApplication.run(args);
+        ConfigurableApplicationContext context = springApplication.run(args);
+        SpringbootUtil.initSpringbootUtil(context);
     }
 }

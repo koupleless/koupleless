@@ -23,7 +23,7 @@ import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
 
 /**
- * 统一操作服务接口
+ * Unified operation service interface, mainly interacts with the sofa-ark container
  * @author mingmen
  * @date 2023/6/14
  */

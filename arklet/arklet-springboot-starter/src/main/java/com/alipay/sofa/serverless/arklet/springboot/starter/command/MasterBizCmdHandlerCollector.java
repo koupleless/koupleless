@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContextAware;
 /**
  * @author mingmen
  * @date 2023/6/14
+ * custom directive extension for master base application
  */
 @SuppressWarnings("rawtypes")
 public class MasterBizCmdHandlerCollector implements ApplicationContextAware {
@@ -35,6 +36,7 @@ public class MasterBizCmdHandlerCollector implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Map<String, AbstractCommandHandler> map = applicationContext.getBeansOfType(AbstractCommandHandler.class);
         map.forEach((k, v) -> {
+            // find custom directive beans from master base's spring context
             ArkletComponentRegistry.getCommandServiceInstance().registerCommandHandler(v);
         });
     }

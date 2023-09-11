@@ -14,25 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core;
+package com.alipay.sofa.serverless.arklet.spring;
+
+import com.alipay.sofa.ark.common.util.ClassLoaderUtils;
+import com.alipay.sofa.ark.spi.constant.Constants;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 /**
- *  * Arklet component interface, managed by registry
- *  * @see ArkletComponentRegistry
- * @author mingmen
- * @date 2023/6/8
+ * @author Lunarscave
  */
-public interface ArkletComponent {
+public class SpringbootBaseTest {
 
-    /**
-     * ArkletComponent init method, called when arklet try to start
-     * the extended custom component should use this method to do some initialization
-     */
-    void init();
+    @BeforeClass
+    public static void initSpringbootTest() {
+        ClassLoaderUtils.pushContextClassLoader(ClassLoader.getSystemClassLoader());
+        System.setProperty(Constants.EMBED_ENABLE, "true");
+        BaseSpringApplication.main(new String[] {});
+    }
 
-    /**
-     * ArkletComponent destroy method, called when arklet try to stop
-     * the extended custom component should use this method to destroy itself
-     */
-    void destroy();
+    @AfterClass
+    public static void destroySpringbootTest() {
+        System.setProperty(Constants.EMBED_ENABLE, "");
+    }
 }

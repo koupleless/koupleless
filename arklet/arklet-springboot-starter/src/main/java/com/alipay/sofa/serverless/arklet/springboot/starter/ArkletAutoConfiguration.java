@@ -32,7 +32,7 @@ public class ArkletAutoConfiguration {
 
     @Bean
     @ConditionalOnMasterBiz
-    public ArkletComponentRegistry componentRegistry() {
+    public ArkletComponentRegistry arkletComponentRegistry() {
         ArkletComponentRegistry registry = new ArkletComponentRegistry();
         registry.initComponents();
         return registry;
@@ -40,7 +40,7 @@ public class ArkletAutoConfiguration {
 
     @Bean
     @ConditionalOnMasterBiz
-    @DependsOn("componentRegistry")
+    @DependsOn("arkletComponentRegistry")
     public MasterBizCmdHandlerCollector masterBizCmdHandlerCollector() {
         return new MasterBizCmdHandlerCollector();
     }
