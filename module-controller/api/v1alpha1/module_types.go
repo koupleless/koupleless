@@ -84,6 +84,8 @@ type ModuleStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	Status ModuleInstanceStatus `json:"status,omitempty"`
+	// Last time the ModuleStatus transitioned from one status to another.
+	LastTransitionTime metav1.Time `json:"last_transition_time,omitempty"`
 }
 
 //+kubebuilder:object:root=true

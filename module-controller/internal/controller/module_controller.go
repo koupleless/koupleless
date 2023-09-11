@@ -59,7 +59,8 @@ type ModuleReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.15.0/pkg/reconcile
 func (r *ModuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-
+	log.Log.Info("start reconcile for module", "request", req)
+	defer log.Log.Info("finish reconcile for module", "request", req)
 	// get module
 	module := &v1alpha1.Module{}
 	err := r.Client.Get(ctx, req.NamespacedName, module)
@@ -114,6 +115,8 @@ func (r *ModuleReconciler) parseModuleInstanceStatus(ctx context.Context, module
 		moduleInstanceStatus = v1alpha1.ModuleInstanceStatusPrepare
 	}
 	module.Status.Status = moduleInstanceStatus
+	module.Status.LastTransitionTime = metav1.Now()
+	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", moduleInstanceStatus))
 	err := r.Status().Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
@@ -189,6 +192,8 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 		// already schedule ip
 		log.Log.Info("module is already schedule ip", "moduleName", module.Spec.Module.Name, "module", module.Name, "ip", module.Labels[label.BaseInstanceIpLabel])
 		module.Status.Status = v1alpha1.ModuleInstanceStatusPrepare
+		module.Status.LastTransitionTime = metav1.Now()
+		log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusPrepare))
 		err := r.Status().Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
@@ -271,6 +276,8 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 func (r *ModuleReconciler) handlePrepareModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	// TODO pre hook
 	module.Status.Status = v1alpha1.ModuleInstanceStatusUpgrading
+	module.Status.LastTransitionTime = metav1.Now()
+	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusUpgrading))
 	err := r.Status().Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
@@ -295,6 +302,8 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, mo
 
 	// update status
 	module.Status.Status = v1alpha1.ModuleInstanceStatusCompleting
+	module.Status.LastTransitionTime = metav1.Now()
+	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusCompleting))
 	err = r.Status().Update(ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
@@ -308,6 +317,7 @@ func (r *ModuleReconciler) handleCompletingModuleInstance(ctx context.Context, m
 	if !utils.HasFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer) {
 		// add installed module finalizer
 		utils.AddFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
+		log.Log.Info(fmt.Sprintf("%s%s", "module add finalizers value is ", finalizer.ModuleInstalledFinalizer))
 		err := r.Client.Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
@@ -315,6 +325,8 @@ func (r *ModuleReconciler) handleCompletingModuleInstance(ctx context.Context, m
 	} else {
 		// update to available status
 		module.Status.Status = v1alpha1.ModuleInstanceStatusAvailable
+		module.Status.LastTransitionTime = metav1.Now()
+		log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusAvailable))
 		err := r.Status().Update(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err

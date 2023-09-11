@@ -1,0 +1,10 @@
+config/crd/bases/serverless.alipay.com_moduledeployments.yaml
+config/crd/bases/serverless.alipay.com_modulereplicasets.yaml
+config/crd/bases/serverless.alipay.com_modules.yaml
+config/crd/bases/serverless.alipay.com_moduletemplates.yaml
+config/rbac/role.yaml
+config/rbac/role_binding.yaml
+config/rbac/service_account.yaml
+config/samples/dynamic-stock-deployment.yaml
+config/samples/module-deployment-controller.yaml
+config/samples/dynamic-stock-service.yaml
