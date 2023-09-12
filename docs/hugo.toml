@@ -2,8 +2,8 @@ baseURL = "/"
 title = "SOFAServerless"
 
 # Language settings
-contentDir = "content/en"
-defaultContentLanguage = "en"
+contentDir = "content/zh-cn"
+defaultContentLanguage = "zh-cn"
 defaultContentLanguageInSubdir = false
 # Useful when translating.
 enableMissingTranslationPlaceholders = true
@@ -61,29 +61,20 @@ id = "UA-00000000-0"
 [languages]
 [languages.en]
 languageName ="English"
+contentDir = "content/en"
 # Weight used for sorting.
 weight = 1
 [languages.en.params]
 title = "SOFAServerless"
 description = "A Docsy example site"
 
-[languages.no]
-languageName ="Norsk"
-contentDir = "content/no"
+[languages.zh-cn]
+languageName ="中文"
 [languages.no.params]
 title = "SOFAServerless"
-description = "Docsy er operativsystem for skyen"
-time_format_default = "02.01.2006"
-time_format_blog = "02.01.2006"
-
-[languages.fa]
-languageName ="فارسی"
-contentDir = "content/fa"
-[languages.fa.params]
-title = "اسناد گلدی"
-description = "یک نمونه برای پوسته داکسی"
-time_format_default = "2006.01.02"
-time_format_blog = "2006.01.02"
+description = "SOFAServerless 官网介绍"
+time_format_default = "2006.02.01"
+time_format_blog = "2006.02.01"
 
 [markup]
   [markup.goldmark]
