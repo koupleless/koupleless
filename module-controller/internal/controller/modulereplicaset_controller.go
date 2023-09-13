@@ -265,8 +265,7 @@ func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleL
 
 	toAllocatePod, err := r.getScaleUpCandidatePods(existedModuleList, selectedPods, moduleReplicaSet)
 	if err != nil {
-		log.Log.Error(err, "Failed to get the candidate pods for scaling up")
-		return err
+		return utils.Error(err, "Failed to get the candidate pods for scaling up")
 	}
 	for _, pod := range toAllocatePod {
 		pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, moduleReplicaSet.Spec.Template.Spec.Module.Name)] = moduleReplicaSet.Spec.Template.Spec.Module.Version
@@ -280,17 +279,17 @@ func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleL
 		} else {
 			pod.Labels[label.ModuleInstanceCount] = "1"
 		}
+		// add pod finalizer
+		utils.AddFinalizer(&pod.ObjectMeta, fmt.Sprintf("%s-%s", finalizer.ModuleNameFinalizer, moduleReplicaSet.Spec.Template.Spec.Module.Name))
 		err := r.Client.Update(ctx, &pod)
-		// TODO add pod finalizer
+		// add pod finalizer
 		if err != nil {
-			// update pod label
 			return err
 		}
 		// create module
 		module := r.generateModule(moduleReplicaSet, pod)
 		if err = r.Client.Create(ctx, module); err != nil {
-			log.Log.Error(err, "Failed to create module", "moduleName", module.Name)
-			return err
+			return utils.Error(err, "Failed to create module", "moduleName", module.Name)
 		}
 	}
 	log.Log.Info("finish scaleup module", "moduleReplicaSetName", moduleReplicaSet.Name)
@@ -306,8 +305,7 @@ func (r *ModuleReplicaSetReconciler) scaledown(ctx context.Context, existedModul
 	selector, err := metav1.LabelSelectorAsSelector(&moduleReplicaSet.Spec.Selector)
 	selectedPods := &corev1.PodList{}
 	if err = r.List(ctx, selectedPods, &client.ListOptions{Namespace: moduleReplicaSet.Namespace, LabelSelector: selector}); err != nil {
-		log.Log.Error(err, "Failed to list pod", "moduleReplicaSetName", moduleReplicaSet.Name)
-		return err
+		return utils.Error(err, "Failed to list pod", "moduleReplicaSetName", moduleReplicaSet.Name)
 	}
 	toDeletedModules := r.getScaleDownCandidateModules(existedModuleList, selectedPods, moduleReplicaSet)
 	for _, module := range toDeletedModules {
@@ -378,10 +376,13 @@ func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(
 	var toAllocatePod []corev1.Pod
 	count := deltaReplicas
 	for _, pod := range selectedPods.Items {
-		instanceCount, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
-		if err != nil {
-			log.Log.Error(err, fmt.Sprintf("invalid ModuleInstanceCount in pod %v", pod.Name))
-			continue
+		instanceCount := 0
+		if _, exist := pod.Labels[label.ModuleInstanceCount]; exist {
+			instanceCount, err = strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
+			if err != nil {
+				log.Log.Error(err, fmt.Sprintf("invalid ModuleInstanceCount in pod %v", pod.Name))
+				continue
+			}
 		}
 		if _, ok := usedPodNames[pod.Name]; !ok && instanceCount < maxModuleCount {
 			toAllocatePod = append(toAllocatePod, pod)
