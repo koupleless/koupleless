@@ -58,12 +58,12 @@ const (
 	ModuleDeploymentDeployPolicyAsymmetric DeployPolicy = "asymmetric"
 )
 
-type UpgradePolicy string
+type ModuleUpgradeType string
 
 const (
-	InstallThenUninstallUpgradePolicy UpgradePolicy = "install_then_uninstall"
-	UninstallThenInstallUpgradePolicy UpgradePolicy = "uninstall_then_install"
-	ScaleUpThenScaleDownUpgradePolicy UpgradePolicy = "scaleup_then_scaledown"
+	InstallThenUninstallUpgradePolicy ModuleUpgradeType = "install_then_uninstall"
+	UninstallThenInstallUpgradePolicy ModuleUpgradeType = "uninstall_then_install"
+	ScaleUpThenScaleDownUpgradePolicy ModuleUpgradeType = "scaleup_then_scaledown"
 )
 
 type ReleaseStatus struct {
@@ -113,7 +113,9 @@ type OperationStrategy struct {
 }
 
 type SchedulingStrategy struct {
-	UpgradePolicy UpgradePolicy `json:"UpgradePolicy,omitempty"`
+	UpgradePolicy    ModuleUpgradeType    `json:"upgradePolicy,omitempty"`
+	SchedulingPolicy ModuleSchedulingType `json:"schedulingPolicy,omitempty"`
+	MaxModuleCount   int                  `json:"maxModuleCount,omitempty"`
 }
 
 // ModuleDeploymentSpec defines the desired state of ModuleDeployment

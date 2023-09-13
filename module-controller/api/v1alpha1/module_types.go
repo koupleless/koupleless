@@ -77,7 +77,7 @@ type ModuleSpec struct {
 	// Foo is an example field of Module. Edit module_types.go to remove/update
 	Module ModuleInfo `json:"module"`
 
-	UpgradePolicy UpgradePolicy `json:"upgradePolicy,omitempty"`
+	UpgradePolicy ModuleUpgradeType `json:"upgradePolicy,omitempty"`
 }
 
 // ModuleStatus defines the observed state of Module

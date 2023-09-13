@@ -60,7 +60,11 @@ spec:
                 type: integer
               schedulingStrategy:
                 properties:
-                  UpgradePolicy:
+                  maxModuleCount:
+                    type: integer
+                  schedulingPolicy:
+                    type: string
+                  upgradePolicy:
                     type: string
                 type: object
               selector:

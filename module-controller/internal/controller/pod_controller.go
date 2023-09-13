@@ -51,7 +51,7 @@ type PodReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.15.0/pkg/reconcile
 func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	// get module
+	// get pod
 	pod := &corev1.Pod{}
 	err := r.Client.Get(ctx, req.NamespacedName, pod)
 	if err != nil {

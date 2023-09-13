@@ -7,21 +7,23 @@ metadata:
     app.kubernetes.io/part-of: module-controller
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: module-controller
-  name: moduledeployment-sample
+  name: moduledeployment-sample-facade
 spec:
   baseDeploymentName: dynamic-stock-deployment
   template:
     spec:
       module:
-        name: dynamic-provider
+        name: dynamic-facade
         version: '1.0.0'
-        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar
+        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-facade-1.0.0-ark-biz.jar
   deployPolicy: symmetric
-  replicas: 1
+  replicas: 2
   operationStrategy:
     needConfirm: true
     useBeta: false
     batchCount: 3
   schedulingStrategy:
-    upgradePolicy: scaleup_then_scaledown
+    upgradePolicy: uninstall_then_install
+    schedulingPolicy: Scatter
+    maxModuleCount: 2
 
