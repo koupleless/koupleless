@@ -52,7 +52,7 @@ type ModuleReplicaSetReconciler struct {
 //+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets/finalizers,verbs=update
 
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
-//+kubebuilder:rbac:groups=,resources=pods,verbs=create;delete;get;list;patch;update;watch
+//+kubebuilder:rbac:groups="",resources=pods,verbs=create;delete;get;list;patch;update;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
