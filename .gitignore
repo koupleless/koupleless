@@ -9,3 +9,8 @@ pom.xml.bak
 *.log
 logs/
 .flattened-pom.xml
+docs/public
+docs/resources/
+docs/node_modules/
+docs/package-lock.json
+docs/.hugo_build.lock
