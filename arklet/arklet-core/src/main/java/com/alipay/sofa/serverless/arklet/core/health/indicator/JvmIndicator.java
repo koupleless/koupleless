@@ -31,7 +31,7 @@ import java.util.Properties;
 /**
  * @author Lunarscave
  */
-public class JvmIndicator extends ArkletBaseIndicator {
+public class JvmIndicator extends Indicator {
 
     private final JvmIndicatorHandler jvmIndicatorHandler;
 
@@ -129,7 +129,7 @@ public class JvmIndicator extends ArkletBaseIndicator {
         }
 
         public double getDuration() {
-            return ConvertUtils.millisecond2Second(new Date(runtimeMxBean.getStartTime()));
+            return ConvertUtils.getDurationSecond(new Date(runtimeMxBean.getStartTime()));
         }
 
         public long getInitHeapMemory() {

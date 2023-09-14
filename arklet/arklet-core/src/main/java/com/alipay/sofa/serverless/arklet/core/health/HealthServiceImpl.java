@@ -24,7 +24,7 @@ import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.common.utils.ArrayUtil;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.model.BizInfo;
-import com.alipay.sofa.serverless.arklet.core.health.indicator.ArkletBaseIndicator;
+import com.alipay.sofa.serverless.arklet.core.health.indicator.Indicator;
 import com.alipay.sofa.serverless.arklet.core.health.indicator.CpuIndicator;
 import com.alipay.sofa.serverless.arklet.core.health.indicator.JvmIndicator;
 import com.alipay.sofa.serverless.arklet.core.health.model.BizHealthMeta;
@@ -32,7 +32,7 @@ import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health.HealthBuilder;
 import com.alipay.sofa.serverless.arklet.core.health.model.PluginHealthMeta;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.model.PluginModel;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.model.PluginInfo;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
 import com.google.inject.Singleton;
@@ -53,7 +53,7 @@ public class HealthServiceImpl implements HealthService {
                                                                      .getDefaultLogger();
     private final HealthBuilder                    healthBuilder = new HealthBuilder();
 
-    private final Map<String, ArkletBaseIndicator> indicators    = new ConcurrentHashMap<>(3);
+    private final Map<String, Indicator> indicators    = new ConcurrentHashMap<>(3);
 
     @Override
     public void init() {
@@ -68,7 +68,7 @@ public class HealthServiceImpl implements HealthService {
     @Override
     public Health getHealth() {
         HealthBuilder builder = new HealthBuilder();
-        for (ArkletBaseIndicator indicator : this.indicators.values()) {
+        for (Indicator indicator : this.indicators.values()) {
             builder.putAllHealthData(indicator.getHealthModel(healthBuilder));
         }
         return builder.build();
@@ -105,7 +105,7 @@ public class HealthServiceImpl implements HealthService {
         HealthBuilder builder = new HealthBuilder();
         return builder.init().putAllHealthData(queryMasterBiz())
             .putAllHealthData(queryModuleInfo(new BizInfo()))
-            .putAllHealthData(queryModuleInfo(new PluginModel())).build();
+            .putAllHealthData(queryModuleInfo(new PluginInfo())).build();
     }
 
     @Override
@@ -121,10 +121,10 @@ public class HealthServiceImpl implements HealthService {
                 builder.putAllHealthData(queryModuleInfo(bizInfo));
             }
             if (StringUtils.isEmpty(type) || Constants.PLUGIN.equals(type)) {
-                PluginModel pluginModel = new PluginModel();
-                pluginModel.setPluginName(name);
-                pluginModel.setPluginVersion(version);
-                builder.putAllHealthData(queryModuleInfo(pluginModel));
+                PluginInfo pluginInfo = new PluginInfo();
+                pluginInfo.setPluginName(name);
+                pluginInfo.setPluginVersion(version);
+                builder.putAllHealthData(queryModuleInfo(pluginInfo));
             }
         } catch (Throwable e) {
             builder.putErrorData(Constants.HEALTH_ERROR, e.getMessage());
@@ -158,8 +158,8 @@ public class HealthServiceImpl implements HealthService {
     }
 
     @Override
-    public Health queryModuleInfo(PluginModel pluginModel) {
-        String pluginName = pluginModel.getPluginName();
+    public Health queryModuleInfo(PluginInfo pluginInfo) {
+        String pluginName = pluginInfo.getPluginName();
         healthBuilder.init();
         try {
             if (StringUtils.isEmpty(pluginName)) {
@@ -187,12 +187,12 @@ public class HealthServiceImpl implements HealthService {
     }
 
     @Override
-    public ArkletBaseIndicator getIndicator(String indicatorId) {
+    public Indicator getIndicator(String indicatorId) {
         return indicators.get(indicatorId);
     }
 
     @Override
-    public void registerIndicator(ArkletBaseIndicator indicator) {
+    public void registerIndicator(Indicator indicator) {
         this.indicators.put(indicator.getIndicatorId(), indicator);
         LOGGER.info("register indicator " + indicator.getIndicatorId());
     }

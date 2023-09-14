@@ -24,16 +24,21 @@ import java.util.Date;
  */
 public class ConvertUtils {
 
+    /**
+     * convert bytes(B) to megabyte(MB)
+     * @param bytes input byte(B) value
+     * @return megabyte(MB)
+     */
     public static double bytes2Megabyte(Long bytes) {
         return ((double) bytes) / 1024 / 1024;
     }
 
-    public static String endDate2Duration(Date date) {
-        long duration = System.currentTimeMillis() - date.getTime();
-        return new SimpleDateFormat("HH-mm-ss").format(duration);
-    }
-
-    public static double millisecond2Second(Date date) {
+    /**
+     * get duration from param date till now and change to second(s)
+     * @param date input date
+     * @return output duration(s)
+     */
+    public static double getDurationSecond(Date date) {
         return ((double) System.currentTimeMillis() - date.getTime()) / 1000;
     }
 
