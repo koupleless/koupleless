@@ -2,7 +2,6 @@
 # (https://gohugo.io/hosting-and-deployment/hosting-on-netlify/#configure-hugo-version-in-netlify)
 
 [build]
-base = "/docs"
 command = "npm run build:preview"
 publish = "public"
 
