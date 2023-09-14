@@ -14,15 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command;
+package com.alipay.sofa.serverless.arklet.core.util;
 
-import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * @author mingmen
- * @date 2023/8/6
+ * @author Lunarscave
  */
-public class Input extends InputMeta {
-    public int    id;
-    public String userName;
+public class ConvertUtils {
+
+    public static double bytes2Megabyte(Long bytes) {
+        return ((double) bytes) / 1024 / 1024;
+    }
+
+    public static String endDate2Duration(Date date) {
+        long duration = System.currentTimeMillis() - date.getTime();
+        return new SimpleDateFormat("HH-mm-ss").format(duration);
+    }
+
+    public static double millisecond2Second(Date date) {
+        return ((double) System.currentTimeMillis() - date.getTime()) / 1000;
+    }
+
 }

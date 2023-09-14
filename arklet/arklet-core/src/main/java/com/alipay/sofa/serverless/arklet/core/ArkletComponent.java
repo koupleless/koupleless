@@ -17,12 +17,22 @@
 package com.alipay.sofa.serverless.arklet.core;
 
 /**
+ *  * Arklet component interface, managed by registry
+ *  * @see ArkletComponentRegistry
  * @author mingmen
  * @date 2023/6/8
  */
 public interface ArkletComponent {
 
+    /**
+     * ArkletComponent init method, called when arklet try to start
+     * the extended custom component should use this method to do some initialization
+     */
     void init();
 
+    /**
+     * ArkletComponent destroy method, called when arklet try to stop
+     * the extended custom component should use this method to destroy itself
+     */
     void destroy();
 }

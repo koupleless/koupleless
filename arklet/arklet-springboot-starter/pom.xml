@@ -12,11 +12,6 @@
 
     <artifactId>arklet-springboot-starter</artifactId>
 
-    <properties>
-        <spring.boot.version>2.5.15</spring.boot.version>
-    </properties>
-
-
     <dependencies>
         <dependency>
             <groupId>com.alipay.sofa.serverless</groupId>
@@ -26,14 +21,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-loader</artifactId>
-            <version>${spring.boot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -41,14 +40,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
-            <version>${spring.boot.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -72,7 +69,6 @@
         <dependency>
             <groupId>com.alipay.sofa</groupId>
             <artifactId>sofa-ark-springboot-starter</artifactId>
-            <version>${sofa.ark.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -81,6 +77,7 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+
 
     </dependencies>
 

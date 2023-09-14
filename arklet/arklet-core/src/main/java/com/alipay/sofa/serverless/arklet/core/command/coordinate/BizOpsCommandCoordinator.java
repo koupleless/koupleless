@@ -26,21 +26,21 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
  * @author mingmen
  * @date 2023/6/14
  */
-public class BizCommandCoordinator {
+public class BizOpsCommandCoordinator {
 
     private static final Map<String, Command> bizIdentityLockMap = new ConcurrentHashMap<>(16);
 
-    public static void putBizExecution(String bizName, String bizVersion, Command command) {
+    public synchronized static boolean checkAndLock(String bizName, String bizVersion,
+                                                    Command command) {
         String identity = BizIdentityUtils.generateBizIdentity(bizName, bizVersion);
-        if (bizIdentityLockMap.containsKey(identity)) {
-            throw new CommandMutexException(
-                "biz {} execution meet mutex lock, conflict command:%s is processing and not finish yet",
-                identity, bizIdentityLockMap.get(identity));
+        if (existBizProcessing(identity)) {
+            return false;
         }
         bizIdentityLockMap.put(identity, command);
+        return true;
     }
 
-    public static void popBizExecution(String bizName, String bizVersion) {
+    public static void unlock(String bizName, String bizVersion) {
         String identity = BizIdentityUtils.generateBizIdentity(bizName, bizVersion);
         bizIdentityLockMap.remove(identity);
     }
@@ -48,6 +48,19 @@ public class BizCommandCoordinator {
     public static boolean existBizProcessing(String bizName, String bizVersion) {
         String identity = BizIdentityUtils.generateBizIdentity(bizName, bizVersion);
         return bizIdentityLockMap.containsKey(identity);
+    }
+
+    public static boolean existBizProcessing(String identity) {
+        return bizIdentityLockMap.containsKey(identity);
+    }
+
+    public static Command getCurrentProcessingCommand(String bizName, String bizVersion) {
+        String identity = BizIdentityUtils.generateBizIdentity(bizName, bizVersion);
+        return bizIdentityLockMap.get(identity);
+    }
+
+    public static void clear() {
+        bizIdentityLockMap.clear();
     }
 
 }

@@ -14,22 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command.builtin.model;
+package com.alipay.sofa.serverless.arklet.core.health.model;
 
+import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizState;
+import com.alipay.sofa.serverless.arklet.core.util.AssertUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @author mingmen
- * @date 2023/6/14
+ * @author Lunarscave
  */
-public class BizModel {
+public class BizHealthMeta {
+
     private String   bizName;
 
     private String   bizVersion;
 
     private BizState bizState;
-
-    private String   mainClass;
 
     private String   webContextPath;
 
@@ -57,14 +60,6 @@ public class BizModel {
         this.bizState = bizState;
     }
 
-    public String getMainClass() {
-        return mainClass;
-    }
-
-    public void setMainClass(String mainClass) {
-        this.mainClass = mainClass;
-    }
-
     public String getWebContextPath() {
         return webContextPath;
     }
@@ -72,4 +67,29 @@ public class BizModel {
     public void setWebContextPath(String webContextPath) {
         this.webContextPath = webContextPath;
     }
+
+    public static BizHealthMeta createBizMeta(Biz biz) {
+        AssertUtils.assertNotNull(biz, "can not find biz");
+        BizHealthMeta bizHealthMeta = createBizMeta(biz.getBizName(), biz.getBizVersion());
+        bizHealthMeta.bizState = biz.getBizState();
+        bizHealthMeta.webContextPath = biz.getWebContextPath();
+        return bizHealthMeta;
+    }
+
+    public static BizHealthMeta createBizMeta(String bizName, String bizVersion) {
+        BizHealthMeta bizHealthMeta = new BizHealthMeta();
+        bizHealthMeta.bizName = bizName;
+        bizHealthMeta.bizVersion = bizVersion;
+        return bizHealthMeta;
+    }
+
+    public static List<BizHealthMeta> createBizMetaList(List<Biz> bizList) {
+        AssertUtils.isTrue(bizList.size() > 0, "no biz found");
+        List<BizHealthMeta> bizHealthMetaList = new ArrayList<>();
+        for (Biz biz : bizList) {
+            bizHealthMetaList.add(createBizMeta(biz));
+        }
+        return bizHealthMetaList;
+    }
+
 }
