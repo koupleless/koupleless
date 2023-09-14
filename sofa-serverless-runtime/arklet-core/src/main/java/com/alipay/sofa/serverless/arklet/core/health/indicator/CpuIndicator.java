@@ -3,8 +3,6 @@ package com.alipay.sofa.serverless.arklet.core.health.indicator;
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
-import oshi.util.GlobalConfig;
-import oshi.util.Util;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +13,7 @@ import java.util.Arrays;
 /**
  * @author Lunarscave
  */
-public class CpuIndicator extends ArkletBaseIndicator {
+public class CpuIndicator extends Indicator {
 
     private final CpuIndicatorHandler cpuIndicatorHandler;
 

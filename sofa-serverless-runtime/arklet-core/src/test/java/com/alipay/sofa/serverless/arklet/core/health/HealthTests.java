@@ -50,7 +50,6 @@ public class HealthTests extends BaseTest {
     @Before
     public void initHealthService() throws IOException {
         this.healthService = ArkletComponentRegistry.getHealthServiceInstance();
-
         //        ClassLoader cl = Thread.currentThread().getContextClassLoader();
         //        URL testBiz = cl.getResource("test-biz.jar");
         //        BizOperation bizOperation = new BizOperation();
@@ -82,4 +81,5 @@ public class HealthTests extends BaseTest {
         Assert.assertNotNull(healthService.getIndicator(Constants.CPU));
         Assert.assertNotNull(healthService.getIndicator(Constants.JVM));
     }
+
 }

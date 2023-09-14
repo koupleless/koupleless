@@ -16,12 +16,12 @@
  */
 package com.alipay.sofa.serverless.arklet.core.health.custom;
 
-import com.alipay.sofa.serverless.arklet.core.health.indicator.ArkletBaseIndicator;
+import com.alipay.sofa.serverless.arklet.core.health.indicator.Indicator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomIndicator extends ArkletBaseIndicator {
+public class CustomIndicator extends Indicator {
     public CustomIndicator() {
         super("custom");
     }

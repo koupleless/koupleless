@@ -20,10 +20,15 @@ package com.alipay.sofa.serverless.common.service;
  * @author: yuanyuan
  * @date: 2023/9/25 11:37 下午
  */
+<<<<<<<< HEAD:sofa-serverless-runtime/sofa-serverless-common/src/main/java/com/alipay/sofa/serverless/common/service/ServiceProxyCache.java
 public class ServiceProxyCache {
+========
+public abstract class Indicator {
+>>>>>>>> bf47eef (optimize code):sofa-serverless-runtime/arklet-core/src/main/java/com/alipay/sofa/serverless/arklet/core/health/indicator/Indicator.java
 
     private Object               proxy;
 
+<<<<<<<< HEAD:sofa-serverless-runtime/sofa-serverless-common/src/main/java/com/alipay/sofa/serverless/common/service/ServiceProxyCache.java
     private SpringServiceInvoker invoker;
 
     public ServiceProxyCache(Object proxy, SpringServiceInvoker invoker) {
@@ -45,5 +50,32 @@ public class ServiceProxyCache {
 
     public void setInvoker(SpringServiceInvoker invoker) {
         this.invoker = invoker;
+========
+    public Indicator(String indicatorId) {
+        this.indicatorId = indicatorId;
+    }
+
+    /**
+     * get health details
+     * @return a map of health details
+     */
+    protected abstract Map<String, Object> getHealthDetails();
+
+    /**
+     * get indicator id
+     * @return indicator id
+     */
+    public String getIndicatorId() {
+        return indicatorId;
+    }
+
+    /**
+     * get health model
+     * @param builder input health builder
+     * @return health model
+     */
+    public Health getHealthModel(HealthBuilder builder) {
+        return builder.init().putHealthData(getIndicatorId(), getHealthDetails()).build();
+>>>>>>>> bf47eef (optimize code):sofa-serverless-runtime/arklet-core/src/main/java/com/alipay/sofa/serverless/arklet/core/health/indicator/Indicator.java
     }
 }

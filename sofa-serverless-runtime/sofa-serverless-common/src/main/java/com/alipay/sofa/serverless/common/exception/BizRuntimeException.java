@@ -14,23 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common.exception;
+package com.alipay.sofa.serverless.arklet.core.util;
 
-public class BizRuntimeException extends RuntimeException {
-    private String errorCode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-    public BizRuntimeException(String errorCode, String message) {
-        super(message);
-        this.errorCode = errorCode;
+/**
+ * @author Lunarscave
+ */
+public class ConvertUtils {
+
+    /**
+     * convert bytes(B) to megabyte(MB)
+     * @param bytes input byte(B) value
+     * @return megabyte(MB)
+     */
+    public static double bytes2Megabyte(Long bytes) {
+        return ((double) bytes) / 1024 / 1024;
     }
 
-    public BizRuntimeException(String errorCode, Throwable cause) {
-        super(cause);
-        this.errorCode = errorCode;
+    /**
+     * get duration from param date till now and change to second(s)
+     * @param date input date
+     * @return output duration(s)
+     */
+    public static double getDurationSecond(Date date) {
+        return ((double) System.currentTimeMillis() - date.getTime()) / 1000;
     }
 
-    public BizRuntimeException(String errorCode, String message, Throwable cause) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
 }
