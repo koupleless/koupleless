@@ -26,7 +26,7 @@ public class IndicatorTests {
 
     @Test
     public void testCpuIndicator() {
-        ArkletBaseIndicator indicator = new CpuIndicator();
+        Indicator indicator = new CpuIndicator();
         final String[] indicatorMetrics = new String[] { "count", "type", "total used (%)",
                 "user used (%)", "system used (%)", "free (%)" };
         final String indicatorId = "cpu";
@@ -41,7 +41,7 @@ public class IndicatorTests {
 
     @Test
     public void testJvmIndicator() {
-        ArkletBaseIndicator indicator = new JvmIndicator();
+        Indicator indicator = new JvmIndicator();
         final String[] indicatorMetrics = new String[] { "java version", "java home",
                 "total memory(M)", "max memory(M)", "free memory(M)", "run time(s)",
                 "init heap memory(M)", "used heap memory(M)", "committed heap memory(M)",
