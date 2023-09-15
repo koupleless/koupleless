@@ -29,6 +29,7 @@ public class ComponentRegistryTest {
     @Test
     public void run() {
         ArkletComponentRegistry registry = new ArkletComponentRegistry();
+        registry.destroyComponents();
         registry.initComponents();
         Assert.assertNotNull(ArkletComponentRegistry.getCommandServiceInstance());
         Assert.assertNotNull(ArkletComponentRegistry.getOperationServiceInstance());
