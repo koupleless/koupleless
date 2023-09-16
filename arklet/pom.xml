@@ -7,7 +7,7 @@
     <version>${revision}</version>
     <modelVersion>4.0.0</modelVersion>
     <properties>
-        <revision>0.3-SNAPSHOT</revision>
+        <revision>0.3.0-SNAPSHOT</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -54,6 +54,21 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>qilong</name>
+            <email>qilong.zql@antfin.com</email>
+            <organization>Ant Financial</organization>
+            <organizationUrl>https://www.alipay.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>abby.zh</name>
+            <email>abby.zh@antfin.com</email>
+            <organization>Ant Financial</organization>
+            <organizationUrl>https://www.alipay.com/</organizationUrl>
+        </developer>
+    </developers>
 
     <dependencyManagement>
         <dependencies>
@@ -326,6 +341,22 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>${maven.staging.plugin}</version>
@@ -349,10 +380,20 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
             <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
                 <repository>
                     <id>ossrh</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
