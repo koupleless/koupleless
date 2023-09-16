@@ -20,10 +20,10 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '8'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn clean install -Pci-install -B -U -e && bash ./tools/check_format.sh
+        run: mvn clean install -Pci-install -B -U -e && sh ./check_format.sh
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '8'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: maven
           server-id: ossrh
           server-username: MAVEN_USERNAME
