@@ -1,14 +1,12 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Release
+name: Arklet Release
 
 ## https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
 ## trigger manually
 on:
   workflow_dispatch:
-    paths:
-      - 'arklet/**'
 
 jobs:
   build:
@@ -23,7 +21,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn clean install -B -U -e && sh ./check_format.sh
+        working-directory: arklet
+        run: mvn clean install -Pci-install -B -U -e && sh ./check_format.sh
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -42,6 +41,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
       - name: Build with Maven
         run: mvn --batch-mode deploy -DskipTests -Prelease
+        working-directory: arklet
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
