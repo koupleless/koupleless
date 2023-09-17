@@ -26,7 +26,7 @@
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
 
         <sofa.ark.version>2.2.3-SNAPSHOT</sofa.ark.version>
-        <sofa.serverless.arklet.version>0.3-SNAPSHOT</sofa.serverless.arklet.version>
+        <sofa.serverless.arklet.version>0.3.0-SNAPSHOT</sofa.serverless.arklet.version>
     </properties>
 
     <name>${project.groupId}:${project.artifactId}</name>
