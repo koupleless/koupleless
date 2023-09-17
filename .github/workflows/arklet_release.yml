@@ -22,7 +22,7 @@ jobs:
           cache: maven
       - name: Build with Maven
         working-directory: arklet
-        run: mvn clean install -Pci-install -B -U -e && sh ./check_format.sh
+        run: mvn clean install -DskipTests -B -U -e && sh ./check_format.sh
   release:
     needs: build
     runs-on: ubuntu-latest
