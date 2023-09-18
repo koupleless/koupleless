@@ -7,7 +7,7 @@
     <version>${revision}</version>
     <modelVersion>4.0.0</modelVersion>
     <properties>
-        <revision>0.3.0-SNAPSHOT</revision>
+        <revision>0.3.1</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -32,7 +32,7 @@
         <spring.boot.version>2.5.12</spring.boot.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
-        <guava.version>16.0.1</guava.version>
+        <guava.version>32.1.2-jre</guava.version>
         <fastjson.version>1.2.69</fastjson.version>
     </properties>
 
@@ -69,6 +69,12 @@
             <organizationUrl>https://www.alipay.com/</organizationUrl>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/sofastack/sofa-serverless.git</connection>
+        <developerConnection>scm:git:ssh://github.com/sofastack/sofa-serverless.git</developerConnection>
+        <url>http://github.com/sofastack/sofa-serverless/tree/master</url>
+    </scm>
 
     <dependencyManagement>
         <dependencies>

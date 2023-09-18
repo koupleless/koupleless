@@ -6,10 +6,9 @@
     <artifactId>sofa-serverless-runtime-starter</artifactId>
     <version>${revision}</version>
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
 
     <properties>
-        <revision>0.1-SNAPSHOT</revision>
+        <revision>0.1.2</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -19,14 +18,14 @@
         <maven.source.plugin>3.0.0</maven.source.plugin>
         <maven.javadoc.plugin>3.2.0</maven.javadoc.plugin>
         <maven.staging.plugin>1.6.7</maven.staging.plugin>
-        <maven.gpg.pluign>1.5</maven.gpg.pluign>
+        <maven.gpg.pluign>1.6</maven.gpg.pluign>
         <jacoco.maven.plugin>0.8.4</jacoco.maven.plugin>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
 
-        <sofa.ark.version>2.2.3-SNAPSHOT</sofa.ark.version>
-        <sofa.serverless.arklet.version>0.3.0-SNAPSHOT</sofa.serverless.arklet.version>
+        <sofa.ark.version>2.2.3</sofa.ark.version>
+        <sofa.serverless.arklet.version>0.3.1</sofa.serverless.arklet.version>
     </properties>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -39,6 +38,27 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>qilong</name>
+            <email>qilong.zql@antfin.com</email>
+            <organization>Ant Financial</organization>
+            <organizationUrl>https://www.alipay.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>abby.zh</name>
+            <email>abby.zh@antfin.com</email>
+            <organization>Ant Financial</organization>
+            <organizationUrl>https://www.alipay.com/</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/sofastack/sofa-serverless.git</connection>
+        <developerConnection>scm:git:ssh://github.com/sofastack/sofa-serverless.git</developerConnection>
+        <url>http://github.com/sofastack/sofa-serverless/tree/master</url>
+    </scm>
 
     <dependencies>
         <!--  sofa-ark begin  -->
@@ -236,6 +256,22 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>${maven.staging.plugin}</version>
@@ -259,10 +295,20 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
             <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
                 <repository>
                     <id>ossrh</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
