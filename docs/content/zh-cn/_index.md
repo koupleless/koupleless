@@ -26,7 +26,7 @@ SOFAServerless 已在蚂蚁内部规模化落地，支撑 42W 核业务，需求
 
 
 {{% blocks/feature icon="fab fa-github" title="Pay as you need!" url="https://github.com/google/docsy-example" %}}
-模块粒度小，占用资源少，调度密度与资源复用率高
+模块粒度小，占用资源少，弹性伸缩灵活，调度密度与资源复用率高
 {{% /blocks/feature %}}
 
 <br>
