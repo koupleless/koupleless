@@ -51,13 +51,6 @@ const (
 	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
 )
 
-type DeployType string
-
-const (
-	ModuleDeploymentDeployTypeSymmetric  DeployType = "symmetric"
-	ModuleDeploymentDeployTypeAsymmetric DeployType = "asymmetric"
-)
-
 type ModuleSchedulingType string
 
 const (
