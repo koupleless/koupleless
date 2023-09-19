@@ -18,7 +18,7 @@ import (
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 )
 
-var _ = FDescribe("ModuleDeployment Controller", func() {
+var _ = Describe("ModuleDeployment Controller", func() {
 	const timeout = time.Second * 30
 	const interval = time.Second * 5
 

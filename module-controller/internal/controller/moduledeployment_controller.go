@@ -231,28 +231,18 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 					maxVersion = version
 					newRS = &replicaSetList.Items[j]
 					oldRSs = oldRSs[:len(oldRSs)-1]
-				} else {
-					panic(fmt.Sprintf("maxVersion: %v, version: %v", maxVersion, version))
 				}
 			}
 			// todo: 批发发布没有完成时不允许改变 module 版本，需要webhook支持限制在批次发布过程中 module 版本变更
 			// 此处默认当 Module 发生版本变化时，已经完成上个版本的批次发布
-			if newRS != nil && !isModuleChanges(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
+			if !isModuleChanges(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
 				return newRS, oldRSs, nil
 			}
 			oldRSs = append(oldRSs, newRS)
-			if newRS == nil {
-				panic(fmt.Sprintf("items cnt: %v", len(replicaSetList.Items)))
-			}
 			log.Log.Info("module has changed, need create a new replicaset")
-			log.Log.Info(fmt.Sprintf("%v", moduleDeployment.Spec.Template.Spec.Module))
-			log.Log.Info(fmt.Sprintf("%v", newRS.Spec.Template.Spec.Module))
 		}
 
-		log.Log.Info(fmt.Sprintf("xxxxx module replicaset is cnt: %v", len(replicaSetList.Items)))
-
 		// create a new moduleReplicaset
-
 		moduleReplicaSet, err := r.createNewReplicaSet(ctx, moduleDeployment, maxVersion+1)
 		if err != nil {
 			continue
