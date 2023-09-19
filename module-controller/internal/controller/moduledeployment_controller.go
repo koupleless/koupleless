@@ -89,20 +89,9 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	// create moduleReplicaSet
-	curRS, oldRSs, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
+	newRS, _, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
 	if err != nil {
 		return ctrl.Result{}, err
-	}
-
-	// todo: 批发发布没有完成时不允许改变 module 版本，需要webhook支持限制在批次发布过程中 module 版本变更
-	// 此处默认当 Module 发生版本变化时，已经完成上个版本的批次发布
-	if isModuleChanges(moduleDeployment.Spec.Template.Spec.Module, curRS.Spec.Template.Spec.Module) {
-		newRS, err := r.createNewReplicaSet(ctx, moduleDeployment)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
-		oldRSs = append(oldRSs, curRS)
-		curRS = *newRS
 	}
 
 	if moduleDeployment.Status.ReleaseStatus == nil {
@@ -122,7 +111,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting:
 		// update moduleReplicaSet
-		if err := r.updateModuleReplicaSet(moduleDeployment, &curRS); err != nil {
+		if err := r.updateModuleReplicaSet(moduleDeployment, newRS); err != nil {
 			return ctrl.Result{}, err
 		}
 	}
@@ -141,23 +130,27 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 		return ctrl.Result{}, nil
 	}
 
-	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{}
-	moduleReplicaSetName := getModuleReplicasName(moduleDeployment.Name)
-	err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleReplicaSetName}, moduleReplicaSet)
 	existReplicaset := true
+	set := map[string]string{
+		label.ModuleDeploymentLabel: moduleDeployment.Name,
+	}
+	replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+	err := r.Client.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 	if err != nil {
 		if errors.IsNotFound(err) {
 			existReplicaset = false
-		} else {
-			log.Log.Error(err, "Failed to get moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSetName)
-			return ctrl.Result{}, err
 		}
+		log.Log.Error(err, "Failed to get moduleReplicaSetList")
+		return ctrl.Result{}, err
 	}
+
 	if existReplicaset {
-		err := r.Client.Delete(ctx, moduleReplicaSet)
-		if err != nil {
-			log.Log.Error(err, "Failed to delete moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSetName)
-			return ctrl.Result{}, err
+		for i := 0; i < len(replicaSetList.Items); i++ {
+			err := r.Client.Delete(ctx, &replicaSetList.Items[i])
+			if err != nil {
+				log.Log.Error(err, "Failed to delete moduleReplicaSet", "moduleReplicaSetName", replicaSetList.Items[i].Name)
+				return ctrl.Result{}, err
+			}
 		}
 		requeueAfter := utils.GetNextReconcileTime(moduleDeployment.DeletionTimestamp.Time)
 		return ctrl.Result{RequeueAfter: requeueAfter}, nil
@@ -209,38 +202,65 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, m
 }
 
 // create or get moduleReplicaset
-func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (moduledeploymentv1alpha1.ModuleReplicaSet, []moduledeploymentv1alpha1.ModuleReplicaSet, error) {
+func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (*moduledeploymentv1alpha1.ModuleReplicaSet, []*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
 	var err error
 	for i := 0; i < 3; i++ {
+		var (
+			newRS  *moduledeploymentv1alpha1.ModuleReplicaSet
+			oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet
+		)
+
 		set := map[string]string{
 			label.ModuleDeploymentLabel: moduleDeployment.Name,
 		}
+
 		replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
 		err = r.Client.List(ctx, replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 		//err = r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleReplicaSetName}, moduleReplicaSet)
-		needCreate := false
+		maxVersion := 0
 		if err != nil {
 			log.Log.Info("get module replicaSet failed", "error", err)
 			if !errors.IsNotFound(err) {
-				return moduledeploymentv1alpha1.ModuleReplicaSet{}, nil, err
+				return nil, nil, err
 			}
-			needCreate = true
-		} else {
-			if len(replicaSetList.Items) != 0 {
-				return replicaSetList.Items[0], replicaSetList.Items[1:], nil
-			}
-			needCreate = true
-		}
-		if needCreate {
 			log.Log.Info("moduleReplicaSet is not exist, need create a new one")
-			moduleReplicaSet, err := r.createNewReplicaSet(ctx, moduleDeployment)
-			if err != nil {
-				continue
+		} else if len(replicaSetList.Items) != 0 {
+			for j := 0; j < len(replicaSetList.Items); j++ {
+				oldRSs = append(oldRSs, &replicaSetList.Items[j])
+				if version := getVersion(&replicaSetList.Items[j]); maxVersion < version {
+					maxVersion = version
+					newRS = &replicaSetList.Items[j]
+					oldRSs = oldRSs[:len(oldRSs)-1]
+				} else {
+					panic(fmt.Sprintf("maxVersion: %v, version: %v", maxVersion, version))
+				}
 			}
-			return *moduleReplicaSet, nil, nil
+			// todo: 批发发布没有完成时不允许改变 module 版本，需要webhook支持限制在批次发布过程中 module 版本变更
+			// 此处默认当 Module 发生版本变化时，已经完成上个版本的批次发布
+			if newRS != nil && !isModuleChanges(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
+				return newRS, oldRSs, nil
+			}
+			oldRSs = append(oldRSs, newRS)
+			if newRS == nil {
+				panic(fmt.Sprintf("items cnt: %v", len(replicaSetList.Items)))
+			}
+			log.Log.Info("module has changed, need create a new replicaset")
+			log.Log.Info(fmt.Sprintf("%v", moduleDeployment.Spec.Template.Spec.Module))
+			log.Log.Info(fmt.Sprintf("%v", newRS.Spec.Template.Spec.Module))
 		}
+
+		log.Log.Info(fmt.Sprintf("xxxxx module replicaset is cnt: %v", len(replicaSetList.Items)))
+
+		// create a new moduleReplicaset
+
+		moduleReplicaSet, err := r.createNewReplicaSet(ctx, moduleDeployment, maxVersion+1)
+		if err != nil {
+			continue
+		}
+		return moduleReplicaSet, oldRSs, nil
+
 	}
-	return moduledeploymentv1alpha1.ModuleReplicaSet{}, nil, err
+	return nil, nil, fmt.Errorf("create or get modulereplicaset error")
 }
 
 // update module replicas
@@ -309,17 +329,18 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 
 // generate module replicas
 func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	deployment *v1.Deployment) *moduledeploymentv1alpha1.ModuleReplicaSet {
+	deployment *v1.Deployment, reversion int) *moduledeploymentv1alpha1.ModuleReplicaSet {
 	newLabels := moduleDeployment.Labels
 	newLabels[label.ModuleNameLabel] = moduleDeployment.Spec.Template.Spec.Module.Name
 	newLabels[label.ModuleDeploymentLabel] = moduleDeployment.Name
 	newLabels[label.ModuleSchedulingStrategy] = string(moduleDeployment.Spec.SchedulingStrategy.SchedulingType)
 	newLabels[label.MaxModuleCount] = strconv.Itoa(moduleDeployment.Spec.SchedulingStrategy.MaxModuleCount)
+	newLabels[label.ModuleReplicasetReversionLabel] = strconv.Itoa(reversion)
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},
 			Labels:      newLabels,
-			Name:        getModuleReplicasName(moduleDeployment.Name),
+			Name:        getModuleReplicasName(moduleDeployment.Name, reversion),
 			Namespace:   moduleDeployment.Namespace,
 		},
 		Spec: moduledeploymentv1alpha1.ModuleReplicaSetSpec{
@@ -344,14 +365,14 @@ func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *mo
 	return moduleReplicaSet
 }
 
-func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
+func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, reversion int) (*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
 	deployment := &v1.Deployment{}
 	err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}, deployment)
 	if err != nil {
 		log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 		return nil, err
 	}
-	moduleReplicaSet := r.generateModuleReplicas(moduleDeployment, deployment)
+	moduleReplicaSet := r.generateModuleReplicas(moduleDeployment, deployment, reversion)
 	err = r.Client.Create(ctx, moduleReplicaSet)
 	if err != nil {
 		log.Log.Error(err, "Failed to create moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
@@ -372,6 +393,20 @@ func isModuleChanges(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool 
 	return module1.Name != module2.Name || module1.Version != module2.Version
 }
 
-func getModuleReplicasName(moduleDeploymentName string) string {
-	return fmt.Sprintf(`%s-%s`, moduleDeploymentName, "replicas")
+func getModuleReplicasName(moduleDeploymentName string, reversion int) string {
+	return fmt.Sprintf(`%s-%s-%v`, moduleDeploymentName, "replicas", reversion)
+}
+
+func getVersion(set *moduledeploymentv1alpha1.ModuleReplicaSet) int {
+	if versionStr, ok := set.Labels[label.ModuleReplicasetReversionLabel]; ok {
+		version, err := strconv.Atoi(versionStr)
+		if err != nil {
+			log.Log.Error(err, "invalid version for ModuleReplicasetReversionLabel")
+			return 0
+		}
+		return version
+	}
+
+	log.Log.Error(fmt.Errorf("can't get ModuleReplicasetReversionLabel from ModuleReplicaSet"), "")
+	return 0
 }
