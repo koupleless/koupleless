@@ -25,7 +25,10 @@ import lombok.Setter;
 import java.lang.management.MemoryPoolMXBean;
 import java.util.Date;
 
-import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.*;
+import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.EXECUTING;
+import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.FAILED;
+import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.INITIALIZED;
+import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.SUCCEEDED;
 
 /**
  * @author: yuanyuan
