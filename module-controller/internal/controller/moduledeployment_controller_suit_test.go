@@ -9,10 +9,13 @@ import (
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
 )
 
 var _ = Describe("ModuleDeployment Controller", func() {
@@ -51,16 +54,16 @@ var _ = Describe("ModuleDeployment Controller", func() {
 			newModuleDeployment.Spec.Template.Spec.Module.Version = "1.0.1"
 			Expect(k8sClient.Update(context.TODO(), &newModuleDeployment)).Should(Succeed())
 
-			moduleReplicaSet := &v1alpha1.ModuleReplicaSet{}
-
-			moduleReplicaSetKey := types.NamespacedName{
-				Name:      getModuleReplicasName(moduleDeploymentName),
-				Namespace: namespace,
-			}
-
 			Eventually(func() bool {
-				k8sClient.Get(context.TODO(), moduleReplicaSetKey, moduleReplicaSet)
-				return moduleReplicaSet.Spec.Template.Spec.Module.Version == "1.0.1"
+				set := map[string]string{
+					label.ModuleDeploymentLabel: moduleDeployment.Name,
+				}
+				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
+				if err != nil || len(replicaSetList.Items) == 0 {
+					return false
+				}
+				return replicaSetList.Items[0].Spec.Template.Spec.Module.Version == "1.0.1"
 			}, timeout, interval).Should(BeTrue())
 		})
 	})
