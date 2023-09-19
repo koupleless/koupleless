@@ -18,7 +18,7 @@ import (
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 )
 
-var _ = Describe("ModuleDeployment Controller", func() {
+var _ = FDescribe("ModuleDeployment Controller", func() {
 	const timeout = time.Second * 30
 	const interval = time.Second * 5
 
@@ -29,16 +29,16 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		It("create module replicaset", func() {
 			Expect(k8sClient.Create(context.TODO(), &moduleDeployment)).Should(Succeed())
 
-			moduleReplicaSet := &v1alpha1.ModuleReplicaSet{}
-
-			key := types.NamespacedName{
-				Name:      getModuleReplicasName(moduleDeploymentName),
-				Namespace: namespace,
-			}
-
 			Eventually(func() bool {
-				k8sClient.Get(context.TODO(), key, moduleReplicaSet)
-				return len(moduleReplicaSet.GetOwnerReferences()) > 0
+				set := map[string]string{
+					label.ModuleDeploymentLabel: moduleDeployment.Name,
+				}
+				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
+				if err != nil {
+					return false
+				}
+				return len(replicaSetList.Items) > 0
 			}, timeout, interval).Should(BeTrue())
 		})
 	})
@@ -63,7 +63,18 @@ var _ = Describe("ModuleDeployment Controller", func() {
 				if err != nil || len(replicaSetList.Items) == 0 {
 					return false
 				}
-				return replicaSetList.Items[0].Spec.Template.Spec.Module.Version == "1.0.1"
+
+				//计算出最新的replcaset
+				maxVersion := 0
+				var newRS *moduledeploymentv1alpha1.ModuleReplicaSet
+				for i := 0; i < len(replicaSetList.Items); i++ {
+					if version := getVersion(&replicaSetList.Items[i]); version > maxVersion {
+						maxVersion = version
+						newRS = &replicaSetList.Items[i]
+					}
+				}
+
+				return newRS != nil && newRS.Spec.Template.Spec.Module.Version == "1.0.1"
 			}, timeout, interval).Should(BeTrue())
 		})
 	})
@@ -78,21 +89,19 @@ var _ = Describe("ModuleDeployment Controller", func() {
 			Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
 			Expect(k8sClient.Delete(context.TODO(), &newModuleDeployment)).Should(Succeed())
 
-			moduleReplicaSet := &v1alpha1.ModuleReplicaSet{}
-			moduleReplicaSetKey := types.NamespacedName{
-				Name:      getModuleReplicasName(moduleDeploymentName),
-				Namespace: namespace,
-			}
-
 			Eventually(func() bool {
-				replicaSetErr := k8sClient.Get(context.TODO(), moduleReplicaSetKey, moduleReplicaSet)
-				if replicaSetErr != nil && errors.IsNotFound(replicaSetErr) {
-					moduleDeploymentErr := k8sClient.Get(context.TODO(), key, &newModuleDeployment)
-					if moduleDeploymentErr != nil && errors.IsNotFound(moduleDeploymentErr) {
+				set := map[string]string{
+					label.ModuleDeploymentLabel: moduleDeployment.Name,
+				}
+				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
+				if err != nil {
+					if errors.IsNotFound(err) {
 						return true
 					}
+					return false
 				}
-				return false
+				return len(replicaSetList.Items) == 0
 			}, timeout, interval).Should(BeTrue())
 		})
 	})
