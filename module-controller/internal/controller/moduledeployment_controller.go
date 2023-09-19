@@ -89,12 +89,12 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	// create moduleReplicaSet
-	newRS, _, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
+	newRS, oldRSs, moduleChanged, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
 
-	if moduleDeployment.Status.ReleaseStatus == nil {
+	if moduleDeployment.Status.ReleaseStatus == nil || moduleChanged {
 		moduleDeployment.Status.ReleaseStatus = &moduledeploymentv1alpha1.ReleaseStatus{
 			CurrentBatch:       1,
 			Progress:           moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressInit,
@@ -111,7 +111,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting:
 		// update moduleReplicaSet
-		if err := r.updateModuleReplicaSet(moduleDeployment, newRS); err != nil {
+		if err := r.updateModuleReplicaSet(moduleDeployment, newRS, oldRSs); err != nil {
 			return ctrl.Result{}, err
 		}
 	}
@@ -137,11 +137,15 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 	replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
 	err := r.Client.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 	if err != nil {
-		if errors.IsNotFound(err) {
-			existReplicaset = false
+		if !errors.IsNotFound(err) {
+			log.Log.Error(err, "Failed to get moduleReplicaSetList")
+			return ctrl.Result{}, err
 		}
-		log.Log.Error(err, "Failed to get moduleReplicaSetList")
-		return ctrl.Result{}, err
+		existReplicaset = false
+	}
+
+	if len(replicaSetList.Items) == 0 {
+		existReplicaset = false
 	}
 
 	if existReplicaset {
@@ -202,7 +206,7 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, m
 }
 
 // create or get moduleReplicaset
-func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (*moduledeploymentv1alpha1.ModuleReplicaSet, []*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
+func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (*moduledeploymentv1alpha1.ModuleReplicaSet, []*moduledeploymentv1alpha1.ModuleReplicaSet, bool, error) {
 	var err error
 	for i := 0; i < 3; i++ {
 		var (
@@ -221,22 +225,27 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 		if err != nil {
 			log.Log.Info("get module replicaSet failed", "error", err)
 			if !errors.IsNotFound(err) {
-				return nil, nil, err
+				return nil, nil, false, err
 			}
 			log.Log.Info("moduleReplicaSet is not exist, need create a new one")
 		} else if len(replicaSetList.Items) != 0 {
+			var rsList []*moduledeploymentv1alpha1.ModuleReplicaSet
 			for j := 0; j < len(replicaSetList.Items); j++ {
-				oldRSs = append(oldRSs, &replicaSetList.Items[j])
+				rsList = append(rsList, &replicaSetList.Items[j])
 				if version := getVersion(&replicaSetList.Items[j]); maxVersion < version {
 					maxVersion = version
 					newRS = &replicaSetList.Items[j]
-					oldRSs = oldRSs[:len(oldRSs)-1]
+				}
+			}
+			for i := 0; i < len(rsList); i++ {
+				if getVersion(rsList[i]) != maxVersion {
+					oldRSs = append(oldRSs, rsList[i])
 				}
 			}
 			// todo: 批发发布没有完成时不允许改变 module 版本，需要webhook支持限制在批次发布过程中 module 版本变更
 			// 此处默认当 Module 发生版本变化时，已经完成上个版本的批次发布
 			if !isModuleChanges(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
-				return newRS, oldRSs, nil
+				return newRS, oldRSs, false, nil
 			}
 			oldRSs = append(oldRSs, newRS)
 			log.Log.Info("module has changed, need create a new replicaset")
@@ -247,42 +256,77 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 		if err != nil {
 			continue
 		}
-		return moduleReplicaSet, oldRSs, nil
+		return moduleReplicaSet, oldRSs, true, nil
 
 	}
-	return nil, nil, fmt.Errorf("create or get modulereplicaset error")
+	return nil, nil, false, fmt.Errorf("create or get modulereplicaset error")
 }
 
 // update module replicas
-func (r *ModuleDeploymentReconciler) updateModuleReplicas(ctx context.Context, replicas int32, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+func (r *ModuleDeploymentReconciler) updateModuleReplicas(
+	ctx context.Context, replicas int32,
+	moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
+	newRS *moduledeploymentv1alpha1.ModuleReplicaSet,
+	oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	moduleSpec := moduleDeployment.Spec.Template.Spec
-	if replicas != moduleReplicaSet.Spec.Replicas || isModuleChanges(moduleSpec.Module, moduleReplicaSet.Spec.Template.Spec.Module) {
-		log.Log.Info("prepare to update moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
-		moduleReplicaSet.Spec.Replicas = int32(replicas)
-		moduleReplicaSet.Spec.Template.Spec.Module = moduleSpec.Module
-		err := r.Client.Update(ctx, moduleReplicaSet)
+	if replicas != newRS.Spec.Replicas || isModuleChanges(moduleSpec.Module, newRS.Spec.Template.Spec.Module) {
+		log.Log.Info("prepare to update newRS", "moduleReplicaSetName", newRS.Name)
+		newRS.Spec.Replicas = int32(replicas)
+		newRS.Spec.Template.Spec.Module = moduleSpec.Module
+		err := r.Client.Update(ctx, newRS)
 		if err != nil {
-			log.Log.Error(err, "Failed to update moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
+			log.Log.Error(err, "Failed to update newRS", "moduleReplicaSetName", newRS.Name)
 			return err
 		}
-		log.Log.Info("finish to update moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
+		log.Log.Info("finish to update newRS", "moduleReplicaSetName", newRS.Name)
+
+		// scale down the old replicaset
+		// todo: there still some replicas of thd oldRSs when the replicas of newModuledeployment is smaller than the oldModuledeployment
+		idx := 0
+		for replicas > 0 && idx < len(oldRSs) {
+			copy := oldRSs[idx].DeepCopy()
+			if copy.Spec.Replicas > 0 {
+				if replicas >= copy.Spec.Replicas {
+					replicas -= copy.Spec.Replicas
+					copy.Spec.Replicas = 0
+				} else {
+					replicas = 0
+					copy.Spec.Replicas -= replicas
+				}
+				if err := r.Client.Update(ctx, copy); err != nil {
+					log.Log.Error(err, "Failed to update old replicaset", "moduleReplicaSetName", copy.Name)
+					return err
+				}
+			}
+			idx += 1
+		}
+
 	}
 	return nil
 }
 
 func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	moduleReplicaSet *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+	newRS *moduledeploymentv1alpha1.ModuleReplicaSet, oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	var (
 		ctx = context.TODO()
 
 		batchCount = moduleDeployment.Spec.OperationStrategy.BatchCount
 		curBatch   = moduleDeployment.Status.ReleaseStatus.CurrentBatch
 
-		curReplicas = moduleReplicaSet.Status.Replicas
+		curReplicas = newRS.Status.Replicas
 		expReplicas = moduleDeployment.Spec.Replicas
 	)
 
-	if curReplicas == expReplicas {
+	if batchCount <= 0 {
+		batchCount = 1
+	}
+
+	// wait moduleReplicaset ready
+	if replicas := (curBatch - 1) * (moduleDeployment.Spec.Replicas / batchCount); replicas > curReplicas {
+		return fmt.Errorf("newRS is not ready")
+	}
+
+	if curReplicas >= expReplicas {
 		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted
 		moduleDeployment.Status.ReleaseStatus.LastTransitionTime = metav1.Now()
 		moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, moduledeploymentv1alpha1.ModuleDeploymentCondition{
@@ -299,7 +343,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 		replicas = expReplicas
 	}
 
-	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, moduleReplicaSet)
+	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS, oldRSs)
 	if err != nil {
 		return err
 	}
