@@ -134,7 +134,7 @@ type ModuleDeploymentSpec struct {
 	// +optional
 	Pause bool `json:"pause,omitempty"`
 
-	OperationStrategy ModuleDeploymentStrategy `json:"strategy,omitempty"`
+	OperationStrategy ModuleDeploymentStrategy `json:"operationStrategy,omitempty"`
 
 	SchedulingStrategy ModuleSchedulingStrategy `json:"schedulingStrategy,omitempty"`
 }

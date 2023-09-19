@@ -262,6 +262,12 @@ func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleL
 			log.Log.Error(err, "Failed to create module", "moduleName", module.Name)
 			return err
 		}
+		copy := moduleReplicaSet.DeepCopy()
+		copy.Status.Replicas += int32(len(toAllocatePod))
+		if err = r.Client.Status().Update(ctx, copy); err != nil {
+			log.Log.Error(err, "Failed to update moduleReplicaset", "moduleReplicasetName", copy.Name)
+			return err
+		}
 	}
 	log.Log.Info("finish scaleup module", "moduleReplicaSetName", moduleReplicaSet.Name)
 	return nil
@@ -289,6 +295,12 @@ func (r *ModuleReplicaSetReconciler) scaledown(ctx context.Context, existedModul
 		if count--; count == 0 {
 			break
 		}
+	}
+	copy := moduleReplicaSet.DeepCopy()
+	copy.Status.Replicas -= int32(len(toDeletedModules))
+	if err = r.Client.Status().Update(ctx, copy); err != nil {
+		log.Log.Error(err, "Failed to update moduleReplicaset", "moduleReplicasetName", copy.Name)
+		return err
 	}
 
 	return err
@@ -348,11 +360,22 @@ func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(
 	var toAllocatePod []corev1.Pod
 	count := deltaReplicas
 	for _, pod := range selectedPods.Items {
-		instanceCount, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
-		if err != nil {
-			log.Log.Error(err, fmt.Sprintf("invalid ModuleInstanceCount in pod %v", pod.Name))
-			continue
+		var instanceCount int
+		if cntStr, ok := pod.Labels[label.ModuleInstanceCount]; !ok {
+			instanceCount = utils.GetModuleCountFromPod(&pod)
+			pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(instanceCount)
+			if err = r.Client.Update(context.TODO(), &pod); err != nil {
+				log.Log.Error(err, fmt.Sprintf("failed to update pod label"))
+				continue
+			}
+		} else {
+			instanceCount, err = strconv.Atoi(cntStr)
+			if err != nil {
+				log.Log.Error(err, fmt.Sprintf("invalid ModuleInstanceCount in pod %v", pod.Name))
+				continue
+			}
 		}
+
 		if _, ok := usedPodNames[pod.Name]; !ok && instanceCount < maxModuleCount {
 			toAllocatePod = append(toAllocatePod, pod)
 			if count--; count == 0 {

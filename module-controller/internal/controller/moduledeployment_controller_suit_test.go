@@ -38,7 +38,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 				if err != nil {
 					return false
 				}
-				return len(replicaSetList.Items) > 0
+				return len(replicaSetList.Items) == 1
 			}, timeout, interval).Should(BeTrue())
 		})
 	})
@@ -64,7 +64,6 @@ var _ = Describe("ModuleDeployment Controller", func() {
 					return false
 				}
 
-				//计算出最新的replcaset
 				maxVersion := 0
 				var newRS *moduledeploymentv1alpha1.ModuleReplicaSet
 				for i := 0; i < len(replicaSetList.Items); i++ {
@@ -74,7 +73,18 @@ var _ = Describe("ModuleDeployment Controller", func() {
 					}
 				}
 
-				return newRS != nil && newRS.Spec.Template.Spec.Module.Version == "1.0.1"
+				// the replicas of old replicaset must be zero
+				for i := 0; i < len(replicaSetList.Items); i++ {
+					if getVersion(&replicaSetList.Items[i]) != maxVersion {
+						if replicaSetList.Items[i].Spec.Replicas != 0 {
+							return false
+						}
+					}
+				}
+
+				// the replicas of new replicaset must be equal to newModuleDeployment
+				return newRS != nil && newRS.Spec.Template.Spec.Module.Version == "1.0.1" &&
+					newRS.Spec.Replicas == newModuleDeployment.Spec.Replicas
 			}, timeout, interval).Should(BeTrue())
 		})
 	})

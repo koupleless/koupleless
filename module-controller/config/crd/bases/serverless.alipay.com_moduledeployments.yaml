@@ -42,6 +42,28 @@ spec:
               minReadySeconds:
                 format: int32
                 type: integer
+              operationStrategy:
+                properties:
+                  batchCount:
+                    format: int32
+                    type: integer
+                  grayTimeBetweenBatchSeconds:
+                    format: int32
+                    type: integer
+                  maxUnavailable:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    x-kubernetes-int-or-string: true
+                  needConfirm:
+                    type: boolean
+                  upgradeType:
+                    type: string
+                  useBeta:
+                    type: boolean
+                required:
+                - upgradeType
+                type: object
               pause:
                 description: Indicates that the moduleDeployment is paused and will
                   not be processed by the moduleDeployment controller.
@@ -65,28 +87,6 @@ spec:
                 required:
                 - maxModuleCount
                 - schedulingType
-                type: object
-              strategy:
-                properties:
-                  batchCount:
-                    format: int32
-                    type: integer
-                  grayTimeBetweenBatchSeconds:
-                    format: int32
-                    type: integer
-                  maxUnavailable:
-                    anyOf:
-                    - type: integer
-                    - type: string
-                    x-kubernetes-int-or-string: true
-                  needConfirm:
-                    type: boolean
-                  upgradeType:
-                    type: string
-                  useBeta:
-                    type: boolean
-                required:
-                - upgradeType
                 type: object
               template:
                 properties:
