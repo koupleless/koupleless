@@ -24,20 +24,33 @@ import java.util.Map;
 /**
  * @author Lunarscave
  */
-public abstract class ArkletBaseIndicator {
+public abstract class Indicator {
 
     private final String indicatorId;
 
-    public ArkletBaseIndicator(String indicatorId) {
+    public Indicator(String indicatorId) {
         this.indicatorId = indicatorId;
     }
 
+    /**
+     * get health details
+     * @return a map of health details
+     */
     protected abstract Map<String, Object> getHealthDetails();
 
+    /**
+     * get indicator id
+     * @return indicator id
+     */
     public String getIndicatorId() {
         return indicatorId;
     }
 
+    /**
+     * get health model
+     * @param builder input health builder
+     * @return health model
+     */
     public Health getHealthModel(HealthBuilder builder) {
         return builder.init().putHealthData(getIndicatorId(), getHealthDetails()).build();
     }
