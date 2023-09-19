@@ -83,13 +83,21 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return r.handleDeletingModuleDeployment(ctx, moduleDeployment)
 	}
 
+	if moduleDeployment.Spec.Pause {
+		return ctrl.Result{}, err
+	}
+
 	// create moduleReplicaSet
 	moduleReplicaSet, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
 
-	if moduleDeployment.Status.ReleaseStatus == nil {
+	// todo: 批发发布没有完成时不允许改变 module 版本，需要webhook支持限制在批次发布过程中 module 版本变更
+	// 此处默认当 Module 发生版本变化时，已经完成上个版本的批次发布
+	moduleChanged := isModuleChanges(moduleDeployment.Spec.Template.Spec.Module, moduleReplicaSet.Spec.Template.Spec.Module)
+
+	if moduleDeployment.Status.ReleaseStatus == nil || moduleChanged {
 		moduleDeployment.Status.ReleaseStatus = &moduledeploymentv1alpha1.ReleaseStatus{
 			CurrentBatch:       1,
 			Progress:           moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressInit,
