@@ -29,6 +29,6 @@ func TestIsModuleChanges(t *testing.T) {
 
 func TestGetModuleReplicasName(t *testing.T) {
 	moduleDeploymentName := "module-deployment"
-	reversion := 1
-	assert.Equal(t, fmt.Sprintf("%v-%v-%v", moduleDeploymentName, "replicas", reversion), getModuleReplicasName(moduleDeploymentName, reversion))
+	revision := 1
+	assert.Equal(t, fmt.Sprintf("%v-%v-%v", moduleDeploymentName, "replicas", revision), getModuleReplicasName(moduleDeploymentName, revision))
 }

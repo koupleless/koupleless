@@ -363,18 +363,18 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 
 // generate module replicas
 func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	deployment *v1.Deployment, reversion int) *moduledeploymentv1alpha1.ModuleReplicaSet {
+	deployment *v1.Deployment, revision int) *moduledeploymentv1alpha1.ModuleReplicaSet {
 	newLabels := moduleDeployment.Labels
 	newLabels[label.ModuleNameLabel] = moduleDeployment.Spec.Template.Spec.Module.Name
 	newLabels[label.ModuleDeploymentLabel] = moduleDeployment.Name
 	newLabels[label.ModuleSchedulingStrategy] = string(moduleDeployment.Spec.SchedulingStrategy.SchedulingType)
 	newLabels[label.MaxModuleCount] = strconv.Itoa(moduleDeployment.Spec.SchedulingStrategy.MaxModuleCount)
-	newLabels[label.ModuleReplicasetReversionLabel] = strconv.Itoa(reversion)
+	newLabels[label.ModuleReplicasetRevisionLabel] = strconv.Itoa(revision)
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},
 			Labels:      newLabels,
-			Name:        getModuleReplicasName(moduleDeployment.Name, reversion),
+			Name:        getModuleReplicasName(moduleDeployment.Name, revision),
 			Namespace:   moduleDeployment.Namespace,
 		},
 		Spec: moduledeploymentv1alpha1.ModuleReplicaSetSpec{
@@ -399,14 +399,14 @@ func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *mo
 	return moduleReplicaSet
 }
 
-func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, reversion int) (*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
+func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, revision int) (*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
 	deployment := &v1.Deployment{}
 	err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}, deployment)
 	if err != nil {
 		log.Log.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 		return nil, err
 	}
-	moduleReplicaSet := r.generateModuleReplicas(moduleDeployment, deployment, reversion)
+	moduleReplicaSet := r.generateModuleReplicas(moduleDeployment, deployment, revision)
 	err = r.Client.Create(ctx, moduleReplicaSet)
 	if err != nil {
 		log.Log.Error(err, "Failed to create moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)
@@ -427,20 +427,20 @@ func isModuleChanges(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool 
 	return module1.Name != module2.Name || module1.Version != module2.Version
 }
 
-func getModuleReplicasName(moduleDeploymentName string, reversion int) string {
-	return fmt.Sprintf(`%s-%s-%v`, moduleDeploymentName, "replicas", reversion)
+func getModuleReplicasName(moduleDeploymentName string, revision int) string {
+	return fmt.Sprintf(`%s-%s-%v`, moduleDeploymentName, "replicas", revision)
 }
 
 func getVersion(set *moduledeploymentv1alpha1.ModuleReplicaSet) int {
-	if versionStr, ok := set.Labels[label.ModuleReplicasetReversionLabel]; ok {
+	if versionStr, ok := set.Labels[label.ModuleReplicasetRevisionLabel]; ok {
 		version, err := strconv.Atoi(versionStr)
 		if err != nil {
-			log.Log.Error(err, "invalid version for ModuleReplicasetReversionLabel")
+			log.Log.Error(err, "invalid version for ModuleReplicasetRevisionLabel")
 			return 0
 		}
 		return version
 	}
 
-	log.Log.Error(fmt.Errorf("can't get ModuleReplicasetReversionLabel from ModuleReplicaSet"), "")
+	log.Log.Error(fmt.Errorf("can't get ModuleReplicasetRevisionLabel from ModuleReplicaSet"), "")
 	return 0
 }
