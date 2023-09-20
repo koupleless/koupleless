@@ -16,7 +16,10 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
@@ -29,6 +32,7 @@ import com.alipay.sofa.serverless.arklet.core.command.custom.CustomCommand;
 import com.alipay.sofa.serverless.arklet.core.command.custom.CustomCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord;
+import com.sun.webkit.Timer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -73,6 +77,26 @@ public class CommandTests extends BaseTest {
         Map map1 = JSONObject.parseObject(JSONObject.toJSONString(input1), Map.class);
         Output<?> output1 = commandService.process(BuiltinCommand.QUERY_BIZ_OPS.getId(), map1);
         Assert.assertNotNull(output1);
+        ProcessRecord processRecord1 = (ProcessRecord) output1.getData();
+        Assert.assertNotNull(processRecord1);
+        Assert.assertNotNull(processRecord1.getEndSpace());
+        Assert.assertNotNull(processRecord1.getEndTime());
+    }
+
+    @Test
+    public void testResourceStatistics() throws Exception {
+        List<MemoryPoolMXBean> memoryPoolMXBeans = ManagementFactory.getMemoryPoolMXBeans();
+        MemoryPoolMXBean metaSpaceMXBean = null;
+        for (MemoryPoolMXBean memoryPoolMXBean : memoryPoolMXBeans)
+            if (memoryPoolMXBean.getName().equals("Metaspace"))
+                metaSpaceMXBean = memoryPoolMXBean;
+        Long beforeSpace = metaSpaceMXBean.getUsage().getUsed();
+        Long beforeTime = System.currentTimeMillis();
+//        运行指令
+        Long time = System.currentTimeMillis() - beforeTime;
+        Long usedSpace = metaSpaceMXBean.getUsage().getUsed() - beforeSpace;
+        System.out.println(time);
+        System.out.println(usedSpace);
     }
 
 }
