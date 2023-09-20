@@ -135,7 +135,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 		label.ModuleDeploymentLabel: moduleDeployment.Name,
 	}
 	replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
-	err := r.Client.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
+	err := r.Client.List(ctx, replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 	if err != nil {
 		if !errors.IsNotFound(err) {
 			log.Log.Error(err, "Failed to get moduleReplicaSetList")
@@ -232,14 +232,18 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 			var rsList []*moduledeploymentv1alpha1.ModuleReplicaSet
 			for j := 0; j < len(replicaSetList.Items); j++ {
 				rsList = append(rsList, &replicaSetList.Items[j])
-				if version := getVersion(&replicaSetList.Items[j]); maxVersion < version {
+				version, err := getVersion(&replicaSetList.Items[j])
+				if err != nil {
+					return nil, nil, false, err
+				}
+				if maxVersion < version {
 					maxVersion = version
 					newRS = &replicaSetList.Items[j]
 				}
 			}
-			for i := 0; i < len(rsList); i++ {
-				if getVersion(rsList[i]) != maxVersion {
-					oldRSs = append(oldRSs, rsList[i])
+			for j := 0; j < len(rsList); j++ {
+				if version, _ := getVersion(rsList[j]); version != maxVersion {
+					oldRSs = append(oldRSs, rsList[j])
 				}
 			}
 			// todo: 批发发布没有完成时不允许改变 module 版本，需要webhook支持限制在批次发布过程中 module 版本变更
@@ -431,16 +435,17 @@ func getModuleReplicasName(moduleDeploymentName string, revision int) string {
 	return fmt.Sprintf(`%s-%s-%v`, moduleDeploymentName, "replicas", revision)
 }
 
-func getVersion(set *moduledeploymentv1alpha1.ModuleReplicaSet) int {
+func getVersion(set *moduledeploymentv1alpha1.ModuleReplicaSet) (int, error) {
 	if versionStr, ok := set.Labels[label.ModuleReplicasetRevisionLabel]; ok {
 		version, err := strconv.Atoi(versionStr)
 		if err != nil {
 			log.Log.Error(err, "invalid version for ModuleReplicasetRevisionLabel")
-			return 0
+			return 0, err
 		}
-		return version
+		return version, nil
 	}
 
-	log.Log.Error(fmt.Errorf("can't get ModuleReplicasetRevisionLabel from ModuleReplicaSet"), "")
-	return 0
+	err := fmt.Errorf("can't get ModuleReplicasetRevisionLabel from ModuleReplicaSet")
+	log.Log.Error(err, "")
+	return 0, err
 }
