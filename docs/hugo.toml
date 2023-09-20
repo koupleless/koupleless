@@ -64,10 +64,10 @@ id = "UA-00000000-0"
 #languageName ="English"
 #contentDir = "content/en"
 # Weight used for sorting.
-weight = 1
-[languages.en.params]
-title = "SOFAServerless"
-description = "SOFAServerless Web Site"
+#weight = 1
+#[languages.en.params]
+#title = "SOFAServerless"
+#description = "SOFAServerless Web Site"
 
 [languages.zh-cn]
 languageName ="中文"
