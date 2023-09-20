@@ -40,7 +40,7 @@ public class ProcessRecord {
 
     private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
 
-    private MemoryPoolMXBean metaSpaceMXBean;
+    private MemoryPoolMXBean          metaSpaceMXBean;
 
     private String                    requestId;
 
