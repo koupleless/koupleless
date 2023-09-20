@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -111,8 +112,13 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting:
 		// update moduleReplicaSet
-		if err := r.updateModuleReplicaSet(moduleDeployment, newRS, oldRSs); err != nil {
+		enqueue, err := r.updateModuleReplicaSet(moduleDeployment, newRS, oldRSs)
+		if err != nil {
 			return ctrl.Result{}, err
+		}
+		if enqueue {
+			requeueAfter := utils.GetNextReconcileTime(time.Now())
+			return ctrl.Result{RequeueAfter: requeueAfter}, nil
 		}
 	}
 
@@ -310,7 +316,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 }
 
 func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	newRS *moduledeploymentv1alpha1.ModuleReplicaSet, oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet) error {
+	newRS *moduledeploymentv1alpha1.ModuleReplicaSet, oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet) (bool, error) {
 	var (
 		ctx = context.TODO()
 
@@ -327,7 +333,8 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 
 	// wait moduleReplicaset ready
 	if replicas := (curBatch - 1) * (moduleDeployment.Spec.Replicas / batchCount); replicas > curReplicas {
-		return fmt.Errorf("newRS is not ready")
+		log.Log.Info(fmt.Sprintf("newRs is not ready, expect replicas %v, but got %v", replicas, curReplicas))
+		return true, nil
 	}
 
 	if curReplicas >= expReplicas {
@@ -339,7 +346,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 			LastTransitionTime: metav1.Now(),
 			Message:            "deployment release progress completed",
 		})
-		return r.Status().Update(ctx, moduleDeployment)
+		return false, r.Status().Update(ctx, moduleDeployment)
 	}
 
 	replicas := curBatch * (moduleDeployment.Spec.Replicas / batchCount)
@@ -349,7 +356,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 
 	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS, oldRSs)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
@@ -362,7 +369,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 		Message:            fmt.Sprintf("deployment release: curbatch %v, batchCount %v", curBatch, batchCount),
 	})
 
-	return r.Status().Update(ctx, moduleDeployment)
+	return false, r.Status().Update(ctx, moduleDeployment)
 }
 
 // generate module replicas
