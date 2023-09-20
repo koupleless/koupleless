@@ -59,9 +59,10 @@ id = "UA-00000000-0"
 # Language configuration
 
 [languages]
-[languages.en]
-languageName ="English"
-contentDir = "content/en"
+#当前没有国际用户，暂时不提供英文版文档。
+#[languages.en]
+#languageName ="English"
+#contentDir = "content/en"
 # Weight used for sorting.
 weight = 1
 [languages.en.params]
