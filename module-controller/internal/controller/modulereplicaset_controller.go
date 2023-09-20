@@ -322,7 +322,7 @@ func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(
 	strategyLabel := moduleReplicaSet.Labels[label.ModuleSchedulingStrategy]
 	strategy := moduledeploymentv1alpha1.ModuleSchedulingType(strategyLabel)
 
-	maxModuleCountLabel := moduleReplicaSet.Labels[label.MaxModuleCount]
+	maxModuleCountLabel := selectedPods.Items[0].Labels[label.MaxModuleCount]
 	maxModuleCount, err := strconv.Atoi(maxModuleCountLabel)
 	if err != nil {
 		return nil, err
