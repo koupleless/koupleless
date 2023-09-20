@@ -173,7 +173,7 @@ func preparePod(podName string) corev1.Pod {
 			Labels: map[string]string{
 				"app":                     "dynamic-stock",
 				label.ModuleInstanceCount: "0",
-				label.MaxModuleCount:      "10",
+				label.MaxModuleCount:      "3",
 			},
 		},
 		Spec: corev1.PodSpec{
