@@ -13,7 +13,7 @@ const (
 
 	ModuleDeploymentLabel = "serverless.alipay.com/module-deployment"
 
-	ModuleReplicasetReversionLabel = "serverless.alipay.com/module-replicaset-reversion"
+	ModuleReplicasetRevisionLabel = "serverless.alipay.com/module-replicaset-revision"
 
 	DeleteModuleLabel = "serverless.alipay.com/delete-module"
 
