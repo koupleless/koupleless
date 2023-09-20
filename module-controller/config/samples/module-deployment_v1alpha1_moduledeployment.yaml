@@ -24,4 +24,3 @@ spec:
     batchCount: 3
   schedulingStrategy:
     maxModuleCount: 10
-

@@ -83,6 +83,10 @@ spec:
                   maxModuleCount:
                     type: integer
                   schedulingType:
+                    default: scatter
+                    enum:
+                    - scatter
+                    - stacking
                     type: string
                 required:
                 - maxModuleCount

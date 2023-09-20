@@ -54,8 +54,8 @@ const (
 type ModuleSchedulingType string
 
 const (
-	Scatter  ModuleSchedulingType = "Scatter"
-	Stacking ModuleSchedulingType = "Stacking"
+	Scatter  ModuleSchedulingType = "scatter"
+	Stacking ModuleSchedulingType = "stacking"
 )
 
 type ReleaseStatus struct {
@@ -93,6 +93,8 @@ type ModuleDeploymentCondition struct {
 }
 
 type ModuleSchedulingStrategy struct {
+	// +kubebuilder:validation:Enum={"scatter","stacking"}
+	// +kubebuilder:default=scatter
 	SchedulingType ModuleSchedulingType `json:"schedulingType"`
 	MaxModuleCount int                  `json:"maxModuleCount"`
 }

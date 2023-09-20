@@ -67,7 +67,11 @@ var _ = Describe("ModuleDeployment Controller", func() {
 				maxVersion := 0
 				var newRS *moduledeploymentv1alpha1.ModuleReplicaSet
 				for i := 0; i < len(replicaSetList.Items); i++ {
-					if version := getVersion(&replicaSetList.Items[i]); version > maxVersion {
+					version, err := getVersion(&replicaSetList.Items[i])
+					if err != nil {
+						return false
+					}
+					if version > maxVersion {
 						maxVersion = version
 						newRS = &replicaSetList.Items[i]
 					}
@@ -75,7 +79,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 
 				// the replicas of old replicaset must be zero
 				for i := 0; i < len(replicaSetList.Items); i++ {
-					if getVersion(&replicaSetList.Items[i]) != maxVersion {
+					if version, _ := getVersion(&replicaSetList.Items[i]); version != maxVersion {
 						if replicaSetList.Items[i].Spec.Replicas != 0 {
 							return false
 						}
