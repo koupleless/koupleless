@@ -85,8 +85,13 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return r.handleDeletingModuleDeployment(ctx, moduleDeployment)
 	}
 
-	if moduleDeployment.Spec.Pause {
+	// update MaxModuleCount
+	if err := r.updateDeployment(ctx, moduleDeployment); err != nil {
 		return ctrl.Result{}, err
+	}
+
+	if moduleDeployment.Spec.Pause {
+		return ctrl.Result{}, nil
 	}
 
 	// create moduleReplicaSet
@@ -238,7 +243,7 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 			var rsList []*moduledeploymentv1alpha1.ModuleReplicaSet
 			for j := 0; j < len(replicaSetList.Items); j++ {
 				rsList = append(rsList, &replicaSetList.Items[j])
-				version, err := getVersion(&replicaSetList.Items[j])
+				version, err := getRevision(&replicaSetList.Items[j])
 				if err != nil {
 					return nil, nil, false, err
 				}
@@ -248,7 +253,7 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 				}
 			}
 			for j := 0; j < len(rsList); j++ {
-				if version, _ := getVersion(rsList[j]); version != maxVersion {
+				if version, _ := getRevision(rsList[j]); version != maxVersion {
 					oldRSs = append(oldRSs, rsList[j])
 				}
 			}
@@ -379,7 +384,6 @@ func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *mo
 	newLabels[label.ModuleNameLabel] = moduleDeployment.Spec.Template.Spec.Module.Name
 	newLabels[label.ModuleDeploymentLabel] = moduleDeployment.Name
 	newLabels[label.ModuleSchedulingStrategy] = string(moduleDeployment.Spec.SchedulingStrategy.SchedulingType)
-	newLabels[label.MaxModuleCount] = strconv.Itoa(moduleDeployment.Spec.SchedulingStrategy.MaxModuleCount)
 	newLabels[label.ModuleReplicasetRevisionLabel] = strconv.Itoa(revision)
 	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{
 		ObjectMeta: metav1.ObjectMeta{
@@ -427,6 +431,23 @@ func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, mo
 	return moduleReplicaSet, nil
 }
 
+func (r *ModuleDeploymentReconciler) updateDeployment(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) error {
+	deployment := &v1.Deployment{}
+	nn := types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}
+	if err := r.Client.Get(ctx, nn, deployment); err != nil {
+		return err
+	}
+
+	curCount, ok := deployment.Spec.Template.Labels[label.MaxModuleCount]
+	if expCount := strconv.Itoa(moduleDeployment.Spec.SchedulingStrategy.MaxModuleCount); !ok || curCount != expCount {
+		deployment.Spec.Template.Labels[label.MaxModuleCount] = expCount
+		if err := r.Client.Update(ctx, deployment); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // SetupWithManager sets up the controller with the Manager.
 func (r *ModuleDeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
@@ -442,7 +463,7 @@ func getModuleReplicasName(moduleDeploymentName string, revision int) string {
 	return fmt.Sprintf(`%s-%s-%v`, moduleDeploymentName, "replicas", revision)
 }
 
-func getVersion(set *moduledeploymentv1alpha1.ModuleReplicaSet) (int, error) {
+func getRevision(set *moduledeploymentv1alpha1.ModuleReplicaSet) (int, error) {
 	if versionStr, ok := set.Labels[label.ModuleReplicasetRevisionLabel]; ok {
 		version, err := strconv.Atoi(versionStr)
 		if err != nil {
