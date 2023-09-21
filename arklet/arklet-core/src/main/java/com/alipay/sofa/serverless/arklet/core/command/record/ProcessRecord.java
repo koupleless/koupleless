@@ -22,7 +22,6 @@ import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.management.MemoryPoolMXBean;
 import java.util.Date;
 
 import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord.Status.EXECUTING;

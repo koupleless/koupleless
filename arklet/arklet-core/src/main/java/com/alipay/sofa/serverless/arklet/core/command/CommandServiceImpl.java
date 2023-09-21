@@ -164,7 +164,10 @@ public class CommandServiceImpl implements CommandService {
                                             arkBizMeta.getBizName(), arkBizMeta.getBizVersion()).getId()));
                 }
                 try {
-                    return handler.handle(input);
+                    final long startSpace = metaSpaceRecord.getMetaSpaceMXBean().getUsage().getUsed();
+                    Output<?> output = handler.handle(input);
+                    output.setElapsedSpace(metaSpaceRecord.getMetaSpaceMXBean().getUsage().getUsed() - startSpace);
+                    return output;
                 } finally {
                     BizOpsCommandCoordinator
                             .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
