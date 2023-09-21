@@ -19,8 +19,6 @@ package com.alipay.sofa.serverless.arklet.core.command.record;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryPoolMXBean;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
