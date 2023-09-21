@@ -96,7 +96,7 @@ type ModuleSchedulingStrategy struct {
 	// +kubebuilder:validation:Enum={"scatter","stacking"}
 	// +kubebuilder:default=scatter
 	SchedulingType ModuleSchedulingType `json:"schedulingType"`
-	MaxModuleCount int                  `json:"maxModuleCount"`
+	//MaxModuleCount int                  `json:"maxModuleCount"`
 }
 
 type ModuleDeploymentStrategy struct {

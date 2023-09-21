@@ -85,11 +85,6 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return r.handleDeletingModuleDeployment(ctx, moduleDeployment)
 	}
 
-	// update MaxModuleCount
-	if err := r.updateDeployment(ctx, moduleDeployment); err != nil {
-		return ctrl.Result{}, err
-	}
-
 	if moduleDeployment.Spec.Pause {
 		return ctrl.Result{}, nil
 	}
@@ -429,23 +424,6 @@ func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, mo
 	}
 	log.Log.Info("finish to create a new one", "moduleReplicaSetName", moduleReplicaSet.Name)
 	return moduleReplicaSet, nil
-}
-
-func (r *ModuleDeploymentReconciler) updateDeployment(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) error {
-	deployment := &v1.Deployment{}
-	nn := types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}
-	if err := r.Client.Get(ctx, nn, deployment); err != nil {
-		return err
-	}
-
-	curCount, ok := deployment.Spec.Template.Labels[label.MaxModuleCount]
-	if expCount := strconv.Itoa(moduleDeployment.Spec.SchedulingStrategy.MaxModuleCount); !ok || curCount != expCount {
-		deployment.Spec.Template.Labels[label.MaxModuleCount] = expCount
-		if err := r.Client.Update(ctx, deployment); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

@@ -22,6 +22,7 @@ import (
 	"sort"
 	"strconv"
 
+	"golang.org/x/tools/container/intsets"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -325,7 +326,8 @@ func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(
 	maxModuleCountLabel := selectedPods.Items[0].Labels[label.MaxModuleCount]
 	maxModuleCount, err := strconv.Atoi(maxModuleCountLabel)
 	if err != nil {
-		return nil, err
+		// if we get MaxModuleCount failed from pod, then set it to max
+		maxModuleCount = intsets.MaxInt
 	}
 
 	if strategy == moduledeploymentv1alpha1.Scatter {
