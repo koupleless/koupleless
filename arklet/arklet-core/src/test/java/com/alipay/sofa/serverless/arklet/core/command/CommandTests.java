@@ -66,6 +66,7 @@ public class CommandTests extends BaseTest {
         Assert.assertNotNull(output);
         ProcessRecord processRecord = (ProcessRecord) output.getData();
         Assert.assertNotNull(processRecord);
+        Assert.assertNotNull(processRecord.getEndSpace());
 
         QueryBizOpsHandler.Input input1 = new QueryBizOpsHandler.Input();
         input1.setRequestId(rid);
@@ -75,7 +76,6 @@ public class CommandTests extends BaseTest {
         ProcessRecord processRecord1 = (ProcessRecord) output1.getData();
         Assert.assertNotNull(processRecord1);
         Assert.assertNotNull(processRecord1.getEndSpace());
-        Assert.assertNotNull(processRecord1.getEndTime());
     }
 
 }

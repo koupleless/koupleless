@@ -40,8 +40,6 @@ public class ProcessRecord {
 
     private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
 
-    private MemoryPoolMXBean          metaSpaceMXBean;
-
     private String                    requestId;
 
     private ArkBizMeta                arkBizMeta;
@@ -98,7 +96,6 @@ public class ProcessRecord {
     }
 
     public void markFinishTime() {
-        setEndSpace(getMetaSpaceMXBean().getUsage().getUsed());
         setElapsedSpace(getEndSpace() - getStartSpace());
         Date date = new Date();
         setEndTime(date);

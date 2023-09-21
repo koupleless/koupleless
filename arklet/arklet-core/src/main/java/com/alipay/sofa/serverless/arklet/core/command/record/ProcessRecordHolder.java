@@ -59,17 +59,10 @@ public class ProcessRecordHolder {
 
     public static ProcessRecord createProcessRecord(String rid, ArkBizMeta arkBizMeta) {
         ProcessRecord pr = new ProcessRecord();
-        List<MemoryPoolMXBean> memoryPoolMXBeans = ManagementFactory.getMemoryPoolMXBeans();
-        MemoryPoolMXBean metaSpaceMXBean = null;
-        for (MemoryPoolMXBean memoryPoolMXBean : memoryPoolMXBeans)
-            if (memoryPoolMXBean.getName().equals("Metaspace"))
-                metaSpaceMXBean = memoryPoolMXBean;
         pr.setRequestId(rid);
         pr.setArkBizMeta(arkBizMeta);
         pr.setStatus(INITIALIZED);
         Date date = new Date();
-        pr.setMetaSpaceMXBean(metaSpaceMXBean);
-        pr.setStartSpace(metaSpaceMXBean.getUsage().getUsed());
         pr.setStartTime(date);
         pr.setStartTimestamp(date.getTime());
         processRecords.put(rid, pr);
