@@ -36,6 +36,7 @@ public class BizUninstallEventHandler implements EventHandler<BeforeBizStopEvent
 
     private void doUninstallBiz(Biz biz) {
         BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
+        BizRuntimeContextRegistry.unRegisterBizRuntimeManager(bizRuntimeContext);
         bizRuntimeContext.shutdown();
     }
 
