@@ -21,19 +21,13 @@ import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Service;
 
-/**
- * TODO: 需要更改成只有在模块里才注册成bean
- */
-@Service
 public class ApplicationContextEventHandler implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry
             .getBizRuntimeContextByClassLoader(applicationContext.getClassLoader());
-        BizRuntimeContextRegistry.unRegisterSofaRuntimeManager(bizRuntimeContext);
         bizRuntimeContext.setRootApplicationContext(applicationContext);
     }
 }

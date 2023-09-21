@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>0.1.3</revision>
+        <revision>0.3.3</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -24,9 +24,18 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
+        <oshi.version>6.4.5</oshi.version>
+        <commons.lang3.version>3.12.0</commons.lang3.version>
+        <guice.version>4.0</guice.version>
+        <netty.version>4.1.42.Final</netty.version>
+        <logback.version>1.2.9</logback.version>
+        <lombok.version>1.18.22</lombok.version>
+        <guava.version>32.1.2-jre</guava.version>
+        <fastjson.version>1.2.69</fastjson.version>
         <spring.boot.version>2.7.15</spring.boot.version>
+        <junit.version>4.13.1</junit.version>
+        <mockito.version>4.8.1</mockito.version>
         <sofa.ark.version>2.2.3</sofa.ark.version>
-        <sofa.serverless.arklet.version>0.3.2</sofa.serverless.arklet.version>
     </properties>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -62,17 +71,29 @@
     </scm>
 
     <modules>
-        <module>sofa-serverless-base-common</module>
+        <module>sofa-serverless-common</module>
         <module>sofa-serverless-base-starter</module>
         <module>sofa-serverless-base-plugin</module>
         <module>sofa-serverless-app-starter</module>
+        <module>arklet-core</module>
+        <module>arklet-springboot-starter</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>sofa-serverless-base-common</artifactId>
+                <artifactId>arklet-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>arklet-springboot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>sofa-serverless-common</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -112,34 +133,118 @@
                 <artifactId>sofa-ark-api</artifactId>
                 <version>${sofa.ark.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.alipay.sofa</groupId>
-                <artifactId>sofa-ark-springboot-starter</artifactId>
-                <version>${sofa.ark.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.alipay.sofa</groupId>
-                        <artifactId>sofa-ark-compatible-springboot1</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.alipay.sofa</groupId>
-                        <artifactId>sofa-ark-compatible-springboot2</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <!--  sofa-ark end  -->
 
-            <!--  arklet begin  -->
-            <dependency>
-                <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>arklet-springboot-starter</artifactId>
-                <version>${sofa.serverless.arklet.version}</version>
-            </dependency>
-            <!--  arklet end  -->
+            <!--  springboot start  -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-springboot-starter</artifactId>
+                <version>${sofa.ark.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-loader</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-logging</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <!--  springboot end  -->
+
+            <dependency>
+                <groupId>com.google.inject</groupId>
+                <artifactId>guice</artifactId>
+                <version>${guice.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.inject.extensions</groupId>
+                <artifactId>guice-multibindings</artifactId>
+                <version>${guice.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!--            测试-->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>${oshi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
