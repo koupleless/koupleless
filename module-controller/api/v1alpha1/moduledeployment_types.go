@@ -51,13 +51,6 @@ const (
 	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
 )
 
-type DeployPolicy string
-
-const (
-	ModuleDeploymentDeployPolicySymmetric  DeployPolicy = "symmetric"
-	ModuleDeploymentDeployPolicyAsymmetric DeployPolicy = "asymmetric"
-)
-
 type ModuleUpgradeType string
 
 const (
@@ -134,9 +127,7 @@ type ModuleDeploymentSpec struct {
 
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
-	// +kubebuilder:validation:Enum={"symmetric","asymmetric"}
-	DeployPolicy DeployPolicy `json:"deployPolicy"`
-
+	// +kubebuilder:validation:Minimum=-1
 	Replicas int32 `json:"replicas,omitempty"`
 
 	MinReadySeconds int32 `json:"minReadySeconds,omitempty"`
