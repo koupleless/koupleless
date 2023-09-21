@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: dynamic-stock-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: dynamic-stock
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: dynamic-stock-container
-          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/dynamic-stock-mng:v0.8
+          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/dynamic-stock-mng:v0.6
           ports:
             - containerPort: 8080
             - containerPort: 1238
