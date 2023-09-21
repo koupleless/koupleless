@@ -86,7 +86,7 @@ jobs:
         run: |
           kubectl get modulereplicaset
 
-      - run: sleep 5
+      - run: sleep 15
 
       - name: get module
         run: |
@@ -107,5 +107,5 @@ jobs:
           kubectl exec -it $podname -- sh -c 'ls -al logs'
           kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng'
           kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng/sofa-ark'
-          kubectl exec -it $podname -- sh -c 'grep "dynamic-provider:1.0.0 started" logs/stock-mng/*.log'
+          kubectl exec -it $podname -- sh -c 'grep "dynamic-provider:1.0.0 started" logs/stock-mng/sofa-ark/*.log'
           
