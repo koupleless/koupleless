@@ -80,8 +80,6 @@ spec:
                 type: integer
               schedulingStrategy:
                 properties:
-                  maxModuleCount:
-                    type: integer
                   schedulingType:
                     default: scatter
                     enum:
@@ -89,7 +87,6 @@ spec:
                     - stacking
                     type: string
                 required:
-                - maxModuleCount
                 - schedulingType
                 type: object
               template:

@@ -138,7 +138,6 @@ func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.Mo
 			},
 			SchedulingStrategy: v1alpha1.ModuleSchedulingStrategy{
 				SchedulingType: v1alpha1.Scatter,
-				MaxModuleCount: 10,
 			},
 		},
 		ObjectMeta: metav1.ObjectMeta{
