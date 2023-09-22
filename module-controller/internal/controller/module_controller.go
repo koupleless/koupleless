@@ -164,20 +164,6 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(ctx context.Context, 
 					return ctrl.Result{}, err
 				}
 
-				// update moduleReplicaset status
-				if replicasetName := module.Labels[label.ModuleReplicasetLabel]; replicasetName != "" {
-					for i := 0; i < 3; i++ {
-						replicaset := &v1alpha1.ModuleReplicaSet{}
-						err := r.Get(ctx, types.NamespacedName{Namespace: module.Namespace, Name: replicasetName}, replicaset)
-						if err != nil {
-							continue
-						}
-						replicaset.Status.Replicas -= 1
-						if err = r.Status().Update(ctx, replicaset); err != nil {
-							continue
-						}
-					}
-				}
 			} else {
 				log.Log.Info("pod not exist", "moduleName", module.Spec.Module.Name, "module", module.Name)
 			}
