@@ -1,6 +1,5 @@
 ---
-title: 文档
-linkTitle: 文档
+title: 用户文档
+linkTitle: 用户文档
 menu: {main: {weight: 20}}
-weight: 20
 ---
