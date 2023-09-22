@@ -23,4 +23,4 @@ spec:
     useBeta: false
     batchCount: 3
   schedulingStrategy:
-    maxModuleCount: 10
+    schedulingType: scatter

@@ -90,12 +90,12 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	// create moduleReplicaSet
-	newRS, oldRSs, moduleChanged, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
+	newRS, oldRSs, moduleVersionChanged, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
 
-	if moduleDeployment.Status.ReleaseStatus == nil || moduleChanged {
+	if moduleDeployment.Status.ReleaseStatus == nil || moduleVersionChanged {
 		moduleDeployment.Status.ReleaseStatus = &moduledeploymentv1alpha1.ReleaseStatus{
 			CurrentBatch:       1,
 			Progress:           moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressInit,
@@ -119,6 +119,13 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		if enqueue {
 			requeueAfter := utils.GetNextReconcileTime(time.Now())
 			return ctrl.Result{RequeueAfter: requeueAfter}, nil
+		}
+	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted:
+		if moduleDeployment.Spec.Replicas != newRS.Spec.Replicas {
+			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
+				return ctrl.Result{}, err
+			}
 		}
 	}
 

@@ -43,7 +43,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		})
 	})
 
-	Context("update module deployment", func() {
+	Context("update module version for module deployment", func() {
 		It("update module replicaset", func() {
 			key := types.NamespacedName{
 				Name:      moduleDeploymentName,
@@ -87,8 +87,61 @@ var _ = Describe("ModuleDeployment Controller", func() {
 				}
 
 				// the replicas of new replicaset must be equal to newModuleDeployment
-				return newRS != nil && newRS.Spec.Template.Spec.Module.Version == "1.0.1" &&
-					newRS.Spec.Replicas == newModuleDeployment.Spec.Replicas
+				return newRS != nil &&
+					newRS.Spec.Template.Spec.Module.Version == "1.0.1" &&
+					newRS.Status.Replicas == newRS.Spec.Replicas &&
+					newRS.Status.Replicas == newModuleDeployment.Spec.Replicas
+			}, timeout, interval).Should(BeTrue())
+		})
+	})
+
+	Context("update replicas for module deployment", func() {
+		It("update module replicas", func() {
+			key := types.NamespacedName{
+				Name:      moduleDeploymentName,
+				Namespace: namespace,
+			}
+			var newModuleDeployment v1alpha1.ModuleDeployment
+			Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
+			newModuleDeployment.Spec.Replicas += 1
+			Expect(k8sClient.Update(context.TODO(), &newModuleDeployment)).Should(Succeed())
+
+			Eventually(func() bool {
+				set := map[string]string{
+					label.ModuleDeploymentLabel: moduleDeployment.Name,
+				}
+				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
+				if err != nil || len(replicaSetList.Items) == 0 {
+					return false
+				}
+
+				maxVersion := 0
+				var newRS *moduledeploymentv1alpha1.ModuleReplicaSet
+				for i := 0; i < len(replicaSetList.Items); i++ {
+					version, err := getRevision(&replicaSetList.Items[i])
+					if err != nil {
+						return false
+					}
+					if version > maxVersion {
+						maxVersion = version
+						newRS = &replicaSetList.Items[i]
+					}
+				}
+
+				// the replicas of old replicaset must be zero
+				for i := 0; i < len(replicaSetList.Items); i++ {
+					if version, _ := getRevision(&replicaSetList.Items[i]); version != maxVersion {
+						if replicaSetList.Items[i].Spec.Replicas != 0 {
+							return false
+						}
+					}
+				}
+
+				// the replicas of new replicaset must be equal to newModuleDeployment
+				return newRS != nil &&
+					newRS.Status.Replicas == newRS.Spec.Replicas &&
+					newRS.Status.Replicas == newModuleDeployment.Spec.Replicas
 			}, timeout, interval).Should(BeTrue())
 		})
 	})

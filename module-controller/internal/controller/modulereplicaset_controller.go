@@ -27,7 +27,9 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/pointer"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
@@ -87,6 +89,31 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	if err != nil {
 		log.Log.Error(err, "Failed to list existedModuleList", "moduleReplicaSetName", moduleReplicaSet.Name)
 		return ctrl.Result{}, nil
+	}
+
+	// update status.replicas
+	expReplicas := moduleReplicaSet.Status.Replicas
+	if replicas := int32(len(existedModuleList.Items)); replicas != expReplicas {
+		expReplicas = replicas
+	} else {
+		replicas = 0
+		// calculate the modules that have been installed successfully
+		for i := 0; i < len(existedModuleList.Items); i++ {
+			status := existedModuleList.Items[i].Status.Status
+			if status == moduledeploymentv1alpha1.ModuleInstanceStatusCompleting ||
+				status == moduledeploymentv1alpha1.ModuleInstanceStatusAvailable {
+				replicas += 1
+			}
+		}
+		if replicas != expReplicas {
+			expReplicas = replicas
+		}
+	}
+	if expReplicas != moduleReplicaSet.Status.Replicas {
+		moduleReplicaSet.Status.Replicas = expReplicas
+		if err = r.Status().Update(ctx, moduleReplicaSet); err != nil {
+			return ctrl.Result{}, err
+		}
 	}
 
 	if moduleReplicaSet.DeletionTimestamp != nil {
@@ -219,8 +246,22 @@ func (r *ModuleReplicaSetReconciler) generateModule(moduleReplicaSet *moduledepl
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ModuleReplicaSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	filterFn := handler.MapFunc(
+		func(_ context.Context, object client.Object) []reconcile.Request {
+			module := object.(*moduledeploymentv1alpha1.Module)
+			return []reconcile.Request{
+				{
+					NamespacedName: types.NamespacedName{
+						Namespace: object.GetNamespace(),
+						Name:      module.Labels[label.ModuleReplicasetLabel],
+					},
+				},
+			}
+		})
+
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&moduledeploymentv1alpha1.ModuleReplicaSet{}).
+		Watches(&moduledeploymentv1alpha1.Module{}, handler.EnqueueRequestsFromMapFunc(filterFn)).
 		Complete(r)
 }
 
@@ -263,12 +304,6 @@ func (r *ModuleReplicaSetReconciler) scaleup(ctx context.Context, existedModuleL
 			log.Log.Error(err, "Failed to create module", "moduleName", module.Name)
 			return err
 		}
-		copy := moduleReplicaSet.DeepCopy()
-		copy.Status.Replicas += int32(len(toAllocatePod))
-		if err = r.Client.Status().Update(ctx, copy); err != nil {
-			log.Log.Error(err, "Failed to update moduleReplicaset", "moduleReplicasetName", copy.Name)
-			return err
-		}
 	}
 	log.Log.Info("finish scaleup module", "moduleReplicaSetName", moduleReplicaSet.Name)
 	return nil
@@ -297,13 +332,6 @@ func (r *ModuleReplicaSetReconciler) scaledown(ctx context.Context, existedModul
 			break
 		}
 	}
-	copy := moduleReplicaSet.DeepCopy()
-	copy.Status.Replicas -= int32(len(toDeletedModules))
-	if err = r.Client.Status().Update(ctx, copy); err != nil {
-		log.Log.Error(err, "Failed to update moduleReplicaset", "moduleReplicasetName", copy.Name)
-		return err
-	}
-
 	return err
 }
 
