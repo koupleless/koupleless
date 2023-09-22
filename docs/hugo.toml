@@ -17,19 +17,19 @@ enableGitInfo = true
 # disableKinds = ["taxonomy", "taxonomyTerm"]
 
 # You can add your own taxonomies
-[taxonomies]
-tag = "tags"
-category = "categories"
+# [taxonomies]
+# tag = "tags"
+# category = "categories"
 
-[params.taxonomy]
+# [params.taxonomy]
 # set taxonomyCloud = [] to hide taxonomy clouds
-taxonomyCloud = ["tags", "categories"]
+# taxonomyCloud = ["tags", "categories"]
 
 # If used, must have same length as taxonomyCloud
-taxonomyCloudTitle = ["Tag Cloud", "Categories"]
+# taxonomyCloudTitle = ["Tag Cloud", "Categories"]
 
 # set taxonomyPageHeader = [] to hide taxonomies on the page headers
-taxonomyPageHeader = ["tags", "categories"]
+# taxonomyPageHeader = ["tags", "categories"]
 
 
 # Highlighting config
@@ -96,8 +96,7 @@ time_format_blog = "2006.02.01"
 section = ["HTML", "print", "RSS"]
 
 [params]
-copyright = "The SOFAServerless Authors"
-privacy_policy = "https://policies.google.com/privacy"
+copyright = "The SOFAServerless Community"
 
 # First one is picked as the Twitter card image if not set on page.
 # images = ["images/project-illustration.png"]
@@ -118,12 +117,12 @@ version = "0.4.0"
 
 # A link to latest version of the docs. Used in the "version-banner" partial to
 # point people to the main doc site.
-url_latest_version = "https://github.com/sofastack/sofa-serverless/releases"
+url_latest_version = "https://sofaserverless.netlify.app/user-docs"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/sofastack/sofa-serverless"
 # An optional link to a related project repo. For example, the sibling repository where your product code lives.
-github_project_repo = "https://github.com/sofastack/sofa-serverless"
+#github_project_repo = "https://github.com/sofastack/sofa-serverless"
 
 # Specify a value here if your content directory is not in your repo's root directory
 # github_subdir = ""
@@ -151,7 +150,8 @@ breadcrumb_disable = false
 # Set to true to disable the About link in the site footer
 footer_about_disable = false
 # Set to false if you don't want to display a logo (/assets/icons/logo.svg) in the top navbar
-navbar_logo = true
+# 等 Logo 设计完成再解注
+navbar_logo = false
 # Set to true if you don't want the top navbar to be translucent when over a `block/cover`, like on the homepage.
 navbar_translucent_over_cover_disable = false
 # Enable to show the side bar menu in its compact state.
@@ -166,14 +166,15 @@ sidebar_search_disable = false
 [params.ui.feedback]
 enable = true
 # The responses that the user sees after clicking "yes" (the page was helpful) or "no" (the page was not helpful).
-yes = 'Glad to hear it! Please <a href="https://github.com/sofastack/sofa-serverless/issues/new?assignees=&labels=&projects=&template=feature_request.md">tell us how we can improve</a>.'
-no = 'Sorry to hear that. Please <a href="https://github.com/sofastack/sofa-serverless/issues/new?assignees=&labels=&projects=&template=feature_request.md">tell us how we can improve</a>.'
+yes = '很高兴文档对您有帮助! 欢迎<a href="https://github.com/sofastack/sofa-serverless/issues/new?assignees=&labels=&projects=&template=feature_request.md">为社区提建议</a>。'
+no = '很抱歉文档对您没帮助。邀请您<a href="https://github.com/sofastack/sofa-serverless/issues/new?assignees=&labels=&projects=&template=feature_request.md">为文档提建议</a>或<a href="https://github.com/sofastack/sofa-serverless/tree/master/user-docs/content/zh-cn">直接完善文档</a>。'
 
 # Adds a reading time to the top of each doc.
 # If you want this feature, but occasionally need to remove the Reading time from a single page,
 # add "hide_readingtime: true" to the page's front matter
-[params.ui.readingtime]
-enable = true
+#[params.ui.readingtime]
+#显得页面不整洁，还会造成阅读压力，先注掉
+#enable = true
 
 [params.links]
 # 从下文开始注释，因为目前没有邮件组、专属的 Stack Overflow
@@ -183,11 +184,11 @@ enable = true
 #  url = "https://example.org/mail"
 #  icon = "fa fa-envelope"
 #  desc = "Discussion and help from your fellow users"
-#[[params.links.user]]
-#  name ="Twitter"
-#  url = "https://example.org/twitter"
-#  icon = "fab fa-twitter"
-#  desc = "Follow us on Twitter to get the latest news!"
+[[params.links.user]]
+  name ="通过社区交流群"
+  url = "/docs/contribution-guidelines/communication-channel/"
+  icon = "fab fa-twitter"
+  desc = "和我们一起讨论 Serverless！"
 #[[params.links.user]]
 #  name = "Stack Overflow"
 #  url = "https://example.org/stack"
@@ -195,10 +196,10 @@ enable = true
 #  desc = "Practical questions and curated answers"
 # Developer relevant links. These will show up on right side of footer and in the community page if you have one.
 [[params.links.developer]]
-  name = "GitHub"
-  url = "https://github.com/sofastack/sofa-serverless"
+  name = "看这里"
+  url = "/docs/contribution-guidelines/contribution/first-pr/"
   icon = "fab fa-github"
-  desc = "Development takes place here!"
+  desc = "完成您的第一次提交！"
 #[[params.links.developer]]
 #  name = "Slack"
 #  url = "https://example.org/slack"
