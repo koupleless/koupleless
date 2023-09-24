@@ -111,9 +111,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 	if expReplicas != moduleReplicaSet.Status.Replicas {
 		moduleReplicaSet.Status.Replicas = expReplicas
-		if err = r.Status().Update(ctx, moduleReplicaSet); err != nil {
-			return ctrl.Result{}, err
-		}
+		return ctrl.Result{}, r.Status().Update(ctx, moduleReplicaSet)
 	}
 
 	if moduleReplicaSet.DeletionTimestamp != nil {
