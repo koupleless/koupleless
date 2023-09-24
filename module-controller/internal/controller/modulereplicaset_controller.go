@@ -125,7 +125,7 @@ func (r *ModuleReplicaSetReconciler) compareAndUpdateModule(ctx context.Context,
 	desiredModule := moduleReplicaSet.Spec.Template.Spec.Module
 	for _, existedModule := range existedModuleList.Items {
 
-		needUpgradeModule := existedModule.Spec.Module.Name != desiredModule.Name || existedModule.Spec.Module.Version != desiredModule.Version || existedModule.Spec.Module.Url != desiredModule.Url
+		needUpgradeModule := existedModule.Spec.Module.Name != desiredModule.Name || existedModule.Spec.Module.Version != desiredModule.Version
 		needUninstallModule := existedModule.Spec.Module.Name != desiredModule.Name
 		if needUpgradeModule {
 			existedModule.Spec.Module.Name = desiredModule.Name
