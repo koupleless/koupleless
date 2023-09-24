@@ -92,25 +92,18 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	// update status.replicas
-	expReplicas := moduleReplicaSet.Status.Replicas
-	if replicas := int32(len(existedModuleList.Items)); replicas != expReplicas {
-		expReplicas = replicas
-	} else {
-		replicas = 0
-		// calculate the modules that have been installed successfully
-		for i := 0; i < len(existedModuleList.Items); i++ {
-			status := existedModuleList.Items[i].Status.Status
-			if status == moduledeploymentv1alpha1.ModuleInstanceStatusCompleting ||
-				status == moduledeploymentv1alpha1.ModuleInstanceStatusAvailable {
-				replicas += 1
-			}
-		}
-		if replicas != expReplicas {
-			expReplicas = replicas
+	replicas := int32(0)
+	// calculate the modules that have been installed successfully
+	for i := 0; i < len(existedModuleList.Items); i++ {
+		status := existedModuleList.Items[i].Status.Status
+		if status == moduledeploymentv1alpha1.ModuleInstanceStatusCompleting ||
+			status == moduledeploymentv1alpha1.ModuleInstanceStatusAvailable {
+			replicas += 1
 		}
 	}
-	if expReplicas != moduleReplicaSet.Status.Replicas {
-		moduleReplicaSet.Status.Replicas = expReplicas
+	// if current replicas isn't equal to status.replicas, then we need update status
+	if replicas != moduleReplicaSet.Status.Replicas {
+		moduleReplicaSet.Status.Replicas = replicas
 		return ctrl.Result{}, r.Status().Update(ctx, moduleReplicaSet)
 	}
 
@@ -259,6 +252,7 @@ func (r *ModuleReplicaSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&moduledeploymentv1alpha1.ModuleReplicaSet{}).
+		// watch module events
 		Watches(&moduledeploymentv1alpha1.Module{}, handler.EnqueueRequestsFromMapFunc(filterFn)).
 		Complete(r)
 }
