@@ -170,9 +170,14 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(ctx context.Context, 
 		}
 
 		if module.Labels[label.DeleteModuleLabel] == "" {
+			moduleReplicaSet := &v1alpha1.ModuleReplicaSet{}
+			err := r.Client.Get(ctx, types.NamespacedName{Namespace: module.Namespace, Name: module.Labels[label.ModuleReplicasetLabel]}, moduleReplicaSet)
+			if err != nil {
+				return ctrl.Result{}, err
+			}
 			// create a new module
 			log.Log.Info("start to create a new module", "moduleName", module.Spec.Module.Name, "module", module.Name)
-			err := r.createNewModule(ctx, module)
+			err = r.createNewModule(ctx, module, moduleReplicaSet)
 			if err != nil {
 				return ctrl.Result{}, err
 			}
@@ -352,7 +357,7 @@ func (r *ModuleReconciler) handleAvailableModuleInstance(ctx context.Context, mo
 }
 
 // create a new module
-func (r *ModuleReconciler) createNewModule(ctx context.Context, module *v1alpha1.Module) error {
+func (r *ModuleReconciler) createNewModule(ctx context.Context, module *v1alpha1.Module, moduleReplicaSet *v1alpha1.ModuleReplicaSet) error {
 	moduleLabels := module.Labels
 	delete(moduleLabels, label.BaseInstanceIpLabel)
 	delete(moduleLabels, label.BaseInstanceNameLabel)
@@ -365,7 +370,7 @@ func (r *ModuleReconciler) createNewModule(ctx context.Context, module *v1alpha1
 			Namespace:    module.Namespace,
 		},
 		Spec: v1alpha1.ModuleSpec{
-			Module:   module.Spec.Module,
+			Module:   moduleReplicaSet.Spec.Template.Spec.Module,
 			Selector: module.Spec.Selector,
 		},
 	}

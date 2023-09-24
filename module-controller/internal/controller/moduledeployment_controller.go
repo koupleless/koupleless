@@ -441,7 +441,7 @@ func (r *ModuleDeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func isModuleChanges(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
-	return module1.Name != module2.Name || module1.Version != module2.Version
+	return module1.Name != module2.Name || module1.Version != module2.Version || module1.Url != module2.Url
 }
 
 func getModuleReplicasName(moduleDeploymentName string, revision int) string {
