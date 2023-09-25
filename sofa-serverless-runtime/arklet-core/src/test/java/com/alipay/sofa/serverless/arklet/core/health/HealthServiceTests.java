@@ -38,7 +38,7 @@ import java.util.Map;
 
 import static org.mockito.Mockito.mockStatic;
 
-public class HealthTests extends BaseTest {
+public class HealthServiceTests extends BaseTest {
 
     private MockedStatic<ArkClient> arkClient;
 
@@ -139,10 +139,11 @@ public class HealthTests extends BaseTest {
     @Test
     public void testGetHealth() {
         final String[] allMetrics = new String[] { Constants.CPU, Constants.JVM };
-        final String[] testMetrics = new String[] { Constants.CPU };
+        final String[] testMetrics = new String[] { Constants.CPU, Constants.JVM };
         final String[] errorMetrics = new String[] { "nonMetrics" };
         validateHealth(healthService.getHealth(), allMetrics);
         validateHealth(healthService.getHealth(new String[0]), allMetrics);
+        validateHealth(healthService.getHealth(testMetrics[0]), new String[]{testMetrics[0]});
         validateHealth(healthService.getHealth(testMetrics), testMetrics);
         validateHealth(healthService.getHealth(errorMetrics), Constants.HEALTH_ERROR,
             "indicator not registered");
