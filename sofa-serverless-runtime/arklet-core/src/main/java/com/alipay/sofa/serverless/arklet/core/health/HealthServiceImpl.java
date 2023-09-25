@@ -181,7 +181,7 @@ public class HealthServiceImpl implements HealthService {
         return healthBuilder
             .init()
             .putHealthData(Constants.MASTER_BIZ_INFO,
-                    BizHealthMeta.createBizMeta(ArkClient.getMasterBiz())).build();
+                BizHealthMeta.createBizMeta(ArkClient.getMasterBiz())).build();
     }
 
     @Override
