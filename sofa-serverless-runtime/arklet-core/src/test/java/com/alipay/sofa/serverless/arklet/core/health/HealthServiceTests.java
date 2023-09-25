@@ -143,7 +143,7 @@ public class HealthServiceTests extends BaseTest {
         final String[] errorMetrics = new String[] { "nonMetrics" };
         validateHealth(healthService.getHealth(), allMetrics);
         validateHealth(healthService.getHealth(new String[0]), allMetrics);
-        validateHealth(healthService.getHealth(testMetrics[0]), new String[]{testMetrics[0]});
+        validateHealth(healthService.getHealth(testMetrics[0]), new String[] { testMetrics[0] });
         validateHealth(healthService.getHealth(testMetrics), testMetrics);
         validateHealth(healthService.getHealth(errorMetrics), Constants.HEALTH_ERROR,
             "indicator not registered");
