@@ -58,6 +58,13 @@ const (
 	ModuleDeploymentDeployTypeAsymmetric DeployType = "asymmetric"
 )
 
+type ModuleSchedulingType string
+
+const (
+	Scatter  ModuleSchedulingType = "Scatter"
+	Stacking ModuleSchedulingType = "Stacking"
+)
+
 type ReleaseStatus struct {
 	// Records the latest revision.
 	// +optional
@@ -90,6 +97,11 @@ type ModuleDeploymentCondition struct {
 
 	// A human readable message indicating details about the transition.
 	Message string `json:"message,omitempty"`
+}
+
+type ModuleSchedulingStrategy struct {
+	SchedulingType ModuleSchedulingType `json:"schedulingType"`
+	MaxModuleCount int                  `json:"maxModuleCount"`
 }
 
 type ModuleDeploymentStrategy struct {
@@ -131,7 +143,9 @@ type ModuleDeploymentSpec struct {
 	// +optional
 	Pause bool `json:"pause,omitempty"`
 
-	Strategy ModuleDeploymentStrategy `json:"strategy,omitempty"`
+	OperationStrategy ModuleDeploymentStrategy `json:"strategy,omitempty"`
+
+	SchedulingStrategy ModuleSchedulingStrategy `json:"schedulingStrategy,omitempty"`
 }
 
 // ModuleDeploymentStatus defines the observed state of ModuleDeployment
