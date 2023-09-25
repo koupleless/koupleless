@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
 public class BaseRuntimeAutoConfiguration {
 
     @Bean
-    @ConditionalOnNotMasterBiz
+    //    @ConditionalOnNotMasterBiz
     public ApplicationContextEventHandler applicationContextEventHandler() {
         return new ApplicationContextEventHandler();
     }
