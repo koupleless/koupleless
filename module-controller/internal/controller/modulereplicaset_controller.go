@@ -19,9 +19,10 @@ package controller
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/selection"
 	"sort"
 	"strconv"
+
+	"k8s.io/apimachinery/pkg/selection"
 
 	"golang.org/x/tools/container/intsets"
 	corev1 "k8s.io/api/core/v1"
