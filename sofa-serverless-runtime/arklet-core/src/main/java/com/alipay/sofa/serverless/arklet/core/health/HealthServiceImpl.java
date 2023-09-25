@@ -178,11 +178,10 @@ public class HealthServiceImpl implements HealthService {
 
     @Override
     public Health queryMasterBiz() {
-        BizHealthMeta bizHealthMeta = BizHealthMeta.createBizMeta(ArkClient.getMasterBiz());
         return healthBuilder
             .init()
             .putHealthData(Constants.MASTER_BIZ_INFO,
-                JSON.parseObject(toJSONString(bizHealthMeta), JSONObject.class)).build();
+                    BizHealthMeta.createBizMeta(ArkClient.getMasterBiz())).build();
     }
 
     @Override
