@@ -46,9 +46,9 @@ const (
 	ModuleDeploymentReleaseProgressWaitingForConfirmation ReleaseProgress = "WaitingForConfirmation"
 	ModuleDeploymentReleaseProgressExecuting              ReleaseProgress = "Executing"
 	ModuleDeploymentReleaseProgressPaused                 ReleaseProgress = "Paused"
-	CafeDeploymentReleaseProgressCompleted                ReleaseProgress = "Completed"
-	CafeDeploymentReleaseProgressAborted                  ReleaseProgress = "Aborted"
-	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
+	ModuleDeploymentReleaseProgressCompleted              ReleaseProgress = "Completed"
+	ModuleDeploymentReleaseProgressAborted                ReleaseProgress = "Aborted"
+	ModuleDeploymentReleaseProgressTermed                 ReleaseProgress = "Terminated"
 )
 
 type ModuleUpgradeType string
@@ -62,8 +62,8 @@ const (
 type ModuleSchedulingType string
 
 const (
-	Scatter  ModuleSchedulingType = "Scatter"
-	Stacking ModuleSchedulingType = "Stacking"
+	Scatter  ModuleSchedulingType = "scatter"
+	Stacking ModuleSchedulingType = "stacking"
 )
 
 type ReleaseStatus struct {
@@ -100,7 +100,7 @@ type ModuleDeploymentCondition struct {
 	Message string `json:"message,omitempty"`
 }
 
-type OperationStrategy struct {
+type ModuleOperationStrategy struct {
 	NeedConfirm bool `json:"needConfirm,omitempty"`
 
 	UseBeta bool `json:"useBeta,omitempty"`
@@ -112,10 +112,11 @@ type OperationStrategy struct {
 	GrayTimeBetweenBatchSeconds int32 `json:"grayTimeBetweenBatchSeconds,omitempty"`
 }
 
-type SchedulingStrategy struct {
-	UpgradePolicy    ModuleUpgradeType    `json:"upgradePolicy,omitempty"`
+type ModuleSchedulingStrategy struct {
+	UpgradePolicy ModuleUpgradeType `json:"upgradePolicy,omitempty"`
+	// +kubebuilder:validation:Enum={"scatter","stacking"}
+	// +kubebuilder:default="scatter"
 	SchedulingPolicy ModuleSchedulingType `json:"schedulingPolicy,omitempty"`
-	MaxModuleCount   int                  `json:"maxModuleCount,omitempty"`
 }
 
 // ModuleDeploymentSpec defines the desired state of ModuleDeployment
@@ -141,9 +142,9 @@ type ModuleDeploymentSpec struct {
 	// +optional
 	Pause bool `json:"pause,omitempty"`
 
-	OperationStrategy OperationStrategy `json:"operationStrategy,omitempty"`
+	OperationStrategy ModuleOperationStrategy `json:"operationStrategy,omitempty"`
 
-	SchedulingStrategy SchedulingStrategy `json:"schedulingStrategy,omitempty"`
+	SchedulingStrategy ModuleSchedulingStrategy `json:"schedulingStrategy,omitempty"`
 }
 
 // ModuleDeploymentStatus defines the observed state of ModuleDeployment

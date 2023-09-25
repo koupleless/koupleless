@@ -73,14 +73,14 @@ func TestModuleReplicaSetReconciler_getScaleUpCandidatePods(t *testing.T) {
 	}{
 		{
 			targetModuleName: targetModuleName,
-			moduleReplicaSet: generateModuleReplicaSet(v1alpha1.Scatter, 2, 3),
+			moduleReplicaSet: generateModuleReplicaSet(v1alpha1.Scatter, 2),
 			podList:          podList,
 			moduleList:       moduleList,
 			expectedPodNames: []string{"pod-01"},
 		},
 		{
 			targetModuleName: targetModuleName,
-			moduleReplicaSet: generateModuleReplicaSet(v1alpha1.Stacking, 2, 3),
+			moduleReplicaSet: generateModuleReplicaSet(v1alpha1.Stacking, 2),
 			podList:          podList,
 			moduleList:       moduleList,
 			expectedPodNames: []string{"pod-03"},
@@ -127,14 +127,14 @@ func TestModuleReplicaSetReconciler_getScaleDownCandidateModules(t *testing.T) {
 	}{
 		{
 			targetModuleName: targetModuleName,
-			moduleReplicaSet: generateModuleReplicaSet(v1alpha1.Scatter, 1, 3),
+			moduleReplicaSet: generateModuleReplicaSet(v1alpha1.Scatter, 1),
 			podList:          podList,
 			moduleList:       moduleList,
 			expectedModules:  []string{targetModuleName + "/" + "pod-04"},
 		},
 		{
 			targetModuleName: targetModuleName,
-			moduleReplicaSet: generateModuleReplicaSet(v1alpha1.Stacking, 1, 3),
+			moduleReplicaSet: generateModuleReplicaSet(v1alpha1.Stacking, 1),
 			podList:          podList,
 			moduleList:       moduleList,
 			expectedModules:  []string{targetModuleName + "/" + "pod-03"},
@@ -175,6 +175,7 @@ func generatePodList(pods []podWithModules) *corev1.PodList {
 				Name: pod.podName,
 				Labels: map[string]string{
 					label.ModuleInstanceCount: strconv.FormatInt(int64(len(pod.modules)), 10),
+					label.MaxModuleCount:      "3",
 				},
 			},
 		})
@@ -205,12 +206,11 @@ func generateModuleList(moduleName string, pods []podWithModules) *v1alpha1.Modu
 }
 
 // generate moduleReplicaSet
-func generateModuleReplicaSet(strategy v1alpha1.ModuleSchedulingType, replicas, maxModuleCount int) *v1alpha1.ModuleReplicaSet {
+func generateModuleReplicaSet(strategy v1alpha1.ModuleSchedulingType, replicas int) *v1alpha1.ModuleReplicaSet {
 	return &v1alpha1.ModuleReplicaSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Labels: map[string]string{
 				label.ModuleSchedulingStrategy: string(strategy),
-				label.MaxModuleCount:           strconv.Itoa(maxModuleCount),
 			},
 		},
 		Spec: v1alpha1.ModuleReplicaSetSpec{

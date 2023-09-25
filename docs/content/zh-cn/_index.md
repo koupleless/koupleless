@@ -2,12 +2,12 @@
 title: SOFAServerless
 ---
 
-{{< blocks/cover title="SOFAServerless 研发框架与平台" image_anchor="top" height="min" >}}
-<p class="mt-1 h2">让传统应用低成本享受 Serverless 体验，帮助企业降本增效！</p>
+{{< blocks/cover title="SOFAServerless 研发框架与平台" image_anchor="top" height="min" style="color: black" >}}
+<p class="mt-1 h2" style="color: black; font-weight: normal">让普通应用低成本享受 Serverless 体验，帮助企业降本增效！</p>
 <a class="btn btn-lg btn-primary me-3 mb-4" href="/docs/introduction/intro-and-scenario">
   查看更多 <i class="fas fa-arrow-alt-circle-right ms-2"></i>
 </a>
-<a class="btn btn-lg btn-secondary me-3 mb-4" href="/docs/getting-started">
+<a class="btn btn-lg btn-secondary me-3 mb-4" href="/docs/quick-start/">
   快速试用 <i class="fab fa-github ms-2 "></i>
 </a>
 {{< blocks/link-down color="info" >}}
@@ -15,7 +15,10 @@ title: SOFAServerless
 
 
 {{% blocks/lead color="primary" %}}
-SOFAServerless 是一种模块化 Serverless 技术，它能让普通应用低成本演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。
+<div style="text-align: left; font-style: normal; font-weight: normal">
+SOFAServerless 是一种模块化 Serverless 技术，它能让普通应用低成本演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。<br/>
+根据可统计数据 SOFAServerless 已经支撑了 <b style="font-size: 24px">6 亿</b> QPM 企业生产流量，帮助企业需求上线效率提升了 <b style="font-size: 24px">50%</b>，长尾应用资源开销减少了<b style="font-size: 24px">一半</b>。
+</div>
 {{% /blocks/lead %}}
 
 
@@ -46,34 +49,40 @@ SOFAServerless 是一种模块化 Serverless 技术，它能让普通应用低�
 适用场景
 {.h1 .text-center}
 
-{{% blocks/section type="row" %}}
-{{% blocks/feature title="解决应用构建发布慢和 SDK 升级繁琐" url="/docs/introduction/intro-and-scenario#scenario-1" %}}
+{{% blocks/section color="#c0e0de" type="row" %}}
+
+{{% blocks/feature icon="fa-none" style="margin-top: -48px;" title="解决应用构建发布慢和 SDK 升级繁琐" url="/docs/introduction/intro-and-scenario#scenario-1" %}}
 {{% /blocks/feature %}}
 
-{{% blocks/feature title="解决高昂的长尾应用资源开销" url="/docs/introduction/intro-and-scenario#scenario-2" %}}
+{{% blocks/feature icon="fa-none" style="margin-top: -48px;" title="解决高昂的长尾应用资源开销" url="/docs/introduction/intro-and-scenario#scenario-2" %}}
 {{% /blocks/feature %}}
 
-{{% blocks/feature title="解决应用研发协作效率低下" url="/docs/introduction/intro-and-scenario#scenario-3" %}}
+{{% blocks/feature icon="fa-none" style="margin-top: -48px;" title="解决应用研发协作效率低下" url="/docs/introduction/intro-and-scenario#scenario-3" %}}
 {{% /blocks/feature %}}
 
-{{% blocks/feature title="解决中台业务资产沉淀困难" url="/docs/introduction/intro-and-scenario#scenario-4" %}}
+{{% blocks/feature icon="fa-none" style="margin-top: -48px;" title="解决中台业务资产沉淀困难" url="/docs/introduction/intro-and-scenario#scenario-4" %}}
 {{% /blocks/feature %}}
 
-{{% blocks/feature title="解决微服务演进成本痛点" url="/docs/introduction/intro-and-scenario#scenario-5" %}}
+{{% blocks/feature icon="fa-none" style="margin-top: -48px;" title="解决微服务演进成本痛点" url="/docs/introduction/intro-and-scenario#scenario-5" %}}
 {{% /blocks/feature %}}
 
+{{% /blocks/section %}}
 
 {{% /blocks/section %}}
 
 
 {{% blocks/section type="row" %}}
 
-{{% blocks/feature icon="fab fa-github" title="欢迎参与社区！" url="/community/contribution/first-pr" %}}
+{{% blocks/feature icon="fab fa-github" title="欢迎参与社区！" url="/docs/contribution-guidelines/contribution/first-pr" %}}
 任何人都能提交 Github [Pull Request](https://github.com/sofastack/sofa-serverless/pulls)。欢迎参与 SOFAServerless 社区！
 {{% /blocks/feature %}}
 
-{{% blocks/feature icon="fab fa-twitter" title="欢迎加入钉钉群与我们沟通！" %}}
-钉钉群号：24970018417
+{{% blocks/feature icon="fab fa-twitter" title="欢迎加入钉钉群与我们沟通交流！" %}}
+Serverless 社区交流与协作群号：24970018417
+{{% /blocks/feature %}}
+
+{{% blocks/feature icon="fab fa-twitter" title="欢迎加入微信群与我们沟通交流！" %}}
+微信群名：SOFAServerless 企业沟通交流群
 {{% /blocks/feature %}}
 
 {{% /blocks/section %}}

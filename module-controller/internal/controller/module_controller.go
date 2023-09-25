@@ -164,7 +164,7 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(ctx context.Context, 
 			err = r.cleanLabelAndFinalizer(ctx, module)
 			// create a new module
 			log.Log.Info("start to create a new module", "moduleName", module.Spec.Module.Name, "module", module.Name)
-			_, err = r.createNewModule(ctx, *module)
+			_, err = r.createNewModule(ctx, module)
 			if err != nil {
 				return ctrl.Result{}, err
 			}
@@ -234,7 +234,7 @@ func (r *ModuleReconciler) doScaleUpThenScaleDownWhenTerminating(ctx context.Con
 	} else {
 		// create a new module
 		log.Log.Info("start to create a new module", "moduleName", module.Spec.Module.Name, "module", module.Name)
-		newModule, err := r.createNewModule(ctx, *module)
+		newModule, err := r.createNewModule(ctx, module)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -399,7 +399,7 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, mo
 		return ctrl.Result{}, nil
 	}
 
-	// update status
+	// update module status
 	module.Status.Status = v1alpha1.ModuleInstanceStatusCompleting
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusCompleting))
@@ -441,7 +441,13 @@ func (r *ModuleReconciler) handleAvailableModuleInstance(ctx context.Context, mo
 }
 
 // create a new module
-func (r *ModuleReconciler) createNewModule(ctx context.Context, module v1alpha1.Module) (v1alpha1.Module, error) {
+func (r *ModuleReconciler) createNewModule(ctx context.Context, module *v1alpha1.Module) (v1alpha1.Module, error) {
+	moduleReplicaSet := &v1alpha1.ModuleReplicaSet{}
+	err := r.Client.Get(ctx, types.NamespacedName{Namespace: module.Namespace, Name: module.Labels[label.ModuleReplicasetLabel]}, moduleReplicaSet)
+	if err != nil {
+		return v1alpha1.Module{}, err
+	}
+
 	moduleLabels := make(map[string]string)
 	for key, value := range module.Labels {
 		if key == label.BaseInstanceIpLabel || key == label.BaseInstanceNameLabel {
@@ -458,7 +464,7 @@ func (r *ModuleReconciler) createNewModule(ctx context.Context, module v1alpha1.
 			Namespace:    module.Namespace,
 		},
 		Spec: v1alpha1.ModuleSpec{
-			Module:        module.Spec.Module,
+			Module:        moduleReplicaSet.Spec.Template.Spec.Module,
 			Selector:      module.Spec.Selector,
 			UpgradePolicy: module.Spec.UpgradePolicy,
 		},

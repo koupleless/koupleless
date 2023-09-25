@@ -80,12 +80,16 @@ var _ = Describe("Module Controller", func() {
 	})
 
 	Context("delete module deployment with ip by deleting module", func() {
-
+		moduleReplicaSetName := "test-modulereplicaset"
+		updateModuleUrl := "https://module-test-url"
 		It("should be deleted and recreate a new one", func() {
-			module.Labels[label.ModuleReplicasetLabel] = "test-modulereplicaset"
+			module.Labels[label.ModuleReplicasetLabel] = moduleReplicaSetName
 			module.Labels[label.ModuleNameLabel] = "test-module"
 			Expect(k8sClient.Update(context.TODO(), &module)).Should(Succeed())
 			Expect(k8sClient.Delete(context.TODO(), &module)).Should(Succeed())
+			moduleReplicaSet := prepareModuleReplicaSet(namespaceName, moduleReplicaSetName)
+			moduleReplicaSet.Spec.Template.Spec.Module.Url = updateModuleUrl
+			Expect(k8sClient.Create(context.TODO(), &moduleReplicaSet)).Should(Succeed())
 			key := types.NamespacedName{
 				Name:      moduleName,
 				Namespace: namespaceName,
@@ -98,7 +102,7 @@ var _ = Describe("Module Controller", func() {
 					err = k8sClient.List(context.TODO(), modules, &client.ListOptions{Namespace: module.Namespace, LabelSelector: selector})
 					if err == nil && len(modules.Items) > 0 {
 						module = modules.Items[0]
-						return true
+						return module.Spec.Module.Url == updateModuleUrl
 					}
 				}
 				return false
