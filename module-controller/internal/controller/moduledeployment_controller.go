@@ -19,6 +19,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"math"
 	"strconv"
 	"time"
 
@@ -119,19 +120,21 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			}
 		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation:
-		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused
-		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
-			return ctrl.Result{}, err
-		}
-	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused:
 		moduleDeployment.Spec.Pause = true
 		if err := r.Update(ctx, moduleDeployment); err != nil {
 			return ctrl.Result{}, err
 		}
 
-		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused
 		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 			return ctrl.Result{}, err
+		}
+	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused:
+		if !moduleDeployment.Spec.Pause {
+			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
+				return ctrl.Result{}, err
+			}
 		}
 
 		if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
@@ -318,6 +321,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 		expReplicas   = moduleDeployment.Spec.Replicas
 		deltaReplicas = expReplicas - newRS.Spec.Replicas
 	)
+
 	if deltaReplicas == 0 {
 		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted
 		moduleDeployment.Status.ReleaseStatus.LastTransitionTime = metav1.Now()
@@ -330,8 +334,25 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 		return ctrl.Result{}, r.Status().Update(ctx, moduleDeployment)
 	}
 
-	replicas := curBatch * (moduleDeployment.Spec.Replicas / batchCount)
-	if curBatch == batchCount { // is the last batch
+	if expReplicas < batchCount {
+		batchCount = expReplicas
+	}
+
+	if batchCount <= 0 {
+		batchCount = 1
+	}
+
+	// wait moduleReplicaset ready
+	if newRS.Spec.Replicas != curReplicas {
+		log.Log.Info(fmt.Sprintf("newRs is not ready, expect replicas %v, but got %v", newRS.Spec.Replicas, curReplicas))
+		return ctrl.Result{Requeue: true, RequeueAfter: utils.GetNextReconcileTime(time.Now())}, nil
+	}
+
+	replicas := int32(0)
+	// use beta strategy
+	if batchCount != 1 && curBatch == 1 && moduleDeployment.Spec.OperationStrategy.UseBeta {
+		replicas = 1
+	} else if curBatch == batchCount { // if it's the last batch
 		replicas = expReplicas
 	} else {
 		replicas = newRS.Spec.Replicas + (curBatch)*int32(math.Floor(float64(deltaReplicas)/float64(batchCount)+0.5))
@@ -344,19 +365,19 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 
 	moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
 	moduleDeployment.Status.ReleaseStatus.LastTransitionTime = metav1.Now()
+	moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
 
-	var grayTime = 0
-
-	if moduleDeployment.Spec.OperationStrategy.NeedConfirm {
-		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation
-	} else if grayTime = int(moduleDeployment.Spec.OperationStrategy.GrayTimeBetweenBatchSeconds); grayTime != 0 {
-		if curBatch == batchCount {
-			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
-		} else {
-			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused
+	var grayTime int
+	if curBatch != batchCount {
+		if moduleDeployment.Spec.OperationStrategy.NeedConfirm { // use NeedConfirm Strategy
+			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation
+		} else if grayTime = int(moduleDeployment.Spec.OperationStrategy.GrayTimeBetweenBatchSeconds); grayTime != 0 {
+			if curBatch == batchCount {
+				moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+			} else {
+				moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused
+			}
 		}
-	} else {
-		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
 	}
 
 	moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, moduledeploymentv1alpha1.ModuleDeploymentCondition{
