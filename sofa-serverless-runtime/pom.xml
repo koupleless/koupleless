@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>0.3.4</revision>
+        <revision>0.5.service</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -30,15 +30,13 @@
         <netty.version>4.1.42.Final</netty.version>
         <logback.version>1.2.9</logback.version>
         <lombok.version>1.18.22</lombok.version>
-        <junit.version>4.13.1</junit.version>
-        <mockito.version>4.8.1</mockito.version>
-        <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <sofa.ark.version>2.2.3</sofa.ark.version>
-        <spring.boot.version>2.5.15</spring.boot.version>
-        <oshi.version>6.4.5</oshi.version>
-        <commons.lang3.version>3.12.0</commons.lang3.version>
         <guava.version>32.1.2-jre</guava.version>
         <fastjson.version>1.2.69</fastjson.version>
+        <spring.boot.version>2.7.15</spring.boot.version>
+        <junit.version>4.13.1</junit.version>
+        <mockito.version>4.8.1</mockito.version>
+        <sofa.ark.version>2.2.3</sofa.ark.version>
+        <hessian.version>3.5.1</hessian.version>
     </properties>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -197,6 +195,12 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>hessian</artifactId>
+                <version>${hessian.version}</version>
             </dependency>
 
             <dependency>
