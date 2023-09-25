@@ -14,22 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command;
+package com.alipay.sofa.serverless.arklet.core.command.handler;
 
+import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.serverless.arklet.core.BaseTest;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HealthHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HealthHandler.Input;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
+import com.alipay.sofa.serverless.arklet.core.health.custom.CustomBizManagerService;
+import com.alipay.sofa.serverless.arklet.core.health.custom.CustomPluginManagerService;
+import com.alipay.sofa.serverless.arklet.core.health.model.Health;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+
+import static org.mockito.Mockito.mockStatic;
 
 /**
  * @author lunarscave
  */
-public class HealthHandlerTest extends BaseTest {
+public class HealthHandlerTest extends BaseHandlerTest {
+
+    private HealthHandler handler;
+
+    @Before
+    public void setupHealthHandlerTest() {
+        handler = (HealthHandler) commandService.getHandler(BuiltinCommand.HEALTH);
+    }
 
     private void testValidate(Input input) throws CommandValidationException {
-        HealthHandler handler = (HealthHandler) commandService.getHandler(BuiltinCommand.HEALTH);
         handler.validate(input);
     }
 
@@ -38,6 +54,18 @@ public class HealthHandlerTest extends BaseTest {
         Input input = new Input();
         input.setType("non type");
         testValidate(input);
+    }
+
+    @Test
+    public void testCommand() {
+        Command result = new HealthHandler().command();
+        Assert.assertEquals(result, BuiltinCommand.HEALTH);
+    }
+
+    @Test
+    public void testHandle_Success() {
+        Output<Health> output = handler.handle(new Input());
+        Assert.assertTrue(output.success());
     }
 
 }

@@ -14,19 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command;
+package com.alipay.sofa.serverless.arklet.core.command.handler;
 
 import com.alipay.sofa.ark.api.ClientResponse;
-import com.alipay.sofa.ark.api.ResponseCode;
-import com.alipay.sofa.ark.exception.ArkRuntimeException;
-import com.alipay.sofa.serverless.arklet.core.BaseTest;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler.Input;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
-import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletRuntimeException;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.when;
@@ -35,60 +32,43 @@ import static org.mockito.Mockito.when;
  * @author mingmen
  * @date 2023/9/5
  */
-public class InstallBizHandlerTests extends BaseTest {
+public class InstallBizHandlerTests extends BaseHandlerTest {
 
-    //@Test
-    //public void testHandle_Success() throws Throwable {
-    //
-    //    InstallBizHandler handler = (InstallBizHandler)commandService.getHandler(BuiltinCommand.INSTALL_BIZ);
-    //
-    //    // 准备测试数据
-    //    Input input = new Input();
-    //    input.setBizUrl("testUrl");
-    //
-    //    ClientResponse response = new ClientResponse();
-    //    response.setCode(ResponseCode.SUCCESS);
-    //
-    //    // 设置Mock行为
-    //    when(operationService.install(anyString())).thenReturn(response);
-    //
-    //    // 执行测试
-    //    Output<ClientResponse> result = handler.handle(input);
-    //
-    //    // 验证结果
-    //    assertSame(response, result.getData());
-    //    assertTrue(result.success());
-    //}
+    private InstallBizHandler handler;
 
-    //    @Test(expected = ArkRuntimeException.class)
-    //    public void testHandle_Failure() throws Throwable {
-    //
-    //        InstallBizHandler handler = (InstallBizHandler) commandService
-    //            .getHandler(BuiltinCommand.INSTALL_BIZ);
-    //
-    //        // 准备测试数据
-    //        Input input = new Input();
-    //        input.setBizUrl("testUrl");
-    //
-    //        ClientResponse response = new ClientResponse();
-    //        response.setCode(ResponseCode.FAILED);
-    //
-    //        // 设置Mock行为
-    //        when(operationService.install(input.getBizUrl())).thenReturn(response);
-    //
-    //        // 执行测试
-    //        Output<ClientResponse> result = handler.handle(input);
-    //
-    //        // 验证结果
-    //        Assert.assertSame(response, result.getData());
-    //        Assert.assertTrue(result.failed());
-    //    }
+    @Before
+    public void setupInstallBizHandler() {
+        handler = (InstallBizHandler) commandService.getHandler(BuiltinCommand.INSTALL_BIZ);
+    }
+
+    @Test
+    public void testHandle_Success() throws Throwable {
+        Input input = new Input();
+        input.setBizUrl("testUrl");
+
+        when(handler.getOperationService().install(input.getBizUrl())).thenReturn(success);
+
+        Output<ClientResponse> result = handler.handle(input);
+
+        Assert.assertEquals(success, result.getData());
+        Assert.assertTrue(result.success());
+    }
+
+    @Test
+    public void testHandle_Failure() throws Throwable {
+        Input input = new Input();
+        input.setBizUrl("testUrl");
+
+        when(handler.getOperationService().install(input.getBizUrl())).thenReturn(failed);
+
+        Output<ClientResponse> result = handler.handle(input);
+
+        Assert.assertSame(failed, result.getData());
+        Assert.assertTrue(result.failed());
+    }
 
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizName() throws CommandValidationException {
-
-        InstallBizHandler handler = (InstallBizHandler) commandService
-            .getHandler(BuiltinCommand.INSTALL_BIZ);
         // 准备测试数据
         Input input = new Input();
         input.setBizName("");
@@ -99,9 +79,6 @@ public class InstallBizHandlerTests extends BaseTest {
 
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizVersion() throws CommandValidationException {
-
-        InstallBizHandler handler = (InstallBizHandler) commandService
-            .getHandler(BuiltinCommand.INSTALL_BIZ);
         // 准备测试数据
         Input input = new Input();
         input.setBizVersion("");
@@ -112,11 +89,7 @@ public class InstallBizHandlerTests extends BaseTest {
 
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankRequestId() throws CommandValidationException {
-
-        InstallBizHandler handler = (InstallBizHandler) commandService
-            .getHandler(BuiltinCommand.INSTALL_BIZ);
-
-        // 准备测试数据
+        // 执行测试
         Input input = new Input();
         input.setAsync(true);
         input.setRequestId("");
@@ -127,9 +100,6 @@ public class InstallBizHandlerTests extends BaseTest {
 
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizUrl() throws CommandValidationException {
-        InstallBizHandler handler = (InstallBizHandler) commandService
-            .getHandler(BuiltinCommand.INSTALL_BIZ);
-
         // 准备测试数据
         Input input = new Input();
         input.setBizUrl("");
@@ -137,4 +107,5 @@ public class InstallBizHandlerTests extends BaseTest {
         // 执行测试
         handler.validate(input);
     }
+
 }

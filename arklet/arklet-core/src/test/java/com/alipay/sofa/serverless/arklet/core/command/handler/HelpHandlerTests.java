@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command;
+package com.alipay.sofa.serverless.arklet.core.command.handler;
 
 import java.util.List;
 
@@ -35,13 +35,12 @@ import org.mockito.MockitoAnnotations;
  * @author mingmen
  * @date 2023/9/6
  */
-public class HelpHandlerTests extends BaseTest {
+public class HelpHandlerTests extends BaseHandlerTest {
 
     private HelpHandler helpHandler;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         helpHandler = (HelpHandler) commandService.getHandler(BuiltinCommand.HELP);
     }
 

@@ -16,21 +16,31 @@
  */
 package com.alipay.sofa.serverless.arklet.core.health;
 
-import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
+import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.ark.spi.model.Biz;
+import com.alipay.sofa.ark.spi.model.Plugin;
 import com.alipay.sofa.serverless.arklet.core.BaseTest;
+import com.alipay.sofa.serverless.arklet.core.health.custom.CustomBizManagerService;
 import com.alipay.sofa.serverless.arklet.core.health.custom.CustomIndicator;
+import com.alipay.sofa.serverless.arklet.core.health.custom.CustomPluginManagerService;
+import com.alipay.sofa.serverless.arklet.core.health.model.BizHealthMeta;
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
+import com.alipay.sofa.serverless.arklet.core.health.model.PluginHealthMeta;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockedStatic;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+
+import static org.mockito.Mockito.mockStatic;
 
 public class HealthTests extends BaseTest {
 
-    private HealthService healthService;
+    private MockedStatic<ArkClient> arkClient;
 
     private void validateHealth(Health health, final String[] expectedMetrics) {
         Assert.assertTrue(health != null && !health.getHealthData().isEmpty());
@@ -41,20 +51,81 @@ public class HealthTests extends BaseTest {
         }
     }
 
-    private void validateHealth(Health health, String errorCode, String errorMessage) {
+    private void validateBizListHealth(Health health, final List<Biz> expectedBizList) {
+        Assert.assertTrue(health != null && !health.getHealthData().isEmpty());
+        Assert.assertTrue(health.getHealthData().containsKey(Constants.BIZ_LIST_INFO));
+
+        List<?> realBizList = (List<?>) health.getHealthData().get(Constants.BIZ_LIST_INFO);
+        Assert.assertEquals(realBizList.size(), expectedBizList.size());
+        for (int i = 0, L = realBizList.size(); i < L; i++) {
+            Object realBiz = realBizList.get(i);
+            Biz expectedBiz = expectedBizList.get(i);
+            Assert.assertTrue(realBiz instanceof BizHealthMeta);
+            validateBiz((BizHealthMeta)realBiz, expectedBiz);
+        }
+    }
+
+    private void validatePluginListHealth(Health health, final List<Plugin> expectedPluginList) {
+        Assert.assertTrue(health != null && !health.getHealthData().isEmpty());
+        Assert.assertTrue(health.getHealthData().containsKey(Constants.PLUGIN_LIST_INFO));
+
+        List<?> realPluginList = (List<?>) health.getHealthData().get(Constants.PLUGIN_LIST_INFO);
+        Assert.assertEquals(realPluginList.size(), expectedPluginList.size());
+        for (int i = 0, L = realPluginList.size(); i < L; i++) {
+            Object realPlugin = realPluginList.get(i);
+            Plugin expectedPlugin = expectedPluginList.get(i);
+            Assert.assertTrue(realPlugin instanceof PluginHealthMeta);
+            validatePlugin((PluginHealthMeta)realPlugin, expectedPlugin);
+        }
+    }
+
+    private void validateHealth(Health health, final List<Biz> expectedBizList, final List<Plugin> expectedPluginList, final Biz expectedMasterBiz) {
+        validateBizListHealth(health, expectedBizList);
+        validatePluginListHealth(health, expectedPluginList);
+        Assert.assertTrue(health.getHealthData().containsKey(Constants.MASTER_BIZ_INFO));
+        Object realMasterBiz = health.getHealthData().get(Constants.MASTER_BIZ_INFO);
+        Assert.assertTrue(realMasterBiz instanceof BizHealthMeta);
+        validateBiz((BizHealthMeta)realMasterBiz, expectedMasterBiz);
+    }
+
+    private void validateHealth(Health health, final Biz expectedBiz) {
+        Assert.assertTrue(health != null && !health.getHealthData().isEmpty());
+        Assert.assertTrue(health.getHealthData().containsKey(Constants.BIZ_INFO));
+        Object realBiz = health.getHealthData().get(Constants.BIZ_INFO);
+        Assert.assertTrue(realBiz instanceof BizHealthMeta);
+        validateBiz((BizHealthMeta)realBiz, expectedBiz);
+    }
+
+    private void validateHealth(Health health, final Plugin expectedPlugin) {
+        Assert.assertTrue(health != null && !health.getHealthData().isEmpty());
+        Assert.assertTrue(health.getHealthData().containsKey(Constants.PLUGIN_INFO));
+        Object realPlugin = health.getHealthData().get(Constants.PLUGIN_INFO);
+        Assert.assertTrue(realPlugin instanceof PluginHealthMeta);
+        validatePlugin((PluginHealthMeta) realPlugin, expectedPlugin);
+    }
+
+    private void validateHealth(Health health, final String errorCode, final String errorMessage) {
         Assert.assertTrue(health != null && !health.getHealthData().isEmpty());
         Assert.assertTrue(health.getHealthData().containsKey(errorCode));
         Assert.assertEquals(health.getHealthData().get(errorCode), errorMessage);
     }
 
+    private void validateBiz(BizHealthMeta realBiz, final Biz expectedBiz) {
+        Assert.assertEquals(realBiz.getBizName(), expectedBiz.getBizName());
+        Assert.assertEquals(realBiz.getBizVersion(), expectedBiz.getBizVersion());
+    }
+
+    private void validatePlugin(PluginHealthMeta realPlugin, final Plugin expectedPlugin) {
+        Assert.assertEquals(realPlugin.getPluginName(), expectedPlugin.getPluginName());
+        Assert.assertEquals(realPlugin.getPluginVersion(), expectedPlugin.getVersion());
+    }
+
     @Before
-    public void initHealthService() throws IOException {
-        this.healthService = ArkletComponentRegistry.getHealthServiceInstance();
-        //        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        //        URL testBiz = cl.getResource("test-biz.jar");
-        //        BizOperation bizOperation = new BizOperation();
-        //        bizOperation.setBizVersion("test version");
-        //        ArkClient.getBizFactoryService().createBiz(bizOperation, new File(testBiz.getFile()));
+    public void initHealthService() {
+        arkClient = mockStatic(ArkClient.class);
+        arkClient.when(ArkClient::getBizManagerService).thenReturn(new CustomBizManagerService());
+        arkClient.when(ArkClient::getPluginManagerService).thenReturn(new CustomPluginManagerService());
+        arkClient.when(ArkClient::getMasterBiz).thenReturn(new CustomBizManagerService().getMasterBiz());
     }
 
     @Test
@@ -77,9 +148,37 @@ public class HealthTests extends BaseTest {
     }
 
     @Test
+    public void testGetModuleInfo() {
+        final CustomBizManagerService bizService = new CustomBizManagerService();
+        final CustomPluginManagerService pluginService = new CustomPluginManagerService();
+        final String bizName = "testBiz1";
+        final String pluginName = "testPlugin1";
+        final String bizVersion = "testBizVersion1";
+        final String errorType = "errorType";
+        final String errorBizName = "errorBiz";
+        final String errorPluginName = "errorPlugin";
+
+        validateHealth(healthService.queryModuleInfo(), bizService.getBizInOrder(), pluginService.getPluginsInOrder(), bizService.getMasterBiz());
+        validateBizListHealth(healthService.queryModuleInfo(Constants.BIZ, null, null), bizService.getBizInOrder());
+        validateBizListHealth(healthService.queryModuleInfo(Constants.BIZ, bizName, null), bizService.getBiz(bizName));
+        validateHealth(healthService.queryModuleInfo(Constants.BIZ, bizName, bizVersion), bizService.getBiz(bizName, bizVersion));
+        validatePluginListHealth(healthService.queryModuleInfo(Constants.PLUGIN, null, null), pluginService.getPluginsInOrder());
+        validateHealth(healthService.queryModuleInfo(Constants.PLUGIN, pluginName, null), pluginService.getPluginByName(pluginName));
+        validateHealth(healthService.queryModuleInfo(Constants.BIZ, errorBizName, bizVersion), Constants.HEALTH_ERROR,
+                "can not find biz");
+        validateHealth(healthService.queryModuleInfo(Constants.PLUGIN, errorPluginName, null), Constants.HEALTH_ERROR,
+                "can not find plugin");
+    }
+
+    @Test
     public void testIndicators() {
         Assert.assertNotNull(healthService.getIndicator(Constants.CPU));
         Assert.assertNotNull(healthService.getIndicator(Constants.JVM));
+    }
+
+    @After
+    public void destroyHealthService() {
+        arkClient.close();
     }
 
 }
