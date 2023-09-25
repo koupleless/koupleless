@@ -61,7 +61,7 @@ public class HealthTests extends BaseTest {
             Object realBiz = realBizList.get(i);
             Biz expectedBiz = expectedBizList.get(i);
             Assert.assertTrue(realBiz instanceof BizHealthMeta);
-            validateBiz((BizHealthMeta)realBiz, expectedBiz);
+            validateBiz((BizHealthMeta) realBiz, expectedBiz);
         }
     }
 
@@ -75,17 +75,18 @@ public class HealthTests extends BaseTest {
             Object realPlugin = realPluginList.get(i);
             Plugin expectedPlugin = expectedPluginList.get(i);
             Assert.assertTrue(realPlugin instanceof PluginHealthMeta);
-            validatePlugin((PluginHealthMeta)realPlugin, expectedPlugin);
+            validatePlugin((PluginHealthMeta) realPlugin, expectedPlugin);
         }
     }
 
-    private void validateHealth(Health health, final List<Biz> expectedBizList, final List<Plugin> expectedPluginList, final Biz expectedMasterBiz) {
+    private void validateHealth(Health health, final List<Biz> expectedBizList,
+                                final List<Plugin> expectedPluginList, final Biz expectedMasterBiz) {
         validateBizListHealth(health, expectedBizList);
         validatePluginListHealth(health, expectedPluginList);
         Assert.assertTrue(health.getHealthData().containsKey(Constants.MASTER_BIZ_INFO));
         Object realMasterBiz = health.getHealthData().get(Constants.MASTER_BIZ_INFO);
         Assert.assertTrue(realMasterBiz instanceof BizHealthMeta);
-        validateBiz((BizHealthMeta)realMasterBiz, expectedMasterBiz);
+        validateBiz((BizHealthMeta) realMasterBiz, expectedMasterBiz);
     }
 
     private void validateHealth(Health health, final Biz expectedBiz) {
@@ -93,7 +94,7 @@ public class HealthTests extends BaseTest {
         Assert.assertTrue(health.getHealthData().containsKey(Constants.BIZ_INFO));
         Object realBiz = health.getHealthData().get(Constants.BIZ_INFO);
         Assert.assertTrue(realBiz instanceof BizHealthMeta);
-        validateBiz((BizHealthMeta)realBiz, expectedBiz);
+        validateBiz((BizHealthMeta) realBiz, expectedBiz);
     }
 
     private void validateHealth(Health health, final Plugin expectedPlugin) {
@@ -158,16 +159,22 @@ public class HealthTests extends BaseTest {
         final String errorBizName = "errorBiz";
         final String errorPluginName = "errorPlugin";
 
-        validateHealth(healthService.queryModuleInfo(), bizService.getBizInOrder(), pluginService.getPluginsInOrder(), bizService.getMasterBiz());
-        validateBizListHealth(healthService.queryModuleInfo(Constants.BIZ, null, null), bizService.getBizInOrder());
-        validateBizListHealth(healthService.queryModuleInfo(Constants.BIZ, bizName, null), bizService.getBiz(bizName));
-        validateHealth(healthService.queryModuleInfo(Constants.BIZ, bizName, bizVersion), bizService.getBiz(bizName, bizVersion));
-        validatePluginListHealth(healthService.queryModuleInfo(Constants.PLUGIN, null, null), pluginService.getPluginsInOrder());
-        validateHealth(healthService.queryModuleInfo(Constants.PLUGIN, pluginName, null), pluginService.getPluginByName(pluginName));
-        validateHealth(healthService.queryModuleInfo(Constants.BIZ, errorBizName, bizVersion), Constants.HEALTH_ERROR,
-                "can not find biz");
-        validateHealth(healthService.queryModuleInfo(Constants.PLUGIN, errorPluginName, null), Constants.HEALTH_ERROR,
-                "can not find plugin");
+        validateHealth(healthService.queryModuleInfo(), bizService.getBizInOrder(),
+            pluginService.getPluginsInOrder(), bizService.getMasterBiz());
+        validateBizListHealth(healthService.queryModuleInfo(Constants.BIZ, null, null),
+            bizService.getBizInOrder());
+        validateBizListHealth(healthService.queryModuleInfo(Constants.BIZ, bizName, null),
+            bizService.getBiz(bizName));
+        validateHealth(healthService.queryModuleInfo(Constants.BIZ, bizName, bizVersion),
+            bizService.getBiz(bizName, bizVersion));
+        validatePluginListHealth(healthService.queryModuleInfo(Constants.PLUGIN, null, null),
+            pluginService.getPluginsInOrder());
+        validateHealth(healthService.queryModuleInfo(Constants.PLUGIN, pluginName, null),
+            pluginService.getPluginByName(pluginName));
+        validateHealth(healthService.queryModuleInfo(Constants.BIZ, errorBizName, bizVersion),
+            Constants.HEALTH_ERROR, "can not find biz");
+        validateHealth(healthService.queryModuleInfo(Constants.PLUGIN, errorPluginName, null),
+            Constants.HEALTH_ERROR, "can not find plugin");
     }
 
     @Test
