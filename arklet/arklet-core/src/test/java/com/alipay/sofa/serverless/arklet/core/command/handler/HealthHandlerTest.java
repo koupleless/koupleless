@@ -16,22 +16,17 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.handler;
 
-import com.alipay.sofa.ark.api.ArkClient;
-import com.alipay.sofa.serverless.arklet.core.BaseTest;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HealthHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HealthHandler.Input;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
-import com.alipay.sofa.serverless.arklet.core.health.custom.CustomBizManagerService;
-import com.alipay.sofa.serverless.arklet.core.health.custom.CustomPluginManagerService;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Mockito.mockStatic;
 
 /**
  * @author lunarscave
