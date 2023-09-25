@@ -1,8 +1,6 @@
 ---
 title: 最新信息
+linkTitle: 最新信息
+date: 2023-09-21T10:28:35+08:00
 menu: {main: {weight: 30}}
 ---
-
-This is the **blog** section. It has two categories: News and Releases.
-
-Files in these directories will be listed in reverse chronological order.

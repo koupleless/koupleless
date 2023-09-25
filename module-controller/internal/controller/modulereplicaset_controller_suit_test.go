@@ -58,7 +58,9 @@ var _ = Describe("ModuleReplicaSet Controller", func() {
 			var newModuleReplicaSet v1alpha1.ModuleReplicaSet
 			k8sClient.Get(context.TODO(), key, &newModuleReplicaSet)
 			newModuleReplicaSet.Spec.Template.Spec.Module.Version = "1.0.1"
-			Expect(k8sClient.Update(context.TODO(), &newModuleReplicaSet)).Should(Succeed())
+			Eventually(func() bool {
+				return k8sClient.Update(context.TODO(), &newModuleReplicaSet) == nil
+			}, timeout, interval).Should(BeTrue())
 			Eventually(func() bool {
 				selector, err := metav1.LabelSelectorAsSelector(&newModuleReplicaSet.Spec.Selector)
 				modules := &v1alpha1.ModuleList{}

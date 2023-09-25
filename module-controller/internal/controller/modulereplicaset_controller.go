@@ -22,11 +22,14 @@ import (
 	"sort"
 	"strconv"
 
+	"golang.org/x/tools/container/intsets"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/pointer"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
@@ -88,6 +91,22 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return ctrl.Result{}, nil
 	}
 
+	// update status.replicas
+	replicas := int32(0)
+	// calculate the modules that have been installed successfully
+	for i := 0; i < len(existedModuleList.Items); i++ {
+		status := existedModuleList.Items[i].Status.Status
+		if status == moduledeploymentv1alpha1.ModuleInstanceStatusCompleting ||
+			status == moduledeploymentv1alpha1.ModuleInstanceStatusAvailable {
+			replicas += 1
+		}
+	}
+	// if current replicas isn't equal to status.replicas, then we need update status
+	if replicas != moduleReplicaSet.Status.Replicas {
+		moduleReplicaSet.Status.Replicas = replicas
+		return ctrl.Result{}, r.Status().Update(ctx, moduleReplicaSet)
+	}
+
 	if moduleReplicaSet.DeletionTimestamp != nil {
 		return r.handleDeletingModuleReplicaSet(ctx, existedModuleList, moduleReplicaSet)
 	}
@@ -125,7 +144,7 @@ func (r *ModuleReplicaSetReconciler) compareAndUpdateModule(ctx context.Context,
 	desiredModule := moduleReplicaSet.Spec.Template.Spec.Module
 	for _, existedModule := range existedModuleList.Items {
 
-		needUpgradeModule := existedModule.Spec.Module.Name != desiredModule.Name || existedModule.Spec.Module.Version != desiredModule.Version || existedModule.Spec.Module.Url != desiredModule.Url
+		needUpgradeModule := existedModule.Spec.Module.Name != desiredModule.Name || existedModule.Spec.Module.Version != desiredModule.Version
 		needUninstallModule := existedModule.Spec.Module.Name != desiredModule.Name
 		if needUpgradeModule {
 			existedModule.Spec.Module.Name = desiredModule.Name
@@ -218,8 +237,23 @@ func (r *ModuleReplicaSetReconciler) generateModule(moduleReplicaSet *moduledepl
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ModuleReplicaSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	filterFn := handler.MapFunc(
+		func(_ context.Context, object client.Object) []reconcile.Request {
+			module := object.(*moduledeploymentv1alpha1.Module)
+			return []reconcile.Request{
+				{
+					NamespacedName: types.NamespacedName{
+						Namespace: object.GetNamespace(),
+						Name:      module.Labels[label.ModuleReplicasetLabel],
+					},
+				},
+			}
+		})
+
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&moduledeploymentv1alpha1.ModuleReplicaSet{}).
+		// watch module events
+		Watches(&moduledeploymentv1alpha1.Module{}, handler.EnqueueRequestsFromMapFunc(filterFn)).
 		Complete(r)
 }
 
@@ -290,7 +324,6 @@ func (r *ModuleReplicaSetReconciler) scaledown(ctx context.Context, existedModul
 			break
 		}
 	}
-
 	return err
 }
 
@@ -310,10 +343,11 @@ func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(
 	strategyLabel := moduleReplicaSet.Labels[label.ModuleSchedulingStrategy]
 	strategy := moduledeploymentv1alpha1.ModuleSchedulingType(strategyLabel)
 
-	maxModuleCountLabel := moduleReplicaSet.Labels[label.MaxModuleCount]
+	maxModuleCountLabel := selectedPods.Items[0].Labels[label.MaxModuleCount]
 	maxModuleCount, err := strconv.Atoi(maxModuleCountLabel)
 	if err != nil {
-		return nil, err
+		// if we get MaxModuleCount failed from pod, then set it to max
+		maxModuleCount = intsets.MaxInt
 	}
 
 	if strategy == moduledeploymentv1alpha1.Scatter {
@@ -348,11 +382,22 @@ func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(
 	var toAllocatePod []corev1.Pod
 	count := deltaReplicas
 	for _, pod := range selectedPods.Items {
-		instanceCount, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
-		if err != nil {
-			log.Log.Error(err, fmt.Sprintf("invalid ModuleInstanceCount in pod %v", pod.Name))
-			continue
+		var instanceCount int
+		if cntStr, ok := pod.Labels[label.ModuleInstanceCount]; !ok {
+			instanceCount = utils.GetModuleCountFromPod(&pod)
+			pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(instanceCount)
+			if err = r.Client.Update(context.TODO(), &pod); err != nil {
+				log.Log.Error(err, fmt.Sprintf("failed to update pod label"))
+				continue
+			}
+		} else {
+			instanceCount, err = strconv.Atoi(cntStr)
+			if err != nil {
+				log.Log.Error(err, fmt.Sprintf("invalid ModuleInstanceCount in pod %v", pod.Name))
+				continue
+			}
 		}
+
 		if _, ok := usedPodNames[pod.Name]; !ok && instanceCount < maxModuleCount {
 			toAllocatePod = append(toAllocatePod, pod)
 			if count--; count == 0 {

@@ -46,23 +46,16 @@ const (
 	ModuleDeploymentReleaseProgressWaitingForConfirmation ReleaseProgress = "WaitingForConfirmation"
 	ModuleDeploymentReleaseProgressExecuting              ReleaseProgress = "Executing"
 	ModuleDeploymentReleaseProgressPaused                 ReleaseProgress = "Paused"
-	CafeDeploymentReleaseProgressCompleted                ReleaseProgress = "Completed"
-	CafeDeploymentReleaseProgressAborted                  ReleaseProgress = "Aborted"
-	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
-)
-
-type DeployType string
-
-const (
-	ModuleDeploymentDeployTypeSymmetric  DeployType = "symmetric"
-	ModuleDeploymentDeployTypeAsymmetric DeployType = "asymmetric"
+	ModuleDeploymentReleaseProgressCompleted              ReleaseProgress = "Completed"
+	ModuleDeploymentReleaseProgressAborted                ReleaseProgress = "Aborted"
+	ModuleDeploymentReleaseProgressTermed                 ReleaseProgress = "Terminated"
 )
 
 type ModuleSchedulingType string
 
 const (
-	Scatter  ModuleSchedulingType = "Scatter"
-	Stacking ModuleSchedulingType = "Stacking"
+	Scatter  ModuleSchedulingType = "scatter"
+	Stacking ModuleSchedulingType = "stacking"
 )
 
 type ReleaseStatus struct {
@@ -100,8 +93,10 @@ type ModuleDeploymentCondition struct {
 }
 
 type ModuleSchedulingStrategy struct {
+	// +kubebuilder:validation:Enum={"scatter","stacking"}
+	// +kubebuilder:default="scatter"
 	SchedulingType ModuleSchedulingType `json:"schedulingType"`
-	MaxModuleCount int                  `json:"maxModuleCount"`
+	//MaxModuleCount int                  `json:"maxModuleCount"`
 }
 
 type ModuleDeploymentStrategy struct {
@@ -127,9 +122,7 @@ type ModuleDeploymentSpec struct {
 
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
-	// +kubebuilder:validation:Enum={"symmetric","asymmetric"}
-	DeployType DeployType `json:"deployType"`
-
+	// +kubebuilder:validation:Minimum=-1
 	Replicas int32 `json:"replicas,omitempty"`
 
 	MinReadySeconds int32 `json:"minReadySeconds,omitempty"`
@@ -143,7 +136,7 @@ type ModuleDeploymentSpec struct {
 	// +optional
 	Pause bool `json:"pause,omitempty"`
 
-	OperationStrategy ModuleDeploymentStrategy `json:"strategy,omitempty"`
+	OperationStrategy ModuleDeploymentStrategy `json:"operationStrategy,omitempty"`
 
 	SchedulingStrategy ModuleSchedulingStrategy `json:"schedulingStrategy,omitempty"`
 }
