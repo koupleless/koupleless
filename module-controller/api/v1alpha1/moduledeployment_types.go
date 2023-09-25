@@ -46,16 +46,16 @@ const (
 	ModuleDeploymentReleaseProgressWaitingForConfirmation ReleaseProgress = "WaitingForConfirmation"
 	ModuleDeploymentReleaseProgressExecuting              ReleaseProgress = "Executing"
 	ModuleDeploymentReleaseProgressPaused                 ReleaseProgress = "Paused"
-	CafeDeploymentReleaseProgressCompleted                ReleaseProgress = "Completed"
-	CafeDeploymentReleaseProgressAborted                  ReleaseProgress = "Aborted"
-	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
+	ModuleDeploymentReleaseProgressCompleted              ReleaseProgress = "Completed"
+	ModuleDeploymentReleaseProgressAborted                ReleaseProgress = "Aborted"
+	ModuleDeploymentReleaseProgressTermed                 ReleaseProgress = "Terminated"
 )
 
 type ModuleSchedulingType string
 
 const (
-	Scatter  ModuleSchedulingType = "Scatter"
-	Stacking ModuleSchedulingType = "Stacking"
+	Scatter  ModuleSchedulingType = "scatter"
+	Stacking ModuleSchedulingType = "stacking"
 )
 
 type ReleaseStatus struct {
@@ -93,8 +93,10 @@ type ModuleDeploymentCondition struct {
 }
 
 type ModuleSchedulingStrategy struct {
+	// +kubebuilder:validation:Enum={"scatter","stacking"}
+	// +kubebuilder:default="scatter"
 	SchedulingType ModuleSchedulingType `json:"schedulingType"`
-	MaxModuleCount int                  `json:"maxModuleCount"`
+	//MaxModuleCount int                  `json:"maxModuleCount"`
 }
 
 type ModuleDeploymentStrategy struct {
@@ -134,7 +136,7 @@ type ModuleDeploymentSpec struct {
 	// +optional
 	Pause bool `json:"pause,omitempty"`
 
-	OperationStrategy ModuleDeploymentStrategy `json:"strategy,omitempty"`
+	OperationStrategy ModuleDeploymentStrategy `json:"operationStrategy,omitempty"`
 
 	SchedulingStrategy ModuleSchedulingStrategy `json:"schedulingStrategy,omitempty"`
 }

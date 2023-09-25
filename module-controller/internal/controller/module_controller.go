@@ -163,6 +163,7 @@ func (r *ModuleReconciler) handleTerminatingModuleInstance(ctx context.Context, 
 					log.Log.Error(err, "Failed post module", "moduleName", module.Spec.Module.Name)
 					return ctrl.Result{}, err
 				}
+
 			} else {
 				log.Log.Info("pod not exist", "moduleName", module.Spec.Module.Name, "module", module.Name)
 			}
@@ -309,7 +310,7 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, mo
 		return ctrl.Result{}, nil
 	}
 
-	// update status
+	// update module status
 	module.Status.Status = v1alpha1.ModuleInstanceStatusCompleting
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusCompleting))

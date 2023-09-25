@@ -42,31 +42,7 @@ spec:
               minReadySeconds:
                 format: int32
                 type: integer
-              pause:
-                description: Indicates that the moduleDeployment is paused and will
-                  not be processed by the moduleDeployment controller.
-                type: boolean
-              progressDeadlineSeconds:
-                format: int32
-                type: integer
-              replicas:
-                format: int32
-                minimum: -1
-                type: integer
-              revisionHistoryLimit:
-                format: int32
-                type: integer
-              schedulingStrategy:
-                properties:
-                  maxModuleCount:
-                    type: integer
-                  schedulingType:
-                    type: string
-                required:
-                - maxModuleCount
-                - schedulingType
-                type: object
-              strategy:
+              operationStrategy:
                 properties:
                   batchCount:
                     format: int32
@@ -87,6 +63,31 @@ spec:
                     type: boolean
                 required:
                 - upgradeType
+                type: object
+              pause:
+                description: Indicates that the moduleDeployment is paused and will
+                  not be processed by the moduleDeployment controller.
+                type: boolean
+              progressDeadlineSeconds:
+                format: int32
+                type: integer
+              replicas:
+                format: int32
+                minimum: -1
+                type: integer
+              revisionHistoryLimit:
+                format: int32
+                type: integer
+              schedulingStrategy:
+                properties:
+                  schedulingType:
+                    default: scatter
+                    enum:
+                    - scatter
+                    - stacking
+                    type: string
+                required:
+                - schedulingType
                 type: object
               template:
                 properties:

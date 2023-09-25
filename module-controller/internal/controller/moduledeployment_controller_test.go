@@ -1,9 +1,12 @@
 package controller
 
 import (
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/stretchr/testify/assert"
+	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
 )
 
 func TestIsModuleChanges(t *testing.T) {
@@ -26,5 +29,6 @@ func TestIsModuleChanges(t *testing.T) {
 
 func TestGetModuleReplicasName(t *testing.T) {
 	moduleDeploymentName := "module-deployment"
-	assert.Equal(t, moduleDeploymentName+"-replicas", getModuleReplicasName(moduleDeploymentName))
+	revision := 1
+	assert.Equal(t, fmt.Sprintf("%v-%v-%v", moduleDeploymentName, "replicas", revision), getModuleReplicasName(moduleDeploymentName, revision))
 }
