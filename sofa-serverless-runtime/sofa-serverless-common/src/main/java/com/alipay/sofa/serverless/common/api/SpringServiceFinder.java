@@ -41,12 +41,12 @@ public class SpringServiceFinder {
     @CallerSensitive
     public static <T> T getBaseService(Class<T> serviceType) {
         Biz masterBiz = ArkClient.getMasterBiz();
-        return (T) ServiceProxyFactory.createServiceProxy(masterBiz, serviceType, null);
+        return ServiceProxyFactory.createServiceProxy(masterBiz, serviceType, null);
     }
 
     public static <T> Map<String, T> listBaseServices(Class<T> serviceType) {
         Biz masterBiz = ArkClient.getMasterBiz();
-        return (Map<String, T>) ServiceProxyFactory.batchCreateServiceProxy(masterBiz, serviceType,
+        return ServiceProxyFactory.batchCreateServiceProxy(masterBiz, serviceType,
             null);
     }
 
@@ -60,13 +60,13 @@ public class SpringServiceFinder {
     public static <T> T getModuleService(String moduleName, String moduleVersion,
                                          Class<T> serviceType) {
         Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
-        return (T) ServiceProxyFactory.createServiceProxy(biz, serviceType, null);
+        return ServiceProxyFactory.createServiceProxy(biz, serviceType, null);
     }
 
     public static <T> Map<String, T> listModuleServices(String moduleName, String moduleVersion,
                                                         Class<T> serviceType) {
         Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
-        return (Map<String, T>) ServiceProxyFactory.batchCreateServiceProxy(biz, serviceType, null);
+        return ServiceProxyFactory.batchCreateServiceProxy(biz, serviceType, null);
     }
 
     public static Biz determineMostSuitableBiz(String moduleName, String moduleVersion) {

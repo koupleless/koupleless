@@ -24,7 +24,6 @@ import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
 import com.alipay.sofa.serverless.common.exception.BizRuntimeException;
 import com.alipay.sofa.serverless.common.util.ReflectionUtils;
 import org.springframework.aop.framework.ProxyFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -130,8 +129,7 @@ public class ServiceProxyFactory {
         Map<ClassLoader, Map<String, ServiceProxyCache>> serviceProxyCaches =
                 bizRuntimeContext.getServiceProxyCaches();
         Map<String, ServiceProxyCache> cacheMap = serviceProxyCaches.computeIfAbsent(service.getClass().getClassLoader(), o -> new ConcurrentHashMap<>());
-        // todo 使用service class name作key，同类型多bean时会有问题？
-        // 服务端模块被卸载时，cacheMap会被清空
+        // 服务端模块被卸载时，cacheMap会被清空，需要重新生成proxy并缓存
         if (cacheMap.containsKey(service.getClass().getName())) {
             ServiceProxyCache serviceProxyCache = cacheMap.get(service.getClass().getName());
             return serviceProxyCache.getProxy();
@@ -144,7 +142,6 @@ public class ServiceProxyFactory {
         Class<?> targetClass = service.getClass();
         if (targetClass.isInterface()) {
             factory.addInterface(targetClass);
-            //            factory.addInterface(JvmBindingInterface.class);
         } else {
             factory.setTargetClass(targetClass);
             factory.setProxyTargetClass(true);
