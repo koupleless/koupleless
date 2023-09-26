@@ -35,6 +35,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringContextManager.E100002;
+import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringContextManager.E100003;
+import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringContextManager.E100004;
+
 /**
  * @author: yuanyuan
  * @date: 2023/9/21 9:55 下午
@@ -82,19 +86,19 @@ public class ServiceProxyFactory {
 
     @CallerSensitive
     private static <T> T getService(Biz biz, String name) {
-        BizRuntimeContext bizRuntimeContext = getBizRuntimeContext(biz);
+        BizRuntimeContext bizRuntimeContext = checkBizStateAndGetBizRuntimeContext(biz);
         return (T) bizRuntimeContext.getRootApplicationContext().getBean(name);
     }
 
     @CallerSensitive
     private static <T> T getService(Biz biz, Class<T> serviceType) {
-        BizRuntimeContext bizRuntimeContext = getBizRuntimeContext(biz);
+        BizRuntimeContext bizRuntimeContext = checkBizStateAndGetBizRuntimeContext(biz);
         return bizRuntimeContext.getRootApplicationContext().getBean(serviceType);
     }
 
     @CallerSensitive
     private static <T> Map<String, T> listService(Biz biz, Class<T> serviceType) {
-        BizRuntimeContext bizRuntimeContext = getBizRuntimeContext(biz);
+        BizRuntimeContext bizRuntimeContext = checkBizStateAndGetBizRuntimeContext(biz);
         ApplicationContext rootApplicationContext = bizRuntimeContext.getRootApplicationContext();
         if (rootApplicationContext instanceof AbstractApplicationContext) {
             ConfigurableListableBeanFactory beanFactory = ((AbstractApplicationContext) rootApplicationContext)
@@ -105,16 +109,19 @@ public class ServiceProxyFactory {
     }
 
     @CallerSensitive
-    private static BizRuntimeContext getBizRuntimeContext(Biz biz) {
+    private static BizRuntimeContext checkBizStateAndGetBizRuntimeContext(Biz biz) {
         if (biz == null) {
-            throw new BizRuntimeException("", "biz is null");
+            throw new BizRuntimeException(E100003, "biz is null");
         }
         if (biz.getBizState() != BizState.ACTIVATED && biz.getBizState() != BizState.DEACTIVATED) {
-            throw new BizRuntimeException("", "biz state is not valid");
+            throw new BizRuntimeException(E100004, "biz state is not valid");
         }
         BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
         if (bizRuntimeContext == null) {
-            throw new BizRuntimeException("", "biz runtime context is null");
+            throw new BizRuntimeException(E100002, "biz runtime context is null");
+        }
+        if (bizRuntimeContext.getRootApplicationContext() == null) {
+            throw new BizRuntimeException(E100002, "biz spring context is null");
         }
         return bizRuntimeContext;
     }

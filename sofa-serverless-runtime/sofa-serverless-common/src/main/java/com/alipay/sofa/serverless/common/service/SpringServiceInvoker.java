@@ -16,6 +16,11 @@
  */
 package com.alipay.sofa.serverless.common.service;
 
+import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.ark.exception.ArkRuntimeException;
+import com.alipay.sofa.ark.spi.model.Biz;
+import com.alipay.sofa.ark.spi.model.BizState;
+import com.alipay.sofa.serverless.common.exception.BizRuntimeException;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
@@ -24,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringContextManager.E100003;
+import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringContextManager.E100004;
 import static com.alipay.sofa.serverless.common.util.SerializeUtils.serializeTransform;
 
 /**
@@ -67,6 +74,14 @@ public class SpringServiceInvoker implements MethodInterceptor {
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
+        Biz biz = ArkClient.getBizManagerService().getBiz(bizName, bizVersion);
+        if (biz == null) {
+            throw new BizRuntimeException(E100003, "biz does not exist when called");
+        }
+        if (BizState.ACTIVATED != biz.getBizState() && BizState.DEACTIVATED != biz.getBizState()) {
+            throw new BizRuntimeException(E100004, "biz state is not valid");
+        }
+
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         long startTime = System.currentTimeMillis();
         try {
@@ -81,19 +96,19 @@ public class SpringServiceInvoker implements MethodInterceptor {
         }
     }
 
-    private Object doInvoke(MethodInvocation invocation) throws InvocationTargetException,
-                                                        IllegalAccessException {
+    protected Object doInvoke(MethodInvocation invocation) throws InvocationTargetException,
+                                                          IllegalAccessException {
         if (isCrossClassLoader(invocation)) {
             return invokeServiceCrossClassLoader(invocation);
         }
         return invokeService(invocation);
     }
 
-    private void doCatch(MethodInvocation invocation, Throwable e, long startTime) {
+    protected void doCatch(MethodInvocation invocation, Throwable e, long startTime) {
         // log
     }
 
-    private void doFinally(MethodInvocation invocation, long startTime) {
+    protected void doFinally(MethodInvocation invocation, long startTime) {
         // log、metrics
     }
 
