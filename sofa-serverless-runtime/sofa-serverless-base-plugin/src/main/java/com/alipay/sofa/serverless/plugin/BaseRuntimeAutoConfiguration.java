@@ -17,7 +17,9 @@
 package com.alipay.sofa.serverless.plugin;
 
 import com.alipay.sofa.serverless.common.environment.ConditionalOnNotMasterBiz;
+import com.alipay.sofa.serverless.common.service.ArkAutowiredBeanPostProcessor;
 import com.alipay.sofa.serverless.plugin.manager.handler.ApplicationContextEventHandler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,8 +31,14 @@ import org.springframework.context.annotation.Configuration;
 public class BaseRuntimeAutoConfiguration {
 
     @Bean
-    @ConditionalOnNotMasterBiz
+    //    @ConditionalOnNotMasterBiz
     public ApplicationContextEventHandler applicationContextEventHandler() {
         return new ApplicationContextEventHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ArkAutowiredBeanPostProcessor arkAutowiredBeanPostProcessor() {
+        return new ArkAutowiredBeanPostProcessor();
     }
 }
