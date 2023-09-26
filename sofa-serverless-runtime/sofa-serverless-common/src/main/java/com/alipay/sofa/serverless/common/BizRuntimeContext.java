@@ -19,16 +19,22 @@ package com.alipay.sofa.serverless.common;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.common.exception.BizRuntimeException;
 import com.alipay.sofa.serverless.common.exception.ErrorCodes;
+import com.alipay.sofa.serverless.common.service.ServiceProxyCache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class BizRuntimeContext {
 
-    private String             bizName;
+    private String                                           bizName;
 
-    private ClassLoader        appClassLoader;
+    private ClassLoader                                      appClassLoader;
 
-    private ApplicationContext rootApplicationContext;
+    private ApplicationContext                               rootApplicationContext;
+
+    private Map<ClassLoader, Map<String, ServiceProxyCache>> serviceProxyCaches = new ConcurrentHashMap<>();
 
     public String getBizName() {
         return bizName;
@@ -58,6 +64,14 @@ public class BizRuntimeContext {
         this.bizName = biz.getBizName();
         this.appClassLoader = biz.getBizClassLoader();
         this.rootApplicationContext = applicationContext;
+    }
+
+    public Map<ClassLoader, Map<String, ServiceProxyCache>> getServiceProxyCaches() {
+        return serviceProxyCaches;
+    }
+
+    public void removeServiceProxyCaches(ClassLoader classLoader) {
+        serviceProxyCaches.remove(classLoader);
     }
 
     public void shutdown() {

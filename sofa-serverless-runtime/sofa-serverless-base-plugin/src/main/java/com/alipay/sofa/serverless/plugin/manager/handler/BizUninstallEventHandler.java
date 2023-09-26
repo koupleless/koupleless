@@ -22,6 +22,7 @@ import com.alipay.sofa.ark.spi.service.PriorityOrdered;
 import com.alipay.sofa.ark.spi.service.event.EventHandler;
 import com.alipay.sofa.serverless.common.BizRuntimeContext;
 import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
+import com.alipay.sofa.serverless.common.service.ServiceProxyCacheCleaner;
 
 /**
  * @author qilong.zql
@@ -37,6 +38,7 @@ public class BizUninstallEventHandler implements EventHandler<BeforeBizStopEvent
     private void doUninstallBiz(Biz biz) {
         BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
         BizRuntimeContextRegistry.unRegisterBizRuntimeManager(bizRuntimeContext);
+        ServiceProxyCacheCleaner.clean(biz.getBizClassLoader());
         bizRuntimeContext.shutdown();
     }
 

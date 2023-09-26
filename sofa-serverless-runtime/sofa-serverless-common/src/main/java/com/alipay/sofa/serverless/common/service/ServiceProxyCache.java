@@ -14,25 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common.api;
+package com.alipay.sofa.serverless.common.service;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+/**
+ * @author: yuanyuan
+ * @date: 2023/9/25 11:37 下午
+ */
+public class ServiceProxyCache {
 
-@Target({ ElementType.FIELD })
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface AutowiredFromBiz {
+    private Object               proxy;
 
-    boolean required() default true;
+    private SpringServiceInvoker invoker;
 
-    String name() default "";
+    public ServiceProxyCache(Object proxy, SpringServiceInvoker invoker) {
+        this.proxy = proxy;
+        this.invoker = invoker;
+    }
 
-    String bizName() default "";
+    public Object getProxy() {
+        return proxy;
+    }
 
-    String bizVersion() default "";
+    public void setProxy(Object proxy) {
+        this.proxy = proxy;
+    }
 
+    public SpringServiceInvoker getInvoker() {
+        return invoker;
+    }
+
+    public void setInvoker(SpringServiceInvoker invoker) {
+        this.invoker = invoker;
+    }
 }

@@ -17,11 +17,14 @@
 package com.alipay.sofa.serverless.common.api;
 
 import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.ark.spi.model.Biz;
-import com.alipay.sofa.serverless.common.BizRuntimeContext;
-import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
+import com.alipay.sofa.ark.spi.model.BizState;
 import com.alipay.sofa.serverless.common.service.ServiceProxyFactory;
 import sun.reflect.CallerSensitive;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author: yuanyuan
@@ -32,51 +35,48 @@ public class SpringServiceFinder {
     @CallerSensitive
     public static <T> T getBaseService(String name) {
         Biz masterBiz = ArkClient.getMasterBiz();
-        return getService(masterBiz, name);
+        return ServiceProxyFactory.createServiceProxy(masterBiz, name, null);
     }
 
     @CallerSensitive
     public static <T> T getBaseService(Class<T> serviceType) {
         Biz masterBiz = ArkClient.getMasterBiz();
-        return getService(masterBiz, serviceType);
+        return (T) ServiceProxyFactory.createServiceProxy(masterBiz, serviceType, null);
     }
 
-    //    public static <T> Map<String, T> listBaseServices(Class<T> serviceType) {
-    //        // todo spring 只支持 getBean
-    //        Biz masterBiz = ArkClient.getMasterBiz();
-    //        return getService(masterBiz, serviceType);
-    //    }
+    public static <T> Map<String, T> listBaseServices(Class<T> serviceType) {
+        Biz masterBiz = ArkClient.getMasterBiz();
+        return (Map<String, T>) ServiceProxyFactory.batchCreateServiceProxy(masterBiz, serviceType,
+            null);
+    }
 
     @CallerSensitive
     public static <T> T getModuleService(String moduleName, String moduleVersion, String name) {
-        // todo if moduleVesion is black
-        Biz biz = ArkClient.getBizManagerService().getBiz(moduleName, moduleVersion);
-        return ServiceProxyFactory.createServiceProxy(biz, name);
+        Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
+        return ServiceProxyFactory.createServiceProxy(biz, name, null);
     }
 
     @CallerSensitive
     public static <T> T getModuleService(String moduleName, String moduleVersion,
                                          Class<T> serviceType) {
-        Biz biz = ArkClient.getBizManagerService().getBiz(moduleName, moduleVersion);
-        return ServiceProxyFactory.createServiceProxy(biz, serviceType);
+        Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
+        return (T) ServiceProxyFactory.createServiceProxy(biz, serviceType, null);
     }
 
-    //    public static <T> Map<String, T> listModuleServices(String moduleName, String moduleVersion, Class<T> serviceType) {
-    //        // todo spring 只支持 getBean
-    //        Biz biz = ArkClient.getBizManagerService().getBiz(moduleName, moduleVersion);
-    //        return getService(biz, serviceType);
-    //    }
-
-    @CallerSensitive
-    private static <T> T getService(Biz biz, String name) {
-        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
-        return (T) bizRuntimeContext.getRootApplicationContext().getBean(name);
+    public static <T> Map<String, T> listModuleServices(String moduleName, String moduleVersion,
+                                                        Class<T> serviceType) {
+        Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
+        return (Map<String, T>) ServiceProxyFactory.batchCreateServiceProxy(biz, serviceType, null);
     }
 
-    @CallerSensitive
-    private static <T> T getService(Biz biz, Class<T> serviceType) {
-        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
-        return bizRuntimeContext.getRootApplicationContext().getBean(serviceType);
+    public static Biz determineMostSuitableBiz(String moduleName, String moduleVersion) {
+        Biz biz;
+        if (StringUtils.isEmpty(moduleVersion)) {
+            List<Biz> bizList = ArkClient.getBizManagerService().getBiz(moduleName);
+            biz = bizList.stream().filter(it -> BizState.ACTIVATED == it.getBizState()).findFirst().get();
+        } else {
+            biz = ArkClient.getBizManagerService().getBiz(moduleName, moduleVersion);
+        }
+        return biz;
     }
-
 }
