@@ -60,6 +60,7 @@
                             <activator>com.alipay.sofa.serverless.plugin.ServerlessRuntimeActivator</activator>
                             <exported>
                                 <packages>
+                                    <package>com.alipay.sofa.serverless.plugin.*</package>
                                 </packages>
                             </exported>
                         </configuration>

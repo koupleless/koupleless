@@ -34,7 +34,6 @@ public class BizRuntimeContextRegistry {
 
     public static void unRegisterBizRuntimeManager(BizRuntimeContext bizRuntimeContext) {
         contextMap.remove(bizRuntimeContext.getAppClassLoader());
-
     }
 
     public static Set<BizRuntimeContext> getRuntimeSet() {
