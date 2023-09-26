@@ -43,7 +43,7 @@ public class BizUninstallEventHandlerTest {
     private Biz                            biz;
 
     @Mock
-    private BizManagerService bizManagerService;
+    private BizManagerService              bizManagerService;
 
     private ConfigurableApplicationContext ctx;
 
@@ -67,7 +67,8 @@ public class BizUninstallEventHandlerTest {
         Mockito.when(biz.getBizName()).thenReturn(bizName);
         Mockito.when(biz.getBizClassLoader()).thenReturn(this.getClass().getClassLoader());
 
-        Mockito.when(bizManagerService.getBizByClassLoader(this.getClass().getClassLoader())).thenReturn(biz);
+        Mockito.when(bizManagerService.getBizByClassLoader(this.getClass().getClassLoader()))
+            .thenReturn(biz);
 
         ctx = springApplication.run();
 
