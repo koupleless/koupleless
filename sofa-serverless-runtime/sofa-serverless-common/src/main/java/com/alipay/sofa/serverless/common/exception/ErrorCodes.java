@@ -28,5 +28,15 @@ public class ErrorCodes {
          * 模块 SpringContext 找不到
          */
         public static final String E100002 = "100002";
+
+        /**
+         * 模块为空
+         */
+        public static final String E100003 = "100003";
+
+        /**
+         * 模块状态非法
+         */
+        public static final String E100004 = "100004";
     }
 }

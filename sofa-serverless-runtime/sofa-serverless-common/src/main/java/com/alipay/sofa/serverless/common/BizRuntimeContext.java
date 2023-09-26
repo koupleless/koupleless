@@ -78,7 +78,10 @@ public class BizRuntimeContext {
         serviceProxyCaches.remove(classLoader);
     }
 
-    public void shutdown() {
+    /**
+     * 方法名为 shutdown() 会导致卸载时候调用两次
+     */
+    public void shutdownContext() {
         try {
             AbstractApplicationContext applicationContext = (AbstractApplicationContext) rootApplicationContext;
             // only need shutdown when root context is active

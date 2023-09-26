@@ -54,7 +54,7 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
         Class<?> beanClassType = bean.getClass();
 
         ReflectionUtils.doWithFields(beanClassType, field -> {
-            LOGGER.info("Processing bean [{}]", beanName);
+            LOGGER.info("Processing bean [{}] field [{}]", beanName, field);
 
             AutowiredFromBase autowiredFromBase = field.getAnnotation(AutowiredFromBase.class);
             AutowiredFromBiz autowiredFromBiz = field.getAnnotation(AutowiredFromBiz.class);
@@ -94,6 +94,9 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
                     ParameterizedType parameterizedType = (ParameterizedType) genericType;
                     Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
                     Class<?> serviceType = (Class<?>) actualTypeArguments[0];
+                    if (Map.class.isAssignableFrom(fieldType)) {
+                        serviceType = (Class<?>) actualTypeArguments[1];
+                    }
 
                     Map<String, ?> serviceProxyMap = ServiceProxyFactory.batchCreateServiceProxy(biz, serviceType, clientClassLoader);
 
