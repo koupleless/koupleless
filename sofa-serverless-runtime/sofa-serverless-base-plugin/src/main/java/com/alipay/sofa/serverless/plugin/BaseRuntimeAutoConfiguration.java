@@ -16,9 +16,12 @@
  */
 package com.alipay.sofa.serverless.plugin;
 
-import com.alipay.sofa.serverless.common.environment.ConditionalOnNotMasterBiz;
+import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.ark.spi.model.Biz;
+import com.alipay.sofa.serverless.common.BizRuntimeContext;
 import com.alipay.sofa.serverless.common.service.ArkAutowiredBeanPostProcessor;
-import com.alipay.sofa.serverless.plugin.manager.handler.ApplicationContextEventHandler;
+import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
+import org.springframework.context.ApplicationContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,9 +34,12 @@ import org.springframework.context.annotation.Configuration;
 public class BaseRuntimeAutoConfiguration {
 
     @Bean
-    //    @ConditionalOnNotMasterBiz
-    public ApplicationContextEventHandler applicationContextEventHandler() {
-        return new ApplicationContextEventHandler();
+    public BizRuntimeContext bizRuntimeContext(ApplicationContext applicationContext) {
+        ClassLoader classLoader = applicationContext.getClassLoader();
+        Biz biz = ArkClient.getBizManagerService().getBizByClassLoader(classLoader);
+        BizRuntimeContext bizRuntimeContext = new BizRuntimeContext(biz, applicationContext);
+        BizRuntimeContextRegistry.registerSpringContext(bizRuntimeContext);
+        return bizRuntimeContext;
     }
 
     @Bean

@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: dynamic-stock
+        maxModuleCount: "10"
     spec:
       containers:
         - name: dynamic-stock-container

@@ -1,12 +1,12 @@
 {
-  "name": "docsy-example-site",
-  "version": "0.7.1",
-  "description": "Example site that uses Docsy theme for technical documentation.",
-  "repository": "github:google/docsy-example",
-  "homepage": "https://example.docsy.dev",
-  "author": "Docsy Authors",
+  "name": "SOFAServerless",
+  "version": "0.4.0",
+  "description": "SOFAServerless is a modularization application architecture patterns for company business rapid development, operation, evolution and cooperation with low cost.",
+  "repository": "https://github.com/sofastack/sofa-serverless",
+  "homepage": "https://sofaserverless.netlify.app/",
+  "author": "lvjing2 lylingzhen",
   "license": "Apache-2.0",
-  "bugs": "https://github.com/google/docsy-example/issues",
+  "bugs": "https://github.com/sofastack/sofa-serverless/issues",
   "spelling": "cSpell:ignore HTMLTEST precheck postbuild -",
   "scripts": {
     "_build": "npm run _hugo-dev",
@@ -31,8 +31,9 @@
     "update:pkg:hugo": "npm install --save-dev --save-exact hugo-extended@latest"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.14",
+    "autoprefixer": "^10.4.16",
     "hugo-extended": "0.117.0",
+    "postcss": "^8.4.30",
     "postcss-cli": "^10.1.0"
   }
 }
