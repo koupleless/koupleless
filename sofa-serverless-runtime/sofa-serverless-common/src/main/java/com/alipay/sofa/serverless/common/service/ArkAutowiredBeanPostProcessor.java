@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.alipay.sofa.serverless.common.service.ServiceProxyFactory.determineMostSuitableBiz;
+
 /**
  * @author: yuanyuan
  * @date: 2023/9/26 11:29 上午
@@ -65,7 +67,7 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
                 name = autowiredFromBase.name();
                 required = autowiredFromBase.required();
             } else if (autowiredFromBiz != null) {
-                biz = ArkClient.getBizManagerService().getBiz(autowiredFromBiz.bizName(), autowiredFromBiz.bizVersion());
+                biz = determineMostSuitableBiz(autowiredFromBiz.bizName(), autowiredFromBiz.bizVersion());
                 name = autowiredFromBiz.name();
                 required = autowiredFromBiz.required();
             } else {

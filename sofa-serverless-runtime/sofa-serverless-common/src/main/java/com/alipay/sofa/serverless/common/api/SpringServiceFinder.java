@@ -26,6 +26,8 @@ import sun.reflect.CallerSensitive;
 import java.util.List;
 import java.util.Map;
 
+import static com.alipay.sofa.serverless.common.service.ServiceProxyFactory.determineMostSuitableBiz;
+
 /**
  * @author: yuanyuan
  * @date: 2023/9/21 9:11 下午
@@ -63,20 +65,11 @@ public class SpringServiceFinder {
         return ServiceProxyFactory.createServiceProxy(biz, serviceType, null);
     }
 
+    @CallerSensitive
     public static <T> Map<String, T> listModuleServices(String moduleName, String moduleVersion,
                                                         Class<T> serviceType) {
         Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
         return ServiceProxyFactory.batchCreateServiceProxy(biz, serviceType, null);
     }
 
-    public static Biz determineMostSuitableBiz(String moduleName, String moduleVersion) {
-        Biz biz;
-        if (StringUtils.isEmpty(moduleVersion)) {
-            List<Biz> bizList = ArkClient.getBizManagerService().getBiz(moduleName);
-            biz = bizList.stream().filter(it -> BizState.ACTIVATED == it.getBizState()).findFirst().get();
-        } else {
-            biz = ArkClient.getBizManagerService().getBiz(moduleName, moduleVersion);
-        }
-        return biz;
-    }
 }
