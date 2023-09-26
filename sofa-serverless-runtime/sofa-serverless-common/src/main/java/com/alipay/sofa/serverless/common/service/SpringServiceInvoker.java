@@ -17,7 +17,6 @@
 package com.alipay.sofa.serverless.common.service;
 
 import com.alipay.sofa.ark.api.ArkClient;
-import com.alipay.sofa.ark.exception.ArkRuntimeException;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizState;
 import com.alipay.sofa.serverless.common.exception.BizRuntimeException;
