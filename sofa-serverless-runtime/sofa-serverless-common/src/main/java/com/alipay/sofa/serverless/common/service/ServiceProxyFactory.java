@@ -17,6 +17,7 @@
 package com.alipay.sofa.serverless.common.service;
 
 import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizState;
 import com.alipay.sofa.serverless.common.BizRuntimeContext;
@@ -30,6 +31,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import sun.reflect.CallerSensitive;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -152,5 +154,16 @@ public class ServiceProxyFactory {
         cacheMap.put(service.getClass().getName(), new ServiceProxyCache(proxy, serviceInvoker));
 
         return proxy;
+    }
+
+    public static Biz determineMostSuitableBiz(String moduleName, String moduleVersion) {
+        Biz biz;
+        if (StringUtils.isEmpty(moduleVersion)) {
+            List<Biz> bizList = ArkClient.getBizManagerService().getBiz(moduleName);
+            biz = bizList.stream().filter(it -> BizState.ACTIVATED == it.getBizState()).findFirst().get();
+        } else {
+            biz = ArkClient.getBizManagerService().getBiz(moduleName, moduleVersion);
+        }
+        return biz;
     }
 }
