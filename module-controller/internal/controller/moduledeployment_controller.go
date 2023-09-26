@@ -307,21 +307,11 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 		batchCount = moduleDeployment.Spec.OperationStrategy.BatchCount
 		curBatch   = moduleDeployment.Status.ReleaseStatus.CurrentBatch
 
-		curReplicas = newRS.Status.Replicas
-		expReplicas = moduleDeployment.Spec.Replicas
+		curReplicas   = newRS.Status.Replicas
+		expReplicas   = moduleDeployment.Spec.Replicas
+		deltaReplicas = expReplicas - newRS.Spec.Replicas
 	)
-
-	if batchCount <= 0 {
-		batchCount = 1
-	}
-
-	// wait moduleReplicaset ready
-	if replicas := (curBatch - 1) * (moduleDeployment.Spec.Replicas / batchCount); replicas > curReplicas {
-		log.Log.Info(fmt.Sprintf("newRs is not ready, expect replicas %v, but got %v", replicas, curReplicas))
-		return true, nil
-	}
-
-	if curReplicas == expReplicas {
+	if deltaReplicas == 0 {
 		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted
 		moduleDeployment.Status.ReleaseStatus.LastTransitionTime = metav1.Now()
 		moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, moduledeploymentv1alpha1.ModuleDeploymentCondition{
@@ -333,9 +323,28 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 		return false, r.Status().Update(ctx, moduleDeployment)
 	}
 
-	replicas := curBatch * (moduleDeployment.Spec.Replicas / batchCount)
-	if curBatch == batchCount { // is the last batch
+	if expReplicas < batchCount {
+		batchCount = expReplicas
+	}
+
+	if batchCount <= 0 {
+		batchCount = 1
+	}
+
+	// wait moduleReplicaset ready
+	if newRS.Spec.Replicas != curReplicas {
+		log.Log.Info(fmt.Sprintf("newRs is not ready, expect replicas %v, but got %v", newRS.Spec.Replicas, curReplicas))
+		return true, nil
+	}
+
+	replicas := int32(0)
+	// use beta strategy
+	if batchCount != 1 && curBatch == 1 && moduleDeployment.Spec.OperationStrategy.UseBeta {
+		replicas = 1
+	} else if curBatch == batchCount { // if it's the last batch
 		replicas = expReplicas
+	} else {
+		replicas = newRS.Spec.Replicas + (curBatch)*int32(math.Floor(float64(deltaReplicas)/float64(batchCount)+0.5))
 	}
 
 	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS)
