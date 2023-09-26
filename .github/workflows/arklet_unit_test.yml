@@ -1,28 +1,28 @@
-name: Arklet Unit Test
-run-name: ${{ github.actor }} pushed arklet code
+name: SOFAServerless Runtime Unit Test
+run-name: ${{ github.actor }} pushed code
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'arklet/**'
+      - 'sofa-serverless-runtime/**'
       
   pull_request:
     branches:
       - master
     paths:
-      - 'arklet/**'
+      - 'sofa-serverless-runtime/**'
       
   # enable manually running the workflow
   workflow_dispatch:
 
 env:
-  WORK_DIR: arklet
+  WORK_DIR: sofa-serverless-runtime
 
 defaults:
   run:
-    working-directory: arklet
+    working-directory: sofa-serverless-runtime
 
 jobs:
   unit-test:
