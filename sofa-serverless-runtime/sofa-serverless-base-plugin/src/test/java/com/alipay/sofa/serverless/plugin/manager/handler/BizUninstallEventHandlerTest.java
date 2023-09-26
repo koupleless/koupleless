@@ -16,9 +16,10 @@
  */
 package com.alipay.sofa.serverless.plugin.manager.handler;
 
-import com.alipay.sofa.ark.spi.event.biz.BeforeBizStartupEvent;
+import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.spi.event.biz.BeforeBizStopEvent;
 import com.alipay.sofa.ark.spi.model.Biz;
+import com.alipay.sofa.ark.spi.service.biz.BizManagerService;
 import com.alipay.sofa.serverless.common.BizRuntimeContext;
 import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
 import com.alipay.sofa.serverless.plugin.BaseRuntimeAutoConfiguration;
@@ -41,6 +42,9 @@ public class BizUninstallEventHandlerTest {
     @Mock
     private Biz                            biz;
 
+    @Mock
+    private BizManagerService bizManagerService;
+
     private ConfigurableApplicationContext ctx;
 
     private SpringApplication              springApplication;
@@ -50,11 +54,12 @@ public class BizUninstallEventHandlerTest {
         Properties properties = new Properties();
         properties.setProperty("spring.application.name", bizName);
 
+        ArkClient.setBizManagerService(bizManagerService);
+
         springApplication = new SpringApplication(BaseRuntimeAutoConfiguration.class);
         springApplication.setDefaultProperties(properties);
 
         springApplication.setWebApplicationType(WebApplicationType.NONE);
-        //        ctx = springApplication.run();
     }
 
     @Test
@@ -62,8 +67,7 @@ public class BizUninstallEventHandlerTest {
         Mockito.when(biz.getBizName()).thenReturn(bizName);
         Mockito.when(biz.getBizClassLoader()).thenReturn(this.getClass().getClassLoader());
 
-        BeforeBizStartupEventHandler beforeBizStartupEventHandler = new BeforeBizStartupEventHandler();
-        beforeBizStartupEventHandler.handleEvent(new BeforeBizStartupEvent(biz));
+        Mockito.when(bizManagerService.getBizByClassLoader(this.getClass().getClassLoader())).thenReturn(biz);
 
         ctx = springApplication.run();
 
@@ -74,4 +78,5 @@ public class BizUninstallEventHandlerTest {
         bizUninstallEventHandler.handleEvent(new BeforeBizStopEvent(biz));
         Assert.assertFalse(ctx.isActive());
     }
+
 }
