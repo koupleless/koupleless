@@ -45,13 +45,11 @@ import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringConte
  */
 public class ServiceProxyFactory {
 
-    @CallerSensitive
     public static <T> T createServiceProxy(Biz biz, String name, ClassLoader clientClassLoader) {
         T service = getService(biz, name);
         return (T) doCreateServiceProxy(biz, service, clientClassLoader);
     }
 
-    @CallerSensitive
     public static <T> T createServiceProxy(Biz biz, Class<T> serviceType,
                                            ClassLoader clientClassLoader) {
         Class<?> serviceClass;
@@ -65,7 +63,6 @@ public class ServiceProxyFactory {
         return (T) doCreateServiceProxy(biz, service, clientClassLoader);
     }
 
-    @CallerSensitive
     public static <T> Map<String, T> batchCreateServiceProxy(Biz biz, Class<T> serviceType,
                                                              ClassLoader clientClassLoader) {
         Class<?> serviceClass;
@@ -84,19 +81,16 @@ public class ServiceProxyFactory {
         return proxyMap;
     }
 
-    @CallerSensitive
     private static <T> T getService(Biz biz, String name) {
         BizRuntimeContext bizRuntimeContext = checkBizStateAndGetBizRuntimeContext(biz);
         return (T) bizRuntimeContext.getRootApplicationContext().getBean(name);
     }
 
-    @CallerSensitive
     private static <T> T getService(Biz biz, Class<T> serviceType) {
         BizRuntimeContext bizRuntimeContext = checkBizStateAndGetBizRuntimeContext(biz);
         return bizRuntimeContext.getRootApplicationContext().getBean(serviceType);
     }
 
-    @CallerSensitive
     private static <T> Map<String, T> listService(Biz biz, Class<T> serviceType) {
         BizRuntimeContext bizRuntimeContext = checkBizStateAndGetBizRuntimeContext(biz);
         ApplicationContext rootApplicationContext = bizRuntimeContext.getRootApplicationContext();
@@ -108,7 +102,6 @@ public class ServiceProxyFactory {
         return new HashMap<>();
     }
 
-    @CallerSensitive
     private static BizRuntimeContext checkBizStateAndGetBizRuntimeContext(Biz biz) {
         if (biz == null) {
             throw new BizRuntimeException(E100003, "biz is null");
@@ -126,7 +119,6 @@ public class ServiceProxyFactory {
         return bizRuntimeContext;
     }
 
-    @CallerSensitive
     private static Object doCreateServiceProxy(Biz biz, Object service, ClassLoader clientClassLoader) {
         if (clientClassLoader == null) {
             Class<?> callerClass = ReflectionUtils.getCallerClass(5);
