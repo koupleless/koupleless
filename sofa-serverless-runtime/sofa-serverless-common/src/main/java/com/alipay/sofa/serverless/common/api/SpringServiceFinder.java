@@ -48,8 +48,7 @@ public class SpringServiceFinder {
 
     public static <T> Map<String, T> listBaseServices(Class<T> serviceType) {
         Biz masterBiz = ArkClient.getMasterBiz();
-        return ServiceProxyFactory.batchCreateServiceProxy(masterBiz, serviceType,
-            null);
+        return ServiceProxyFactory.batchCreateServiceProxy(masterBiz, serviceType, null);
     }
 
     @CallerSensitive

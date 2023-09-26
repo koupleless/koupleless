@@ -60,6 +60,10 @@ public class BizRuntimeContext {
         this.rootApplicationContext = rootApplicationContext;
     }
 
+    public BizRuntimeContext(Biz biz) {
+        this(biz, null);
+    }
+
     public BizRuntimeContext(Biz biz, ApplicationContext applicationContext) {
         this.bizName = biz.getBizName();
         this.appClassLoader = biz.getBizClassLoader();
