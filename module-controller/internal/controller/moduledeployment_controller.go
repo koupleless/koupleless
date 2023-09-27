@@ -130,7 +130,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			return ctrl.Result{}, err
 		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused:
-		if !moduleDeployment.Spec.Pause {
+		if !moduleDeployment.Spec.Pause && time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 {
 			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
 			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 				return ctrl.Result{}, err
@@ -363,8 +363,9 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 		return ctrl.Result{}, err
 	}
 
+	now := metav1.Now()
 	moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
-	moduleDeployment.Status.ReleaseStatus.LastTransitionTime = metav1.Now()
+	moduleDeployment.Status.ReleaseStatus.LastTransitionTime = now
 	moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
 
 	var grayTime int
@@ -375,6 +376,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(moduleDeployment *mo
 			if curBatch == batchCount {
 				moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
 			} else {
+				moduleDeployment.Status.ReleaseStatus.NextReconcileTime = metav1.NewTime(now.Add(time.Duration(grayTime) * time.Second))
 				moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused
 			}
 		}
