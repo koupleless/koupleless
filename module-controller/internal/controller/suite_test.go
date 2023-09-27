@@ -18,7 +18,6 @@ package controller
 
 import (
 	"fmt"
-	"github.com/sofastack/sofa-serverless/internal/arklet"
 	"os"
 	"path/filepath"
 	"testing"
