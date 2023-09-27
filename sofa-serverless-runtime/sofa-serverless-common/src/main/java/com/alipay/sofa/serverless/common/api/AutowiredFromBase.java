@@ -14,29 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common.exception;
+package com.alipay.sofa.serverless.common.api;
 
-public class ErrorCodes {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    public static class SpringContextManager {
-        /**
-         * 模块 SpringContext 关闭失败
-         */
-        public static final String E100001 = "100001";
+@Target({ ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface AutowiredFromBase {
 
-        /**
-         * 模块 SpringContext 找不到
-         */
-        public static final String E100002 = "100002";
+    boolean required() default true;
 
-        /**
-         * 模块为空
-         */
-        public static final String E100003 = "100003";
+    String name() default "";
 
-        /**
-         * 模块状态非法
-         */
-        public static final String E100004 = "100004";
-    }
 }

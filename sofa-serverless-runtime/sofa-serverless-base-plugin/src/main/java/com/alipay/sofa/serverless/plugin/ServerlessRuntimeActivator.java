@@ -19,6 +19,7 @@ package com.alipay.sofa.serverless.plugin;
 import com.alipay.sofa.ark.spi.model.PluginContext;
 import com.alipay.sofa.ark.spi.service.PluginActivator;
 import com.alipay.sofa.ark.spi.service.event.EventAdminService;
+import com.alipay.sofa.serverless.plugin.manager.handler.BeforeBizStartupEventHandler;
 import com.alipay.sofa.serverless.plugin.manager.handler.BizUninstallEventHandler;
 
 /**
@@ -35,6 +36,7 @@ public class ServerlessRuntimeActivator implements PluginActivator {
         EventAdminService eventAdminService = context.referenceService(EventAdminService.class)
             .getService();
         eventAdminService.register(new BizUninstallEventHandler());
+        eventAdminService.register(new BeforeBizStartupEventHandler());
     }
 
     @Override

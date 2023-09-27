@@ -67,12 +67,11 @@ public class BizUninstallEventHandlerTest {
         Mockito.when(biz.getBizName()).thenReturn(bizName);
         Mockito.when(biz.getBizClassLoader()).thenReturn(this.getClass().getClassLoader());
 
-        Mockito.when(bizManagerService.getBizByClassLoader(this.getClass().getClassLoader()))
-            .thenReturn(biz);
+        BizRuntimeContext bizRuntimeContext = new BizRuntimeContext(biz);
+        BizRuntimeContextRegistry.registerBizRuntimeManager(bizRuntimeContext);
 
         ctx = springApplication.run();
 
-        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
         Assert.assertEquals(bizRuntimeContext.getRootApplicationContext(), ctx);
 
         BizUninstallEventHandler bizUninstallEventHandler = new BizUninstallEventHandler();

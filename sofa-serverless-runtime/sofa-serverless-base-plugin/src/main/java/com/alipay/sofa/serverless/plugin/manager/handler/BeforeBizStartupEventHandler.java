@@ -16,30 +16,24 @@
  */
 package com.alipay.sofa.serverless.plugin.manager.handler;
 
-import com.alipay.sofa.ark.spi.event.biz.BeforeBizStopEvent;
+import com.alipay.sofa.ark.spi.event.biz.BeforeBizStartupEvent;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.service.PriorityOrdered;
 import com.alipay.sofa.ark.spi.service.event.EventHandler;
 import com.alipay.sofa.serverless.common.BizRuntimeContext;
 import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
-import com.alipay.sofa.serverless.common.service.ServiceProxyCacheCleaner;
 
 /**
- * @author qilong.zql
- * @since 2.5.0
+ * @author: yuanyuan
+ * @date: 2023/9/26 5:47 下午
  */
-public class BizUninstallEventHandler implements EventHandler<BeforeBizStopEvent> {
+public class BeforeBizStartupEventHandler implements EventHandler<BeforeBizStartupEvent> {
 
     @Override
-    public void handleEvent(BeforeBizStopEvent event) {
-        doUninstallBiz(event.getSource());
-    }
-
-    private void doUninstallBiz(Biz biz) {
-        ServiceProxyCacheCleaner.clean(biz.getBizClassLoader());
-        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
-        BizRuntimeContextRegistry.unRegisterBizRuntimeManager(bizRuntimeContext);
-        bizRuntimeContext.shutdownContext();
+    public void handleEvent(BeforeBizStartupEvent event) {
+        Biz biz = event.getSource();
+        BizRuntimeContext bizRuntimeContext = new BizRuntimeContext(biz);
+        BizRuntimeContextRegistry.registerBizRuntimeManager(bizRuntimeContext);
     }
 
     @Override

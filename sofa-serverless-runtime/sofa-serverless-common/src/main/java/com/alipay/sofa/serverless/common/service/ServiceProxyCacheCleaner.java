@@ -14,29 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common.exception;
+package com.alipay.sofa.serverless.common.service;
 
-public class ErrorCodes {
+import com.alipay.sofa.serverless.common.BizRuntimeContext;
+import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
 
-    public static class SpringContextManager {
-        /**
-         * 模块 SpringContext 关闭失败
-         */
-        public static final String E100001 = "100001";
+import java.util.Set;
 
-        /**
-         * 模块 SpringContext 找不到
-         */
-        public static final String E100002 = "100002";
+/**
+ * @author: yuanyuan
+ * @date: 2023/9/25 11:52 下午
+ */
+public class ServiceProxyCacheCleaner {
 
-        /**
-         * 模块为空
-         */
-        public static final String E100003 = "100003";
-
-        /**
-         * 模块状态非法
-         */
-        public static final String E100004 = "100004";
+    public static void clean(ClassLoader classLoader) {
+        Set<BizRuntimeContext> runtimeSet = BizRuntimeContextRegistry.getRuntimeSet();
+        for (BizRuntimeContext bizRuntimeContext : runtimeSet) {
+            bizRuntimeContext.removeServiceProxyCaches(classLoader);
+        }
     }
 }

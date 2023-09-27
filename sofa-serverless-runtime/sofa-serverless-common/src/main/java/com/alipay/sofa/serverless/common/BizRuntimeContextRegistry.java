@@ -28,7 +28,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class BizRuntimeContextRegistry {
     private static ConcurrentHashMap<ClassLoader, BizRuntimeContext> contextMap = new ConcurrentHashMap<>();
 
-    public static void registerSpringContext(BizRuntimeContext bizRuntimeContext) {
+    public static void registerBizRuntimeManager(BizRuntimeContext bizRuntimeContext) {
         contextMap.put(bizRuntimeContext.getAppClassLoader(), bizRuntimeContext);
     }
 

@@ -14,29 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common.exception;
+package com.alipay.sofa.serverless.common.service;
 
-public class ErrorCodes {
+/**
+ * @author: yuanyuan
+ * @date: 2023/9/25 11:37 下午
+ */
+public class ServiceProxyCache {
 
-    public static class SpringContextManager {
-        /**
-         * 模块 SpringContext 关闭失败
-         */
-        public static final String E100001 = "100001";
+    private Object               proxy;
 
-        /**
-         * 模块 SpringContext 找不到
-         */
-        public static final String E100002 = "100002";
+    private SpringServiceInvoker invoker;
 
-        /**
-         * 模块为空
-         */
-        public static final String E100003 = "100003";
+    public ServiceProxyCache(Object proxy, SpringServiceInvoker invoker) {
+        this.proxy = proxy;
+        this.invoker = invoker;
+    }
 
-        /**
-         * 模块状态非法
-         */
-        public static final String E100004 = "100004";
+    public Object getProxy() {
+        return proxy;
+    }
+
+    public void setProxy(Object proxy) {
+        this.proxy = proxy;
+    }
+
+    public SpringServiceInvoker getInvoker() {
+        return invoker;
+    }
+
+    public void setInvoker(SpringServiceInvoker invoker) {
+        this.invoker = invoker;
     }
 }
