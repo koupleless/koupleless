@@ -16,7 +16,6 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.record;
 
-import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import org.apache.commons.lang3.StringUtils;
 
