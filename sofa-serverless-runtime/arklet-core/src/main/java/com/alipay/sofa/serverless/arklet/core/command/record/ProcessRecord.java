@@ -55,19 +55,13 @@ public class ProcessRecord {
 
     private Date                      startTime;
 
-    private long                      startSpace;
-
     private long                      startTimestamp;
 
     private Date                      endTime;
 
-    private long                      endSpace;
-
     private long                      endTimestamp;
 
     private long                      elapsedTime;
-
-    private long                      elapsedSpace;
 
     public enum Status {
 
@@ -95,7 +89,6 @@ public class ProcessRecord {
     }
 
     public void markFinishTime() {
-        setElapsedSpace(getEndSpace() - getStartSpace());
         Date date = new Date();
         setEndTime(date);
         setEndTimestamp(date.getTime());
