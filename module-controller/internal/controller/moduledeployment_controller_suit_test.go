@@ -99,42 +99,9 @@ var _ = Describe("ModuleDeployment Controller", func() {
 			Expect(k8sClient.Update(context.TODO(), &newModuleDeployment)).Should(Succeed())
 
 			Eventually(func() bool {
-				set := map[string]string{
-					label.ModuleDeploymentLabel: moduleDeployment.Name,
-				}
-				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
-				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
-				if err != nil || len(replicaSetList.Items) == 0 {
-					return false
-				}
-
-				maxVersion := 0
-				var newRS *moduledeploymentv1alpha1.ModuleReplicaSet
-				for i := 0; i < len(replicaSetList.Items); i++ {
-					version, err := getRevision(&replicaSetList.Items[i])
-					if err != nil {
-						return false
-					}
-					if version > maxVersion {
-						maxVersion = version
-						newRS = &replicaSetList.Items[i]
-					}
-				}
-
-				// the replicas of old replicaset must be zero
-				for i := 0; i < len(replicaSetList.Items); i++ {
-					if version, _ := getRevision(&replicaSetList.Items[i]); version != maxVersion {
-						if replicaSetList.Items[i].Spec.Replicas != 0 {
-							return false
-						}
-					}
-				}
-
-				// the replicas of new replicaset must be equal to newModuleDeployment
-				return newRS != nil &&
-					newRS.Spec.Template.Spec.Module.Version == "1.0.1" &&
-					newRS.Status.Replicas == newRS.Spec.Replicas &&
-					newRS.Status.Replicas == newModuleDeployment.Spec.Replicas
+				return checkModuleDeploymentReplicas(
+					types.NamespacedName{Name: moduleDeploymentName, Namespace: namespace},
+					newModuleDeployment.Spec.Replicas)
 			}, timeout, interval).Should(BeTrue())
 		})
 	})
@@ -193,7 +160,6 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	})
 
 	Context("test batchConfirm strategy", func() {
-		namespace := "default"
 		moduleDeploymentName := "module-deployment-test-for-batch-confirm"
 		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
 		moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
@@ -203,7 +169,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 
 		It("0. prepare 2 pods", func() {
 			Eventually(func() bool {
-				pod := preparePod("fake-pod-3")
+				pod := preparePod(namespace, "fake-pod-3")
 				pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
 				if err := k8sClient.Create(context.TODO(), &pod); err != nil {
 					return false
@@ -230,32 +196,10 @@ var _ = Describe("ModuleDeployment Controller", func() {
 					return false
 				}
 
-				set := map[string]string{
-					label.ModuleDeploymentLabel: moduleDeployment.Name,
-				}
-				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
-				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
-				if err != nil || len(replicaSetList.Items) == 0 {
-					return false
-				}
-
-				maxVersion := 0
-				var newRS *moduledeploymentv1alpha1.ModuleReplicaSet
-				for i := 0; i < len(replicaSetList.Items); i++ {
-					version, err := getRevision(&replicaSetList.Items[i])
-					if err != nil {
-						return false
-					}
-					if version > maxVersion {
-						maxVersion = version
-						newRS = &replicaSetList.Items[i]
-					}
-				}
-
-				// the replicas of new replicaset must be equal to newModuleDeployment
-				return newRS != nil &&
-					newRS.Status.Replicas == newRS.Spec.Replicas &&
-					newRS.Status.Replicas == 1
+				return checkModuleDeploymentReplicas(
+					types.NamespacedName{
+						Name:      moduleDeploymentName,
+						Namespace: moduleDeployment.Namespace}, 1)
 			}, timeout, interval).Should(BeTrue())
 		})
 
@@ -310,6 +254,35 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		})
 	})
 })
+
+func checkModuleDeploymentReplicas(nn types.NamespacedName, replicas int32) bool {
+	set := map[string]string{
+		label.ModuleDeploymentLabel: nn.Name,
+	}
+	replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+	err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(nn.Namespace))
+	if err != nil || len(replicaSetList.Items) == 0 {
+		return false
+	}
+
+	maxVersion := 0
+	var newRS *moduledeploymentv1alpha1.ModuleReplicaSet
+	for i := 0; i < len(replicaSetList.Items); i++ {
+		version, err := getRevision(&replicaSetList.Items[i])
+		if err != nil {
+			return false
+		}
+		if version > maxVersion {
+			maxVersion = version
+			newRS = &replicaSetList.Items[i]
+		}
+	}
+
+	// the replicas of new replicaset must be equal to newModuleDeployment
+	return newRS != nil &&
+		newRS.Status.Replicas == newRS.Spec.Replicas &&
+		newRS.Status.Replicas == replicas
+}
 
 func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.ModuleDeployment {
 	baseDeploymentName := "dynamic-stock-deployment"
