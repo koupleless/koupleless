@@ -16,8 +16,6 @@
  */
 package com.alipay.sofa.serverless.common.util;
 
-import sun.reflect.CallerSensitive;
-
 import java.lang.reflect.Method;
 
 /**
@@ -38,7 +36,6 @@ public class ReflectionUtils {
         }
     }
 
-    @CallerSensitive
     public static Class<?> getCallerClass(int realFramesToSkip) {
         if (method == null)
             throw new IllegalStateException("sun.reflect.Reflection initialization failure.");
