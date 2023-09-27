@@ -70,7 +70,7 @@ public class SpringServiceFinderTest {
         Mockito.when(masterBiz.getBizName()).thenReturn("master");
         Mockito.when(masterBiz.getBizVersion()).thenReturn("1.0.0");
         BizRuntimeContext masterBizRuntime = new BizRuntimeContext(masterBiz, masterCtx);
-        BizRuntimeContextRegistry.registerSpringContext(masterBizRuntime);
+        BizRuntimeContextRegistry.registerBizRuntimeManager(masterBizRuntime);
 
         Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
         Mockito.when(biz1.getBizState()).thenReturn(BizState.ACTIVATED);
@@ -78,7 +78,7 @@ public class SpringServiceFinderTest {
         Mockito.when(biz1.getBizName()).thenReturn("biz1");
         Mockito.when(biz1.getBizVersion()).thenReturn("version1");
         BizRuntimeContext bizRuntime = new BizRuntimeContext(biz1, bizCtx);
-        BizRuntimeContextRegistry.registerSpringContext(bizRuntime);
+        BizRuntimeContextRegistry.registerBizRuntimeManager(bizRuntime);
 
         BaseBean baseBean = SpringServiceFinder.getBaseService("baseBean");
         Assert.assertNotNull(baseBean);
