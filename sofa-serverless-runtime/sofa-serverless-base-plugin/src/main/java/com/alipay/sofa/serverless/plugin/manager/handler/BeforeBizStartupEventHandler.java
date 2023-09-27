@@ -33,7 +33,7 @@ public class BeforeBizStartupEventHandler implements EventHandler<BeforeBizStart
     public void handleEvent(BeforeBizStartupEvent event) {
         Biz biz = event.getSource();
         BizRuntimeContext bizRuntimeContext = new BizRuntimeContext(biz);
-        BizRuntimeContextRegistry.registerSpringContext(bizRuntimeContext);
+        BizRuntimeContextRegistry.registerBizRuntimeManager(bizRuntimeContext);
     }
 
     @Override
