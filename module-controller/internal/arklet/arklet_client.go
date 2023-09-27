@@ -61,19 +61,19 @@ func init() {
 
 	testEnv, _ := env.GetBool("test", false)
 	if testEnv {
-		svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			data := ArkletResponse{
-				Code: Success,
-			}
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(data)
-		}))
-		MockClient(svr.URL)
+		MockClient()
 	}
 }
 
-func MockClient(customMockUrl string) {
-	mockUrl = customMockUrl
+func MockClient() {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		data := ArkletResponse{
+			Code: Success,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(data)
+	}))
+	mockUrl = svr.URL
 }
 
 func Client() *ArkletClient {

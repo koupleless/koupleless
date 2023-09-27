@@ -20,6 +20,7 @@ import (
 	"context"
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/utils"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
@@ -59,9 +60,9 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 			log.Log.Info("pod is deleted", "podName", pod.Name)
 			return reconcile.Result{}, nil
 		}
-		log.Log.Error(err, "Failed to get pod", "podName", pod.Name)
-		return ctrl.Result{}, nil
+		return ctrl.Result{}, utils.Error(err, "Failed to get pod", "podName", pod.Name)
 	}
+
 	if pod.DeletionTimestamp != nil {
 		// pod is deleting
 		log.Log.Info("start delete pod", "podName", pod.Name)
@@ -71,12 +72,32 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		})})
 		for _, module := range moduleList.Items {
 			log.Log.Info("start delete module", "moduleName", module.Name, "podName", pod.Name)
-			err := r.Client.Delete(ctx, &module)
-			if err != nil && errors.IsNotFound(err) {
-				log.Log.Error(err, "delete module failed when delete pod", "moduleName", module.Name, "podName", pod.Name)
-				return ctrl.Result{}, err
+			if pod.Labels[label.DeletePodLabel] == "true" {
+				if module.Labels[label.DeleteModuleLabel] != "true" {
+					module.Labels[label.DeleteModuleLabel] = "true"
+					err = r.Client.Update(ctx, &module)
+					if err != nil {
+						log.Log.Error(err, "delete module failed when update delete module label", "moduleName", module.Name, "podName", pod.Name)
+						return ctrl.Result{}, err
+					}
+				}
+			} else {
+				err := r.Client.Delete(ctx, &module)
+				if err != nil && errors.IsNotFound(err) {
+					log.Log.Error(err, "delete module failed when delete pod", "moduleName", module.Name, "podName", pod.Name)
+					return ctrl.Result{}, nil
+				}
 			}
 		}
+	} else if pod.Labels[label.DeletePodLabel] == "true" {
+		err := r.Client.Delete(ctx, pod)
+		if err != nil {
+			if errors.IsNotFound(err) {
+				log.Log.Info("pod is deleted", "podName", pod.Name)
+				return reconcile.Result{}, nil
+			}
+		}
+		return ctrl.Result{}, utils.Error(err, "Failed to get pod", "podName", pod.Name)
 	}
 
 	return ctrl.Result{}, nil

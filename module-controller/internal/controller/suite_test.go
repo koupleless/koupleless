@@ -18,11 +18,16 @@ package controller
 
 import (
 	"fmt"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"path/filepath"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"testing"
+
+	"github.com/sofastack/sofa-serverless/internal/arklet"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
+
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -119,6 +124,7 @@ var _ = BeforeSuite(func() {
 		fmt.Printf("Failed to prepare resource: %v", err)
 		os.Exit(1)
 	}
+	arklet.MockClient()
 })
 
 func prepareNamespace(namespaceName string) corev1.Namespace {
@@ -179,7 +185,9 @@ func preparePod(namespaceName string, podName string) corev1.Pod {
 			Name:      podName,
 			Namespace: namespaceName,
 			Labels: map[string]string{
-				"app": "dynamic-stock",
+				"app":                     "dynamic-stock",
+				label.ModuleInstanceCount: "0",
+				label.MaxModuleCount:      "3",
 			},
 		},
 		Spec: corev1.PodSpec{

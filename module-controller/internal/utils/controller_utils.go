@@ -2,10 +2,16 @@ package utils
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+	"time"
+
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-	"time"
+
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
 )
 
 func AddFinalizer(meta *metav1.ObjectMeta, finalizer string) bool {
@@ -69,7 +75,27 @@ func GetNextReconcileTime(currentTime time.Time) time.Duration {
 	return nextDuration
 }
 
+func GetModuleCountFromPod(pod *corev1.Pod) (count int) {
+	for k, _ := range pod.Labels {
+		if strings.HasPrefix(k, label.ModuleNameLabel) {
+			count += 1
+		}
+	}
+	return count
+}
+
 func Error(err error, msg string, keysAndValues ...interface{}) error {
-	log.Log.Error(err, msg, keysAndValues)
+	log.Log.Error(err, msg, keysAndValues...)
 	return err
+}
+
+func GetModuleInstanceCount(pod corev1.Pod) int {
+	if pod.Labels[label.ModuleInstanceCount] == "" {
+		return 0
+	}
+	count, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
+	if err != nil {
+		return 0
+	}
+	return count
 }
