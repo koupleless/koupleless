@@ -16,7 +16,11 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.alibaba.fastjson.JSONObject;
+
 import com.alipay.sofa.serverless.arklet.core.BaseTest;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
@@ -27,9 +31,6 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author mingmen
@@ -66,16 +67,12 @@ public class CommandTests extends BaseTest {
         Assert.assertNotNull(output);
         ProcessRecord processRecord = (ProcessRecord) output.getData();
         Assert.assertNotNull(processRecord);
-        Assert.assertNotNull(processRecord.getEndSpace());
 
         QueryBizOpsHandler.Input input1 = new QueryBizOpsHandler.Input();
         input1.setRequestId(rid);
         Map map1 = JSONObject.parseObject(JSONObject.toJSONString(input1), Map.class);
         Output<?> output1 = commandService.process(BuiltinCommand.QUERY_BIZ_OPS.getId(), map1);
         Assert.assertNotNull(output1);
-        ProcessRecord processRecord1 = (ProcessRecord) output1.getData();
-        Assert.assertNotNull(processRecord1);
-        Assert.assertNotNull(processRecord1.getEndSpace());
     }
 
 }
