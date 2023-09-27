@@ -41,7 +41,6 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizOps;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
 import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
-import com.alipay.sofa.serverless.arklet.core.command.record.MetaSpaceRecord;
 import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecord;
 import com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecordHolder;
 import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletInitException;
@@ -111,7 +110,6 @@ public class CommandServiceImpl implements CommandService {
             ArkBizMeta arkBizMeta = (ArkBizMeta) input;
             AssertUtils.assertNotNull(arkBizMeta,
                     "when execute bizOpsHandler, arkBizMeta should not be null");
-            final MetaSpaceRecord metaSpaceRecord = new MetaSpaceRecord();
             if (arkBizMeta.isAsync()) {
                 String requestId = arkBizMeta.getRequestId();
                 if (ProcessRecordHolder.getProcessRecord(requestId) != null) {
@@ -129,7 +127,6 @@ public class CommandServiceImpl implements CommandService {
                             processRecord.fail("command conflict, exist unfinished command for this biz");
                         } else {
                             processRecord.start();
-                            processRecord.setStartSpace(metaSpaceRecord.getMetaSpaceMXBean().getUsage().getUsed());
                             Output output = handler.handle(input);
                             if (output.success()) {
                                 processRecord.success();
@@ -141,7 +138,6 @@ public class CommandServiceImpl implements CommandService {
                         processRecord.fail(throwable.getMessage(), throwable);
                         LOGGER.error("Error happened when handling command, requestId=" + requestId, throwable);
                     } finally {
-                        processRecord.setEndSpace(metaSpaceRecord.getMetaSpaceMXBean().getUsage().getUsed());
                         processRecord.markFinishTime();
                         BizOpsCommandCoordinator
                                 .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());
@@ -164,10 +160,7 @@ public class CommandServiceImpl implements CommandService {
                                             arkBizMeta.getBizName(), arkBizMeta.getBizVersion()).getId()));
                 }
                 try {
-                    final long startSpace = metaSpaceRecord.getMetaSpaceMXBean().getUsage().getUsed();
-                    Output<?> output = handler.handle(input);
-                    output.setElapsedSpace(metaSpaceRecord.getMetaSpaceMXBean().getUsage().getUsed() - startSpace);
-                    return output;
+                    return handler.handle(input);
                 } finally {
                     BizOpsCommandCoordinator
                             .unlock(arkBizMeta.getBizName(), arkBizMeta.getBizVersion());

@@ -26,7 +26,6 @@ public class Output<T> {
 
     private ResponseCode code;
     private String       message;
-    private long         elapsedSpace;
     private T            data;
 
     private Output() {
@@ -84,13 +83,5 @@ public class Output<T> {
 
     public void setData(T data) {
         this.data = data;
-    }
-
-    public void setElapsedSpace(long elapsedSpace) {
-        this.elapsedSpace = elapsedSpace;
-    }
-
-    public long getElapsedSpace() {
-        return this.elapsedSpace;
     }
 }
