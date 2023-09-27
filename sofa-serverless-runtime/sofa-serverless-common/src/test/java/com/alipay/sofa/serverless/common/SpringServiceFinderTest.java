@@ -25,6 +25,7 @@ import com.alipay.sofa.serverless.common.environment.ConditionalOnMasterBiz;
 import com.alipay.sofa.serverless.common.environment.ConditionalOnNotMasterBiz;
 import com.alipay.sofa.serverless.common.exception.BizRuntimeException;
 import com.alipay.sofa.serverless.common.exception.ErrorCodes;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,10 +34,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.Properties;
 
@@ -58,29 +62,60 @@ public class SpringServiceFinderTest {
 
     @Test
     public void testSpringServiceFinder() {
-        ArkClient.setMasterBiz(masterBiz);
-        Mockito.when(masterBiz.getBizState()).thenReturn(BizState.ACTIVATED);
+        ConfigurableApplicationContext masterCtx = buildApplicationContext("masterBiz");
+        masterCtx.getBeanFactory().registerSingleton("baseBean", new BaseBean());
+
+        ConfigurableApplicationContext bizCtx = buildApplicationContext("biz1");
+        bizCtx.getBeanFactory().registerSingleton("moduleBean", new ModuleBean());
 
         ArkClient.setBizManagerService(bizManagerService);
-        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
 
+        ArkClient.setMasterBiz(masterBiz);
+        Mockito.when(bizManagerService.getBiz("master", "1.0.0")).thenReturn(masterBiz);
+        Mockito.when(masterBiz.getBizState()).thenReturn(BizState.ACTIVATED);
+        Mockito.when(masterBiz.getBizClassLoader()).thenReturn(ClassLoader.getSystemClassLoader());
+        Mockito.when(masterBiz.getBizName()).thenReturn("master");
+        Mockito.when(masterBiz.getBizVersion()).thenReturn("1.0.0");
+        BizRuntimeContext masterBizRuntime = new BizRuntimeContext(masterBiz, masterCtx);
+        BizRuntimeContextRegistry.registerSpringContext(masterBizRuntime);
+
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        Mockito.when(biz1.getBizState()).thenReturn(BizState.ACTIVATED);
+        Mockito.when(biz1.getBizClassLoader()).thenReturn(new URLClassLoader(new URL[0]));
+        Mockito.when(biz1.getBizName()).thenReturn("biz1");
+        Mockito.when(biz1.getBizVersion()).thenReturn("version1");
+        BizRuntimeContext bizRuntime = new BizRuntimeContext(biz1, bizCtx);
+        BizRuntimeContextRegistry.registerSpringContext(bizRuntime);
+
+        BaseBean baseBean = SpringServiceFinder.getBaseService("baseBean");
+        Assert.assertNotNull(baseBean);
+        BaseBean baseBean1 = SpringServiceFinder.getBaseService(BaseBean.class);
+        Assert.assertNotNull(baseBean1);
+        Map<String, BaseBean> baseBeanMap = SpringServiceFinder.listBaseServices(BaseBean.class);
+        Assert.assertNotNull(baseBeanMap);
+        Assert.assertEquals(1, baseBeanMap.size());
+        ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
+            "moduleBean");
+        Assert.assertNotNull(moduleBean);
+        ModuleBean moduleBean1 = SpringServiceFinder.getModuleService("biz1", "version1",
+            ModuleBean.class);
+        Assert.assertNotNull(moduleBean1);
+        Map<String, ModuleBean> moduleBeanMap = SpringServiceFinder.listModuleServices("biz1",
+            "version1", ModuleBean.class);
+        Assert.assertNotNull(moduleBeanMap);
+        Assert.assertEquals(1, moduleBeanMap.size());
+
+        Assert.assertEquals("base", baseBean.test());
+        Assert.assertEquals("module", moduleBean.test());
+    }
+
+    public ConfigurableApplicationContext buildApplicationContext(String appName) {
         Properties properties = new Properties();
-        properties.setProperty("spring.application.name", "biz1");
+        properties.setProperty("spring.application.name", appName);
         SpringApplication springApplication = new SpringApplication(CustomConfiguration.class);
         springApplication.setDefaultProperties(properties);
         springApplication.setWebApplicationType(WebApplicationType.NONE);
-        ConfigurableApplicationContext bizContext = springApplication.run();
-        bizContext.getBeanFactory().registerSingleton("moduleBean", new ModuleBean());
-
-        BaseBean baseBean = SpringServiceFinder.getBaseService("baseBean");
-        BaseBean baseBean1 = SpringServiceFinder.getBaseService(BaseBean.class);
-        Map<String, BaseBean> baseBeanMap = SpringServiceFinder.listBaseServices(BaseBean.class);
-        ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
-            "moduleBean");
-        ModuleBean moduleBean1 = SpringServiceFinder.getModuleService("biz1", "version1",
-            ModuleBean.class);
-        Map<String, ModuleBean> moduleBeanMap = SpringServiceFinder.listModuleServices("biz1",
-            "version1", ModuleBean.class);
+        return springApplication.run();
     }
 
     @Configuration
@@ -89,9 +124,17 @@ public class SpringServiceFinderTest {
     }
 
     public class BaseBean {
+
+        public String test() {
+            return "base";
+        }
     }
 
     public class ModuleBean {
+
+        public String test() {
+            return "module";
+        }
     }
 
 }

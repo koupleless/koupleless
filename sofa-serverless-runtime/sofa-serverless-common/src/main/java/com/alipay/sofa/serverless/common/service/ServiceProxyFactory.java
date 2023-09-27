@@ -124,8 +124,7 @@ public class ServiceProxyFactory {
             clientClassLoader = callerClass.getClassLoader();
         }
 
-        Biz clientBiz = ArkClient.getBizManagerService().getBizByClassLoader(clientClassLoader);
-        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(clientBiz);
+        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContextByClassLoader(clientClassLoader);
         Map<ClassLoader, Map<String, ServiceProxyCache>> serviceProxyCaches =
                 bizRuntimeContext.getServiceProxyCaches();
         Map<String, ServiceProxyCache> cacheMap = serviceProxyCaches.computeIfAbsent(service.getClass().getClassLoader(), o -> new ConcurrentHashMap<>());
