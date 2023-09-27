@@ -24,4 +24,6 @@ const (
 	MaxModuleCount = "serverless.alipay.com/max-module-count"
 
 	NewReplicatedModuleLabel = "serverless.alipay.com/new-replicated-module"
+
+	DeletePodLabel = "serverless.alipay.com/delete-pod"
 )

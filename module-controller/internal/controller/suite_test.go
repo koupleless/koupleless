@@ -22,6 +22,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/sofastack/sofa-serverless/internal/arklet"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 
@@ -122,6 +124,7 @@ var _ = BeforeSuite(func() {
 		fmt.Printf("Failed to prepare resource: %v", err)
 		os.Exit(1)
 	}
+	arklet.MockClient()
 })
 
 func prepareNamespace(namespaceName string) corev1.Namespace {

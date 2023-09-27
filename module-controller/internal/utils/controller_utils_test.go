@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"strconv"
 	"testing"
 	"time"
@@ -89,4 +90,24 @@ func TestGetModuleCountFromPod(t *testing.T) {
 	if count != actual {
 		t.Errorf("the expected count is %v, but got %v", count, actual)
 	}
+}
+
+func TestError(t *testing.T) {
+	err := Error(errors.NewBadRequest("testBadRequestErr"), "testMsg", "testKey", "testValue")
+	assert.True(t, errors.IsBadRequest(err))
+}
+
+func TestGetModuleInstanceCount(t *testing.T) {
+	pod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Labels: map[string]string{},
+		},
+	}
+	assert.Equal(t, 0, GetModuleInstanceCount(*pod))
+
+	pod.Labels[label.ModuleInstanceCount] = "error"
+	assert.Equal(t, 0, GetModuleInstanceCount(*pod))
+
+	pod.Labels[label.ModuleInstanceCount] = "1"
+	assert.Equal(t, 1, GetModuleInstanceCount(*pod))
 }

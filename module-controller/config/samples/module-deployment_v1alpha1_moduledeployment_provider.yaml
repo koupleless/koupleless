@@ -16,12 +16,12 @@ spec:
         name: dynamic-provider
         version: '1.0.0'
         url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar
-  replicas: 1
+  replicas: 2
   operationStrategy:
     needConfirm: true
     useBeta: false
-    batchCount: 3
+    batchCount: 2
   schedulingStrategy:
-    upgradePolicy: uninstall_then_install
-    schedulingPolicy: Scatter
+    upgradePolicy: install_then_uninstall
+    schedulingPolicy: scatter
 

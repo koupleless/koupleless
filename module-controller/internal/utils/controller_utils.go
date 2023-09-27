@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -84,6 +85,17 @@ func GetModuleCountFromPod(pod *corev1.Pod) (count int) {
 }
 
 func Error(err error, msg string, keysAndValues ...interface{}) error {
-	log.Log.Error(err, msg, keysAndValues)
+	log.Log.Error(err, msg, keysAndValues...)
 	return err
+}
+
+func GetModuleInstanceCount(pod corev1.Pod) int {
+	if pod.Labels[label.ModuleInstanceCount] == "" {
+		return 0
+	}
+	count, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
+	if err != nil {
+		return 0
+	}
+	return count
 }

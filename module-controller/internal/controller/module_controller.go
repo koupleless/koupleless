@@ -193,18 +193,16 @@ func (r *ModuleReconciler) doUninstallModuleWhenTerminating(ctx context.Context,
 	}
 
 	if targetPod != nil && targetPod.Name != "" {
-		// clean module label
-		delete(targetPod.Labels, fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name))
-		err = r.Client.Update(ctx, targetPod)
-		if err != nil {
-			utils.Error(err, "Failed remove module label in pod", "moduleName", module.Spec.Module.Name)
-			return err
-		}
-
 		// uninstall module
 		_, err = arklet.Client().UninstallBiz(ip, module.Spec.Module.Name, module.Spec.Module.Version)
 		if err != nil {
 			return utils.Error(err, "Failed post module", "moduleName", module.Spec.Module.Name)
+		}
+		// clean module label
+		delete(targetPod.Labels, fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name))
+		err = r.Client.Update(ctx, targetPod)
+		if err != nil {
+			return utils.Error(err, "Failed remove module label in pod", "moduleName", module.Spec.Module.Name)
 		}
 	} else {
 		log.Log.Info("pod not exist", "moduleName", module.Spec.Module.Name, "module", module.Name)
@@ -255,8 +253,7 @@ func (r *ModuleReconciler) cleanLabelAndFinalizer(ctx context.Context, module *v
 	utils.RemoveFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
 	err := r.Client.Update(ctx, module)
 	if err != nil {
-		log.Log.Info("failed to clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
-		return err
+		return utils.Error(err, "failed to clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 	}
 	log.Log.Info("finish clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 	podName := module.Labels[label.BaseInstanceNameLabel]
@@ -314,6 +311,9 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 	var pod corev1.Pod
 	existSchedulingPod := false
 	for _, podItr := range selectedPods.Items {
+		if podItr.DeletionTimestamp != nil {
+			continue
+		}
 		if podItr.Status.PodIP != "" {
 			// pod with ip to schedule module
 			pod = podItr
@@ -328,16 +328,11 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 		return ctrl.Result{RequeueAfter: requeueAfter}, nil
 	}
 
-	// find a pod to schedule
-	// TODO scheduling strategy
-
 	// lock the pod, update the label
 	pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name)] = module.Spec.Module.Version
 	if _, exist := pod.Labels[label.ModuleInstanceCount]; exist {
 		count, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
-		if err != nil {
-			log.Log.Error(err, "failed to update module count")
-		} else {
+		if err == nil {
 			pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(count + 1)
 		}
 	} else {
@@ -390,8 +385,7 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, mo
 	ip := module.Labels[label.BaseInstanceIpLabel]
 	installResult, err := arklet.Client().InstallBiz(ip, moduleInfo)
 	if err != nil {
-		log.Log.Error(err, "Failed install module", "moduleInfo", moduleInfo)
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "Failed install module", "moduleInfo", moduleInfo)
 	}
 	if installResult.Code != arklet.Success {
 		log.Log.Error(err, "Failed install module", "moduleInfo", moduleInfo, "result", installResult)
