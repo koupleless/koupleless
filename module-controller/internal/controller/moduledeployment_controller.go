@@ -90,7 +90,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	// create moduleReplicaSet
-	newRS, oldRSs, moduleVersionChanged, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
+	newRS, _, moduleVersionChanged, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -112,7 +112,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting:
 		// update moduleReplicaSet
-		enqueue, err := r.updateModuleReplicaSet(ctx, moduleDeployment, newRS, oldRSs)
+		enqueue, err := r.updateModuleReplicaSet(ctx, moduleDeployment, newRS)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -125,6 +125,13 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
 			moduleDeployment.Status.ReleaseStatus.CurrentBatch = 1
 			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+
+		if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
+			newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
+			if err := r.Client.Update(ctx, newRS); err != nil {
 				return ctrl.Result{}, err
 			}
 		}
@@ -256,7 +263,7 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 			}
 			// todo: 批发发布没有完成时不允许改变 module 版本，需要webhook支持限制在批次发布过程中 module 版本变更
 			// 此处默认当 Module 发生版本变化时，已经完成上个版本的批次发布
-			if !isModuleChanges(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
+			if !isModuleChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
 				return newRS, oldRSs, false, nil
 			}
 			oldRSs = append(oldRSs, newRS)
@@ -278,10 +285,10 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 	ctx context.Context, replicas int32,
 	moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	newRS *moduledeploymentv1alpha1.ModuleReplicaSet,
-	oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet) error {
+	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	moduleSpec := moduleDeployment.Spec.Template.Spec
-	if replicas != newRS.Spec.Replicas || isModuleChanges(moduleSpec.Module, newRS.Spec.Template.Spec.Module) {
+	if replicas != newRS.Spec.Replicas || isModuleChange(moduleSpec.Module, newRS.Spec.Template.Spec.Module) ||
+		isUrlChange(moduleSpec.Module, newRS.Spec.Template.Spec.Module) {
 		log.Log.Info("prepare to update newRS", "moduleReplicaSetName", newRS.Name)
 		newRS.Spec.Replicas = replicas
 		newRS.Spec.Template.Spec.Module = moduleSpec.Module
@@ -295,7 +302,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 }
 
 func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	newRS *moduledeploymentv1alpha1.ModuleReplicaSet, oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet) (bool, error) {
+	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) (bool, error) {
 	var (
 		batchCount = moduleDeployment.Spec.OperationStrategy.BatchCount
 		curBatch   = moduleDeployment.Status.ReleaseStatus.CurrentBatch
@@ -340,7 +347,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 		replicas = newRS.Spec.Replicas + (curBatch)*int32(math.Floor(float64(deltaReplicas)/float64(batchCount)+0.5))
 	}
 
-	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS, oldRSs)
+	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS)
 	if err != nil {
 		return false, err
 	}
@@ -419,8 +426,12 @@ func (r *ModuleDeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func isModuleChanges(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
+func isModuleChange(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
 	return module1.Name != module2.Name || module1.Version != module2.Version
+}
+
+func isUrlChange(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
+	return module1.Url != module2.Url
 }
 
 func getModuleReplicasName(moduleDeploymentName string, revision int) string {
