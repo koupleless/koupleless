@@ -263,7 +263,7 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 			}
 			// todo: 批发发布没有完成时不允许改变 module 版本，需要webhook支持限制在批次发布过程中 module 版本变更
 			// 此处默认当 Module 发生版本变化时，已经完成上个版本的批次发布
-			if !isModuleChanges(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
+			if !isModuleChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
 				return newRS, oldRSs, false, nil
 			}
 			oldRSs = append(oldRSs, newRS)
@@ -287,7 +287,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 	moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
 	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	moduleSpec := moduleDeployment.Spec.Template.Spec
-	if replicas != newRS.Spec.Replicas || isModuleChanges(moduleSpec.Module, newRS.Spec.Template.Spec.Module) ||
+	if replicas != newRS.Spec.Replicas || isModuleChange(moduleSpec.Module, newRS.Spec.Template.Spec.Module) ||
 		isOnlyModuleUrlChange(moduleSpec.Module, newRS.Spec.Template.Spec.Module) {
 		log.Log.Info("prepare to update newRS", "moduleReplicaSetName", newRS.Name)
 		newRS.Spec.Replicas = replicas
@@ -426,7 +426,7 @@ func (r *ModuleDeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func isModuleChanges(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
+func isModuleChange(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
 	return module1.Name != module2.Name || module1.Version != module2.Version
 }
 
