@@ -136,12 +136,11 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 				return ctrl.Result{}, err
 			}
 		}
-
-		if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
-			newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
-			if err := r.Client.Update(ctx, newRS); err != nil {
-				return ctrl.Result{}, err
-			}
+	}
+	if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
+		newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
+		if err := r.Client.Update(ctx, newRS); err != nil {
+			return ctrl.Result{}, err
 		}
 	}
 
