@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-public class ConvertUtilsTest extends TestCase {
+public class ConvertUtilsTests extends TestCase {
 
     @Test
     public void testBytes2Megabyte() {

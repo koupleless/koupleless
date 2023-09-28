@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * @author lunarscave
  */
-public class HealthHandlerTest extends BaseHandlerTest {
+public class HealthHandlerTests extends BaseHandlerTest {
 
     private HealthHandler handler;
 
