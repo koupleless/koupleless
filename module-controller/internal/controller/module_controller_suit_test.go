@@ -2,19 +2,22 @@ package controller
 
 import (
 	"context"
+	"time"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 	"github.com/sofastack/sofa-serverless/internal/utils"
-	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-	"time"
 )
 
 var _ = Describe("Module Controller", func() {

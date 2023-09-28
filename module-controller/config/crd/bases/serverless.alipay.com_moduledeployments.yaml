@@ -220,6 +220,9 @@ spec:
                       to another.
                     format: date-time
                     type: string
+                  nextReconcileTime:
+                    format: date-time
+                    type: string
                   progress:
                     description: The phase current release reach
                     type: string

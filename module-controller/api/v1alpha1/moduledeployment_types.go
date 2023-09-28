@@ -81,6 +81,8 @@ type ReleaseStatus struct {
 
 	// Last time the release transitioned from one status to another.
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
+
+	NextReconcileTime metav1.Time `json:"nextReconcileTime,omitempty"`
 }
 
 type ModuleDeploymentCondition struct {

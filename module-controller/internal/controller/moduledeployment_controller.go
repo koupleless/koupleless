@@ -23,17 +23,11 @@ import (
 	"strconv"
 	"time"
 
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/labels"
-
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
-	"github.com/sofastack/sofa-serverless/internal/utils"
-
 	v1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/pointer"
@@ -41,6 +35,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+
+	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
+	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/utils"
 )
 
 // ModuleDeploymentReconciler reconciles a ModuleDeployment object
@@ -111,15 +110,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			return ctrl.Result{}, err
 		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting:
-		// update moduleReplicaSet
-		enqueue, err := r.updateModuleReplicaSet(ctx, moduleDeployment, newRS)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
-		if enqueue {
-			requeueAfter := utils.GetNextReconcileTime(time.Now())
-			return ctrl.Result{RequeueAfter: requeueAfter}, nil
-		}
+		return r.updateModuleReplicaSet(ctx, moduleDeployment, newRS)
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted:
 		if moduleDeployment.Spec.Replicas != newRS.Spec.Replicas {
 			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
@@ -128,10 +119,26 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 				return ctrl.Result{}, err
 			}
 		}
-
 		if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
 			newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
 			if err := r.Client.Update(ctx, newRS); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation:
+		moduleDeployment.Spec.Pause = true
+		if err := r.Update(ctx, moduleDeployment); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused
+		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
+			return ctrl.Result{}, err
+		}
+	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused:
+		if !moduleDeployment.Spec.Pause && time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 {
+			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 				return ctrl.Result{}, err
 			}
 		}
@@ -302,7 +309,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 }
 
 func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) (bool, error) {
+	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) (ctrl.Result, error) {
 	var (
 		batchCount = moduleDeployment.Spec.OperationStrategy.BatchCount
 		curBatch   = moduleDeployment.Status.ReleaseStatus.CurrentBatch
@@ -311,6 +318,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 		expReplicas   = moduleDeployment.Spec.Replicas
 		deltaReplicas = expReplicas - newRS.Spec.Replicas
 	)
+
 	if deltaReplicas == 0 {
 		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted
 		moduleDeployment.Status.ReleaseStatus.LastTransitionTime = metav1.Now()
@@ -320,7 +328,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 			LastTransitionTime: metav1.Now(),
 			Message:            "deployment release progress completed",
 		})
-		return false, r.Status().Update(ctx, moduleDeployment)
+		return ctrl.Result{}, r.Status().Update(ctx, moduleDeployment)
 	}
 
 	if expReplicas < batchCount {
@@ -334,12 +342,13 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	// wait moduleReplicaset ready
 	if newRS.Spec.Replicas != curReplicas {
 		log.Log.Info(fmt.Sprintf("newRs is not ready, expect replicas %v, but got %v", newRS.Spec.Replicas, curReplicas))
-		return true, nil
+		return ctrl.Result{Requeue: true, RequeueAfter: utils.GetNextReconcileTime(time.Now())}, nil
 	}
 
 	replicas := int32(0)
 	// use beta strategy
-	if batchCount != 1 && curBatch == 1 && moduleDeployment.Spec.OperationStrategy.UseBeta {
+	useBeta := batchCount != 1 && curBatch == 1 && moduleDeployment.Spec.OperationStrategy.UseBeta
+	if useBeta {
 		replicas = 1
 	} else if curBatch == batchCount { // if it's the last batch
 		replicas = expReplicas
@@ -349,20 +358,45 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 
 	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS)
 	if err != nil {
-		return false, err
+		return ctrl.Result{}, err
 	}
 
-	moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
+	var message string
+	now := metav1.Now()
+
+	if useBeta {
+		moduleDeployment.Status.ReleaseStatus.CurrentBatch = 1
+		message = "deployment release: beta deployment"
+	} else {
+		moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
+		message = fmt.Sprintf("deployment release: curbatch %v, batchCount %v", curBatch, batchCount)
+	}
+
+	moduleDeployment.Status.ReleaseStatus.LastTransitionTime = now
 	moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
-	moduleDeployment.Status.ReleaseStatus.LastTransitionTime = metav1.Now()
+
 	moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, moduledeploymentv1alpha1.ModuleDeploymentCondition{
 		Type:               moduledeploymentv1alpha1.DeploymentProgressing,
 		Status:             corev1.ConditionTrue,
-		LastTransitionTime: metav1.Now(),
-		Message:            fmt.Sprintf("deployment release: curbatch %v, batchCount %v", curBatch, batchCount),
+		LastTransitionTime: now,
+		Message:            message,
 	})
 
-	return false, r.Status().Update(ctx, moduleDeployment)
+	var grayTime int
+	if curBatch != batchCount {
+		if moduleDeployment.Spec.OperationStrategy.NeedConfirm { // use NeedConfirm Strategy
+			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation
+		} else if grayTime = int(moduleDeployment.Spec.OperationStrategy.GrayTimeBetweenBatchSeconds); grayTime != 0 {
+			if curBatch == batchCount {
+				moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+			} else {
+				moduleDeployment.Status.ReleaseStatus.NextReconcileTime = metav1.NewTime(now.Add(time.Duration(grayTime) * time.Second))
+				moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused
+			}
+		}
+	}
+
+	return ctrl.Result{Requeue: true, RequeueAfter: time.Duration(grayTime) * time.Second}, r.Status().Update(ctx, moduleDeployment)
 }
 
 // generate module replicas
