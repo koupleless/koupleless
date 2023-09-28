@@ -3,11 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>arklet</artifactId>
+    <artifactId>sofa-serverless-runtime</artifactId>
     <version>${revision}</version>
     <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
     <properties>
-        <revision>0.3-SNAPSHOT</revision>
+        <revision>0.5.0</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -17,10 +19,13 @@
         <maven.source.plugin>3.0.0</maven.source.plugin>
         <maven.javadoc.plugin>3.2.0</maven.javadoc.plugin>
         <maven.staging.plugin>1.6.7</maven.staging.plugin>
-        <maven.gpg.pluign>1.5</maven.gpg.pluign>
+        <maven.gpg.pluign>1.6</maven.gpg.pluign>
         <jacoco.maven.plugin>0.8.4</jacoco.maven.plugin>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
+        <oshi.version>6.4.5</oshi.version>
+        <commons.lang3.version>3.12.0</commons.lang3.version>
         <guice.version>4.0</guice.version>
         <netty.version>4.1.42.Final</netty.version>
         <logback.version>1.2.9</logback.version>
@@ -28,25 +33,18 @@
         <junit.version>4.13.1</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <sofa.ark.version>2.2.3-SNAPSHOT</sofa.ark.version>
-        <spring.boot.version>2.5.12</spring.boot.version>
+        <sofa.ark.version>2.2.3</sofa.ark.version>
+        <spring.boot.version>2.5.15</spring.boot.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
-        <guava.version>16.0.1</guava.version>
+        <guava.version>32.1.2-jre</guava.version>
         <fastjson.version>1.2.69</fastjson.version>
+        <hessian.version>3.5.1</hessian.version>
     </properties>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>todo</description>
-    <url>https://github.com/sofastack/sofa-serverless/arklet</url>
-
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>arklet-core</module>
-        <module>arklet-springboot-starter</module>
-    </modules>
-
+    <url>https://github.com/sofastack/sofa-serverless/sofa-serverless-starter</url>
 
     <licenses>
         <license>
@@ -55,15 +53,98 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>qilong</name>
+            <email>qilong.zql@antfin.com</email>
+            <organization>Ant Financial</organization>
+            <organizationUrl>https://www.alipay.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>abby.zh</name>
+            <email>abby.zh@antfin.com</email>
+            <organization>Ant Financial</organization>
+            <organizationUrl>https://www.alipay.com/</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/sofastack/sofa-serverless.git</connection>
+        <developerConnection>scm:git:ssh://github.com/sofastack/sofa-serverless.git</developerConnection>
+        <url>http://github.com/sofastack/sofa-serverless/tree/master</url>
+    </scm>
+
+    <modules>
+        <module>sofa-serverless-common</module>
+        <module>sofa-serverless-base-starter</module>
+        <module>sofa-serverless-base-plugin</module>
+        <module>sofa-serverless-app-starter</module>
+        <module>arklet-core</module>
+        <module>arklet-springboot-starter</module>
+    </modules>
+
     <dependencyManagement>
         <dependencies>
-            <!--            sofa-ark依赖-->
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>arklet-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>arklet-springboot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>sofa-serverless-common</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>sofa-serverless-base-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>sofa-serverless-base-plugin</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!--  sofa-ark begin  -->
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-all</artifactId>
+                <version>${sofa.ark.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-spi</artifactId>
+                <version>${sofa.ark.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>sofa-ark-api</artifactId>
                 <version>${sofa.ark.version}</version>
             </dependency>
+            <!--  sofa-ark end  -->
 
+            <!--  springboot start  -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>sofa-ark-springboot-starter</artifactId>
@@ -84,12 +165,6 @@
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-actuator</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
@@ -99,6 +174,7 @@
                 <artifactId>spring-boot-starter-logging</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
+            <!--  springboot end  -->
 
             <dependency>
                 <groupId>com.google.inject</groupId>
@@ -125,6 +201,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>hessian</artifactId>
+                <version>${hessian.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
                 <version>${netty.version}</version>
@@ -148,31 +230,6 @@
                 <version>${lombok.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.github.oshi</groupId>
-                <artifactId>oshi-core</artifactId>
-                <version>${oshi.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons.lang3.version}</version>
-            </dependency>
-
-            <!--            内部依赖-->
-            <dependency>
-                <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>arklet-core</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>arklet-springboot-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
             <!--            测试-->
             <dependency>
                 <groupId>junit</groupId>
@@ -186,6 +243,18 @@
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>${oshi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
             </dependency>
 
             <dependency>
@@ -301,6 +370,25 @@
                 </executions>
             </plugin>
 
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-javadoc-plugin</artifactId>-->
+            <!--                <version>${maven.javadoc.plugin}</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>attach-javadocs</id>-->
+            <!--                        <goals>-->
+            <!--                            <goal>jar</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <docencoding>UTF-8</docencoding>-->
+            <!--                            <charset>UTF-8</charset>-->
+            <!--                            <encoding>UTF-8</encoding>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -334,6 +422,22 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>${maven.staging.plugin}</version>
@@ -357,10 +461,20 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
             <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
                 <repository>
                     <id>ossrh</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
