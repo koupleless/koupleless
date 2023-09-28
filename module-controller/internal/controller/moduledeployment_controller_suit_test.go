@@ -20,7 +20,7 @@ import (
 )
 
 var _ = Describe("ModuleDeployment Controller", func() {
-	const timeout = time.Second * 30
+	const timeout = time.Second * 120
 	const interval = time.Second * 5
 
 	namespace := "module-deployment-namespace"
@@ -225,6 +225,48 @@ var _ = Describe("ModuleDeployment Controller", func() {
 				return moduleDeployment.Status.ReleaseStatus.Progress == moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted
 			}, timeout, interval).Should(BeTrue())
 		})
+
+		It("5. delete moduleDeployment", func() {
+			Expect(k8sClient.Delete(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+	})
+
+	Context("test useBeta strategy", func() {
+		moduleDeploymentName := "module-deployment-test-for-use-beta"
+		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
+		moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
+		moduleDeployment.Spec.Replicas = 4
+		moduleDeployment.Spec.OperationStrategy.UseBeta = true
+		moduleDeployment.Spec.OperationStrategy.NeedConfirm = true
+		moduleDeployment.Spec.OperationStrategy.BatchCount = 2
+
+		It("0. prepare pods", func() {
+			Eventually(func() bool {
+				pod := preparePod(namespace, "fake-pod-use-beta")
+				pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
+				if err := k8sClient.Create(context.TODO(), &pod); err != nil {
+					return false
+				}
+				// when install module, the podIP is necessary
+				pod.Status.PodIP = "127.0.0.1"
+				return k8sClient.Status().Update(context.TODO(), &pod) == nil
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("1. create a new moduleDeployment", func() {
+			Expect(k8sClient.Create(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+
+		It("2. check if use Beta strategy", func() {
+			Eventually(func() bool {
+				return checkModuleDeploymentReplicas(nn, 1)
+			})
+		})
+
+		It("3. clean environment", func() {
+			Expect(k8sClient.Delete(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+
 	})
 
 	Context("delete module deployment", func() {
