@@ -16,13 +16,12 @@
  */
 package com.alipay.sofa.serverless.arklet.core.util;
 
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
 
-public class ConvertUtilsTests extends TestCase {
+public class ConvertUtilsTests {
 
     @Test
     public void testBytes2Megabyte() {
