@@ -45,5 +45,5 @@ func TestIsOnlyModuleUrlChange(t *testing.T) {
 		Url:     "http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.1-ark-biz.jar",
 	}
 	assert.False(t, isOnlyModuleUrlChange(module1, module1))
-	assert.True(t, isModuleChange(module1, module2))
+	assert.True(t, isOnlyModuleUrlChange(module1, module2))
 }
