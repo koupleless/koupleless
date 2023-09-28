@@ -112,7 +112,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting:
 		// update moduleReplicaSet
-		enqueue, err := r.updateModuleReplicaSet(ctx, moduleDeployment, newRS, oldRSs)
+		enqueue, err := r.updateModuleReplicaSet(ctx, moduleDeployment, newRS, oldRSs, moduleVersionChanged)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -125,6 +125,13 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
 			moduleDeployment.Status.ReleaseStatus.CurrentBatch = 1
 			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+
+		if !moduleVersionChanged && isOnlyModuleUrlChanges(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
+			newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
+			if err := r.Client.Update(ctx, newRS); err != nil {
 				return ctrl.Result{}, err
 			}
 		}
@@ -279,9 +286,11 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 	ctx context.Context, replicas int32,
 	moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
 	newRS *moduledeploymentv1alpha1.ModuleReplicaSet,
-	oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet) error {
+	oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet,
+	moduleVersionChanged bool) error {
 	moduleSpec := moduleDeployment.Spec.Template.Spec
-	if replicas != newRS.Spec.Replicas || isModuleChanges(moduleSpec.Module, newRS.Spec.Template.Spec.Module) {
+	if replicas != newRS.Spec.Replicas || isModuleChanges(moduleSpec.Module, newRS.Spec.Template.Spec.Module) ||
+		(!moduleVersionChanged && isOnlyModuleUrlChanges(moduleSpec.Module, newRS.Spec.Template.Spec.Module)) {
 		log.Log.Info("prepare to update newRS", "moduleReplicaSetName", newRS.Name)
 		newRS.Spec.Replicas = replicas
 		newRS.Spec.Template.Spec.Module = moduleSpec.Module
@@ -295,7 +304,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 }
 
 func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	newRS *moduledeploymentv1alpha1.ModuleReplicaSet, oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet) (bool, error) {
+	newRS *moduledeploymentv1alpha1.ModuleReplicaSet, oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet, moduleVersionChanged bool) (bool, error) {
 	var (
 		batchCount = moduleDeployment.Spec.OperationStrategy.BatchCount
 		curBatch   = moduleDeployment.Status.ReleaseStatus.CurrentBatch
@@ -340,7 +349,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 		replicas = newRS.Spec.Replicas + (curBatch)*int32(math.Floor(float64(deltaReplicas)/float64(batchCount)+0.5))
 	}
 
-	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS, oldRSs)
+	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS, oldRSs, moduleVersionChanged)
 	if err != nil {
 		return false, err
 	}
@@ -421,6 +430,10 @@ func (r *ModuleDeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func isModuleChanges(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
 	return module1.Name != module2.Name || module1.Version != module2.Version
+}
+
+func isOnlyModuleUrlChanges(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
+	return module1.Url != module2.Url
 }
 
 func getModuleReplicasName(moduleDeploymentName string, revision int) string {

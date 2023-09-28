@@ -57,6 +57,35 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		})
 	})
 
+	Context("update module url for module deployment", func() {
+		It("update module replicaset", func() {
+			moduleUrl := "https://test.url.com"
+			key := types.NamespacedName{
+				Name:      moduleDeploymentName,
+				Namespace: namespace,
+			}
+			var newModuleDeployment v1alpha1.ModuleDeployment
+			Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
+			newModuleDeployment.Spec.Template.Spec.Module.Url = moduleUrl
+			Expect(k8sClient.Update(context.TODO(), &newModuleDeployment)).Should(Succeed())
+
+			Eventually(func() bool {
+				set := map[string]string{
+					label.ModuleDeploymentLabel: moduleDeployment.Name,
+				}
+				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
+				if err != nil || len(replicaSetList.Items) > 1 {
+					return false
+				}
+
+				replicaSet := replicaSetList.Items[0]
+				url := replicaSet.Spec.Template.Spec.Module.Url
+				return url == moduleUrl
+			}, timeout, interval).Should(BeTrue())
+		})
+	})
+
 	Context("update module version for module deployment", func() {
 		It("update module replicaset", func() {
 			key := types.NamespacedName{
