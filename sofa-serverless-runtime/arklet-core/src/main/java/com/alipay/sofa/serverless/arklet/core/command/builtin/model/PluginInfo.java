@@ -19,7 +19,7 @@ package com.alipay.sofa.serverless.arklet.core.command.builtin.model;
 /**
  * @author Lunarscave
  */
-public class PluginModel {
+public class PluginInfo {
 
     private String pluginName;
 

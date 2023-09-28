@@ -16,11 +16,18 @@
  */
 package com.alipay.sofa.serverless.arklet.core;
 
+import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.ark.api.ClientResponse;
+import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.health.HealthService;
-import com.alipay.sofa.serverless.arklet.core.health.model.Health;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * @author mingmen
@@ -33,7 +40,7 @@ public class BaseTest {
     public static HealthService           healthService;
 
     @Before
-    public void setup() {
+    public void setup() throws Throwable {
         if (componentRegistry == null) {
             ArkletComponentRegistry registry = new ArkletComponentRegistry();
             registry.initComponents();
@@ -43,4 +50,5 @@ public class BaseTest {
             healthService = ArkletComponentRegistry.getHealthServiceInstance();
         }
     }
+
 }

@@ -16,7 +16,7 @@
  */
 package com.alipay.sofa.serverless.arklet.springboot.starter.health.extension.indicator;
 
-import com.alipay.sofa.serverless.arklet.core.health.indicator.ArkletBaseIndicator;
+import com.alipay.sofa.serverless.arklet.core.health.indicator.Indicator;
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
 import com.alipay.sofa.serverless.arklet.core.util.AssertUtils;
 import org.springframework.boot.availability.ApplicationAvailability;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * @author Lunarscave
  */
-public class MasterBizHealthIndicator extends ArkletBaseIndicator {
+public class MasterBizHealthIndicator extends Indicator {
 
     private ApplicationAvailability applicationAvailability;
 

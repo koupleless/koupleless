@@ -16,30 +16,31 @@
  */
 package com.alipay.sofa.serverless.arklet.core.util;
 
-import java.text.SimpleDateFormat;
+import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.Date;
 
-/**
- * @author Lunarscave
- */
-public class ConvertUtils {
+public class ConvertUtilsTests extends TestCase {
 
-    /**
-     * convert bytes(B) to megabyte(MB)
-     * @param bytes input byte(B) value
-     * @return megabyte(MB)
-     */
-    public static double bytes2Megabyte(Long bytes) {
-        return ((double) bytes) / 1024 / 1024;
+    @Test
+    public void testBytes2Megabyte() {
+        final long bytes = 1024 * 1024;
+        final double delta = 1e-5;
+        Assert.assertEquals(1., ConvertUtils.bytes2Megabyte(bytes), delta);
     }
 
-    /**
-     * get duration from param date till now and change to second(s)
-     * @param date input date
-     * @return output duration(s)
-     */
-    public static double getDurationSecond(Date date) {
-        return ((double) System.currentTimeMillis() - date.getTime()) / 1000;
+    @Test
+    public void testGetDurationSecond() {
+        try {
+            final Date date = new Date(System.currentTimeMillis());
+            final long millis = 1000;
+            final double delta = 1e-2;
+            Thread.sleep(millis);
+            Assert.assertEquals(millis / 1000., ConvertUtils.getDurationSecond(date), delta);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
-
 }
