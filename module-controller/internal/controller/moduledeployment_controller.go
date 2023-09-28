@@ -129,7 +129,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			}
 		}
 
-		if !moduleVersionChanged && isOnlyModuleUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
+		if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
 			newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
 			if err := r.Client.Update(ctx, newRS); err != nil {
 				return ctrl.Result{}, err
@@ -288,7 +288,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) error {
 	moduleSpec := moduleDeployment.Spec.Template.Spec
 	if replicas != newRS.Spec.Replicas || isModuleChange(moduleSpec.Module, newRS.Spec.Template.Spec.Module) ||
-		isOnlyModuleUrlChange(moduleSpec.Module, newRS.Spec.Template.Spec.Module) {
+		isUrlChange(moduleSpec.Module, newRS.Spec.Template.Spec.Module) {
 		log.Log.Info("prepare to update newRS", "moduleReplicaSetName", newRS.Name)
 		newRS.Spec.Replicas = replicas
 		newRS.Spec.Template.Spec.Module = moduleSpec.Module
@@ -430,7 +430,7 @@ func isModuleChange(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
 	return module1.Name != module2.Name || module1.Version != module2.Version
 }
 
-func isOnlyModuleUrlChange(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
+func isUrlChange(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
 	return module1.Url != module2.Url
 }
 
