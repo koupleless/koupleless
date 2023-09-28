@@ -14,31 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.health.indicator;
+package com.alipay.sofa.serverless.arklet.core.util;
 
-import com.alipay.sofa.serverless.arklet.core.health.model.Health;
-import com.alipay.sofa.serverless.arklet.core.health.model.Health.HealthBuilder;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.util.Map;
+import java.util.Date;
 
-/**
- * @author Lunarscave
- */
-public abstract class ArkletBaseIndicator {
+public class ConvertUtilsTests {
 
-    private final String indicatorId;
-
-    public ArkletBaseIndicator(String indicatorId) {
-        this.indicatorId = indicatorId;
+    @Test
+    public void testBytes2Megabyte() {
+        final long bytes = 1024 * 1024;
+        final double delta = 1e-5;
+        Assert.assertEquals(1., ConvertUtils.bytes2Megabyte(bytes), delta);
     }
 
-    protected abstract Map<String, Object> getHealthDetails();
-
-    public String getIndicatorId() {
-        return indicatorId;
-    }
-
-    public Health getHealthModel(HealthBuilder builder) {
-        return builder.init().putHealthData(getIndicatorId(), getHealthDetails()).build();
+    @Test
+    public void testGetDurationSecond() {
+        try {
+            final Date date = new Date(System.currentTimeMillis());
+            final long millis = 1000;
+            final double delta = 1e-2;
+            Thread.sleep(millis);
+            Assert.assertEquals(millis / 1000., ConvertUtils.getDurationSecond(date), delta);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
