@@ -118,12 +118,12 @@ var _ = Describe("Module Controller", func() {
 		})
 	})
 
-	moduleWithScaleUpThenScaleDownUpgradePolicy := PrepareModule(namespaceName, moduleName)
-	moduleWithScaleUpThenScaleDownUpgradePolicy.Labels[label.ModuleReplicasetLabel] = moduleReplicaSetName
-	utils.AddFinalizer(&moduleWithScaleUpThenScaleDownUpgradePolicy.ObjectMeta, finalizer.ModuleInstalledFinalizer)
-	moduleWithScaleUpThenScaleDownUpgradePolicy.Spec.UpgradePolicy = v1alpha1.ScaleUpThenScaleDownUpgradePolicy
 	Context("delete module with ScaleUpThenScaleDownUpgradePolicy", func() {
-		It("should be available status", func() {
+		It("should create a new module with available status", func() {
+			moduleWithScaleUpThenScaleDownUpgradePolicy := PrepareModule(namespaceName, moduleName)
+			moduleWithScaleUpThenScaleDownUpgradePolicy.Labels[label.ModuleReplicasetLabel] = moduleReplicaSetName
+			utils.AddFinalizer(&moduleWithScaleUpThenScaleDownUpgradePolicy.ObjectMeta, finalizer.ModuleInstalledFinalizer)
+			moduleWithScaleUpThenScaleDownUpgradePolicy.Spec.UpgradePolicy = v1alpha1.ScaleUpThenScaleDownUpgradePolicy
 			pod := preparePod(namespaceName, podName)
 			k8sClient.Create(context.TODO(), &pod)
 			pod.Status.PodIP = "127.0.0.2"
@@ -175,3 +175,16 @@ func PrepareModule(namespace string, moduleName string) v1alpha1.Module {
 	}
 	return module
 }
+
+//func cleanAllModules(namespaceName string) {
+//	modules := &v1alpha1.ModuleList{}
+//	k8sClient.List(context.TODO(), modules, &client.ListOptions{Namespace: namespaceName, LabelSelector: labels.SelectorFromSet(map[string]string{})})
+//	for _, module := range modules.Items {
+//		k8sClient.Delete(context.TODO(), &module)
+//		var emptyFinalize []string
+//		if len(module.Finalizers) > 0 {
+//			module.Finalizers = emptyFinalize
+//			k8sClient.Update(context.TODO(), &module)
+//		}
+//	}
+//}
