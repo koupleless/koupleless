@@ -27,6 +27,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.mockito.MockedStatic;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
 
 /**
@@ -46,6 +47,7 @@ public class BaseHandlerTest extends BaseTest {
         arkClient = mockStatic(ArkClient.class);
         arkClient.when(() -> {
             ArkClient.installOperation(new BizOperation());
+            ArkClient.uninstallBiz(anyString(), anyString());
         }).thenReturn(success);
         arkClient.when(ArkClient::getBizManagerService).thenReturn(new CustomBizManagerService());
         arkClient.when(ArkClient::getPluginManagerService).thenReturn(new CustomPluginManagerService());

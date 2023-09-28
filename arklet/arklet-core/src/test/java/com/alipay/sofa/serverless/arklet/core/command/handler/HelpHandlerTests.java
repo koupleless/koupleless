@@ -18,7 +18,6 @@ package com.alipay.sofa.serverless.arklet.core.command.handler;
 
 import java.util.List;
 
-import com.alipay.sofa.serverless.arklet.core.BaseTest;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.HelpHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.model.CommandModel;
@@ -29,7 +28,6 @@ import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidation
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 /**
  * @author mingmen
