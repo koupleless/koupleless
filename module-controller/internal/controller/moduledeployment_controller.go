@@ -119,6 +119,12 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 				return ctrl.Result{}, err
 			}
 		}
+		if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
+			newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
+			if err := r.Client.Update(ctx, newRS); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation:
 		moduleDeployment.Spec.Pause = true
 		if err := r.Update(ctx, moduleDeployment); err != nil {
@@ -135,12 +141,6 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 				return ctrl.Result{}, err
 			}
-		}
-	}
-	if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
-		newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
-		if err := r.Client.Update(ctx, newRS); err != nil {
-			return ctrl.Result{}, err
 		}
 	}
 
