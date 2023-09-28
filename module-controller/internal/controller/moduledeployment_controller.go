@@ -110,7 +110,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			return ctrl.Result{}, err
 		}
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting:
-		return r.updateModuleReplicaSet(ctx, moduleDeployment, newRS, oldRSs)
+		return r.updateModuleReplicaSet(ctx, moduleDeployment, newRS)
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted:
 		if moduleDeployment.Spec.Replicas != newRS.Spec.Replicas {
 			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
@@ -310,7 +310,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 }
 
 func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	newRS *moduledeploymentv1alpha1.ModuleReplicaSet, oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet) (ctrl.Result, error) {
+	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) (ctrl.Result, error) {
 	var (
 		batchCount = moduleDeployment.Spec.OperationStrategy.BatchCount
 		curBatch   = moduleDeployment.Status.ReleaseStatus.CurrentBatch
