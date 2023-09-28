@@ -2,19 +2,16 @@ package controller
 
 import (
 	"context"
-	"encoding/json"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/arklet"
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 	"github.com/sofastack/sofa-serverless/internal/utils"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
-	"net/http"
-	"net/http/httptest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"time"
@@ -24,16 +21,20 @@ var _ = Describe("Module Controller", func() {
 	const timeout = time.Second * 30
 	const interval = time.Second * 3
 	moduleName := "test-module-name"
-	namespace := "default"
+	namespaceName := "module-controller-namespace"
+	podName := "test-pod-name"
+	moduleReplicaSetName := "test-modulereplicaset"
 
 	Context("create module deployment without pod", func() {
 		It("should be pending status", func() {
-			module := prepareModule()
+			namespace := prepareNamespace(namespaceName)
+			Expect(k8sClient.Create(context.TODO(), &namespace)).Should(Succeed())
+			module := PrepareModule(namespaceName, moduleName)
 			Expect(k8sClient.Create(context.TODO(), &module)).Should(Succeed())
 
 			key := types.NamespacedName{
 				Name:      moduleName,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			Eventually(func() bool {
 				k8sClient.Get(context.TODO(), key, &module)
@@ -45,19 +46,10 @@ var _ = Describe("Module Controller", func() {
 		})
 	})
 
-	module := prepareModule()
+	module := PrepareModule(namespaceName, moduleName)
 	Context("create module deployment with pod", func() {
-		svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			data := arklet.ArkletResponse{
-				Code: arklet.Success,
-			}
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(data)
-		}))
-		arklet.MockClient(svr.URL)
-
 		It("should be available status", func() {
-			pod := preparePod("fake-pod-2")
+			pod := preparePod(namespaceName, podName)
 			k8sClient.Create(context.TODO(), &pod)
 			pod.Status.PodIP = "127.0.0.1"
 			k8sClient.Status().Update(context.TODO(), &pod)
@@ -66,7 +58,7 @@ var _ = Describe("Module Controller", func() {
 
 			key := types.NamespacedName{
 				Name:      moduleName,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			Eventually(func() bool {
 				k8sClient.Get(context.TODO(), key, &module)
@@ -77,19 +69,19 @@ var _ = Describe("Module Controller", func() {
 	})
 
 	Context("delete module deployment with ip by deleting module", func() {
-		moduleReplicaSetName := "test-modulereplicaset"
+
 		updateModuleUrl := "https://module-test-url"
 		It("should be deleted and recreate a new one", func() {
 			module.Labels[label.ModuleReplicasetLabel] = moduleReplicaSetName
 			module.Labels[label.ModuleNameLabel] = "test-module"
 			Expect(k8sClient.Update(context.TODO(), &module)).Should(Succeed())
 			Expect(k8sClient.Delete(context.TODO(), &module)).Should(Succeed())
-			moduleReplicaSet := prepareModuleReplicaSet(namespace, moduleReplicaSetName)
+			moduleReplicaSet := prepareModuleReplicaSet(namespaceName, moduleReplicaSetName)
 			moduleReplicaSet.Spec.Template.Spec.Module.Url = updateModuleUrl
 			Expect(k8sClient.Create(context.TODO(), &moduleReplicaSet)).Should(Succeed())
 			key := types.NamespacedName{
 				Name:      moduleName,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			Eventually(func() bool {
 				err := k8sClient.Get(context.TODO(), key, &module)
@@ -114,7 +106,7 @@ var _ = Describe("Module Controller", func() {
 			Expect(k8sClient.Update(context.TODO(), &module)).Should(Succeed())
 			key := types.NamespacedName{
 				Name:      module.Name,
-				Namespace: namespace,
+				Namespace: namespaceName,
 			}
 			Eventually(func() bool {
 				err := k8sClient.Get(context.TODO(), key, &module)
@@ -125,11 +117,40 @@ var _ = Describe("Module Controller", func() {
 			}, timeout, interval).Should(BeTrue())
 		})
 	})
+
+	Context("delete module with ScaleUpThenScaleDownUpgradePolicy", func() {
+		It("should create a new module with available status", func() {
+			moduleWithScaleUpThenScaleDownUpgradePolicy := PrepareModule(namespaceName, moduleName)
+			moduleWithScaleUpThenScaleDownUpgradePolicy.Labels[label.ModuleReplicasetLabel] = moduleReplicaSetName
+			utils.AddFinalizer(&moduleWithScaleUpThenScaleDownUpgradePolicy.ObjectMeta, finalizer.ModuleInstalledFinalizer)
+			moduleWithScaleUpThenScaleDownUpgradePolicy.Spec.UpgradePolicy = v1alpha1.ScaleUpThenScaleDownUpgradePolicy
+			pod := preparePod(namespaceName, podName)
+			k8sClient.Create(context.TODO(), &pod)
+			pod.Status.PodIP = "127.0.0.2"
+			k8sClient.Status().Update(context.TODO(), &pod)
+			Expect(k8sClient.Create(context.TODO(), &moduleWithScaleUpThenScaleDownUpgradePolicy)).Should(Succeed())
+
+			err := k8sClient.Delete(context.TODO(), &moduleWithScaleUpThenScaleDownUpgradePolicy)
+			if err != nil {
+				return
+			}
+			Eventually(func() bool {
+				err := k8sClient.Get(context.TODO(), types.NamespacedName{Namespace: namespaceName, Name: moduleName}, &moduleWithScaleUpThenScaleDownUpgradePolicy)
+				if err == nil || !errors.IsNotFound(err) {
+					return false
+				}
+				modules := &v1alpha1.ModuleList{}
+				err = k8sClient.List(context.TODO(), modules, &client.ListOptions{Namespace: module.Namespace, LabelSelector: labels.SelectorFromSet(map[string]string{
+					label.ModuleReplicasetLabel: moduleReplicaSetName,
+				})})
+				return modules.Items[0].Name != moduleName && modules.Items[0].Status.Status == v1alpha1.ModuleInstanceStatusAvailable
+			}, timeout, interval).Should(BeTrue())
+		})
+	})
+
 })
 
-func prepareModule() v1alpha1.Module {
-	moduleName := "test-module-name"
-	namespace := "default"
+func PrepareModule(namespace string, moduleName string) v1alpha1.Module {
 	module := v1alpha1.Module{
 		Spec: v1alpha1.ModuleSpec{
 			Selector: metav1.LabelSelector{
@@ -154,3 +175,16 @@ func prepareModule() v1alpha1.Module {
 	}
 	return module
 }
+
+//func cleanAllModules(namespaceName string) {
+//	modules := &v1alpha1.ModuleList{}
+//	k8sClient.List(context.TODO(), modules, &client.ListOptions{Namespace: namespaceName, LabelSelector: labels.SelectorFromSet(map[string]string{})})
+//	for _, module := range modules.Items {
+//		k8sClient.Delete(context.TODO(), &module)
+//		var emptyFinalize []string
+//		if len(module.Finalizers) > 0 {
+//			module.Finalizers = emptyFinalize
+//			k8sClient.Update(context.TODO(), &module)
+//		}
+//	}
+//}

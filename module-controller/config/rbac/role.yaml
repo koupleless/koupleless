@@ -102,3 +102,29 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - serverless.alipay.com
+  resources:
+  - pods
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - serverless.alipay.com
+  resources:
+  - pods/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - serverless.alipay.com
+  resources:
+  - pods/status
+  verbs:
+  - get
+  - patch
+  - update

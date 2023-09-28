@@ -17,11 +17,12 @@ limitations under the License.
 package controller
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/sofastack/sofa-serverless/internal/arklet"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -103,6 +104,12 @@ var _ = BeforeSuite(func() {
 	}).SetupWithManager(k8sManager)
 	Expect(err).ToNot(HaveOccurred())
 
+	err = (&PodReconciler{
+		Client: k8sManager.GetClient(),
+		Scheme: k8sManager.GetScheme(),
+	}).SetupWithManager(k8sManager)
+	Expect(err).ToNot(HaveOccurred())
+
 	go func() {
 		err = k8sManager.Start(ctrl.SetupSignalHandler())
 		Expect(err).ToNot(HaveOccurred())
@@ -110,25 +117,32 @@ var _ = BeforeSuite(func() {
 
 	k8sClient = k8sManager.GetClient()
 	Expect(k8sClient).ToNot(BeNil())
-
-	deployment := prepareDeployment()
-	err = k8sClient.Create(context.TODO(), &deployment)
-	pod := preparePod("fake-pod-1")
-	pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
-	err = k8sClient.Create(context.TODO(), &pod)
+	//pod := preparePod("fake-pod-1")
+	//pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
+	//err = k8sClient.Create(context.TODO(), &pod)
 	if err != nil {
 		fmt.Printf("Failed to prepare resource: %v", err)
 		os.Exit(1)
 	}
+	arklet.MockClient()
 })
 
-func prepareDeployment() v1.Deployment {
+func prepareNamespace(namespaceName string) corev1.Namespace {
+	namespace := corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: namespaceName,
+		},
+	}
+	return namespace
+}
+
+func prepareDeployment(namespaceName string) v1.Deployment {
 	var deployment v1.Deployment
 	replicas := int32(1)
 	deployment = v1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "dynamic-stock-deployment",
-			Namespace: "default",
+			Namespace: namespaceName,
 		},
 		Spec: v1.DeploymentSpec{
 			Replicas: &replicas,
@@ -165,11 +179,11 @@ func prepareDeployment() v1.Deployment {
 	return deployment
 }
 
-func preparePod(podName string) corev1.Pod {
+func preparePod(namespaceName string, podName string) corev1.Pod {
 	pod := corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      podName,
-			Namespace: "default",
+			Namespace: namespaceName,
 			Labels: map[string]string{
 				"app":                     "dynamic-stock",
 				label.ModuleInstanceCount: "0",

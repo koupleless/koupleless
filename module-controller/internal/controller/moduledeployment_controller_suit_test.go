@@ -22,10 +22,24 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	const timeout = time.Second * 30
 	const interval = time.Second * 5
 
-	namespace := "default"
+	namespace := "module-deployment-namespace"
+	namespaceObj := prepareNamespace(namespace)
+	deployment := prepareDeployment(namespace)
 	moduleDeploymentName := "module-deployment-test-demo"
 	moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
+	pod := preparePod(namespace, "fake-pod-1")
 	Context("create module deployment", func() {
+		It("prepare deployment and pod", func() {
+			Expect(k8sClient.Create(context.TODO(), &namespaceObj)).Should(Succeed())
+
+			Expect(k8sClient.Create(context.TODO(), &deployment)).Should(Succeed())
+
+			Expect(k8sClient.Create(context.TODO(), &pod)).Should(Succeed())
+
+			pod.Status.PodIP = "127.0.0.1"
+			Expect(k8sClient.Status().Update(context.TODO(), &pod)).Should(Succeed())
+		})
+
 		It("create module replicaset", func() {
 			Expect(k8sClient.Create(context.TODO(), &moduleDeployment)).Should(Succeed())
 
@@ -190,7 +204,7 @@ func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.Mo
 				},
 			},
 			SchedulingStrategy: v1alpha1.ModuleSchedulingStrategy{
-				SchedulingType: v1alpha1.Scatter,
+				SchedulingPolicy: v1alpha1.Scatter,
 			},
 		},
 		ObjectMeta: metav1.ObjectMeta{

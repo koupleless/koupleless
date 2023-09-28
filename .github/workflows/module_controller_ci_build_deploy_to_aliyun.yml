@@ -1,15 +1,22 @@
-name: Module Controller Build and Deploy Master to Aliyun
+name: Module Controller Integration Test
 run-name: ${{ github.actor }} pushed module-controller code
- 
+
 on:
   push:
     branches:
       - master
     paths:
       - 'module-controller/**'
+      
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'module-controller/**'
+      
   # enable manually running the workflow
   workflow_dispatch:
-
+  
 env:
   CGO_ENABLED: 0
   GOOS: linux
@@ -24,61 +31,117 @@ defaults:
   run:
     working-directory: module-controller
 
-permissions:
-  contents: read
-
 jobs:
-  build:
+  unit-test:
     runs-on: ubuntu-latest
-    environment: production
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Docker login
-      uses: docker/login-action@v2.2.0
-      with:
-       registry: ${{ env.DOCKERHUB_REGISTRY }}
-       username: ${{ secrets.DOCKERHUB_USERNAME }}
-       password: ${{ secrets.DOCKERHUB_PASSWORD }}
-       logout: false
+      - name: Docker login
+        uses: docker/login-action@v2.2.0
+        with:
+          registry: ${{ env.DOCKERHUB_REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          logout: false
 
-    - name: Set up Docker buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ hashFiles('${{ env.WORK_DIR }}/*Dockerfile') }}
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ hashFiles('${{ env.WORK_DIR }}/*Dockerfile') }}
 
-    - name: Build and push module-controller Docker images
-      uses: docker/build-push-action@v4.1.1
-      with:
-        context: ${{ env.WORK_DIR }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
-        file: ${{ env.WORK_DIR }}/Dockerfile
-        platforms: linux/amd64
-        push: true
-        tags: ${{ env.DOCKERHUB_REGISTRY }}/${{ env.MODULE_CONTROLLER_IMAGE_PATH }}:${{ env.TAG }}
+      - name: Build and push module-controller Docker images
+        uses: docker/build-push-action@v4.1.1
+        with:
+          context: ${{ env.WORK_DIR }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          file: ${{ env.WORK_DIR }}/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.DOCKERHUB_REGISTRY }}/${{ env.MODULE_CONTROLLER_IMAGE_PATH }}:${{ env.TAG }}
 
-    - run: sleep 30
+      - run: sleep 30
 
-    - name: Build and push module-controller-integration-tests Docker images
-      uses: docker/build-push-action@v4.1.1
-      with:
-        context: ${{ env.WORK_DIR }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
-        file: ${{ env.WORK_DIR }}/IntegrationTestsDockerfile
-        platforms: linux/amd64
-        push: true
-        tags: ${{ env.DOCKERHUB_REGISTRY }}/${{ env.INTEGRATION_TESTS_IMAGE_PATH }}:${{ env.TAG }}
+      - name: Set up Minikube
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
-    #- name: kubectl-simple
-    #  uses: steebchen/kubectl@v2.1.1
-    #  with:
-    #    config: ${{ secrets.CI_KUBE_CONFIG }}
-    #    command: apply -f ${{ env.WORK_DIR }}/config/samples/module-deployment-controller.yaml
+      - name: Start Minikube
+        run: minikube start
+
+      - name: Prepare development env
+        run: |
+          kubectl apply -f config/crd/bases/serverless.alipay.com_moduledeployments.yaml
+          kubectl apply -f config/crd/bases/serverless.alipay.com_modulereplicasets.yaml
+          kubectl apply -f config/crd/bases/serverless.alipay.com_modules.yaml
+          kubectl apply -f config/crd/bases/serverless.alipay.com_moduletemplates.yaml
+          kubectl apply -f config/rbac/role.yaml
+          kubectl apply -f config/rbac/role_binding.yaml
+          kubectl apply -f config/rbac/service_account.yaml
+          kubectl apply -f config/samples/dynamic-stock-deployment.yaml
+          kubectl apply -f config/samples/module-deployment-controller.yaml
+          kubectl apply -f config/samples/dynamic-stock-service.yaml
+
+      - run: sleep 60
+
+      - name: minikube logs
+        run: minikube logs
+
+      - name: get pod
+        run: |
+          kubectl get pod
+
+      - name: describe pod
+        run: |
+          kubectl describe pod
+
+      - name: wait base pod available
+        run: |
+          kubectl wait --for=condition=available deployment/dynamic-stock-deployment --timeout=300s
+
+      - name: get module controller pod available
+        run: |
+          kubectl wait --for=condition=available deployment/module-controller --timeout=300s
+
+      - name: Apply moduledeployment
+        run: |
+          kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_provider.yaml
+
+      - name: get moduledeployment
+        run: |
+          kubectl get moduledeployment
+      
+      - name: get modulereplicaset
+        run: |
+          kubectl get modulereplicaset
+
+      - run: sleep 15
+
+      - name: get module
+        run: |
+          kubectl get module -oyaml
+
+      - name: exist module
+        run: |
+          moduleCount=$(kubectl get module | wc -l)
+          if [[ $moduleCount -lt 1 ]]; then
+            echo "ERROR: 不存在module"
+            exit 1
+          fi
+
+      - name: check module
+        run: |
+          podname=$(kubectl get pod -l app=dynamic-stock -o name)
+          kubectl exec -it $podname -- sh -c 'ls -al'
+          kubectl exec -it $podname -- sh -c 'ls -al logs'
+          kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng'
+          kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng/sofa-ark'
+          kubectl exec -it $podname -- sh -c 'grep "dynamic-provider:1.0.0 started" logs/stock-mng/sofa-ark/*.log'
+          

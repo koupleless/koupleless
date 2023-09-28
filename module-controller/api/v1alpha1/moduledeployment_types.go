@@ -51,6 +51,14 @@ const (
 	ModuleDeploymentReleaseProgressTermed                 ReleaseProgress = "Terminated"
 )
 
+type ModuleUpgradeType string
+
+const (
+	InstallThenUninstallUpgradePolicy ModuleUpgradeType = "install_then_uninstall"
+	UninstallThenInstallUpgradePolicy ModuleUpgradeType = "uninstall_then_install"
+	ScaleUpThenScaleDownUpgradePolicy ModuleUpgradeType = "scaleup_then_scaledown"
+)
+
 type ModuleSchedulingType string
 
 const (
@@ -92,16 +100,7 @@ type ModuleDeploymentCondition struct {
 	Message string `json:"message,omitempty"`
 }
 
-type ModuleSchedulingStrategy struct {
-	// +kubebuilder:validation:Enum={"scatter","stacking"}
-	// +kubebuilder:default="scatter"
-	SchedulingType ModuleSchedulingType `json:"schedulingType"`
-	//MaxModuleCount int                  `json:"maxModuleCount"`
-}
-
-type ModuleDeploymentStrategy struct {
-	UpgradeType string `json:"upgradeType"`
-
+type ModuleOperationStrategy struct {
 	NeedConfirm bool `json:"needConfirm,omitempty"`
 
 	UseBeta bool `json:"useBeta,omitempty"`
@@ -111,6 +110,13 @@ type ModuleDeploymentStrategy struct {
 	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty"`
 
 	GrayTimeBetweenBatchSeconds int32 `json:"grayTimeBetweenBatchSeconds,omitempty"`
+}
+
+type ModuleSchedulingStrategy struct {
+	UpgradePolicy ModuleUpgradeType `json:"upgradePolicy,omitempty"`
+	// +kubebuilder:validation:Enum={"scatter","stacking"}
+	// +kubebuilder:default="scatter"
+	SchedulingPolicy ModuleSchedulingType `json:"schedulingPolicy,omitempty"`
 }
 
 // ModuleDeploymentSpec defines the desired state of ModuleDeployment
@@ -136,7 +142,7 @@ type ModuleDeploymentSpec struct {
 	// +optional
 	Pause bool `json:"pause,omitempty"`
 
-	OperationStrategy ModuleDeploymentStrategy `json:"operationStrategy,omitempty"`
+	OperationStrategy ModuleOperationStrategy `json:"operationStrategy,omitempty"`
 
 	SchedulingStrategy ModuleSchedulingStrategy `json:"schedulingStrategy,omitempty"`
 }

@@ -57,12 +57,8 @@ spec:
                     x-kubernetes-int-or-string: true
                   needConfirm:
                     type: boolean
-                  upgradeType:
-                    type: string
                   useBeta:
                     type: boolean
-                required:
-                - upgradeType
                 type: object
               pause:
                 description: Indicates that the moduleDeployment is paused and will
@@ -80,14 +76,14 @@ spec:
                 type: integer
               schedulingStrategy:
                 properties:
-                  schedulingType:
+                  schedulingPolicy:
                     default: scatter
                     enum:
                     - scatter
                     - stacking
                     type: string
-                required:
-                - schedulingType
+                  upgradePolicy:
+                    type: string
                 type: object
               template:
                 properties:
@@ -166,6 +162,8 @@ spec:
                             type: object
                         type: object
                         x-kubernetes-map-type: atomic
+                      upgradePolicy:
+                        type: string
                     required:
                     - module
                     type: object

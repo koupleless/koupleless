@@ -73,6 +73,8 @@ type ModuleInfo struct {
 type ModuleSpec struct {
 	Selector metav1.LabelSelector `json:"selector,omitempty"`
 	Module   ModuleInfo           `json:"module"`
+
+	UpgradePolicy ModuleUpgradeType `json:"upgradePolicy,omitempty"`
 }
 
 // ModuleStatus defines the observed state of Module

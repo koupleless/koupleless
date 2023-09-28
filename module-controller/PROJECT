@@ -35,4 +35,8 @@ resources:
   kind: ModuleReplicaSet
   path: github.com/sofastack/sofa-serverless/api/v1alpha1
   version: v1alpha1
+- controller: true
+  domain: serverless.alipay.com
+  kind: Pod
+  version: v1
 version: "3"
