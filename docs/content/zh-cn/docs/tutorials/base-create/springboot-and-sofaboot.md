@@ -22,15 +22,22 @@ spring.application.name = ${替换为实际基座名}
 #### 修改主 pom.xml
 ```xml
 <properties>
-    <sofa.serverless.runtime.version>0.1.3</sofa.serverless.runtime.version>
+    <sofa.ark.verion>2.2.4-SNAPSHOT</sofa.ark.verion>
+    <sofa.serverless.runtime.version>0.5.0</sofa.serverless.runtime.version>
 </properties>
 ```
 
 ```xml
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-runtime-starter</artifactId>
+    <artifactId>sofa-serverless-base-starter</artifactId>
     <version>${sofa.serverless.runtime.version}</version>
+</dependency>
+
+<!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ -->
+<dependency>
+    <groupId>com.alipay.sofa</groupId>
+    <artifactId>web-ark-plugin</artifactId>
 </dependency>
 ```
 <a name="fpmps"></a>
