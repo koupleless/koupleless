@@ -16,7 +16,6 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.handler;
 
-import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler.Input;
@@ -48,9 +47,9 @@ public class InstallBizHandlerTests extends BaseHandlerTest {
 
         when(handler.getOperationService().install(input.getBizUrl())).thenReturn(success);
 
-        Output<ClientResponse> result = handler.handle(input);
+        Output<InstallBizHandler.ClientResponseMetaSpace> result = handler.handle(input);
 
-        Assert.assertEquals(success, result.getData());
+        Assert.assertEquals(success, result.getData().getClientResponse());
         Assert.assertTrue(result.success());
     }
 
@@ -61,9 +60,9 @@ public class InstallBizHandlerTests extends BaseHandlerTest {
 
         when(handler.getOperationService().install(input.getBizUrl())).thenReturn(failed);
 
-        Output<ClientResponse> result = handler.handle(input);
+        Output<InstallBizHandler.ClientResponseMetaSpace> result = handler.handle(input);
 
-        Assert.assertSame(failed, result.getData());
+        Assert.assertSame(failed, result.getData().getClientResponse());
         Assert.assertTrue(result.failed());
     }
 

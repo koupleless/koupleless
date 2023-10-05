@@ -30,23 +30,38 @@ import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidation
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.util.List;
+
 /**
  * @author mingmen
  * @date 2023/6/8
  */
-public class InstallBizHandler extends
-                              AbstractCommandHandler<InstallBizHandler.Input, ClientResponse>
-                                                                                             implements
-                                                                                             ArkBizOps {
+public class InstallBizHandler
+                              extends
+                              AbstractCommandHandler<InstallBizHandler.Input, InstallBizHandler.ClientResponseMetaSpace>
+                                                                                                                        implements
+                                                                                                                        ArkBizOps {
 
     @Override
-    public Output<ClientResponse> handle(Input input) {
+    public Output<ClientResponseMetaSpace> handle(Input input) {
+        MemoryPoolMXBean metaSpaceMXBean = null;
+        List<MemoryPoolMXBean> memoryPoolMXBeans = ManagementFactory.getMemoryPoolMXBeans();
+        for (MemoryPoolMXBean memoryPoolMXBean : memoryPoolMXBeans)
+            if (memoryPoolMXBean.getName().equals("Metaspace"))
+                metaSpaceMXBean = memoryPoolMXBean;
+        long startSpace = metaSpaceMXBean.getUsage().getUsed();
+        InstallBizHandler.ClientResponseMetaSpace clientResponseMetaSpace = new InstallBizHandler.ClientResponseMetaSpace();
         try {
             ClientResponse res = getOperationService().install(input.getBizUrl());
+            clientResponseMetaSpace.setElapsedSpace(metaSpaceMXBean.getUsage().getUsed()
+                                                    - startSpace);
+            clientResponseMetaSpace.setClientResponse(res);
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
-                return Output.ofSuccess(res);
+                return Output.ofSuccess(clientResponseMetaSpace);
             } else {
-                return Output.ofFailed(res, "install biz not success!");
+                return Output.ofFailed(clientResponseMetaSpace, "install biz not success!");
             }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);
@@ -71,6 +86,13 @@ public class InstallBizHandler extends
     @Setter
     public static class Input extends ArkBizMeta {
         private String bizUrl;
+    }
+
+    @Getter
+    @Setter
+    public static class ClientResponseMetaSpace extends ClientResponse {
+        private long           elapsedSpace;
+        private ClientResponse clientResponse;
     }
 
 }
