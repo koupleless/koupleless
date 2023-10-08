@@ -35,9 +35,9 @@ import static org.mockito.Mockito.mockStatic;
  */
 public class BaseHandlerTest extends BaseTest {
 
-    public final InstallBizHandler.ClientResponseMetaSpace success = new InstallBizHandler.ClientResponseMetaSpace();
-    public final InstallBizHandler.ClientResponseMetaSpace failed  = new InstallBizHandler.ClientResponseMetaSpace();
-    public MockedStatic<ArkClient>                         arkClient;
+    public final InstallBizHandler.InstallBizClientResponse success = new InstallBizHandler.InstallBizClientResponse();
+    public final InstallBizHandler.InstallBizClientResponse failed  = new InstallBizHandler.InstallBizClientResponse();
+    public MockedStatic<ArkClient>                          arkClient;
 
     @Before
     public void setupHandler() {
