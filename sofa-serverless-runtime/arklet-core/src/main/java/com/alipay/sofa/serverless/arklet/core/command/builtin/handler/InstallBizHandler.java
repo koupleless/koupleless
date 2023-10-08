@@ -40,32 +40,37 @@ import java.util.List;
  */
 public class InstallBizHandler
                               extends
-                              AbstractCommandHandler<InstallBizHandler.Input, InstallBizHandler.ClientResponseMetaSpace>
-                                                                                                                        implements
-                                                                                                                        ArkBizOps {
+                              AbstractCommandHandler<InstallBizHandler.Input, InstallBizHandler.InstallBizClientResponse>
+                                                                                                                         implements
+                                                                                                                         ArkBizOps {
 
     @Override
-    public Output<ClientResponseMetaSpace> handle(Input input) {
+    public Output<InstallBizClientResponse> handle(Input input) {
+        MemoryPoolMXBean metaSpaceMXBean = getMetaSpaceMXBean();
+        long startSpace = metaSpaceMXBean.getUsage().getUsed();
+        InstallBizClientResponse installBizClientResponse;
+        try {
+            ClientResponse res = getOperationService().install(input.getBizUrl());
+            installBizClientResponse = (InstallBizClientResponse) res;
+            installBizClientResponse.setElapsedSpace(metaSpaceMXBean.getUsage().getUsed()
+                                                     - startSpace);
+            if (ResponseCode.SUCCESS.equals(res.getCode())) {
+                return Output.ofSuccess(installBizClientResponse);
+            } else {
+                return Output.ofFailed(installBizClientResponse, "install biz not success!");
+            }
+        } catch (Throwable e) {
+            throw new ArkletRuntimeException(e);
+        }
+    }
+
+    private MemoryPoolMXBean getMetaSpaceMXBean() {
         MemoryPoolMXBean metaSpaceMXBean = null;
         List<MemoryPoolMXBean> memoryPoolMXBeans = ManagementFactory.getMemoryPoolMXBeans();
         for (MemoryPoolMXBean memoryPoolMXBean : memoryPoolMXBeans)
             if (memoryPoolMXBean.getName().equals("Metaspace"))
                 metaSpaceMXBean = memoryPoolMXBean;
-        long startSpace = metaSpaceMXBean.getUsage().getUsed();
-        InstallBizHandler.ClientResponseMetaSpace clientResponseMetaSpace = new InstallBizHandler.ClientResponseMetaSpace();
-        try {
-            ClientResponse res = getOperationService().install(input.getBizUrl());
-            clientResponseMetaSpace.setElapsedSpace(metaSpaceMXBean.getUsage().getUsed()
-                                                    - startSpace);
-            clientResponseMetaSpace.setClientResponse(res);
-            if (ResponseCode.SUCCESS.equals(res.getCode())) {
-                return Output.ofSuccess(clientResponseMetaSpace);
-            } else {
-                return Output.ofFailed(clientResponseMetaSpace, "install biz not success!");
-            }
-        } catch (Throwable e) {
-            throw new ArkletRuntimeException(e);
-        }
+        return metaSpaceMXBean;
     }
 
     @Override
@@ -90,9 +95,8 @@ public class InstallBizHandler
 
     @Getter
     @Setter
-    public static class ClientResponseMetaSpace extends ClientResponse {
-        private long           elapsedSpace;
-        private ClientResponse clientResponse;
+    public static class InstallBizClientResponse extends ClientResponse {
+        private long elapsedSpace;
     }
 
 }
