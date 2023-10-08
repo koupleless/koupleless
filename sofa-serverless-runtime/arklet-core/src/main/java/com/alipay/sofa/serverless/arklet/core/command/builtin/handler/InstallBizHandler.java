@@ -30,27 +30,47 @@ import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidation
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.util.List;
+
 /**
  * @author mingmen
  * @date 2023/6/8
  */
-public class InstallBizHandler extends
-                              AbstractCommandHandler<InstallBizHandler.Input, ClientResponse>
-                                                                                             implements
-                                                                                             ArkBizOps {
+public class InstallBizHandler
+                              extends
+                              AbstractCommandHandler<InstallBizHandler.Input, InstallBizHandler.InstallBizClientResponse>
+                                                                                                                         implements
+                                                                                                                         ArkBizOps {
 
     @Override
-    public Output<ClientResponse> handle(Input input) {
+    public Output<InstallBizClientResponse> handle(Input input) {
+        MemoryPoolMXBean metaSpaceMXBean = getMetaSpaceMXBean();
+        long startSpace = metaSpaceMXBean.getUsage().getUsed();
+        InstallBizClientResponse installBizClientResponse;
         try {
             ClientResponse res = getOperationService().install(input.getBizUrl());
+            installBizClientResponse = (InstallBizClientResponse) res;
+            installBizClientResponse.setElapsedSpace(metaSpaceMXBean.getUsage().getUsed()
+                                                     - startSpace);
             if (ResponseCode.SUCCESS.equals(res.getCode())) {
-                return Output.ofSuccess(res);
+                return Output.ofSuccess(installBizClientResponse);
             } else {
-                return Output.ofFailed(res, "install biz not success!");
+                return Output.ofFailed(installBizClientResponse, "install biz not success!");
             }
         } catch (Throwable e) {
             throw new ArkletRuntimeException(e);
         }
+    }
+
+    private MemoryPoolMXBean getMetaSpaceMXBean() {
+        MemoryPoolMXBean metaSpaceMXBean = null;
+        List<MemoryPoolMXBean> memoryPoolMXBeans = ManagementFactory.getMemoryPoolMXBeans();
+        for (MemoryPoolMXBean memoryPoolMXBean : memoryPoolMXBeans)
+            if (memoryPoolMXBean.getName().equals("Metaspace"))
+                metaSpaceMXBean = memoryPoolMXBean;
+        return metaSpaceMXBean;
     }
 
     @Override
@@ -71,6 +91,12 @@ public class InstallBizHandler extends
     @Setter
     public static class Input extends ArkBizMeta {
         private String bizUrl;
+    }
+
+    @Getter
+    @Setter
+    public static class InstallBizClientResponse extends ClientResponse {
+        private long elapsedSpace;
     }
 
 }
