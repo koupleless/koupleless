@@ -1,7 +1,7 @@
 package finalizer
 
 const (
-	ModuleInstalledFinalizer = "serverless.alipay.com/module-installed"
+	AllocatePodFinalizer = "serverless.alipay.com/allocate-pod"
 
 	ModuleReplicaSetExistedFinalizer = "serverless.alipay.com/module-replicaset-existed"
 
