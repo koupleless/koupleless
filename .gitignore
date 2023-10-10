@@ -8,6 +8,7 @@ pom.xml.bak
 .classpath
 *.log
 logs/
+logs*/
 .flattened-pom.xml
 docs/public
 docs/resources/

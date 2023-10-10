@@ -32,6 +32,9 @@ import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.apache.logging.log4j.core.util.NameUtil;
 import org.apache.logging.log4j.message.Message;
 import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.logging.LogFile;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.LoggerConfiguration;
@@ -67,9 +70,11 @@ import java.util.logging.Handler;
  */
 public class SOFAServerlessLog4J2LoggingSystem extends Log4J2LoggingSystem {
 
-    private static final String           FILE_PROTOCOL = "file";
+    private static final String           FILE_PROTOCOL             = "file";
 
-    private static final LogLevels<Level> LEVELS        = new LogLevels<>();
+    private static final String           DEFAULT_LOG4j_CONFIG_PATH = "classpath:org/springframework/boot/logging/log4j2/";
+
+    private static final LogLevels<Level> LEVELS                    = new LogLevels<>();
 
     static {
         LEVELS.map(LogLevel.TRACE, Level.TRACE);
@@ -81,41 +86,41 @@ public class SOFAServerlessLog4J2LoggingSystem extends Log4J2LoggingSystem {
         LEVELS.map(LogLevel.OFF, Level.OFF);
     }
 
-    private static final Filter           FILTER        = new AbstractFilter() {
+    private static final Filter           FILTER                    = new AbstractFilter() {
 
-                                                            @Override
-                                                            public Result filter(LogEvent event) {
-                                                                return Result.DENY;
-                                                            }
+                                                                        @Override
+                                                                        public Result filter(LogEvent event) {
+                                                                            return Result.DENY;
+                                                                        }
 
-                                                            @Override
-                                                            public Result filter(Logger logger,
-                                                                                 Level level,
-                                                                                 Marker marker,
-                                                                                 Message msg,
-                                                                                 Throwable t) {
-                                                                return Result.DENY;
-                                                            }
+                                                                        @Override
+                                                                        public Result filter(Logger logger,
+                                                                                             Level level,
+                                                                                             Marker marker,
+                                                                                             Message msg,
+                                                                                             Throwable t) {
+                                                                            return Result.DENY;
+                                                                        }
 
-                                                            @Override
-                                                            public Result filter(Logger logger,
-                                                                                 Level level,
-                                                                                 Marker marker,
-                                                                                 Object msg,
-                                                                                 Throwable t) {
-                                                                return Result.DENY;
-                                                            }
+                                                                        @Override
+                                                                        public Result filter(Logger logger,
+                                                                                             Level level,
+                                                                                             Marker marker,
+                                                                                             Object msg,
+                                                                                             Throwable t) {
+                                                                            return Result.DENY;
+                                                                        }
 
-                                                            @Override
-                                                            public Result filter(Logger logger,
-                                                                                 Level level,
-                                                                                 Marker marker,
-                                                                                 String msg,
-                                                                                 Object... params) {
-                                                                return Result.DENY;
-                                                            }
+                                                                        @Override
+                                                                        public Result filter(Logger logger,
+                                                                                             Level level,
+                                                                                             Marker marker,
+                                                                                             String msg,
+                                                                                             Object... params) {
+                                                                            return Result.DENY;
+                                                                        }
 
-                                                        };
+                                                                    };
 
     public SOFAServerlessLog4J2LoggingSystem(ClassLoader classLoader) {
         super(classLoader);
@@ -171,6 +176,23 @@ public class SOFAServerlessLog4J2LoggingSystem extends Log4J2LoggingSystem {
             return;
         }
         loadDefaults(initializationContext, logFile);
+    }
+
+    @Override
+    protected void loadDefaults(LoggingInitializationContext initializationContext, LogFile logFile) {
+        if (logFile != null) {
+            loadConfiguration(DEFAULT_LOG4j_CONFIG_PATH + "log4j2-file.xml", logFile,
+                getOverrides(initializationContext));
+        } else {
+            loadConfiguration(DEFAULT_LOG4j_CONFIG_PATH + "log4j2.xml", logFile,
+                getOverrides(initializationContext));
+        }
+    }
+
+    private List<String> getOverrides(LoggingInitializationContext initializationContext) {
+        BindResult<List<String>> overrides = Binder.get(initializationContext.getEnvironment())
+            .bind("logging.log4j2.config.override", Bindable.listOf(String.class));
+        return overrides.orElse(Collections.emptyList());
     }
 
     @Override
@@ -311,7 +333,7 @@ public class SOFAServerlessLog4J2LoggingSystem extends Log4J2LoggingSystem {
     private void removeDefaultRootHandler() {
         try {
             java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager()
-                    .getLogger("");
+                .getLogger("");
             Handler[] handlers = rootLogger.getHandlers();
             if (handlers.length == 1 && handlers[0] instanceof ConsoleHandler) {
                 rootLogger.removeHandler(handlers[0]);
