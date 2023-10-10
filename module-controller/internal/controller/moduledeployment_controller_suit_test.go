@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 	"time"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -20,7 +21,7 @@ import (
 )
 
 var _ = Describe("ModuleDeployment Controller", func() {
-	const timeout = time.Second * 120
+	const timeout = time.Second * 30
 	const interval = time.Second * 5
 
 	namespace := "module-deployment-namespace"
@@ -116,7 +117,9 @@ var _ = Describe("ModuleDeployment Controller", func() {
 			Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
 			newModuleDeployment.Spec.Replicas += 1
 			Eventually(func() bool {
-				return k8sClient.Update(context.TODO(), &newModuleDeployment) == nil
+				err := k8sClient.Update(context.TODO(), &newModuleDeployment)
+				log.Log.Error(err, "update module replicas error")
+				return err == nil
 			}, timeout, interval).Should(BeTrue())
 
 			Eventually(func() bool {

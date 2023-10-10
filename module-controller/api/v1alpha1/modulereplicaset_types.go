@@ -46,6 +46,8 @@ type ModuleReplicaSetStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 	Replicas int32 `json:"replicas,omitempty"`
 
+	CurrentReplicas int32 `json:"currentReplicas,omitempty"`
+
 	AvailableReplicas int32 `json:"availableReplicas,omitempty"`
 
 	ReadyReplicas int32 `json:"readyReplicas,omitempty"`

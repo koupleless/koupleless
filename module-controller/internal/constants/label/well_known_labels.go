@@ -15,9 +15,13 @@ const (
 
 	DeleteModuleLabel = "serverless.alipay.com/delete-module"
 
+	DeleteModuleDirectlyLabel = "serverless.alipay.com/delete-module-directly"
+
 	ModuleInstanceCount = "serverless.alipay.com/module-instance-count"
 
 	NewReplicatedModuleLabel = "serverless.alipay.com/new-replicated-module"
 
 	DeletePodLabel = "serverless.alipay.com/delete-pod"
+
+	DeletePodDirectlyLabel = "serverless.alipay.com/delete-pod-directly"
 )

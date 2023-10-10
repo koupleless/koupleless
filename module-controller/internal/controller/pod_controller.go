@@ -83,6 +83,15 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 						return ctrl.Result{}, err
 					}
 				}
+			} else if pod.Labels[label.DeletePodDirectlyLabel] == "true" {
+				if module.Labels[label.DeleteModuleDirectlyLabel] != "true" {
+					module.Labels[label.DeleteModuleDirectlyLabel] = "true"
+					err = r.Client.Update(ctx, &module)
+					if err != nil {
+						log.Log.Error(err, "delete module failed when update delete module label", "moduleName", module.Name, "podName", pod.Name)
+						return ctrl.Result{}, err
+					}
+				}
 			} else {
 				err := r.Client.Delete(ctx, &module)
 				if err != nil && errors.IsNotFound(err) {
@@ -91,7 +100,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 				}
 			}
 		}
-	} else if pod.Labels[label.DeletePodLabel] == "true" {
+	} else if pod.Labels[label.DeletePodLabel] == "true" || pod.Labels[label.DeletePodDirectlyLabel] == "true" {
 		err := r.Client.Delete(ctx, pod)
 		if err != nil {
 			if errors.IsNotFound(err) {

@@ -75,6 +75,14 @@ type ReleaseStatus struct {
 	// +optional
 	CurrentBatch int32 `json:"currentBatch,omitempty"`
 
+	// Records the real batch count
+	// +optional
+	RealBatchCount int32 `json:"realBatchCount,omitempty"`
+
+	// Records the original delta replicas
+	// +optional
+	OriginalDeltaReplicas int32 `json:"originalDeltaReplicas,omitempty"`
+
 	// The phase current release reach
 	// +optional
 	Progress ReleaseProgress `json:"progress,omitempty"`
