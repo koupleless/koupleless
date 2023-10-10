@@ -46,6 +46,14 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 ### biz
 biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
 ```xml
+<!-- 模块需要引入专门的 log4j2 adapter -->
+<dependency>
+    <groupId>com.alipay.sofa.serverless</groupId>
+    <artifactId>sofa-serverless-adapter-log4j2</artifactId>
+    <version>${sofa.serverless.runtime.version}</version>
+    <scope>provided</scope>
+</dependency>
+
 <!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
