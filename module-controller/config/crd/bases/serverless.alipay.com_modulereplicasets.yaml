@@ -231,6 +231,9 @@ spec:
                       type: string
                   type: object
                 type: array
+              currentReplicas:
+                format: int32
+                type: integer
               observedGeneration:
                 format: int64
                 type: integer

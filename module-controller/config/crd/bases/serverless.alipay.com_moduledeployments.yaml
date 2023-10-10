@@ -223,9 +223,17 @@ spec:
                   nextReconcileTime:
                     format: date-time
                     type: string
+                  originalDeltaReplicas:
+                    description: Records the original delta replicas
+                    format: int32
+                    type: integer
                   progress:
                     description: The phase current release reach
                     type: string
+                  realBatchCount:
+                    description: Records the real batch count
+                    format: int32
+                    type: integer
                   updateRevision:
                     description: Records the latest revision.
                     type: string

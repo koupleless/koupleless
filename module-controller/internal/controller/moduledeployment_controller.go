@@ -105,7 +105,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	releaseStatus := moduleDeployment.Status.ReleaseStatus
 	switch releaseStatus.Progress {
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressInit:
-		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+		handleInitModuleDeployment(moduleDeployment, newRS)
 		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 			return ctrl.Result{}, err
 		}
@@ -113,8 +113,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return r.updateModuleReplicaSet(ctx, moduleDeployment, newRS)
 	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted:
 		if moduleDeployment.Spec.Replicas != newRS.Spec.Replicas {
-			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
-			moduleDeployment.Status.ReleaseStatus.CurrentBatch = 1
+			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressInit
 			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 				return ctrl.Result{}, err
 			}
@@ -150,6 +149,29 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return ctrl.Result{}, err
 	}
 	return ctrl.Result{}, nil
+}
+
+func handleInitModuleDeployment(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, newRS *moduledeploymentv1alpha1.ModuleReplicaSet) {
+	var (
+		expReplicas    = moduleDeployment.Spec.Replicas
+		deltaReplicas  = expReplicas - newRS.Spec.Replicas
+		realBatchCount = moduleDeployment.Status.ReleaseStatus.RealBatchCount
+	)
+
+	batchCount := moduleDeployment.Spec.OperationStrategy.BatchCount
+	if batchCount <= 0 {
+		realBatchCount = 1
+	} else if int32(math.Abs(float64(deltaReplicas))) < batchCount {
+		realBatchCount = int32(math.Abs(float64(deltaReplicas)))
+	} else {
+		realBatchCount = batchCount
+	}
+	moduleDeployment.Status.ReleaseStatus.RealBatchCount = realBatchCount
+
+	moduleDeployment.Status.ReleaseStatus.OriginalDeltaReplicas = deltaReplicas
+
+	moduleDeployment.Status.ReleaseStatus.CurrentBatch = 1
+	moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
 }
 
 // handle deleting module deployment
@@ -311,8 +333,9 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
 	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) (ctrl.Result, error) {
 	var (
-		batchCount = moduleDeployment.Spec.OperationStrategy.BatchCount
-		curBatch   = moduleDeployment.Status.ReleaseStatus.CurrentBatch
+		curBatch              = moduleDeployment.Status.ReleaseStatus.CurrentBatch
+		realBatchCount        = moduleDeployment.Status.ReleaseStatus.RealBatchCount
+		originalDeltaReplicas = moduleDeployment.Status.ReleaseStatus.OriginalDeltaReplicas
 
 		curReplicas   = newRS.Status.Replicas
 		expReplicas   = moduleDeployment.Spec.Replicas
@@ -331,14 +354,6 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 		return ctrl.Result{}, r.Status().Update(ctx, moduleDeployment)
 	}
 
-	if expReplicas < batchCount {
-		batchCount = expReplicas
-	}
-
-	if batchCount <= 0 {
-		batchCount = 1
-	}
-
 	// wait moduleReplicaset ready
 	if newRS.Spec.Replicas != curReplicas {
 		log.Log.Info(fmt.Sprintf("newRs is not ready, expect replicas %v, but got %v", newRS.Spec.Replicas, curReplicas))
@@ -347,13 +362,13 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 
 	replicas := int32(0)
 	// use beta strategy
-	useBeta := batchCount != 1 && curBatch == 1 && moduleDeployment.Spec.OperationStrategy.UseBeta
+	useBeta := realBatchCount != 1 && curBatch == 1 && moduleDeployment.Spec.OperationStrategy.UseBeta
 	if useBeta {
 		replicas = 1
-	} else if curBatch == batchCount { // if it's the last batch
+	} else if curBatch == realBatchCount { // if it's the last batch
 		replicas = expReplicas
 	} else {
-		replicas = newRS.Spec.Replicas + (curBatch)*int32(math.Floor(float64(deltaReplicas)/float64(batchCount)+0.5))
+		replicas = newRS.Spec.Replicas + int32(math.Ceil(float64(originalDeltaReplicas)/float64(realBatchCount)))
 	}
 
 	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS)
@@ -365,11 +380,9 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	now := metav1.Now()
 
 	if useBeta {
-		moduleDeployment.Status.ReleaseStatus.CurrentBatch = 1
 		message = "deployment release: beta deployment"
 	} else {
-		moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
-		message = fmt.Sprintf("deployment release: curbatch %v, batchCount %v", curBatch, batchCount)
+		message = fmt.Sprintf("deployment release: curbatch %v, batchCount %v", curBatch, realBatchCount)
 	}
 
 	moduleDeployment.Status.ReleaseStatus.LastTransitionTime = now
@@ -382,12 +395,17 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 		Message:            message,
 	})
 
+	//if len(moduleDeployment.Status.Conditions) > 10 {
+	//	moduleDeployment.Status.Conditions = moduleDeployment.Status.Conditions[]
+	//}
+
 	var grayTime int
-	if curBatch != batchCount {
-		if moduleDeployment.Spec.OperationStrategy.NeedConfirm { // use NeedConfirm Strategy
+	if curBatch != realBatchCount {
+		// needConfirm = true or batch = 1 and useBeta = true
+		if moduleDeployment.Spec.OperationStrategy.NeedConfirm || curBatch == 1 && moduleDeployment.Spec.OperationStrategy.UseBeta { // use NeedConfirm Strategy
 			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation
 		} else if grayTime = int(moduleDeployment.Spec.OperationStrategy.GrayTimeBetweenBatchSeconds); grayTime != 0 {
-			if curBatch == batchCount {
+			if curBatch == realBatchCount {
 				moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
 			} else {
 				moduleDeployment.Status.ReleaseStatus.NextReconcileTime = metav1.NewTime(now.Add(time.Duration(grayTime) * time.Second))
@@ -395,7 +413,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 			}
 		}
 	}
-
+	moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
 	return ctrl.Result{Requeue: true, RequeueAfter: time.Duration(grayTime) * time.Second}, r.Status().Update(ctx, moduleDeployment)
 }
 

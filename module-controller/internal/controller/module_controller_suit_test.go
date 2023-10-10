@@ -15,7 +15,6 @@ import (
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 	"github.com/sofastack/sofa-serverless/internal/utils"
 
-	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
@@ -25,7 +24,7 @@ var _ = Describe("Module Controller", func() {
 	const interval = time.Second * 3
 	moduleName := "test-module-name"
 	namespaceName := "module-controller-namespace"
-	podName := "test-pod-name"
+	podNamePrefix := "test-pod-name"
 	moduleReplicaSetName := "test-modulereplicaset"
 
 	Context("create module deployment without pod", func() {
@@ -52,6 +51,7 @@ var _ = Describe("Module Controller", func() {
 	module := PrepareModule(namespaceName, moduleName)
 	Context("create module deployment with pod", func() {
 		It("should be available status", func() {
+			podName := podNamePrefix + "-1"
 			pod := preparePod(namespaceName, podName)
 			k8sClient.Create(context.TODO(), &pod)
 			pod.Status.PodIP = "127.0.0.1"
@@ -77,11 +77,12 @@ var _ = Describe("Module Controller", func() {
 		It("should be deleted and recreate a new one", func() {
 			module.Labels[label.ModuleReplicasetLabel] = moduleReplicaSetName
 			module.Labels[label.ModuleNameLabel] = "test-module"
-			Expect(k8sClient.Update(context.TODO(), &module)).Should(Succeed())
-			Expect(k8sClient.Delete(context.TODO(), &module)).Should(Succeed())
+			utils.AddFinalizer(&module.ObjectMeta, finalizer.AllocatePodFinalizer)
 			moduleReplicaSet := prepareModuleReplicaSet(namespaceName, moduleReplicaSetName)
 			moduleReplicaSet.Spec.Template.Spec.Module.Url = updateModuleUrl
 			Expect(k8sClient.Create(context.TODO(), &moduleReplicaSet)).Should(Succeed())
+			Expect(k8sClient.Update(context.TODO(), &module)).Should(Succeed())
+			Expect(k8sClient.Delete(context.TODO(), &module)).Should(Succeed())
 			key := types.NamespacedName{
 				Name:      moduleName,
 				Namespace: namespaceName,
@@ -105,7 +106,7 @@ var _ = Describe("Module Controller", func() {
 	Context("delete module deployment with ip by patching delete label", func() {
 		It("should be deleted", func() {
 			module.Labels[label.DeleteModuleLabel] = "true"
-			utils.AddFinalizer(&module.ObjectMeta, finalizer.ModuleInstalledFinalizer)
+			utils.AddFinalizer(&module.ObjectMeta, finalizer.AllocatePodFinalizer)
 			Expect(k8sClient.Update(context.TODO(), &module)).Should(Succeed())
 			key := types.NamespacedName{
 				Name:      module.Name,
@@ -125,28 +126,26 @@ var _ = Describe("Module Controller", func() {
 		It("should create a new module with available status", func() {
 			moduleWithScaleUpThenScaleDownUpgradePolicy := PrepareModule(namespaceName, moduleName)
 			moduleWithScaleUpThenScaleDownUpgradePolicy.Labels[label.ModuleReplicasetLabel] = moduleReplicaSetName
-			utils.AddFinalizer(&moduleWithScaleUpThenScaleDownUpgradePolicy.ObjectMeta, finalizer.ModuleInstalledFinalizer)
+			utils.AddFinalizer(&moduleWithScaleUpThenScaleDownUpgradePolicy.ObjectMeta, finalizer.AllocatePodFinalizer)
 			moduleWithScaleUpThenScaleDownUpgradePolicy.Spec.UpgradePolicy = v1alpha1.ScaleUpThenScaleDownUpgradePolicy
+			podName := podNamePrefix + "-2"
 			pod := preparePod(namespaceName, podName)
-			k8sClient.Create(context.TODO(), &pod)
+			Expect(k8sClient.Create(context.TODO(), &pod)).Should(Succeed())
 			pod.Status.PodIP = "127.0.0.2"
 			k8sClient.Status().Update(context.TODO(), &pod)
 			Expect(k8sClient.Create(context.TODO(), &moduleWithScaleUpThenScaleDownUpgradePolicy)).Should(Succeed())
-
-			err := k8sClient.Delete(context.TODO(), &moduleWithScaleUpThenScaleDownUpgradePolicy)
-			if err != nil {
-				return
-			}
+			Expect(k8sClient.Delete(context.TODO(), &moduleWithScaleUpThenScaleDownUpgradePolicy)).Should(Succeed())
 			Eventually(func() bool {
-				err := k8sClient.Get(context.TODO(), types.NamespacedName{Namespace: namespaceName, Name: moduleName}, &moduleWithScaleUpThenScaleDownUpgradePolicy)
-				if err == nil || !errors.IsNotFound(err) {
-					return false
+				k8sClient.Get(context.TODO(), types.NamespacedName{Namespace: namespaceName, Name: moduleName}, &moduleWithScaleUpThenScaleDownUpgradePolicy)
+				if moduleWithScaleUpThenScaleDownUpgradePolicy.Labels[label.NewReplicatedModuleLabel] != "" {
+					newModule := &v1alpha1.Module{}
+					err := k8sClient.Get(context.TODO(), types.NamespacedName{Namespace: namespaceName, Name: moduleName}, newModule)
+					if err != nil {
+						return false
+					}
+					return newModule != nil
 				}
-				modules := &v1alpha1.ModuleList{}
-				err = k8sClient.List(context.TODO(), modules, &client.ListOptions{Namespace: module.Namespace, LabelSelector: labels.SelectorFromSet(map[string]string{
-					label.ModuleReplicasetLabel: moduleReplicaSetName,
-				})})
-				return modules.Items[0].Name != moduleName && modules.Items[0].Status.Status == v1alpha1.ModuleInstanceStatusAvailable
+				return false
 			}, timeout, interval).Should(BeTrue())
 		})
 	})
@@ -178,16 +177,3 @@ func PrepareModule(namespace string, moduleName string) v1alpha1.Module {
 	}
 	return module
 }
-
-//func cleanAllModules(namespaceName string) {
-//	modules := &v1alpha1.ModuleList{}
-//	k8sClient.List(context.TODO(), modules, &client.ListOptions{Namespace: namespaceName, LabelSelector: labels.SelectorFromSet(map[string]string{})})
-//	for _, module := range modules.Items {
-//		k8sClient.Delete(context.TODO(), &module)
-//		var emptyFinalize []string
-//		if len(module.Finalizers) > 0 {
-//			module.Finalizers = emptyFinalize
-//			k8sClient.Update(context.TODO(), &module)
-//		}
-//	}
-//}
