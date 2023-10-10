@@ -76,7 +76,7 @@ var _ = Describe("Pod Controller", func() {
 			module2.Labels[label.BaseInstanceNameLabel] = pod.Name
 			Expect(k8sClient.Create(context.TODO(), &module1)).Should(Succeed())
 			Expect(k8sClient.Create(context.TODO(), &module2)).Should(Succeed())
-			utils.AddFinalizer(&pod.ObjectMeta, finalizer.ModuleInstalledFinalizer)
+			utils.AddFinalizer(&pod.ObjectMeta, finalizer.AllocatePodFinalizer)
 			Expect(k8sClient.Create(context.TODO(), &pod)).Should(Succeed())
 			pod.Labels[label.DeletePodLabel] = "true"
 			Expect(k8sClient.Update(context.TODO(), &pod)).Should(Succeed())
