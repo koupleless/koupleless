@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.alipay.sofa</groupId>
+        <artifactId>sofa-ark-spring-guides</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.alipay.sofa.web</groupId>
+    <artifactId>biz-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>biz-service</name>
+    <description>biz-service</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-app-starter</artifactId>
+            <version>0.3.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa</groupId>
+            <artifactId>base-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <!--				<exclusion>-->
+                <!--					<groupId>com.alipay.sofa.serverless</groupId>-->
+                <!--					<artifactId>sofa-serverless-base-starter</artifactId>-->
+                <!--				</exclusion>-->
+                <!--				<exclusion>-->
+                <!--					<groupId>com.alipay.sofa</groupId>-->
+                <!--					<artifactId>spring-boot-ark-biz</artifactId>-->
+                <!--				</exclusion>-->
+                <!--				<exclusion>-->
+                <!--					<groupId>com.alipay.sofa</groupId>-->
+                <!--					<artifactId>sofa-ark-all</artifactId>-->
+                <!--				</exclusion>-->
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
+            <plugin>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-maven-plugin</artifactId>
+                <version>2.2.3</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skipArkExecutable>true</skipArkExecutable>
+                    <outputDirectory>./target</outputDirectory>
+                    <bizName>biz</bizName>
+                    <!-- 单host下需更换 web context path -->
+                    <webContextPath>biz</webContextPath>
+                    <declaredMode>true</declaredMode>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
