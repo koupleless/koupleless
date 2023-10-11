@@ -1,10 +1,9 @@
 package com.alipay.sofa.biz.rest;
 
-import com.alipay.sofa.base.facade.AppService;
-import com.alipay.sofa.base.facade.SampleService;
+import com.alipay.sofa.model.facade.AppService;
+import com.alipay.sofa.model.facade.SampleService;
 import com.alipay.sofa.serverless.common.api.AutowiredFromBase;
 import com.alipay.sofa.serverless.common.api.SpringServiceFinder;
-import com.alipay.sofa.base.EnvClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,9 +29,6 @@ public class SampleController {
     @AutowiredFromBase
     private AppService appService;
 
-    @AutowiredFromBase
-    private EnvClient envClient;
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
 
@@ -49,9 +45,6 @@ public class SampleController {
         }
 
         appService.getAppName();
-
-        envClient.getEnv();
-
 
         SampleService sampleServiceImplFromFinder = SpringServiceFinder.getBaseService("sampleServiceImpl");
         String result = sampleServiceImplFromFinder.service();

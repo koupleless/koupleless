@@ -8,7 +8,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.alipay.sofa</groupId>
+	<groupId>com.alipay.sofa.service</groupId>
 	<artifactId>base-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>base-service</name>
@@ -37,36 +37,14 @@
 
 		<!-- 这里添加动态模块相关依赖 -->
 		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>sofa-ark-springboot-starter</artifactId>
-			<version>${sofa.ark.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>web-ark-plugin</artifactId>
-			<version>${sofa.ark.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>sofa-ark-all</artifactId>
-			<version>${sofa.ark.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>sofa-ark-api</artifactId>
-			<version>${sofa.ark.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>com.alipay.sofa.serverless</groupId>
 			<artifactId>sofa-serverless-base-starter</artifactId>
-			<version>0.3.4</version>
+			<version>0.5.0</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.alipay.sofa.web</groupId>
-			<artifactId>biz-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>com.alipay.sofa.service</groupId>
+			<artifactId>model</artifactId>
 		</dependency>
 
 	</dependencies>

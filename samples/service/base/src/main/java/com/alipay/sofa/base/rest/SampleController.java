@@ -1,11 +1,9 @@
-package com.alipay.sofa.base;
+package com.alipay.sofa.base.rest;
 
-import com.alipay.sofa.base.facade.SampleService;
+import com.alipay.sofa.model.model.Param;
+import com.alipay.sofa.model.model.Provider;
+import com.alipay.sofa.model.model.Result;
 import com.alipay.sofa.serverless.common.api.SpringServiceFinder;
-import com.alipay.sofa.biz.Provider;
-import com.alipay.sofa.biz.model.Param;
-import com.alipay.sofa.biz.model.Result;
-import com.alipay.sofa.biz.service.TeacherProvider;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +19,6 @@ import java.util.Map;
 @RestController
 public class SampleController {
 
-//    @Autowired
-    private SampleService sampleService;
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
 //        sampleService.service();
@@ -37,15 +32,15 @@ public class SampleController {
         System.out.println(result);
 
         Provider teacherProvider = SpringServiceFinder.getModuleService("spring-boot-ark-biz", "0.0.1-SNAPSHOT",
-                TeacherProvider.class);
+                "teacherProvider");
         Result result1 = teacherProvider.provide(new Param());
         System.out.println(result1.getClass());
         System.out.println(result1.isSuccess());
         System.out.println(result1.getPeople().getClass());
         System.out.println(result1);
 
-        Map<String, TeacherProvider> teacherProviderMap = SpringServiceFinder.listModuleServices("spring-boot-ark-biz", "0.0.1-SNAPSHOT",
-                TeacherProvider.class);
+        Map<String, Provider> teacherProviderMap = SpringServiceFinder.listModuleServices("spring-boot-ark-biz", "0.0.1-SNAPSHOT",
+                Provider.class);
         for (String beanName : teacherProviderMap.keySet()) {
             Result result2 = teacherProviderMap.get(beanName).provide(new Param());
             System.out.println(result2.getClass());

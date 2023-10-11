@@ -1,4 +1,4 @@
-package com.alipay.sofa.biz.model;
+package com.alipay.sofa.model.model;
 
 import java.util.Date;
 

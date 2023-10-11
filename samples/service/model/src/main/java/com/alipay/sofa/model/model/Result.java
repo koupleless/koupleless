@@ -1,4 +1,4 @@
-package com.alipay.sofa.biz.model;
+package com.alipay.sofa.model.model;
 
 /**
  * @author: yuanyuan
@@ -8,7 +8,7 @@ public class Result {
 
     private boolean success;
 
-    private com.alipay.sofa.biz.model.People people;
+    private People people;
 
     public boolean isSuccess() {
         return success;
@@ -18,7 +18,7 @@ public class Result {
         this.success = success;
     }
 
-    public com.alipay.sofa.biz.model.People getPeople() {
+    public People getPeople() {
         return people;
     }
 

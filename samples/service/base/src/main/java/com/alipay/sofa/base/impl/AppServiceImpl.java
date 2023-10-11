@@ -1,7 +1,7 @@
 package com.alipay.sofa.base.impl;
 
 
-import com.alipay.sofa.base.facade.AppService;
+import com.alipay.sofa.model.facade.AppService;
 import org.springframework.stereotype.Service;
 
 /**

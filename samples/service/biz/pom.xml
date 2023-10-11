@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.alipay.sofa.web</groupId>
+    <groupId>com.alipay.sofa.service</groupId>
     <artifactId>biz-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>biz-service</name>
@@ -40,32 +40,14 @@
         <dependency>
             <groupId>com.alipay.sofa.serverless</groupId>
             <artifactId>sofa-serverless-app-starter</artifactId>
-            <version>0.3.4</version>
+            <version>0.5.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.alipay.sofa</groupId>
-            <artifactId>base-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <!--				<exclusion>-->
-                <!--					<groupId>com.alipay.sofa.serverless</groupId>-->
-                <!--					<artifactId>sofa-serverless-base-starter</artifactId>-->
-                <!--				</exclusion>-->
-                <!--				<exclusion>-->
-                <!--					<groupId>com.alipay.sofa</groupId>-->
-                <!--					<artifactId>spring-boot-ark-biz</artifactId>-->
-                <!--				</exclusion>-->
-                <!--				<exclusion>-->
-                <!--					<groupId>com.alipay.sofa</groupId>-->
-                <!--					<artifactId>sofa-ark-all</artifactId>-->
-                <!--				</exclusion>-->
-            </exclusions>
+            <groupId>com.alipay.sofa.service</groupId>
+            <artifactId>model</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

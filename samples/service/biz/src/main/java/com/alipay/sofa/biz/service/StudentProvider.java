@@ -1,9 +1,9 @@
 package com.alipay.sofa.biz.service;
 
-import com.alipay.sofa.biz.Provider;
-import com.alipay.sofa.biz.model.Param;
-import com.alipay.sofa.biz.model.Result;
-import com.alipay.sofa.biz.model.Student;
+import com.alipay.sofa.model.model.Param;
+import com.alipay.sofa.model.model.Provider;
+import com.alipay.sofa.model.model.Result;
+import com.alipay.sofa.model.model.Student;
 import org.springframework.stereotype.Service;
 
 /**

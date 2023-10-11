@@ -1,4 +1,4 @@
-package com.alipay.sofa.base.facade;
+package com.alipay.sofa.model.facade;
 
 public interface AppService {
 
