@@ -32,6 +32,9 @@
         <module>web/tomcat/base</module>
         <module>web/tomcat/biz1</module>
         <module>web/tomcat/biz2</module>
+        <module>msg/kafka/base</module>
+        <module>msg/kafka/biz1</module>
+        <module>msg/kafka/biz2</module>
     </modules>
 
     <dependencyManagement>
