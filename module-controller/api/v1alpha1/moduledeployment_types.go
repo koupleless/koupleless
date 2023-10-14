@@ -46,16 +46,9 @@ const (
 	ModuleDeploymentReleaseProgressWaitingForConfirmation ReleaseProgress = "WaitingForConfirmation"
 	ModuleDeploymentReleaseProgressExecuting              ReleaseProgress = "Executing"
 	ModuleDeploymentReleaseProgressPaused                 ReleaseProgress = "Paused"
-	CafeDeploymentReleaseProgressCompleted                ReleaseProgress = "Completed"
-	CafeDeploymentReleaseProgressAborted                  ReleaseProgress = "Aborted"
-	CafeDeploymentReleaseProgressTermed                   ReleaseProgress = "Terminated"
-)
-
-type DeployPolicy string
-
-const (
-	ModuleDeploymentDeployPolicySymmetric  DeployPolicy = "symmetric"
-	ModuleDeploymentDeployPolicyAsymmetric DeployPolicy = "asymmetric"
+	ModuleDeploymentReleaseProgressCompleted              ReleaseProgress = "Completed"
+	ModuleDeploymentReleaseProgressAborted                ReleaseProgress = "Aborted"
+	ModuleDeploymentReleaseProgressTermed                 ReleaseProgress = "Terminated"
 )
 
 type ModuleUpgradeType string
@@ -64,6 +57,13 @@ const (
 	InstallThenUninstallUpgradePolicy ModuleUpgradeType = "install_then_uninstall"
 	UninstallThenInstallUpgradePolicy ModuleUpgradeType = "uninstall_then_install"
 	ScaleUpThenScaleDownUpgradePolicy ModuleUpgradeType = "scaleup_then_scaledown"
+)
+
+type ModuleSchedulingType string
+
+const (
+	Scatter  ModuleSchedulingType = "scatter"
+	Stacking ModuleSchedulingType = "stacking"
 )
 
 type ReleaseStatus struct {
@@ -110,7 +110,7 @@ type ModuleDeploymentCondition struct {
 	Message string `json:"message,omitempty"`
 }
 
-type OperationStrategy struct {
+type ModuleOperationStrategy struct {
 	NeedConfirm bool `json:"needConfirm,omitempty"`
 
 	UseBeta bool `json:"useBeta,omitempty"`
@@ -122,10 +122,11 @@ type OperationStrategy struct {
 	GrayTimeBetweenBatchSeconds int32 `json:"grayTimeBetweenBatchSeconds,omitempty"`
 }
 
-type SchedulingStrategy struct {
-	UpgradePolicy    ModuleUpgradeType    `json:"upgradePolicy,omitempty"`
+type ModuleSchedulingStrategy struct {
+	UpgradePolicy ModuleUpgradeType `json:"upgradePolicy,omitempty"`
+	// +kubebuilder:validation:Enum={"scatter","stacking"}
+	// +kubebuilder:default="scatter"
 	SchedulingPolicy ModuleSchedulingType `json:"schedulingPolicy,omitempty"`
-	MaxModuleCount   int                  `json:"maxModuleCount,omitempty"`
 }
 
 // ModuleDeploymentSpec defines the desired state of ModuleDeployment
@@ -137,9 +138,7 @@ type ModuleDeploymentSpec struct {
 
 	Template ModuleTemplateSpec `json:"template,omitempty"`
 
-	// +kubebuilder:validation:Enum={"symmetric","asymmetric"}
-	DeployPolicy DeployPolicy `json:"deployPolicy"`
-
+	// +kubebuilder:validation:Minimum=-1
 	Replicas int32 `json:"replicas,omitempty"`
 
 	MinReadySeconds int32 `json:"minReadySeconds,omitempty"`
@@ -153,9 +152,9 @@ type ModuleDeploymentSpec struct {
 	// +optional
 	Pause bool `json:"pause,omitempty"`
 
-	OperationStrategy OperationStrategy `json:"operationStrategy,omitempty"`
+	OperationStrategy ModuleOperationStrategy `json:"operationStrategy,omitempty"`
 
-	SchedulingStrategy SchedulingStrategy `json:"schedulingStrategy,omitempty"`
+	SchedulingStrategy ModuleSchedulingStrategy `json:"schedulingStrategy,omitempty"`
 }
 
 // ModuleDeploymentStatus defines the observed state of ModuleDeployment

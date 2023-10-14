@@ -60,9 +60,11 @@ spec:
                 type: integer
               schedulingStrategy:
                 properties:
-                  maxModuleCount:
-                    type: integer
                   schedulingPolicy:
+                    default: scatter
+                    enum:
+                    - scatter
+                    - stacking
                     type: string
                   upgradePolicy:
                     type: string

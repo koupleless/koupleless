@@ -14,13 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command.meta.bizops;
+package com.alipay.sofa.serverless.common.service;
 
 /**
- * @author mingmen
- * @date 2023/8/21
- * An interface that requires manipulation of ark biz changes
- * command handler needs to implement this interface
+ * @author: yuanyuan
+ * @date: 2023/9/25 11:37 下午
  */
-public interface ArkBizOps {
+public class ServiceProxyCache {
+
+    private Object               proxy;
+
+    private SpringServiceInvoker invoker;
+
+    public ServiceProxyCache(Object proxy, SpringServiceInvoker invoker) {
+        this.proxy = proxy;
+        this.invoker = invoker;
+    }
+
+    public Object getProxy() {
+        return proxy;
+    }
+
+    public void setProxy(Object proxy) {
+        this.proxy = proxy;
+    }
+
+    public SpringServiceInvoker getInvoker() {
+        return invoker;
+    }
+
+    public void setInvoker(SpringServiceInvoker invoker) {
+        this.invoker = invoker;
+    }
 }

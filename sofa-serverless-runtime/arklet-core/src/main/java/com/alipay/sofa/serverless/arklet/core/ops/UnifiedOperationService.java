@@ -29,7 +29,6 @@ import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
  */
 public interface UnifiedOperationService extends ArkletComponent {
 
-
     /**
      * install biz
      * @param bizUrl biz URL

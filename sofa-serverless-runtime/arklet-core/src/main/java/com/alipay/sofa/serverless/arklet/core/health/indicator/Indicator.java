@@ -14,43 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common.service;
+package com.alipay.sofa.serverless.arklet.core.health.indicator;
+
+import com.alipay.sofa.serverless.arklet.core.health.model.Health;
+import com.alipay.sofa.serverless.arklet.core.health.model.Health.HealthBuilder;
+
+import java.util.Map;
 
 /**
- * @author: yuanyuan
- * @date: 2023/9/25 11:37 下午
+ * @author Lunarscave
  */
-<<<<<<<< HEAD:sofa-serverless-runtime/sofa-serverless-common/src/main/java/com/alipay/sofa/serverless/common/service/ServiceProxyCache.java
-public class ServiceProxyCache {
-========
 public abstract class Indicator {
->>>>>>>> bf47eef (optimize code):sofa-serverless-runtime/arklet-core/src/main/java/com/alipay/sofa/serverless/arklet/core/health/indicator/Indicator.java
 
-    private Object               proxy;
+    private final String indicatorId;
 
-<<<<<<<< HEAD:sofa-serverless-runtime/sofa-serverless-common/src/main/java/com/alipay/sofa/serverless/common/service/ServiceProxyCache.java
-    private SpringServiceInvoker invoker;
-
-    public ServiceProxyCache(Object proxy, SpringServiceInvoker invoker) {
-        this.proxy = proxy;
-        this.invoker = invoker;
-    }
-
-    public Object getProxy() {
-        return proxy;
-    }
-
-    public void setProxy(Object proxy) {
-        this.proxy = proxy;
-    }
-
-    public SpringServiceInvoker getInvoker() {
-        return invoker;
-    }
-
-    public void setInvoker(SpringServiceInvoker invoker) {
-        this.invoker = invoker;
-========
     public Indicator(String indicatorId) {
         this.indicatorId = indicatorId;
     }
@@ -76,6 +53,5 @@ public abstract class Indicator {
      */
     public Health getHealthModel(HealthBuilder builder) {
         return builder.init().putHealthData(getIndicatorId(), getHealthDetails()).build();
->>>>>>>> bf47eef (optimize code):sofa-serverless-runtime/arklet-core/src/main/java/com/alipay/sofa/serverless/arklet/core/health/indicator/Indicator.java
     }
 }

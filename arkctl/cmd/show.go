@@ -14,13 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command.meta.bizops;
 
-/**
- * @author mingmen
- * @date 2023/8/21
- * An interface that requires manipulation of ark biz changes
- * command handler needs to implement this interface
- */
-public interface ArkBizOps {
+package cmd
+
+import (
+	"fmt"
+	"github.com/spf13/cobra"
+)
+
+// showCmd represents the show command
+var showCmd = &cobra.Command{
+	Use:   "show",
+	Short: "show serverless app status",
+	Long:  ``,
+	Run:   show,
+}
+
+func init() {
+	rootCmd.AddCommand(showCmd)
+	showCmd.Flags().String("r", "", "")
+	showCmd.Flags().String("mc", "", "Get Metadata in MetadataCenter")
+	showCmd.Flags().String("h", "h", "")
+}
+
+func show(cmd *cobra.Command, _ []string) {
+	fmt.Printf("======================\n")
+	fmt.Printf("获取模块状态信息")
 }

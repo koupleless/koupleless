@@ -14,13 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.command.meta.bizops;
 
-/**
- * @author mingmen
- * @date 2023/8/21
- * An interface that requires manipulation of ark biz changes
- * command handler needs to implement this interface
- */
-public interface ArkBizOps {
+package cmd
+
+import (
+	"fmt"
+)
+
+import (
+	"github.com/spf13/cobra"
+)
+
+import (
+	"serverless.alipay.com/sofa-serverless/v1/arkctl/constant"
+)
+
+// versionCmd represents the version command
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "show version",
+	Long:  ``,
+	Run:   versionFunc,
+}
+
+func init() {
+	rootCmd.AddCommand(versionCmd)
+}
+
+func versionFunc(cmd *cobra.Command, _ []string) {
+	fmt.Printf("arkctl Version: %s\n", constant.Version)
 }

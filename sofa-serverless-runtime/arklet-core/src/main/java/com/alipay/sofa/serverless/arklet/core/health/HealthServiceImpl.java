@@ -47,9 +47,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class HealthServiceImpl implements HealthService {
 
-    private static final ArkletLogger              LOGGER        = ArkletLoggerFactory
-                                                                     .getDefaultLogger();
-    private final HealthBuilder                    healthBuilder = new HealthBuilder();
+    private static final ArkletLogger    LOGGER        = ArkletLoggerFactory.getDefaultLogger();
+    private final HealthBuilder          healthBuilder = new HealthBuilder();
 
     private final Map<String, Indicator> indicators    = new ConcurrentHashMap<>(3);
 
