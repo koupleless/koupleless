@@ -17,21 +17,21 @@ weight: 800
 | tomcat | 7.x、8.x、9.x <br />及以上均可 | - [x] 已经支持<br /> |
 | netty | 4.x | - [x] 已经支持<br /> |
 | sofarpc | >= 5.8.6 | - [x] 已经支持<br /> |
-| dubbo | 3.x | [x] 已经支持<br/>基座和模块完整使用样例及注意事项可[参见此处](https://github.com/sofastack/sofa-serverless/blob/master/samples/dubbo-samples/rpc/grpc) |
-| grpc | 1.x 且 >= 1.42 | [x] 已经支持<br/>基座和模块完整使用样例及注意事项可[参见此处](https://github.com/sofastack/sofa-serverless/blob/master/samples/dubbo-samples/rpc/grpc) |
-| protobuf-java | 3.x 且 >= 3.17 | [x] 已经支持<br/>基座和模块完整使用样例及注意事项可[参见此处](https://github.com/sofastack/sofa-serverless/blob/master/samples/dubbo-samples/rpc/grpc) |
+| dubbo | 3.x | - [x] 已经支持<br/>基座和模块完整使用样例及注意事项可[参见此处](https://github.com/sofastack/sofa-serverless/blob/master/samples/dubbo-samples/rpc/grpc) |
+| grpc | 1.x 且 >= 1.42 | - [x] 已经支持<br/>基座和模块完整使用样例及注意事项可[参见此处](https://github.com/sofastack/sofa-serverless/blob/master/samples/dubbo-samples/rpc/grpc) |
+| protobuf-java | 3.x 且 >= 3.17 | - [x] 已经支持<br/>基座和模块完整使用样例及注意事项可[参见此处](https://github.com/sofastack/sofa-serverless/blob/master/samples/dubbo-samples/rpc/grpc) |
 | apollo | 1.x 且 >= 1.6.0 | 验证进行中 |
 | kafka-client | >= 2.8.0  或<br />>= 3.4.0 | - [x] 已经支持<br />基座和模块完整使用样例可[参见此处](https://github.com/sofastack/sofa-serverless/blob/master/samples/logging/README.md) |
 | rocketmq | 4.x 且 >= 4.3.0 | 验证进行中 |
-| xxl-job | 2.x 且 >= 2.1.0 | [x] 已经支持 |
+| xxl-job | 2.x 且 >= 2.1.0 | - [x] 已经支持 |
 | mybatis | >= 2.2.2  或<br />>= 3.5.12 | 理论支持，验证进行中 |
 | hibernate | 5.x 且 >= 5.6.15 | - [x] 已经支持<br /> |
 | druid | 1.x 且 >= 1.2.3 | 理论支持，验证进行中 |
-| mysql-connector-java | 8.x 且 >= 8.0.31 | 理论支持，验证进行中 |
+| mysql-connector-java | 8.x | 理论支持，验证进行中 |
 | postgresql | 42.x 且 >= 42.3.8 | - [x] 已经支持<br /> |
-| jedis | 3.x 且 >= 3.3.0 | [ ] 验证进行中 |
+| jedis | 3.x 且 >= 3.3.0 | - [ ] 验证进行中 |
 | opentracing | 0.x 且 >= 0.32.0 | - [x] 已经支持<br /> |
-| elasticsearch | 7.x 且 >= 7.6.2 | [x] 已经支持<br /> |
-| jaspyt | 1.x 且 >= 1.9.3 | [ ] 适配进行中<br /> |
-| io.kubernetes:client | 10.x 且 >= 10.0.0 | [x] 已经支持<br /> |
+| elasticsearch | 7.x 且 >= 7.6.2 | - [x] 已经支持<br /> |
+| jaspyt | 1.x 且 >= 1.9.3 | - [ ] 适配进行中<br /> |
+| io.kubernetes:client | 10.x 且 >= 10.0.0 | - [x] 已经支持<br /> |
 | net.java.dev.jna | 5.x 且 >= 5.12.1 | - [x] 已经支持<br /> |
