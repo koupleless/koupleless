@@ -69,6 +69,14 @@ public class SampleController {
             System.out.println(result1);
         }
 
+        Result provide = studentProvider.provide(new Param());
+
+        Result provide1 = teacherProvider.provide(new Param());
+
+        for (Provider provider : providers) {
+            Result provide2 = provider.provide(new Param());
+        }
+
         Provider teacherProvider1 = SpringServiceFinder.getModuleService("biz", "0.0.1-SNAPSHOT", "teacherProvider", Provider.class);
         Result result1 = teacherProvider1.provide(new Param());
 

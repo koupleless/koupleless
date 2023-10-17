@@ -21,7 +21,6 @@ public class SampleController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
-//        sampleService.service();
 
         Provider studentProvider = SpringServiceFinder.getModuleService("biz", "0.0.1-SNAPSHOT",
                 "studentProvider", Provider.class);

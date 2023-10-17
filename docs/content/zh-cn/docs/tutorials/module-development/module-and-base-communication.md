@@ -12,23 +12,22 @@ weight: 300
 ```java
 @RestController
 public class SampleController {
-    
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
 
-        Provider studentProvider = SpringServiceFinder.getModuleService("spring-boot-ark-biz", "0.0.1-SNAPSHOT",
-                "studentProvider");
+        Provider studentProvider = SpringServiceFinder.getModuleService("biz", "0.0.1-SNAPSHOT",
+                "studentProvider", Provider.class);
         Result result = studentProvider.provide(new Param());
-        
-        Provider teacherProvider = SpringServiceFinder.getModuleService("spring-boot-ark-biz", "0.0.1-SNAPSHOT",
-                TeacherProvider.class);
-        Result result1 = teacherProvider.provide(new Param());
 
-        Map<String, TeacherProvider> teacherProviderMap = SpringServiceFinder.listModuleServices("spring-boot-ark-biz", "0.0.1-SNAPSHOT",
-                TeacherProvider.class);
-        for (String beanName : teacherProviderMap.keySet()) {
-            Result result2 = teacherProviderMap.get(beanName).provide(new Param());
-            System.out.println(result2.getClass());
+        Provider teacherProvider = SpringServiceFinder.getModuleService("biz", "0.0.1-SNAPSHOT",
+                "teacherProvider", Provider.class);
+        Result result1 = teacherProvider.provide(new Param());
+        
+        Map<String, Provider> providerMap = SpringServiceFinder.listModuleServices("biz", "0.0.1-SNAPSHOT",
+                Provider.class);
+        for (String beanName : providerMap.keySet()) {
+            Result result2 = providerMap.get(beanName).provide(new Param());
         }
 
         return "hello to ark master biz";
@@ -59,9 +58,6 @@ public class SampleController {
     @AutowiredFromBase
     private AppService appService;
 
-    @AutowiredFromBase
-    private EnvClient envClient;
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
 
@@ -79,9 +75,7 @@ public class SampleController {
 
         appService.getAppName();
 
-        envClient.getEnv();
-
-        return "hello to ark dynamic deploy";
+        return "hello to ark2 dynamic deploy";
     }
 }
 ```
@@ -95,7 +89,7 @@ public class SampleController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
 
-        SampleService sampleServiceImplFromFinder = SpringServiceFinder.getBaseService("sampleServiceImpl");
+        SampleService sampleServiceImplFromFinder = SpringServiceFinder.getBaseService("sampleServiceImpl", SampleService.class);
         String result = sampleServiceImplFromFinder.service();
         System.out.println(result);
 
@@ -105,7 +99,7 @@ public class SampleController {
             System.out.println(result1);
         }
 
-        return "hello to ark dynamic deploy";
+        return "hello to ark2 dynamic deploy";
     }
 }
 ```
@@ -120,34 +114,27 @@ public class SampleController {
 @RestController
 public class SampleController {
 
-    @AutowiredFromBiz(name = "studentProvider", bizName = "spring-boot-ark-biz", bizVersion = "0.0.1-SNAPSHOT")
+    @AutowiredFromBiz(bizName = "biz", bizVersion = "0.0.1-SNAPSHOT", name = "studentProvider")
     private Provider studentProvider;
 
-    @AutowiredFromBiz(name = "teacherProvider", bizName = "spring-boot-ark-biz")
+    @AutowiredFromBiz(bizName = "biz", name = "teacherProvider")
     private Provider teacherProvider;
 
-    @AutowiredFromBiz
-    private List<Provider> providerList;
-
-    @AutowiredFromBiz
-    private Map<String, Provider> providerMap;
+    @AutowiredFromBiz(bizName = "biz", bizVersion = "0.0.1-SNAPSHOT")
+    private List<Provider> providers;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
 
-        Result result = studentProvider.provide(new Param());
+        Result provide = studentProvider.provide(new Param());
 
-        Result result1 = teacherProvider.provide(new Param());
+        Result provide1 = teacherProvider.provide(new Param());
 
-        for (Provider provider : providerList) {
-            Result result = studentProvider.provide(new Param());
+        for (Provider provider : providers) {
+            Result provide2 = provider.provide(new Param());
         }
 
-        for (String beanName : providerMap.keySet()) {
-            Result result = providerMap.get(beanName).provide(new Param());
-        }
-
-        return "hello to ark dynamic deploy";
+        return "hello to ark2 dynamic deploy";
     }
 }
 ```
@@ -155,26 +142,26 @@ public class SampleController {
 ### 方式二：编程API SpringServiceFinder
 
 ```java
-import java.security.Provider;
-
 @RestController
 public class SampleController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
 
-        Provider studentProvider = SpringServiceFinder.getModuleService("spring-boot-ark-biz", "0.0.1-SNAPSHOT", "studentProvider");
-        Result result = studentProvider.provide(new Param());
+        Provider teacherProvider1 = SpringServiceFinder.getModuleService("biz", "0.0.1-SNAPSHOT", "teacherProvider", Provider.class);
+        Result result1 = teacherProvider1.provide(new Param());
 
-        Map<String, Provider> providerMap = SpringServiceFinder.listModuleServices("spring-boot-ark-biz", "0.0.1-SNAPSHOT", Provider.class);
+        Map<String, Provider> providerMap = SpringServiceFinder.listModuleServices("biz", "0.0.1-SNAPSHOT", Provider.class);
         for (String beanName : providerMap.keySet()) {
-            Result result1 = providerMap.get(beanName).provide(new Param());
+            Result result2 = providerMap.get(beanName).provide(new Param());
         }
 
-        return "hello to ark dynamic deploy";
+        return "hello to ark2 dynamic deploy";
     }
 }
 ```
+
+[完整样例](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-ark-jvm/)
 
 # SOFABoot 环境
 
