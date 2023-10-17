@@ -30,9 +30,9 @@ import static com.alipay.sofa.serverless.common.service.ServiceProxyFactory.dete
  */
 public class SpringServiceFinder {
 
-    public static <T> T getBaseService(String name) {
+    public static <T> T getBaseService(String name, Class<T> serviceType) {
         Biz masterBiz = ArkClient.getMasterBiz();
-        return ServiceProxyFactory.createServiceProxy(masterBiz, name, null);
+        return ServiceProxyFactory.createServiceProxy(masterBiz, name, serviceType, null);
     }
 
     public static <T> T getBaseService(Class<T> serviceType) {
@@ -45,9 +45,10 @@ public class SpringServiceFinder {
         return ServiceProxyFactory.batchCreateServiceProxy(masterBiz, serviceType, null);
     }
 
-    public static <T> T getModuleService(String moduleName, String moduleVersion, String name) {
+    public static <T> T getModuleService(String moduleName, String moduleVersion, String name,
+                                         Class<T> serviceType) {
         Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
-        return ServiceProxyFactory.createServiceProxy(biz, name, null);
+        return ServiceProxyFactory.createServiceProxy(biz, name, serviceType, null);
     }
 
     public static <T> T getModuleService(String moduleName, String moduleVersion,

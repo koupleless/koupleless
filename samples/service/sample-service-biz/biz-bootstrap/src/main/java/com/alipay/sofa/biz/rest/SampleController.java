@@ -46,7 +46,7 @@ public class SampleController {
 
         appService.getAppName();
 
-        SampleService sampleServiceImplFromFinder = SpringServiceFinder.getBaseService("sampleServiceImpl");
+        SampleService sampleServiceImplFromFinder = SpringServiceFinder.getBaseService("sampleServiceImpl", SampleService.class);
         String result = sampleServiceImplFromFinder.service();
         System.out.println(result);
 

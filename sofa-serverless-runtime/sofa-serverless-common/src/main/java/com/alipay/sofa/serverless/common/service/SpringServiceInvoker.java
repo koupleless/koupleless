@@ -45,17 +45,17 @@ public class SpringServiceInvoker implements MethodInterceptor {
     private static final String EQUALS_METHOD   = "equals";
     private static final String HASHCODE_METHOD = "hashCode";
 
-    private Object              target;                                                    // target 跨上下文寻址
+    private Object              target;                                                    // 被调用方目标bean
 
-    private String              bizName;
+    private String              bizName;                                                   // 被调用方bizName
 
-    private String              bizVersion;
+    private String              bizVersion;                                                // 被调用方bizVersion
 
-    private String              bizIdentity;
+    private String              bizIdentity;                                               // 被调用方bizIdentity
 
-    private ClassLoader         clientClassLoader;
+    private ClassLoader         clientClassLoader;                                         // 调用方classloader
 
-    private ClassLoader         serviceClassLoader;
+    private ClassLoader         serviceClassLoader;                                        // 被调用方classloader
 
     public SpringServiceInvoker() {
     }

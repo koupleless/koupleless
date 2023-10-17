@@ -80,7 +80,7 @@ public class SpringServiceFinderTest {
         BizRuntimeContext bizRuntime = new BizRuntimeContext(biz1, bizCtx);
         BizRuntimeContextRegistry.registerBizRuntimeManager(bizRuntime);
 
-        BaseBean baseBean = SpringServiceFinder.getBaseService("baseBean");
+        BaseBean baseBean = SpringServiceFinder.getBaseService("baseBean", BaseBean.class);
         Assert.assertNotNull(baseBean);
         BaseBean baseBean1 = SpringServiceFinder.getBaseService(BaseBean.class);
         Assert.assertNotNull(baseBean1);
@@ -88,7 +88,7 @@ public class SpringServiceFinderTest {
         Assert.assertNotNull(baseBeanMap);
         Assert.assertEquals(1, baseBeanMap.size());
         ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
-            "moduleBean");
+            "moduleBean", ModuleBean.class);
         Assert.assertNotNull(moduleBean);
         ModuleBean moduleBean1 = SpringServiceFinder.getModuleService("biz1", "version1",
             ModuleBean.class);

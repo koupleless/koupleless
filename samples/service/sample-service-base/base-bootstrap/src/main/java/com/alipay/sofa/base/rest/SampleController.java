@@ -24,7 +24,7 @@ public class SampleController {
 //        sampleService.service();
 
         Provider studentProvider = SpringServiceFinder.getModuleService("spring-boot-ark-biz", "0.0.1-SNAPSHOT",
-                "studentProvider");
+                "studentProvider", Provider.class);
         Result result = studentProvider.provide(new Param());
         System.out.println(result.getClass());
         System.out.println(result.isSuccess());
@@ -32,7 +32,7 @@ public class SampleController {
         System.out.println(result);
 
         Provider teacherProvider = SpringServiceFinder.getModuleService("spring-boot-ark-biz", "0.0.1-SNAPSHOT",
-                "teacherProvider");
+                "teacherProvider", Provider.class);
         Result result1 = teacherProvider.provide(new Param());
         System.out.println(result1.getClass());
         System.out.println(result1.isSuccess());
