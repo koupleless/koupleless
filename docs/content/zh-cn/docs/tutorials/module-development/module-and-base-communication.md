@@ -161,7 +161,7 @@ public class SampleController {
 }
 ```
 
-[完整样例](https://github.com/sofastack/sofa-serverless)
+[完整样例](https://github.com/sofastack/sofa-serverless/tree/master/samples)
 
 # SOFABoot 环境
 
