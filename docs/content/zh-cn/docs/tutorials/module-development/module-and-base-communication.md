@@ -161,7 +161,7 @@ public class SampleController {
 }
 ```
 
-[完整样例](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-ark-jvm/)
+[完整样例](https://github.com/sofastack/sofa-serverless)
 
 # SOFABoot 环境
 
