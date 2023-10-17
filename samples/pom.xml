@@ -34,6 +34,7 @@
         <module>web/tomcat/biz2</module>
         <module>service/sample-service-base</module>
         <module>service/sample-service-biz</module>
+        <module>service/sample-service-biz2</module>
     </modules>
 
     <dependencyManagement>
