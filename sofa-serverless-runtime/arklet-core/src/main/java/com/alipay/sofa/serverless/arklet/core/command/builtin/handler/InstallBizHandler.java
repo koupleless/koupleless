@@ -87,8 +87,6 @@ public class InstallBizHandler
 
     @Override
     public void validate(Input input) throws CommandValidationException {
-        notBlank(input.getBizName(), "bizName should not be blank");
-        notBlank(input.getBizVersion(), "bizVersion should not be blank");
         isTrue(!input.isAsync() || !StringUtils.isEmpty(input.getRequestId()),
             "requestId should not be blank when async is true");
         notBlank(input.getBizUrl(), "bizUrl should not be blank");
