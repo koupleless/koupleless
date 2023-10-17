@@ -6,19 +6,19 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 )
 
 func TestIsModuleChange(t *testing.T) {
-	module1 := moduledeploymentv1alpha1.ModuleInfo{
+	module1 := v1alpha1.ModuleInfo{
 		Name:    "testModule1",
 		Version: "v1",
 	}
-	module2 := moduledeploymentv1alpha1.ModuleInfo{
+	module2 := v1alpha1.ModuleInfo{
 		Name:    "testModule1",
 		Version: "v2",
 	}
-	module3 := moduledeploymentv1alpha1.ModuleInfo{
+	module3 := v1alpha1.ModuleInfo{
 		Name:    "testModule2",
 		Version: "v2",
 	}
@@ -34,18 +34,18 @@ func TestGetModuleReplicasName(t *testing.T) {
 }
 
 func TestIsUrlChange(t *testing.T) {
-	module1 := moduledeploymentv1alpha1.ModuleInfo{
+	module1 := v1alpha1.ModuleInfo{
 		Name:    "testModule1",
 		Version: "v1",
 		Url:     "http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar",
 	}
-	module2 := moduledeploymentv1alpha1.ModuleInfo{
+	module2 := v1alpha1.ModuleInfo{
 		Name:    "testModule1",
 		Version: "v1",
 		Url:     "http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.1-ark-biz.jar",
 	}
 
-	module3 := moduledeploymentv1alpha1.ModuleInfo{
+	module3 := v1alpha1.ModuleInfo{
 		Name:    "testModule2",
 		Version: "v2",
 		Url:     "http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.1-ark-biz.jar",

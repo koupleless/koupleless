@@ -36,7 +36,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 	"github.com/sofastack/sofa-serverless/internal/event"
@@ -71,7 +71,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	defer log.Log.Info("finish reconcile for moduleDeployment", "request", req)
 
 	// get the moduleDeployment
-	moduleDeployment := &moduledeploymentv1alpha1.ModuleDeployment{}
+	moduleDeployment := &v1alpha1.ModuleDeployment{}
 	err := r.Client.Get(ctx, req.NamespacedName, moduleDeployment)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -102,25 +102,25 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	if moduleDeployment.Status.ReleaseStatus == nil || moduleVersionChanged {
-		moduleDeployment.Status.ReleaseStatus = &moduledeploymentv1alpha1.ReleaseStatus{
+		moduleDeployment.Status.ReleaseStatus = &v1alpha1.ReleaseStatus{
 			CurrentBatch:       1,
-			Progress:           moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressInit,
+			Progress:           v1alpha1.ModuleDeploymentReleaseProgressInit,
 			LastTransitionTime: metav1.Now(),
 		}
 	}
 
 	releaseStatus := moduleDeployment.Status.ReleaseStatus
 	switch releaseStatus.Progress {
-	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressInit:
+	case v1alpha1.ModuleDeploymentReleaseProgressInit:
 		handleInitModuleDeployment(moduleDeployment, newRS)
 		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 			return ctrl.Result{}, err
 		}
-	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting:
+	case v1alpha1.ModuleDeploymentReleaseProgressExecuting:
 		return r.updateModuleReplicaSet(ctx, moduleDeployment, newRS)
-	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted:
+	case v1alpha1.ModuleDeploymentReleaseProgressCompleted:
 		if moduleDeployment.Spec.Replicas != newRS.Spec.Replicas {
-			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressInit
+			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressInit
 			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 				return ctrl.Result{}, err
 			}
@@ -131,19 +131,19 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 				return ctrl.Result{}, err
 			}
 		}
-	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation:
+	case v1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation:
 		moduleDeployment.Spec.Pause = true
 		if err := r.Update(ctx, moduleDeployment); err != nil {
 			return ctrl.Result{}, err
 		}
 
-		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused
+		moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressPaused
 		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 			return ctrl.Result{}, err
 		}
-	case moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused:
+	case v1alpha1.ModuleDeploymentReleaseProgressPaused:
 		if !moduleDeployment.Spec.Pause && time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 {
-			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 				return ctrl.Result{}, err
 			}
@@ -158,7 +158,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	return ctrl.Result{}, nil
 }
 
-func handleInitModuleDeployment(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, newRS *moduledeploymentv1alpha1.ModuleReplicaSet) {
+func handleInitModuleDeployment(moduleDeployment *v1alpha1.ModuleDeployment, newRS *v1alpha1.ModuleReplicaSet) {
 	var (
 		expReplicas    = moduleDeployment.Spec.Replicas
 		deltaReplicas  = expReplicas - newRS.Spec.Replicas
@@ -178,11 +178,11 @@ func handleInitModuleDeployment(moduleDeployment *moduledeploymentv1alpha1.Modul
 	moduleDeployment.Status.ReleaseStatus.OriginalDeltaReplicas = deltaReplicas
 
 	moduleDeployment.Status.ReleaseStatus.CurrentBatch = 1
-	moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+	moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 }
 
 // handle deleting module deployment
-func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (ctrl.Result, error) {
+func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.Context, moduleDeployment *v1alpha1.ModuleDeployment) (ctrl.Result, error) {
 	if !utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer) {
 		return ctrl.Result{}, nil
 	}
@@ -191,7 +191,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 	set := map[string]string{
 		label.ModuleDeploymentLabel: moduleDeployment.Name,
 	}
-	replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+	replicaSetList := &v1alpha1.ModuleReplicaSetList{}
 	err := r.Client.List(ctx, replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 	if err != nil {
 		if !errors.IsNotFound(err) {
@@ -225,7 +225,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 }
 
 // update moduleDeployment owner reference
-func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) error {
+func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, moduleDeployment *v1alpha1.ModuleDeployment) error {
 	moduleDeploymentOwnerReferenceExist := false
 	for _, ownerReference := range moduleDeployment.GetOwnerReferences() {
 		if moduleDeployment.Spec.BaseDeploymentName == ownerReference.Name {
@@ -259,19 +259,19 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, m
 }
 
 // create or get moduleReplicaset
-func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment) (*moduledeploymentv1alpha1.ModuleReplicaSet, []*moduledeploymentv1alpha1.ModuleReplicaSet, bool, error) {
+func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Context, moduleDeployment *v1alpha1.ModuleDeployment) (*v1alpha1.ModuleReplicaSet, []*v1alpha1.ModuleReplicaSet, bool, error) {
 	var err error
 	for i := 0; i < 3; i++ {
 		var (
-			newRS  *moduledeploymentv1alpha1.ModuleReplicaSet
-			oldRSs []*moduledeploymentv1alpha1.ModuleReplicaSet
+			newRS  *v1alpha1.ModuleReplicaSet
+			oldRSs []*v1alpha1.ModuleReplicaSet
 		)
 
 		set := map[string]string{
 			label.ModuleDeploymentLabel: moduleDeployment.Name,
 		}
 
-		replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+		replicaSetList := &v1alpha1.ModuleReplicaSetList{}
 		err = r.Client.List(ctx, replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 		maxVersion := 0
 		if err != nil {
@@ -280,7 +280,7 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 				return nil, nil, false, err
 			}
 		} else if len(replicaSetList.Items) != 0 {
-			var rsList []*moduledeploymentv1alpha1.ModuleReplicaSet
+			var rsList []*v1alpha1.ModuleReplicaSet
 			for j := 0; j < len(replicaSetList.Items); j++ {
 				rsList = append(rsList, &replicaSetList.Items[j])
 				version, err := getRevision(&replicaSetList.Items[j])
@@ -320,8 +320,8 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 // update module replicas
 func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 	ctx context.Context, replicas int32,
-	moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) error {
+	moduleDeployment *v1alpha1.ModuleDeployment,
+	newRS *v1alpha1.ModuleReplicaSet) error {
 	moduleSpec := moduleDeployment.Spec.Template.Spec
 	if replicas != newRS.Spec.Replicas || isModuleChange(moduleSpec.Module, newRS.Spec.Template.Spec.Module) ||
 		isUrlChange(moduleSpec.Module, newRS.Spec.Template.Spec.Module) {
@@ -337,8 +337,8 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 	return nil
 }
 
-func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	newRS *moduledeploymentv1alpha1.ModuleReplicaSet) (ctrl.Result, error) {
+func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context, moduleDeployment *v1alpha1.ModuleDeployment,
+	newRS *v1alpha1.ModuleReplicaSet) (ctrl.Result, error) {
 	var (
 		curBatch              = moduleDeployment.Status.ReleaseStatus.CurrentBatch
 		realBatchCount        = moduleDeployment.Status.ReleaseStatus.RealBatchCount
@@ -350,10 +350,10 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	)
 
 	if deltaReplicas == 0 {
-		moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted
+		moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressCompleted
 		moduleDeployment.Status.ReleaseStatus.LastTransitionTime = metav1.Now()
-		moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, moduledeploymentv1alpha1.ModuleDeploymentCondition{
-			Type:               moduledeploymentv1alpha1.DeploymentAvailable,
+		moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, v1alpha1.ModuleDeploymentCondition{
+			Type:               v1alpha1.DeploymentAvailable,
 			Status:             corev1.ConditionTrue,
 			LastTransitionTime: metav1.Now(),
 			Message:            "deployment release progress completed",
@@ -393,10 +393,10 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	}
 
 	moduleDeployment.Status.ReleaseStatus.LastTransitionTime = now
-	moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+	moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 
-	moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, moduledeploymentv1alpha1.ModuleDeploymentCondition{
-		Type:               moduledeploymentv1alpha1.DeploymentProgressing,
+	moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, v1alpha1.ModuleDeploymentCondition{
+		Type:               v1alpha1.DeploymentProgressing,
 		Status:             corev1.ConditionTrue,
 		LastTransitionTime: now,
 		Message:            message,
@@ -410,13 +410,13 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	if curBatch != realBatchCount {
 		// needConfirm = true or batch = 1 and useBeta = true
 		if moduleDeployment.Spec.OperationStrategy.NeedConfirm || curBatch == 1 && moduleDeployment.Spec.OperationStrategy.UseBeta { // use NeedConfirm Strategy
-			moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation
+			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation
 		} else if grayTime = int(moduleDeployment.Spec.OperationStrategy.GrayTimeBetweenBatchSeconds); grayTime != 0 {
 			if curBatch == realBatchCount {
-				moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressExecuting
+				moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 			} else {
 				moduleDeployment.Status.ReleaseStatus.NextReconcileTime = metav1.NewTime(now.Add(time.Duration(grayTime) * time.Second))
-				moduleDeployment.Status.ReleaseStatus.Progress = moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressPaused
+				moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressPaused
 			}
 		}
 	}
@@ -425,21 +425,21 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 }
 
 // generate module replicas
-func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment,
-	deployment *v1.Deployment, revision int) *moduledeploymentv1alpha1.ModuleReplicaSet {
+func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *v1alpha1.ModuleDeployment,
+	deployment *v1.Deployment, revision int) *v1alpha1.ModuleReplicaSet {
 	newLabels := moduleDeployment.Labels
 	newLabels[label.ModuleNameLabel] = moduleDeployment.Spec.Template.Spec.Module.Name
 	newLabels[label.ModuleDeploymentLabel] = moduleDeployment.Name
 	newLabels[label.ModuleSchedulingStrategy] = string(moduleDeployment.Spec.SchedulingStrategy.SchedulingPolicy)
 	newLabels[label.ModuleReplicasetRevisionLabel] = strconv.Itoa(revision)
-	moduleReplicaSet := &moduledeploymentv1alpha1.ModuleReplicaSet{
+	moduleReplicaSet := &v1alpha1.ModuleReplicaSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},
 			Labels:      newLabels,
 			Name:        getModuleReplicasName(moduleDeployment.Name, revision),
 			Namespace:   moduleDeployment.Namespace,
 		},
-		Spec: moduledeploymentv1alpha1.ModuleReplicaSetSpec{
+		Spec: v1alpha1.ModuleReplicaSetSpec{
 			Selector:           *deployment.Spec.Selector,
 			Template:           moduleDeployment.Spec.Template,
 			OperationStrategy:  moduleDeployment.Spec.OperationStrategy,
@@ -463,7 +463,7 @@ func (r *ModuleDeploymentReconciler) generateModuleReplicas(moduleDeployment *mo
 	return moduleReplicaSet
 }
 
-func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, moduleDeployment *moduledeploymentv1alpha1.ModuleDeployment, revision int) (*moduledeploymentv1alpha1.ModuleReplicaSet, error) {
+func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, moduleDeployment *v1alpha1.ModuleDeployment, revision int) (*v1alpha1.ModuleReplicaSet, error) {
 	deployment := &v1.Deployment{}
 	err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}, deployment)
 	if err != nil {
@@ -483,15 +483,15 @@ func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, mo
 // SetupWithManager sets up the controller with the Manager.
 func (r *ModuleDeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&moduledeploymentv1alpha1.ModuleDeployment{}).
+		For(&v1alpha1.ModuleDeployment{}).
 		Complete(r)
 }
 
-func isModuleChange(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
+func isModuleChange(module1, module2 v1alpha1.ModuleInfo) bool {
 	return module1.Name != module2.Name || module1.Version != module2.Version
 }
 
-func isUrlChange(module1, module2 moduledeploymentv1alpha1.ModuleInfo) bool {
+func isUrlChange(module1, module2 v1alpha1.ModuleInfo) bool {
 	return module1.Url != module2.Url
 }
 
@@ -499,7 +499,7 @@ func getModuleReplicasName(moduleDeploymentName string, revision int) string {
 	return fmt.Sprintf(`%s-%s-%v`, moduleDeploymentName, "replicas", revision)
 }
 
-func getRevision(set *moduledeploymentv1alpha1.ModuleReplicaSet) (int, error) {
+func getRevision(set *v1alpha1.ModuleReplicaSet) (int, error) {
 	if versionStr, ok := set.Labels[label.ModuleReplicasetRevisionLabel]; ok {
 		version, err := strconv.Atoi(versionStr)
 		if err != nil {

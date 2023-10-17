@@ -24,7 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 	"github.com/sofastack/sofa-serverless/internal/utils"
 
@@ -68,7 +68,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 	if pod.DeletionTimestamp != nil {
 		// pod is deleting
 		log.Log.Info("start delete pod", "podName", pod.Name)
-		moduleList := &moduledeploymentv1alpha1.ModuleList{}
+		moduleList := &v1alpha1.ModuleList{}
 		err = r.Client.List(ctx, moduleList, &client.ListOptions{Namespace: req.Namespace, LabelSelector: labels.SelectorFromSet(map[string]string{
 			label.BaseInstanceNameLabel: pod.Name,
 		})})
