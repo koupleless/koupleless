@@ -2,14 +2,13 @@ package controller
 
 import (
 	"context"
-	"fmt"
+	"github.com/sofastack/sofa-serverless/internal/utils"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"time"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -28,7 +27,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	namespaceObj := prepareNamespace(namespace)
 	deployment := prepareDeployment(namespace)
 	moduleDeploymentName := "module-deployment-test-demo"
-	moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
+	moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
 	pod := preparePod(namespace, "fake-pod-1")
 	Context("create module deployment", func() {
 		It("prepare deployment and pod", func() {
@@ -165,7 +164,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	Context("test batchConfirm strategy", func() {
 		moduleDeploymentName := "module-deployment-test-for-batch-confirm"
 		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
-		moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
+		moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
 		moduleDeployment.Spec.Replicas = 2
 		moduleDeployment.Spec.OperationStrategy.NeedConfirm = true
 		moduleDeployment.Spec.OperationStrategy.BatchCount = 2
@@ -173,7 +172,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		It("0. prepare 2 pods", func() {
 			Eventually(func() bool {
 				pod := preparePod(namespace, "fake-pod-3")
-				pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
+				pod.Labels[label.ModuleLabelPrefix+"dynamic-provider"] = "true"
 				if err := k8sClient.Create(context.TODO(), &pod); err != nil {
 					return false
 				}
@@ -237,7 +236,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	Context("test useBeta strategy", func() {
 		moduleDeploymentName := "module-deployment-test-for-use-beta"
 		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
-		moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
+		moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
 		moduleDeployment.Spec.Replicas = 4
 		moduleDeployment.Spec.OperationStrategy.UseBeta = true
 		moduleDeployment.Spec.OperationStrategy.NeedConfirm = true
@@ -246,7 +245,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		It("0. prepare pods", func() {
 			Eventually(func() bool {
 				pod := preparePod(namespace, "fake-pod-use-beta")
-				pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
+				pod.Labels[label.ModuleLabelPrefix+"dynamic-provider"] = "true"
 				if err := k8sClient.Create(context.TODO(), &pod); err != nil {
 					return false
 				}
@@ -327,35 +326,4 @@ func checkModuleDeploymentReplicas(nn types.NamespacedName, replicas int32) bool
 	return newRS != nil &&
 		newRS.Status.Replicas == newRS.Spec.Replicas &&
 		newRS.Status.Replicas == replicas
-}
-
-func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.ModuleDeployment {
-	baseDeploymentName := "dynamic-stock-deployment"
-
-	moduleDeployment := v1alpha1.ModuleDeployment{
-		Spec: v1alpha1.ModuleDeploymentSpec{
-			BaseDeploymentName: baseDeploymentName,
-			Template: v1alpha1.ModuleTemplateSpec{
-				Spec: v1alpha1.ModuleSpec{
-					Module: v1alpha1.ModuleInfo{
-						Name:    "dynamic-provider",
-						Version: "1.0.0",
-						Url:     "http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar",
-					},
-				},
-			},
-			SchedulingStrategy: v1alpha1.ModuleSchedulingStrategy{
-				SchedulingPolicy: v1alpha1.Scatter,
-			},
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      moduleDeploymentName,
-			Namespace: namespace,
-			Labels: map[string]string{
-				"app": "dynamic-stock",
-			},
-			Annotations: map[string]string{},
-		},
-	}
-	return moduleDeployment
 }

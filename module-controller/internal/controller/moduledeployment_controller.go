@@ -39,6 +39,7 @@ import (
 	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/event"
 	"github.com/sofastack/sofa-serverless/internal/utils"
 )
 
@@ -54,6 +55,7 @@ type ModuleDeploymentReconciler struct {
 
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
 //+kubebuilder:rbac:groups="",resources=pods,verbs=create;delete;get;list;patch;update;watch
+//+kubebuilder:rbac:groups="",resources=services,verbs=create;delete;get;list;patch;update;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -81,7 +83,12 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 
 	if moduleDeployment.DeletionTimestamp != nil {
 		// delete moduleDeployment
+		event.PublishModuleDeploymentDeleteEvent(r.Client, ctx, moduleDeployment)
 		return r.handleDeletingModuleDeployment(ctx, moduleDeployment)
+	}
+
+	if moduleDeployment.Generation == 1 {
+		event.PublishModuleDeploymentCreateEvent(r.Client, ctx, moduleDeployment)
 	}
 
 	if moduleDeployment.Spec.Pause {
@@ -463,6 +470,8 @@ func (r *ModuleDeploymentReconciler) createNewReplicaSet(ctx context.Context, mo
 		return nil, utils.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 	}
 	moduleReplicaSet := r.generateModuleReplicas(moduleDeployment, deployment, revision)
+	// publish module replicaset pre hook event
+	event.PublishModuleReplicaSetCreateEvent(r.Client, ctx, moduleReplicaSet)
 	err = r.Client.Create(ctx, moduleReplicaSet)
 	if err != nil {
 		return nil, utils.Error(err, "Failed to create moduleReplicaSet", "moduleReplicaSetName", moduleReplicaSet.Name)

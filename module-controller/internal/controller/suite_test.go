@@ -117,9 +117,7 @@ var _ = BeforeSuite(func() {
 
 	k8sClient = k8sManager.GetClient()
 	Expect(k8sClient).ToNot(BeNil())
-	//pod := preparePod("fake-pod-1")
-	//pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
-	//err = k8sClient.Create(context.TODO(), &pod)
+
 	if err != nil {
 		fmt.Printf("Failed to prepare resource: %v", err)
 		os.Exit(1)

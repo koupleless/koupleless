@@ -23,6 +23,7 @@ import (
 	"go.uber.org/zap/zapcore"
 
 	"github.com/sofastack/sofa-serverless/internal/controller"
+	_ "github.com/sofastack/sofa-serverless/internal/handler"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.

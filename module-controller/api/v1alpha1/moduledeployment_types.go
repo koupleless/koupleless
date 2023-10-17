@@ -120,13 +120,25 @@ type ModuleOperationStrategy struct {
 	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty"`
 
 	GrayTimeBetweenBatchSeconds int32 `json:"grayTimeBetweenBatchSeconds,omitempty"`
+
+	UpgradePolicy ModuleUpgradeType `json:"upgradePolicy,omitempty"`
+
+	ServiceStrategy ModuleServiceStrategy `json:"serviceStrategy,omitempty"`
 }
 
 type ModuleSchedulingStrategy struct {
-	UpgradePolicy ModuleUpgradeType `json:"upgradePolicy,omitempty"`
+
 	// +kubebuilder:validation:Enum={"scatter","stacking"}
 	// +kubebuilder:default="scatter"
 	SchedulingPolicy ModuleSchedulingType `json:"schedulingPolicy,omitempty"`
+}
+
+type ModuleServiceStrategy struct {
+	EnableModuleService bool `json:"enableModuleService,omitempty"`
+
+	Port int32 `json:"port,omitempty"`
+
+	TargetPort intstr.IntOrString `json:"targetPort,omitempty" protobuf:"bytes,4,opt,name=targetPort"`
 }
 
 // ModuleDeploymentSpec defines the desired state of ModuleDeployment
