@@ -58,7 +58,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 
@@ -68,7 +67,7 @@ import java.util.logging.Handler;
  * @author ruoshan
  * @version $Id: AlipayLog4J2LoggingSystem.java, v 0.1 2018年08月24日 12:09 PM ruoshan Exp $
  */
-public class SOFAServerlessLog4J2LoggingSystem extends Log4J2LoggingSystem {
+public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
 
     private static final String           FILE_PROTOCOL             = "file";
 
@@ -122,7 +121,7 @@ public class SOFAServerlessLog4J2LoggingSystem extends Log4J2LoggingSystem {
 
                                                                     };
 
-    public SOFAServerlessLog4J2LoggingSystem(ClassLoader classLoader) {
+    public SOFAServerlessLog4j2LoggingSystem(ClassLoader classLoader) {
         super(classLoader);
     }
 
