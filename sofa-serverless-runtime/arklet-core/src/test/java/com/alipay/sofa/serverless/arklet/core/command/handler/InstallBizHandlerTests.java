@@ -47,9 +47,11 @@ public class InstallBizHandlerTests extends BaseHandlerTest {
 
         when(handler.getOperationService().install(input.getBizUrl())).thenReturn(success);
 
-        Output<?> result = handler.handle(input);
+        Output<InstallBizHandler.InstallBizClientResponse> result = handler.handle(input);
 
-        Assert.assertEquals(success, result.getData());
+        Assert.assertEquals(success.getBizInfos(), result.getData().getBizInfos());
+        Assert.assertEquals(success.getMessage(), result.getData().getMessage());
+        Assert.assertEquals(success.getCode(), result.getData().getCode());
         Assert.assertTrue(result.success());
     }
 
@@ -62,7 +64,9 @@ public class InstallBizHandlerTests extends BaseHandlerTest {
 
         Output<InstallBizHandler.InstallBizClientResponse> result = handler.handle(input);
 
-        Assert.assertSame(failed, result.getData());
+        Assert.assertEquals(failed.getBizInfos(), result.getData().getBizInfos());
+        Assert.assertEquals(failed.getMessage(), result.getData().getMessage());
+        Assert.assertEquals(failed.getCode(), result.getData().getCode());
         Assert.assertTrue(result.failed());
     }
 
