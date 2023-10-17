@@ -88,7 +88,7 @@ public class SOFAServerlessLog4j2SpringContextListener implements GenericApplica
 
     private void onApplicationStartingEvent() {
         System.setProperty(LoggingSystem.class.getName(),
-            SOFAServerlessLog4J2LoggingSystem.class.getName());
+            SOFAServerlessLog4j2LoggingSystem.class.getName());
     }
 
     @Override
