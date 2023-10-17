@@ -79,7 +79,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 }'
 ```
 
-如果想验证卸载也可以执行
+如果想验证热部署，可以通过多次卸载多次部署，然后验证请求是否正常
 ```shell
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
