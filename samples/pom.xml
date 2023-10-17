@@ -32,9 +32,8 @@
         <module>web/tomcat/base</module>
         <module>web/tomcat/biz1</module>
         <module>web/tomcat/biz2</module>
-        <module>service/base</module>
-        <module>service/biz</module>
-        <module>service/model</module>
+        <module>service/sample-service-base</module>
+        <module>service/sample-service-biz</module>
     </modules>
 
     <dependencyManagement>
