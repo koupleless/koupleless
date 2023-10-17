@@ -3,7 +3,7 @@ title: 模块中官方验证并兼容的中间件客户端
 weight: 800
 ---
 
-在 SOFAServerless 模块中，官方目前支持并兼容常见的中间件客户端，具体如下。<br />**注意**，这里 “**已经支持**” 需要在基座 POM 中引入相关客户端依赖（**强烈建议使用 SpringBoot Starter 方式引入相关依赖**），同时在模块 POM 中也引入相关依赖并设置 **<scope>provided</scope>** 将依赖委托给基座加载。
+在 SOFAServerless 模块中，官方目前支持并兼容常见的中间件客户端。<br />**注意**，这里 “**已经支持**” 需要在基座 POM 中引入相关客户端依赖（**强烈建议使用 SpringBoot Starter 方式引入相关依赖**），同时在模块 POM 中也引入相关依赖并设置 **<scope>provided</scope>** 将依赖委托给基座加载。
 
 <br/>
 
