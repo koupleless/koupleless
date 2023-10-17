@@ -149,7 +149,6 @@ public class ServiceProxyFactory {
             biz.getBizVersion(), biz.getIdentity(), clientClassLoader, service
                 .getClass().getClassLoader());
         ProxyFactory factory = new ProxyFactory();
-//        Class<?> targetClass = service.getClass();
         if (serviceType.isInterface()) {
             factory.addInterface(serviceType);
         } else {
