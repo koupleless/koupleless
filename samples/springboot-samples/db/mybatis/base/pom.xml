@@ -51,11 +51,11 @@
 <!--			<artifactId>spring-kafka</artifactId>-->
 <!--		</dependency>-->
 
-<!--		<dependency>-->
-<!--			<groupId>com.lmax</groupId>-->
-<!--			<artifactId>disruptor</artifactId>-->
-<!--			<version>${disruptor.version}</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>${disruptor.version}</version>
+		</dependency>
 
 		<!-- 这里添加动态模块相关依赖 -->
 		<dependency>

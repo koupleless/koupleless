@@ -1,5 +1,6 @@
 package com.alipay.sofa.base;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -9,7 +10,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 
 @ImportResource({ "classpath*:META-INF/spring/service.xml"})
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class})
+//@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class})
+@SpringBootApplication
+@MapperScan
 public class BaseApplication {
 	private static Logger LOGGER = LoggerFactory.getLogger(BaseApplication.class);
 
