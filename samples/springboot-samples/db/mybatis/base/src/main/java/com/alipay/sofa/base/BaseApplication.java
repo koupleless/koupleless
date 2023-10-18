@@ -10,7 +10,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 
 @ImportResource({ "classpath*:META-INF/spring/service.xml"})
-//@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class})
 @SpringBootApplication
 @MapperScan
 public class BaseApplication {
