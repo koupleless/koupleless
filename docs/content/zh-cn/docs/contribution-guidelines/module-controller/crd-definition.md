@@ -18,22 +18,22 @@ weight: 200
 <a name="14d02f3f"></a>
 ## ModuleDeployment CRD 模型
 
-![](https://github.com/sofastack/sofa-serverless/assets/13743483/4f84d04d-7252-496d-9eb4-5540c39a5860#id=li81F&originHeight=2870&originWidth=1972&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![image](https://github.com/sofastack/sofa-serverless/assets/13743483/863d8ede-4904-423e-9473-77466af33c46)
 
 <a name="8392d397"></a>
 ## Module CRD 模型
 
-![](https://github.com/sofastack/sofa-serverless/assets/13743483/e1ba399a-f2e6-4040-a886-da77800c3a5b#id=gvCx6&originHeight=1571&originWidth=1766&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![image](https://github.com/sofastack/sofa-serverless/assets/13743483/f4e109eb-4b10-4835-a502-7d723b1ca73c)
 
 <a name="7a8e666e"></a>
 ## ModuleTemplate CRD 模型
 
-![](https://github.com/sofastack/sofa-serverless/assets/13743483/db4fd36b-d698-4946-8d62-6e6651d3f18a#id=tdukT&originHeight=455&originWidth=1092&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![image](https://github.com/sofastack/sofa-serverless/assets/13743483/db4fd36b-d698-4946-8d62-6e6651d3f18a)
 
 <a name="03b3bef7"></a>
 ## ModuleReplicaSet CRD 模型
 
-![](https://github.com/sofastack/sofa-serverless/assets/13743483/29a1846e-3d46-4b58-bc1a-25c7f3663942#id=kN3c7&originHeight=2032&originWidth=1706&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![image](https://github.com/sofastack/sofa-serverless/assets/13743483/13fbf29e-3977-4138-b3dd-849ce871fb3b)
 
 
 <br/>

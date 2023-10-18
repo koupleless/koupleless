@@ -32,10 +32,13 @@ spec:
         url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar
   replicas: 2
   operationStrategy:
-    upgradePolicy: installThenUninstall
+    upgradePolicy: install_then_uninstall
     needConfirm: true
+    grayTimeBetweenBatchSeconds: 0
     useBeta: false
     batchCount: 2
+  schedulingStrategy:
+    schedulingPolicy: scatter
 ```
 
 如果要自定义模块发布运维策略可配置 operationStrategy，具体可参考[模块发布运维策略](/docs/contribution-guidelines/module-controller/crd-definition)。<br />样例演示的是使用 kubectl 方式，直接调用 K8S APIServer 修改 ModuleDeployment CR 一样能实现分组发布。
