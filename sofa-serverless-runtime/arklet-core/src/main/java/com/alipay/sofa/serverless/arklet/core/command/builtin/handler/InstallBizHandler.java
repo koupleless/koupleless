@@ -16,9 +16,13 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.builtin.handler;
 
+import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
+import com.alipay.sofa.ark.common.util.FileUtils;
 import com.alipay.sofa.ark.common.util.StringUtils;
+import com.alipay.sofa.ark.spi.model.Biz;
+import com.alipay.sofa.ark.spi.service.biz.BizFactoryService;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
@@ -30,8 +34,14 @@ import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidation
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,6 +100,19 @@ public class InstallBizHandler
         isTrue(!input.isAsync() || !StringUtils.isEmpty(input.getRequestId()),
             "requestId should not be blank when async is true");
         notBlank(input.getBizUrl(), "bizUrl should not be blank");
+        try {
+            BizFactoryService bizFactoryService = ArkClient.getBizFactoryService();
+            URL url = new URL((String) input.getBizUrl());
+            String suffix = (new SimpleDateFormat("yyyyMMddHHmmssSSS")).format(new Date());
+            File bizFile = ArkClient.createBizSaveFile((String) input.getBizName(),
+                (String) input.getBizVersion(), suffix);
+            FileUtils.copyInputStreamToFile(url.openStream(), bizFile);
+            Biz biz = bizFactoryService.createBiz(bizFile);
+            input.setBizName(biz.getBizName());
+            input.setBizVersion(biz.getBizVersion());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Getter
