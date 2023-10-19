@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.spring;
+package com.alipay.sofa.serverless.arklet.spring.starter;
 
-import com.alipay.sofa.serverless.arklet.spring.common.SpringbootUtil;
+import com.alipay.sofa.serverless.arklet.spring.starter.common.SpringbootUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

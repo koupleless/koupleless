@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.spring.common;
+package com.alipay.sofa.serverless.arklet.spring.starter.common;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
