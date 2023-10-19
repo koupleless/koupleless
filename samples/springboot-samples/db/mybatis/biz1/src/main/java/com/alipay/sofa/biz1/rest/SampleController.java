@@ -1,6 +1,8 @@
 package com.alipay.sofa.biz1.rest;
 
+import com.alipay.sofa.biz1.mapper.SongMapper;
 import com.alipay.sofa.biz1.mapper.StudentMapper;
+import com.alipay.sofa.biz1.model.Song;
 import com.alipay.sofa.biz1.model.Student;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +24,16 @@ public class SampleController {
     @Autowired
     private StudentMapper studentMapper;
 
+    @Autowired
+    private SongMapper songMapper;
+
     @GetMapping("/hello/{input}")
     public String hello(@PathVariable String input) {
         return String.format("hello to %s deploy", applicationContext.getId());
     }
 
-    @GetMapping("/mybatis")
-    public List<Student> mybatis() {
+    @GetMapping("/mybatis/student")
+    public List<Student> mybatis1() {
         Student student = new Student();
         student.setName("wangwu");
         student.setAge(20);
@@ -36,6 +41,16 @@ public class SampleController {
         student.setGrade("five");
         studentMapper.insert(student);
         return studentMapper.getAll();
+    }
+
+    @GetMapping("/mybatis/song")
+    public List<Song> mybatis2() {
+        Song song = new Song();
+        song.setName("March of the Volunteers");
+        song.setAuthor("Er Nie");
+        song.setAlbum("unknown");
+        songMapper.insert(song);
+        return songMapper.getAll();
     }
 
 }
