@@ -43,16 +43,16 @@ import com.google.inject.multibindings.Multibinder;
  */
 public class ArkletComponentRegistry {
 
-    private static final ArkletLogger          LOGGER        = ArkletLoggerFactory
-                                                                 .getDefaultLogger();
-    private static final List<ArkletComponent> componentList = new ArrayList<>(8);
-    private final AtomicBoolean                init          = new AtomicBoolean(false);
-    private final AtomicBoolean                destroy       = new AtomicBoolean(false);
+    private static final ArkletLogger LOGGER            = ArkletLoggerFactory.getDefaultLogger();
 
-    private static final Injector              componentInjector;
+    private static final Injector     componentInjector = Guice
+                                                            .createInjector(new ComponentGuiceModule());
 
-    static {
-        componentInjector = Guice.createInjector(new ComponentGuiceModule());
+    private List<ArkletComponent>     componentList     = new ArrayList<>(8);
+    private final AtomicBoolean       init              = new AtomicBoolean(false);
+    private final AtomicBoolean       destroy           = new AtomicBoolean(false);
+
+    public ArkletComponentRegistry() {
         for (Binding<ArkletComponent> binding : componentInjector
             .findBindingsByType(new TypeLiteral<ArkletComponent>() {
             })) {
@@ -60,11 +60,7 @@ public class ArkletComponentRegistry {
         }
     }
 
-    public ArkletComponentRegistry() {
-
-    }
-
-    public void initComponents() {
+    public synchronized void initComponents() {
         if (init.compareAndSet(false, true)) {
             String components = componentList.stream().map(s -> s.getClass().getSimpleName()).collect(Collectors.joining(", "));
             LOGGER.info("found components: {}", components);
@@ -76,7 +72,7 @@ public class ArkletComponentRegistry {
         }
     }
 
-    public void destroyComponents() {
+    public synchronized void destroyComponents() {
         if (destroy.compareAndSet(false, true)) {
             LOGGER.info("start to destroy components");
             for (ArkletComponent component : componentList) {
