@@ -33,7 +33,7 @@ import org.junit.Test;
  * @author mingmen
  * @date 2023/9/6
  */
-public class HelpHandlerTests extends BaseHandlerTest {
+public class HelpHandlerTest extends BaseHandlerTest {
 
     private HelpHandler helpHandler;
 

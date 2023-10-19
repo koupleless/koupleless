@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
-public class IndicatorTests {
+public class IndicatorTest {
 
     @Test
     public void testCpuIndicator() {

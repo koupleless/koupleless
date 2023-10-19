@@ -23,20 +23,16 @@ import com.alipay.sofa.serverless.arklet.spring.SpringbootBaseTest;
 import com.alipay.sofa.serverless.arklet.spring.common.SpringbootUtil;
 import com.alipay.sofa.serverless.arklet.springboot.starter.health.extension.indicator.MasterBizHealthIndicator;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.availability.ApplicationAvailability;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Map;
 
 /**
  * @author Lunarscave
  */
-public class MasterBizHealthIndicatorTests extends SpringbootBaseTest {
+public class MasterBizHealthIndicatorTest extends SpringbootBaseTest {
 
     private static MasterBizHealthIndicator indicator;
 

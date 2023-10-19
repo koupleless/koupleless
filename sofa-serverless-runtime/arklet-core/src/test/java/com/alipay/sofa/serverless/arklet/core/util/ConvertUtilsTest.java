@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-public class ConvertUtilsTests {
+public class ConvertUtilsTest {
 
     @Test
     public void testBytes2Megabyte() {

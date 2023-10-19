@@ -36,7 +36,7 @@ import org.junit.Test;
  * @author mingmen
  * @date 2023/6/26
  */
-public class CommandTests extends BaseTest {
+public class CommandTest extends BaseTest {
 
     @Test
     public void registerCustomCommand() {

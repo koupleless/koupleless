@@ -20,7 +20,7 @@
         <maven.javadoc.plugin>3.2.0</maven.javadoc.plugin>
         <maven.staging.plugin>1.6.7</maven.staging.plugin>
         <maven.gpg.pluign>1.6</maven.gpg.pluign>
-        <jacoco.maven.plugin>0.8.4</jacoco.maven.plugin>
+        <jacoco.maven.plugin>0.8.11</jacoco.maven.plugin>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
@@ -416,6 +416,23 @@
                         <goals>
                             <goal>report-aggregate</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>merge-results</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.basedir}</directory>
+                                    <includes>
+                                        <include>**/target/jacoco.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
