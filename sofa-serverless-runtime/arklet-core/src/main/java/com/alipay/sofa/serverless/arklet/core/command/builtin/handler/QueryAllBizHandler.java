@@ -39,6 +39,8 @@ public class QueryAllBizHandler extends AbstractCommandHandler<InputMeta, List<B
         List<Biz> bizList = getOperationService().queryBizList();
         List<BizInfo> bizInfos = new ArrayList<>(bizList.size());
         for (Biz biz : bizList) {
+            if (biz.getMainClass() == "embed main")
+                continue;
             BizInfo model = new BizInfo();
             model.setBizName(biz.getBizName());
             model.setBizVersion(biz.getBizVersion());

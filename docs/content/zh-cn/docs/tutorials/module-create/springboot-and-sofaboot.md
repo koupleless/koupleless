@@ -11,13 +11,13 @@ weight: 100
 <a name="EmaQ2"></a>
 ## 接入步骤
 <a name="A2kxP"></a>
-#### 修改 application.properties
+### 修改 application.properties
 ```properties
 # 需要定义应用名
 spring.application.name = ${替换为实际模块名}
 ```
 <a name="HOwyD"></a>
-#### 添加模块打包插件
+### 添加模块打包插件
 ```xml
 <plugins>
     <!--这里添加ark 打包插件-->
@@ -44,7 +44,7 @@ spring.application.name = ${替换为实际模块名}
 </plugins>
 ```
 <a name="PumLP"></a>
-#### 模块瘦身：模块里的依赖如果已经里也有，则将模块的该依赖 scope 设置成 provided，如
+### 模块瘦身：模块里的依赖如果已经里也有，则将模块的该依赖 scope 设置成 provided，如
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -64,7 +64,7 @@ spring.application.name = ${替换为实际模块名}
 ```
 如果不设置成 provided，会出现报错[如果模块独立引入 SpringBoot 框架部分会怎样？](/docs/faq/import-full-springboot-in-module)
 <a name="BBCza"></a>
-#### 构建成模块 jar 包
+### 构建成模块 jar 包
 执行 `mvn clean package -DskipTest`, 可以在 target 目录下找到打包生成的 ark biz jar 包。
 
 <a name="znPA9"></a>

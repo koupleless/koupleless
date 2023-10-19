@@ -48,13 +48,12 @@ public class InstallBizHandler
     public Output<InstallBizClientResponse> handle(Input input) {
         MemoryPoolMXBean metaSpaceMXBean = getMetaSpaceMXBean();
         long startSpace = metaSpaceMXBean.getUsage().getUsed();
-        InstallBizClientResponse installBizClientResponse;
         try {
-            ClientResponse res = getOperationService().install(input.getBizUrl());
-            installBizClientResponse = (InstallBizClientResponse) res;
+            InstallBizClientResponse installBizClientResponse = convertClientResponse(getOperationService()
+                .install(input.getBizUrl()));
             installBizClientResponse.setElapsedSpace(metaSpaceMXBean.getUsage().getUsed()
                                                      - startSpace);
-            if (ResponseCode.SUCCESS.equals(res.getCode())) {
+            if (ResponseCode.SUCCESS.equals(installBizClientResponse.getCode())) {
                 return Output.ofSuccess(installBizClientResponse);
             } else {
                 return Output.ofFailed(installBizClientResponse, "install biz not success!");
@@ -71,6 +70,14 @@ public class InstallBizHandler
             if (memoryPoolMXBean.getName().equals("Metaspace"))
                 metaSpaceMXBean = memoryPoolMXBean;
         return metaSpaceMXBean;
+    }
+
+    private InstallBizClientResponse convertClientResponse(ClientResponse res) {
+        InstallBizClientResponse installBizClientResponse = new InstallBizClientResponse();
+        installBizClientResponse.setBizInfos(res.getBizInfos());
+        installBizClientResponse.setCode(res.getCode());
+        installBizClientResponse.setMessage(res.getMessage());
+        return installBizClientResponse;
     }
 
     @Override
