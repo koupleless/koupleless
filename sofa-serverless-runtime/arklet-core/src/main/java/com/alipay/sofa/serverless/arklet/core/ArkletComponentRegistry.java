@@ -69,11 +69,11 @@ public class ArkletComponentRegistry {
     }
 
     private static void destroyComponents() {
-            LOGGER.info("start to destroy components");
-            for (ArkletComponent component : componentList) {
-                component.destroy();
-            }
-            LOGGER.info("finish destroy components");
+        LOGGER.info("start to destroy components");
+        for (ArkletComponent component : componentList) {
+            component.destroy();
+        }
+        LOGGER.info("finish destroy components");
     }
 
     public static UnifiedOperationService getOperationServiceInstance() {
