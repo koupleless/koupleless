@@ -27,7 +27,6 @@ import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationContextEvent;
-import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 /**
@@ -53,11 +52,5 @@ public class ArkletApplicationListener implements ApplicationListener<Applicatio
             String commands = handlers.stream().map(s -> s.command().getId()).collect(Collectors.joining(", "));
             LOGGER.info("total supported commands:{}", commands);
         }
-        if (event instanceof ContextClosedEvent) {
-            // destroy arklet components
-            ArkletComponentRegistry componentRegistry = event.getApplicationContext().getBean(ArkletComponentRegistry.class);
-            componentRegistry.destroyComponents();
-        }
-
     }
 }

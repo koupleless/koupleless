@@ -16,13 +16,9 @@
  */
 package com.alipay.sofa.serverless.arklet.spring;
 
-import com.alipay.sofa.ark.common.util.ClassLoaderUtils;
-import com.alipay.sofa.ark.spi.constant.Constants;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
-import org.junit.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author mingmen
