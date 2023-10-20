@@ -1,6 +1,6 @@
 {
   "name": "SOFAServerless",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "SOFAServerless is a modularization application architecture patterns for company business rapid development, operation, evolution and cooperation with low cost.",
   "repository": "https://github.com/sofastack/sofa-serverless",
   "homepage": "https://sofaserverless.netlify.app/",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
-    "hugo-extended": "0.117.0",
+    "hugo-extended": "0.119.0",
     "postcss": "^8.4.30",
     "postcss-cli": "^10.1.0"
   }
