@@ -1,10 +1,13 @@
 package com.alipay.sofa.rpc.grpc.biz1.rest;
 
+import com.alipay.sofa.rpc.grpc.base.model.PoJoModel;
+import com.alipay.sofa.rpc.grpc.base.model.PoJoModelService;
 import com.alipay.sofa.rpc.grpc.model.pb.Greeter;
 import com.alipay.sofa.rpc.grpc.model.pb.GreeterRequest;
 import com.alipay.sofa.rpc.grpc.model.pb.GreeterResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class RPCController {
 
-    @DubboReference(group = "grpc")
-    private Greeter greeter;
+    @DubboReference(group = "triplePojo", scope = "remote")
+    private PoJoModelService poJoModelService;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -24,10 +27,10 @@ public class RPCController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
         String appName = applicationContext.getId();
-
-        GreeterRequest greeterRequest = GreeterRequest.newBuilder().setName(appName).build();
-        GreeterResponse response = greeter.greet(greeterRequest);
-        log.info(response.getMessage());
-        return response.getMessage();
+        PoJoModel poJoModel = new PoJoModel();
+        poJoModel.setName(appName);
+        PoJoModel response = poJoModelService.revert(poJoModel);
+        log.info(response.getName());
+        return response.getName();
     }
 }

@@ -56,6 +56,15 @@
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy/>
         </RollingFile>
+		<RollingFile name="DUBBO-APPENDER" fileName="${ctx:logging.file.path}/dubbo/dubbo.log"
+					 filePattern="${ctx:logging.file.path}/dubbo/dubbo.log.%d{yyyy-MM-dd}"
+					 append="true">
+			<PatternLayout
+					pattern="%d [%X{traceId} %X{rpcId} - %X{loginUserEmail}/%X{loginUserID}/%X{remoteAddr}/%X{clientId} - %X{requestURIWithQueryString}] %-5p %c{2} - %m%n%throwable"
+					charset="UTF-8"/>
+			<TimeBasedTriggeringPolicy/>
+			<DefaultRolloverStrategy/>
+		</RollingFile>
 
         <RollingFile name="NO-USAGE-APPENDER" fileName="${ctx:logging.file.path}/no-usage/no-usage.log"
                      filePattern="${ctx:logging.file.path}/no-usage/no-usage.log.%d{yyyy-MM-dd}"
@@ -69,6 +78,17 @@
     </Appenders>
 
     <Loggers>
+
+		<logger name="com.alibaba.dubbo" additivity="false">
+			<priority value ="info"/>
+			<appender-ref ref="DUBBO-APPENDER" />
+		</logger>
+		<AsyncLogger name="com.alibaba.dubbo" additivity="false" level="${ctx:logging.level.com.alipay.sofa.rpc.grpc}">
+			<AppenderRef ref="DUBBO-APPENDER"/>
+			<AppenderRef ref="WARN-APPENDER"/>
+			<AppenderRef ref="ERROR-APPENDER"/>
+			<AppenderRef ref="STDOUT-APPENDER"/>
+		</AsyncLogger>
         <AsyncLogger name="STDOUT" additivity="false" level="info">
             <AppenderRef ref="STDOUT-APPENDER"/>
         </AsyncLogger>

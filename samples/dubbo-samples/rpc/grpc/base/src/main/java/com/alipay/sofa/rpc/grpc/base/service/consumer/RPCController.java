@@ -1,12 +1,9 @@
 package com.alipay.sofa.rpc.grpc.base.service.consumer;
 
-import com.alipay.sofa.rpc.grpc.model.pb.DubboGreeterTriple;
-import com.alipay.sofa.rpc.grpc.model.pb.Greeter;
+import com.alipay.sofa.rpc.grpc.base.model.PoJoModel;
+import com.alipay.sofa.rpc.grpc.base.model.PoJoModelService;
 import com.alipay.sofa.rpc.grpc.model.pb.GreeterRequest;
-import com.alipay.sofa.rpc.grpc.model.pb.GreeterResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.common.constants.CommonConstants;
-import org.apache.dubbo.common.stream.StreamObserver;
 import org.apache.dubbo.config.annotation.DubboReference;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class RPCController {
 
-    @DubboReference(proxy = CommonConstants.NATIVE_STUB, group = "grpc")
-    private Greeter greeter;
+    @DubboReference(group = "triplePojo", scope = "remote")
+    private PoJoModelService poJoModelService;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -30,10 +27,10 @@ public class RPCController {
 
         GreeterRequest greeterRequest = GreeterRequest.newBuilder().setName(appName).build();
 
-        // 调用这个接口会报错，原因在这里 https://github.com/apache/dubbo/pull/13200
-        // 这个接口可以先不验证
-        GreeterResponse response = greeter.greet(greeterRequest);
-        log.info(response.getMessage());
-        return response.getMessage();
+        PoJoModel poJoModel = new PoJoModel();
+        poJoModel.setName(appName);
+        PoJoModel response = poJoModelService.revert(poJoModel);
+        log.info(response.getName());
+        return response.getName();
     }
 }
