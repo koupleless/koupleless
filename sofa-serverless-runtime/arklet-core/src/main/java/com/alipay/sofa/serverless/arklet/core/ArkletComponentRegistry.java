@@ -18,7 +18,6 @@ package com.alipay.sofa.serverless.arklet.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import com.alipay.sofa.serverless.arklet.core.health.HealthService;
@@ -43,29 +42,23 @@ import com.google.inject.multibindings.Multibinder;
  */
 public class ArkletComponentRegistry {
 
-    private static final ArkletLogger          LOGGER        = ArkletLoggerFactory
-                                                                 .getDefaultLogger();
-    private static final List<ArkletComponent> componentList = new ArrayList<>(8);
-    private final AtomicBoolean                init          = new AtomicBoolean(false);
-    private final AtomicBoolean                destroy       = new AtomicBoolean(false);
+    private static final ArkletLogger    LOGGER            = ArkletLoggerFactory.getDefaultLogger();
 
-    private static final Injector              componentInjector;
+    private static final Injector        componentInjector = Guice
+                                                               .createInjector(new ComponentGuiceModule());
+
+    private static List<ArkletComponent> componentList     = new ArrayList<>(8);
 
     static {
-        componentInjector = Guice.createInjector(new ComponentGuiceModule());
         for (Binding<ArkletComponent> binding : componentInjector
             .findBindingsByType(new TypeLiteral<ArkletComponent>() {
             })) {
             componentList.add(binding.getProvider().get());
         }
+        initComponents();
     }
 
-    public ArkletComponentRegistry() {
-
-    }
-
-    public void initComponents() {
-        if (init.compareAndSet(false, true)) {
+    private static void initComponents() {
             String components = componentList.stream().map(s -> s.getClass().getSimpleName()).collect(Collectors.joining(", "));
             LOGGER.info("found components: {}", components);
             LOGGER.info("start to initialize components");
@@ -73,17 +66,14 @@ public class ArkletComponentRegistry {
                 component.init();
             }
             LOGGER.info("finish initialize components");
-        }
     }
 
-    public void destroyComponents() {
-        if (destroy.compareAndSet(false, true)) {
-            LOGGER.info("start to destroy components");
-            for (ArkletComponent component : componentList) {
-                component.destroy();
-            }
-            LOGGER.info("finish destroy components");
+    private static void destroyComponents() {
+        LOGGER.info("start to destroy components");
+        for (ArkletComponent component : componentList) {
+            component.destroy();
         }
+        LOGGER.info("finish destroy components");
     }
 
     public static UnifiedOperationService getOperationServiceInstance() {
