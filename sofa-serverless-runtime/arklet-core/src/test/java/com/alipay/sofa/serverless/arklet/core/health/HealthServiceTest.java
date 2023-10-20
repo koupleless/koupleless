@@ -38,7 +38,7 @@ import java.util.Map;
 
 import static org.mockito.Mockito.mockStatic;
 
-public class HealthServiceTests extends BaseTest {
+public class HealthServiceTest extends BaseTest {
 
     private MockedStatic<ArkClient> arkClient;
 

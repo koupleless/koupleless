@@ -14,12 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.spring.health.endpoint;
+package com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint;
 
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
-import com.alipay.sofa.serverless.arklet.spring.SpringbootBaseTest;
-import com.alipay.sofa.serverless.arklet.spring.common.SpringbootUtil;
-import com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint.ArkHealthzEndpoint;
+import com.alipay.sofa.serverless.arklet.springboot.starter.SpringbootBaseTest;
+import com.alipay.sofa.serverless.arklet.springboot.starter.common.SpringbootUtil;
 import com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint.model.EndpointResponse;
 import com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint.model.EndpointResponseCode;
 import org.junit.Assert;
@@ -31,7 +30,7 @@ import java.util.Map;
 /**
  * @author Lunarscave
  */
-public class ArkHealthzEndpointTests extends SpringbootBaseTest {
+public class ArkHealthzEndpointTest extends SpringbootBaseTest {
 
     private static ArkHealthzEndpoint arkHealthzEndpoint;
     private static String             bizName;

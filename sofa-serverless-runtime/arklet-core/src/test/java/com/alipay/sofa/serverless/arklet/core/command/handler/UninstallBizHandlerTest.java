@@ -16,9 +16,9 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.handler;
 
+import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
-import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler.Input;
+import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.UninstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
 import org.junit.Assert;
@@ -27,54 +27,51 @@ import org.junit.Test;
 
 import static org.mockito.Mockito.when;
 
-/**
- * @author mingmen
- * @date 2023/9/5
- */
-public class InstallBizHandlerTests extends BaseHandlerTest {
+public class UninstallBizHandlerTest extends BaseHandlerTest {
 
-    private InstallBizHandler handler;
+    private UninstallBizHandler handler;
 
     @Before
     public void setupInstallBizHandler() {
-        handler = (InstallBizHandler) commandService.getHandler(BuiltinCommand.INSTALL_BIZ);
+        handler = (UninstallBizHandler) commandService.getHandler(BuiltinCommand.UNINSTALL_BIZ);
     }
 
     @Test
     public void testHandle_Success() throws Throwable {
-        Input input = new Input();
-        input.setBizUrl("testUrl");
+        UninstallBizHandler.Input input = new UninstallBizHandler.Input();
+        input.setBizName("testBizName");
+        input.setBizVersion("testBizVersion");
 
-        when(handler.getOperationService().install(input.getBizUrl())).thenReturn(success);
+        when(handler.getOperationService().uninstall(input.getBizName(), input.getBizVersion()))
+            .thenReturn(success);
 
-        Output<InstallBizHandler.InstallBizClientResponse> result = handler.handle(input);
+        Output<ClientResponse> result = handler.handle(input);
 
-        Assert.assertEquals(success.getBizInfos(), result.getData().getBizInfos());
-        Assert.assertEquals(success.getMessage(), result.getData().getMessage());
-        Assert.assertEquals(success.getCode(), result.getData().getCode());
+        Assert.assertEquals(success, result.getData());
         Assert.assertTrue(result.success());
     }
 
     @Test
     public void testHandle_Failure() throws Throwable {
-        Input input = new Input();
-        input.setBizUrl("testUrl");
+        UninstallBizHandler.Input input = new UninstallBizHandler.Input();
+        input.setBizName("testBizName");
+        input.setBizVersion("testBizVersion");
 
-        when(handler.getOperationService().install(input.getBizUrl())).thenReturn(failed);
+        when(handler.getOperationService().uninstall(input.getBizName(), input.getBizVersion()))
+            .thenReturn(failed);
 
-        Output<InstallBizHandler.InstallBizClientResponse> result = handler.handle(input);
+        Output<ClientResponse> result = handler.handle(input);
 
-        Assert.assertEquals(failed.getBizInfos(), result.getData().getBizInfos());
-        Assert.assertEquals(failed.getMessage(), result.getData().getMessage());
-        Assert.assertEquals(failed.getCode(), result.getData().getCode());
+        Assert.assertSame(failed, result.getData());
         Assert.assertTrue(result.failed());
     }
 
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizName() throws CommandValidationException {
         // 准备测试数据
-        Input input = new Input();
+        UninstallBizHandler.Input input = new UninstallBizHandler.Input();
         input.setBizName("");
+        input.setBizVersion("testBizVersion");
 
         // 执行测试
         handler.validate(input);
@@ -83,7 +80,8 @@ public class InstallBizHandlerTests extends BaseHandlerTest {
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankBizVersion() throws CommandValidationException {
         // 准备测试数据
-        Input input = new Input();
+        UninstallBizHandler.Input input = new UninstallBizHandler.Input();
+        input.setBizName("testBizName");
         input.setBizVersion("");
 
         // 执行测试
@@ -93,19 +91,9 @@ public class InstallBizHandlerTests extends BaseHandlerTest {
     @Test(expected = CommandValidationException.class)
     public void testValidate_BlankRequestId() throws CommandValidationException {
         // 执行测试
-        Input input = new Input();
+        UninstallBizHandler.Input input = new UninstallBizHandler.Input();
         input.setAsync(true);
         input.setRequestId("");
-
-        // 执行测试
-        handler.validate(input);
-    }
-
-    @Test(expected = CommandValidationException.class)
-    public void testValidate_BlankBizUrl() throws CommandValidationException {
-        // 准备测试数据
-        Input input = new Input();
-        input.setBizUrl("");
 
         // 执行测试
         handler.validate(input);

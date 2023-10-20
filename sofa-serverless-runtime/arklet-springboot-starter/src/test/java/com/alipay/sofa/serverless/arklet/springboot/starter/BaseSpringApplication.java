@@ -14,32 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.core.util;
+package com.alipay.sofa.serverless.arklet.springboot.starter;
 
-import org.junit.Assert;
-import org.junit.Test;
+import com.alipay.sofa.serverless.arklet.springboot.starter.common.SpringbootUtil;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import java.util.Date;
-
-public class ConvertUtilsTests {
-
-    @Test
-    public void testBytes2Megabyte() {
-        final long bytes = 1024 * 1024;
-        final double delta = 1e-5;
-        Assert.assertEquals(1., ConvertUtils.bytes2Megabyte(bytes), delta);
-    }
-
-    @Test
-    public void testGetDurationSecond() {
-        try {
-            final Date date = new Date(System.currentTimeMillis());
-            final long millis = 1000;
-            final double delta = 1e-2;
-            Thread.sleep(millis);
-            Assert.assertEquals(millis / 1000., ConvertUtils.getDurationSecond(date), delta);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+/**
+ * @author mingmen
+ * @date 2023/6/26
+ */
+@SpringBootApplication
+public class BaseSpringApplication {
+    public static void main(String[] args) {
+        SpringApplication springApplication = new SpringApplication(BaseSpringApplication.class);
+        ConfigurableApplicationContext context = springApplication.run(args);
+        SpringbootUtil.initSpringbootUtil(context);
     }
 }

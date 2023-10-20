@@ -14,29 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.spring.health.extension.indicator;
+package com.alipay.sofa.serverless.arklet.springboot.starter.health.extension.indicator;
 
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.core.health.HealthService;
 import com.alipay.sofa.serverless.arklet.core.health.model.Health;
-import com.alipay.sofa.serverless.arklet.spring.SpringbootBaseTest;
-import com.alipay.sofa.serverless.arklet.spring.common.SpringbootUtil;
-import com.alipay.sofa.serverless.arklet.springboot.starter.health.extension.indicator.MasterBizHealthIndicator;
+import com.alipay.sofa.serverless.arklet.springboot.starter.SpringbootBaseTest;
+import com.alipay.sofa.serverless.arklet.springboot.starter.common.SpringbootUtil;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.availability.ApplicationAvailability;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Map;
 
 /**
  * @author Lunarscave
  */
-public class MasterBizHealthIndicatorTests extends SpringbootBaseTest {
+public class MasterBizHealthIndicatorTest extends SpringbootBaseTest {
 
     private static MasterBizHealthIndicator indicator;
 

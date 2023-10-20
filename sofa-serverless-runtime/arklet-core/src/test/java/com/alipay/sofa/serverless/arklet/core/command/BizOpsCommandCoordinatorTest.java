@@ -28,7 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-public class BizOpsCommandCoordinatorTests {
+public class BizOpsCommandCoordinatorTest {
 
     private final BuiltinCommand command = BuiltinCommand.INSTALL_BIZ;
 

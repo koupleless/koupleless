@@ -16,10 +16,9 @@
  */
 package com.alipay.sofa.serverless.arklet.core.util;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-public class AssertUtilsTests {
+public class AssertUtilsTest {
 
     @Test
     public void testTestAssertNotNull_Success() {

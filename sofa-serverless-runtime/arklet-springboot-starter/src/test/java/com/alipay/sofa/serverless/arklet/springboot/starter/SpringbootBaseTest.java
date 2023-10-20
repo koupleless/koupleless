@@ -14,22 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.spring;
+package com.alipay.sofa.serverless.arklet.springboot.starter;
 
-import com.alipay.sofa.serverless.arklet.spring.common.SpringbootUtil;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import com.alipay.sofa.ark.common.util.ClassLoaderUtils;
+import com.alipay.sofa.ark.spi.constant.Constants;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 /**
- * @author mingmen
- * @date 2023/6/26
+ * @author Lunarscave
  */
-@SpringBootApplication
-public class BaseSpringApplication {
-    public static void main(String[] args) {
-        SpringApplication springApplication = new SpringApplication(BaseSpringApplication.class);
-        ConfigurableApplicationContext context = springApplication.run(args);
-        SpringbootUtil.initSpringbootUtil(context);
+public class SpringbootBaseTest {
+
+    @BeforeClass
+    public static void initSpringbootTest() {
+        ClassLoaderUtils.pushContextClassLoader(ClassLoader.getSystemClassLoader());
+        System.setProperty(Constants.EMBED_ENABLE, "true");
+        BaseSpringApplication.main(new String[] {});
+    }
+
+    @AfterClass
+    public static void destroySpringbootTest() {
+        System.setProperty(Constants.EMBED_ENABLE, "");
     }
 }

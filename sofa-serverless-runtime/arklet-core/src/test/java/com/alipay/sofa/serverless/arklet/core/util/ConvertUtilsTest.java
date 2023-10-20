@@ -14,22 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.spring;
+package com.alipay.sofa.serverless.arklet.core.util;
 
-import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author mingmen
- * @date 2023/6/26
- */
-public class SpringbootRunnerTest extends SpringbootBaseTest {
+import java.util.Date;
+
+public class ConvertUtilsTest {
 
     @Test
-    public void testArkletService() {
-        Assert.assertNotNull(ArkletComponentRegistry.getCommandServiceInstance());
-        Assert.assertNotNull(ArkletComponentRegistry.getHealthServiceInstance());
-        Assert.assertNotNull(ArkletComponentRegistry.getOperationServiceInstance());
+    public void testBytes2Megabyte() {
+        final long bytes = 1024 * 1024;
+        final double delta = 1e-5;
+        Assert.assertEquals(1., ConvertUtils.bytes2Megabyte(bytes), delta);
+    }
+
+    @Test
+    public void testGetDurationSecond() {
+        try {
+            final Date date = new Date(System.currentTimeMillis());
+            final long millis = 1000;
+            final double delta = 1e-2;
+            Thread.sleep(millis);
+            Assert.assertEquals(millis / 1000., ConvertUtils.getDurationSecond(date), delta);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
