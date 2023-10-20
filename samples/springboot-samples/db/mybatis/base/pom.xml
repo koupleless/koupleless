@@ -33,6 +33,12 @@
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 			<version>2.3.1</version>
 		</dependency>
+		<!--druid依赖-->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+			<version>1.2.9</version>
+		</dependency>
 
 
 		<dependency>

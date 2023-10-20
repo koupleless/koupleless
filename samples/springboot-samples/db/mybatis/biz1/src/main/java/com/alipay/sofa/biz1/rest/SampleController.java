@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,12 +26,12 @@ public class SampleController {
     @Autowired
     private SongMapper songMapper;
 
-    @GetMapping("/hello/{input}")
-    public String hello(@PathVariable String input) {
+    @GetMapping("/hi")
+    public String hello() {
         return String.format("hello to %s deploy", applicationContext.getId());
     }
 
-    @GetMapping("/mybatis/student")
+    @GetMapping("/testmybatis")
     public List<Student> mybatis1() {
         Student student = new Student();
         student.setName("wangwu");
@@ -43,7 +42,7 @@ public class SampleController {
         return studentMapper.getAll();
     }
 
-    @GetMapping("/mybatis/song")
+    @GetMapping("/testmybatis1")
     public List<Song> mybatis2() {
         Song song = new Song();
         song.setName("March of the Volunteers");

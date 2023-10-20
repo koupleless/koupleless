@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ImportResource;
 
 @ImportResource({ "classpath*:META-INF/spring/service.xml"})
 @SpringBootApplication
-@MapperScan
+@MapperScan(basePackages = "com.alipay.sofa.base.mapper")
 public class BaseApplication {
 	private static Logger LOGGER = LoggerFactory.getLogger(BaseApplication.class);
 
