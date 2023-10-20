@@ -38,5 +38,10 @@ public class ErrorCodes {
          * 模块状态非法
          */
         public static final String E100004 = "100004";
+
+        /**
+         * 跨模块调用，目标biz找不到该类
+         */
+        public static final String E100005 = "100005";
     }
 }
