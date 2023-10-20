@@ -5,6 +5,8 @@ weight: 1100
 
 > 作者: 朱林(封渊)、张建明(明门)
 
+<br/>
+
 # 项目背景
 过去几年，AIDC（阿里巴巴海外数字商业）业务板块在全球多个国家和地区拓展。国际电商业务模式上分为"跨境"和"本对本"两种，分别基于AE(跨境)、Lazada、Daraz、Mirivia、Trendyol 等多个电商平台承载。以下将不同的电商平台统称为“站点”。
 
@@ -25,6 +27,8 @@ weight: 1100
 Serverless 的技术理念中，强调关注点分离，让业务研发专注在业务逻辑的研发，而不太需要关注底层平台。这样一个理念，结合上述我们面临的问题或许是一个比较好的解法，让平台从二方包升级成为一个平台基座应用，统一收敛平台的迭代，包括应用运行时的升级；让业务站点应用轻量化，只关注定制逻辑的开发，提升部署效率，降低维护成本，整体逻辑架构图如下：
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/8b6d120f-42b3-495d-9879-6be1a8000ebc)
 
+<br/>
+
 # 概念阐述
 Serverless 普遍的理解是“无服务器架构”。它是云原生的主要技术之一，无服务器指的是用户不必关心应用运行和运维的管理，可以让用户去开发和使用应用程序，而不用去管理基础设施，云服务商提供、配置、管理用于运算的底层基础设施，将应用程序从基础结构中抽离出来，让开发人员可以更加专注于业务逻辑，从而提高交付能力，降低工作成本。传统 Serverless 在实现上其实就是 **FaaS** **+** **BaaS**。FaaS 承载代码片段（即函数），可随时随地创建、使用、销毁，无法自带状态。和 BaaS（后端即服务）搭配使用。两者合在一起，才最终实现了完整行为的 Serverless 服务。
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/fe45cf14-0f19-42ed-8a06-6d461c2209f4)
@@ -40,6 +44,9 @@ Serverless 普遍的理解是“无服务器架构”。它是云原生的主要
    - 基座应用开发者可以统一升级中间件和组件版本，在保证兼容性的前提下，上层 App 无需感知整个升级过程
    - 基座具备不同站点间的可复用性，一个交易的基座可以被 AE、Lazada、Daraz等不同的站点 App 共用
 - **Serverless App**：为了最大程度减少业务的改造成本，业务团队维护的 App 依旧保持其自身的发布运维职责的独立性不变，Serverless 化后业务开发人员只需要关心业务代码即可。JVM 对外服务的载体依旧是业务应用。
+
+<br/>
+
 # 技术实施
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/160e41e5-3227-409d-b81a-05800f24a306)
 
@@ -47,11 +54,15 @@ Serverless 架构演技的实施过程分为两个部分：
 
 1. 重新设计 Serverless 架构模型下的应用架构分层与职责划分，让业务减负，让 SRE 提效。
 2. 在研发、发布&运维等领域采用新的研发框架、交付模型与发布运维产品来支持业务快速迭代。
+<br/>
 ## 应用架构
 以 Daraz 基础链路为例，应用架构的分层结构、交互关系、团队职责如下：
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/7af3a82f-31b8-4ed4-ae18-e7d2606a261a)
 
 我们将一个 Serverless 应用完整交付所需的支撑架构进行逻辑分层与开发职责划分，并且清晰定义出 App 与基座之间交互的协议标准。
+
+<br/>
+
 ## 研发域
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/e7957e02-0f14-4f79-9b00-d748ce806722)
 
@@ -61,7 +72,7 @@ Serverless 架构演技的实施过程分为两个部分：
 ### voyager-serverless framework
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/92bb0727-abad-49a0-a175-9cba64ffdbbb)
 
-**voyager-serverless framework** 是一个基于 [SOFAServerless](https://github.com/sofastack/sofa-serverless/) 技术自研的提供`serverless编程界面`的研发框架，允许业务 App 以`动态`的方式被装载到一个正在运行的基座容器(ArkContainer)中。在 [SOFAServerless](https://github.com/sofastack/sofa-serverless/) 模块隔离能力的基础上，我们针对阿里集团技术栈做了深度改造定制。
+**voyager-serverless framework** 是一个基于 **[SOFAServerless](https://github.com/sofastack/sofa-serverless/)** 技术自研的提供`serverless编程界面`的研发框架，允许业务 App 以`动态`的方式被装载到一个正在运行的基座容器(ArkContainer)中。在 [SOFAServerless](https://github.com/sofastack/sofa-serverless/) 模块隔离能力的基础上，我们针对阿里集团技术栈做了深度改造定制。
 整套框架提供以下关键能力:
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/b2bc97cb-2a0c-4d6d-a971-0dbc78dd2959)
 
@@ -78,6 +89,7 @@ Serverless 架构演技的实施过程分为两个部分：
 - **二阶段app启动**
    - **第三步**: `Serverless App启动`，由 ArkContainer 内置组件接受`Fiber`调度请求下载app制品并触发app launch
       - 创建 BizClassLoader，作为线程 ClassLoader 初始化 SpringContext，加载`App自有类、基座Plugin类、依赖包类、中间件SDK类`等
+
 #### 通信机制
 在 Serverless 形态下，基座与 App 之间可以通过`进程内通信方式`进行交互，目前提供两种通信模型: **SPI **和**基座Bean服务导出**
 > SPI 本质上就是基于标准 Java SPI 的扩展的内部特殊实现，本文不额外赘述，这里重点介绍下`基座Bean服务导出`。
@@ -90,16 +102,19 @@ Serverless 架构演技的实施过程分为两个部分：
    2. 基座启动结束后，隔离容器会自动将用户标注的 Bean 导出到一个缓冲区中，等待 App 的启动使用
    3. App 在基座上启动，App 的 SpringContext 初始化过程中，会在初始化阶段读取到缓冲区中需要导入的 Bean
    4. App 的 SpringContext 中的其他组件可以正常`@Autowired`这些导出的 Bean
+
 #### 插件机制
 Serverless 插件提供了一种能够让 App 运行时所需的类默认从基座中加载的机制，框架支持将平台基座需要暴露给上层 App 使用的SDK/二方包等包装成一个插件(Ark Plugin)，最终实现中台控制的包下沉到基座而不需要让上层业务改动。
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/7bbbcbb9-46d4-46d0-b82d-1e9f21c754b0)
-
+<br/>
 ### 中间件适配
 在 Serverless 架构演进中，由于一个完整应用的启动过程被拆分成基座启动和 App 启动，因此在一二阶段相关中间件的初始化逻辑也发生了变化。我们对国际侧常用的中间件和产品组件进行了测试，并对部分中间件进行了适配改造。
 总结起来，大部分问题都出现在中间件一些流程逻辑没设计这种多 ClassLoader 的场景，很多类/方法使用中不会将ClassLoader 对象作为参数传递进来，进而在初始化模型对象时出错，导致上下文交互异常。
 ### 开发配套
 我们也提供了一整套完整且简单易用的配套工具，方便开发者快速接入 Serverless 体系
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/2d7c3c88-0924-4a9b-9d01-c6c718fcd4b0)
+
+<br/>
 
 ## 发布&运维域
 除了研发域，Serverless 架构在发布运维领域也带来很多新的变化。首先是研发运维分层拆分，实现了关注点分离，降低研发复杂度
@@ -120,6 +135,7 @@ Serverless 插件提供了一种能够让 App 运行时所需的类默认从基�
 
 - **Maven 构建优化**: 由于很多依赖包都已经下沉到已经就绪的基座，因此对于 App 来说就可以减少需要构建的二方包数量以及 Class 文件数量，进而整体优化制品大小，提升构建效率
 - **Docker 构建移除**: 由于 Serverless 模式下业务 App 部署的制品就是轻量化 Fat Jar，因此也无需进行 docker 构建
+
 ### 发布效率提升
 在 Serverless 模式下，我们采用`Surge+流式发布`替换传统的分批发布来进一步提升 App 的发布效率。
 
@@ -162,12 +178,15 @@ Serverless 插件提供了一种能够让 App 运行时所需的类默认从基�
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/2b9dda94-acf8-4846-8e21-821cda4a56cd)
 
 同时，我们也在生产环境配置一定数量的基座 Buffer，支持站点 App 的快速弹性扩容。
+
+<br/>
+
 # 总结与展望
+
 目前已经完成 Daraz 业务站点的**交易、营销、履约、会员、逆向**应用的 Serverless 升级改造，在`构建时长`、`单机应用启动时长`、`预发环境发布时长`三个指标上均取得了较大优化效果。在个别领域，甚至真正做到了 App 的 **10s **级启动。
 
 ![image](https://github.com/sofastack/sofa-serverless/assets/11410549/298650c3-ef2f-48b3-8b85-3754bd62e5cb)
 
 
-可以看到，本次 Serverless 架构的升级，无论从理论推演还是实践结果，都产生了较大的正向收益与效率提升，这给后续业务 App 的快速迭代带来了不少便利。同时，由于平台代码下沉为基座应用，也具备了跟业务站点正交的发布能力，基本上可以实现基础链路平台版本统一的目标；"关注点分离"也解放了业务开发者，让他们更多关注在自己的业务代码上。但是，还有一些如开发配套成熟度、问题定位与诊断、生产环境成本最优的基座配置等问题与挑战需要进一步解决。我们也会深度参与共建 [SOFAServerless](https://github.com/sofastack/sofa-serverless/) 开源社区，发掘更多的落地场景与实践经验。
+可以看到，本次 Serverless 架构的升级，无论从理论推演还是实践结果，都产生了较大的正向收益与效率提升，这给后续业务 App 的快速迭代带来了不少便利。同时，由于平台代码下沉为基座应用，也具备了跟业务站点正交的发布能力，基本上可以实现基础链路平台版本统一的目标；"关注点分离"也解放了业务开发者，让他们更多关注在自己的业务代码上。但是，还有一些如开发配套成熟度、问题定位与诊断、生产环境成本最优的基座配置等问题与挑战需要进一步解决。我们也会深度参与共建 **[SOFAServerless](https://github.com/sofastack/sofa-serverless/)** 开源社区，发掘更多的落地场景与实践经验。
 Serverless 从来不是某个单一的架构形态，它带来的更多是一种理念和生产方式。理解它、利用它，帮助我们拓宽新的思路与解题方法。
-
