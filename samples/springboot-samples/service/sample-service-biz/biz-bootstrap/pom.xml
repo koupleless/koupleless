@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>sample-service-biz2</artifactId>
+        <artifactId>sample-service-biz</artifactId>
         <groupId>com.alipay.sofa.service</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>biz2-bootstrap</artifactId>
+    <artifactId>biz-bootstrap</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -17,10 +17,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.alipay.sofa.service</groupId>
-            <artifactId>biz2-facade</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.alipay.sofa.service</groupId>
             <artifactId>biz-facade</artifactId>
@@ -75,10 +71,10 @@
                 </executions>
                 <configuration>
                     <skipArkExecutable>true</skipArkExecutable>
-                    <outputDirectory>./target</outputDirectory>
-                    <bizName>biz2</bizName>
+                    <outputDirectory>target</outputDirectory>
+                    <bizName>biz</bizName>
                     <!-- 单host下需更换 web context path -->
-                    <webContextPath>biz2</webContextPath>
+                    <webContextPath>biz</webContextPath>
                     <declaredMode>true</declaredMode>
                 </configuration>
             </plugin>
