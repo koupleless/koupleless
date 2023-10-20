@@ -16,12 +16,10 @@
  */
 package com.alipay.sofa.serverless.arklet.springboot.starter;
 
-import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.springboot.starter.command.MasterBizCmdHandlerCollector;
 import com.alipay.sofa.serverless.common.environment.ConditionalOnMasterBiz;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 /**
  * @author mingmen
@@ -32,15 +30,6 @@ public class ArkletAutoConfiguration {
 
     @Bean
     @ConditionalOnMasterBiz
-    public ArkletComponentRegistry arkletComponentRegistry() {
-        ArkletComponentRegistry registry = new ArkletComponentRegistry();
-        registry.initComponents();
-        return registry;
-    }
-
-    @Bean
-    @ConditionalOnMasterBiz
-    @DependsOn("arkletComponentRegistry")
     public MasterBizCmdHandlerCollector masterBizCmdHandlerCollector() {
         return new MasterBizCmdHandlerCollector();
     }

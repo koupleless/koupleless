@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.spring.starter;
+package com.alipay.sofa.serverless.arklet.springboot.starter;
 
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author mingmen

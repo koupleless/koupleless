@@ -14,12 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.arklet.spring.starter.health.endpoint;
+package com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint;
 
 import com.alipay.sofa.serverless.arklet.core.health.model.Constants;
-import com.alipay.sofa.serverless.arklet.spring.starter.SpringbootBaseTest;
-import com.alipay.sofa.serverless.arklet.spring.starter.common.SpringbootUtil;
-import com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint.ArkHealthCodeEndpoint;
+import com.alipay.sofa.serverless.arklet.springboot.starter.SpringbootBaseTest;
+import com.alipay.sofa.serverless.arklet.springboot.starter.common.SpringbootUtil;
 import com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint.model.EndpointResponseCode;
 import org.junit.Assert;
 import org.junit.BeforeClass;
