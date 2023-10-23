@@ -173,7 +173,7 @@ var _ = Describe("ModuleReplicaSet Controller", func() {
 			pod3.Status.PodIP = "127.0.0.2"
 			k8sClient.Status().Update(context.TODO(), &pod3)
 			moduleReplicaSet := prepareModuleReplicaSet(namespaceName, moduleReplicaSetName)
-			moduleReplicaSet.Spec.SchedulingStrategy.UpgradePolicy = v1alpha1.ScaleUpThenScaleDownUpgradePolicy
+			moduleReplicaSet.Spec.OperationStrategy.UpgradePolicy = v1alpha1.ScaleUpThenScaleDownUpgradePolicy
 			utils.AddFinalizer(&moduleReplicaSet.ObjectMeta, finalizer.ModuleExistedFinalizer)
 			Expect(k8sClient.Create(context.TODO(), &moduleReplicaSet)).Should(Succeed())
 			key := types.NamespacedName{

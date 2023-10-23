@@ -30,4 +30,6 @@ const (
 	DeletePodLabel = "serverless.alipay.com/delete-pod"
 
 	DeletePodDirectlyLabel = "serverless.alipay.com/delete-pod-directly"
+
+	ModuleLabelPrefix = "module.serverless.alipay.com/"
 )

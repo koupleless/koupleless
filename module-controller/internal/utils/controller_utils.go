@@ -77,7 +77,7 @@ func GetNextReconcileTime(currentTime time.Time) time.Duration {
 
 func GetModuleCountFromPod(pod *corev1.Pod) (count int) {
 	for k, _ := range pod.Labels {
-		if strings.HasPrefix(k, label.ModuleNameLabel) {
+		if strings.HasPrefix(k, label.ModuleLabelPrefix) {
 			count += 1
 		}
 	}

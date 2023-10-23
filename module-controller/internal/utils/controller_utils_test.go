@@ -83,7 +83,7 @@ func TestGetModuleCountFromPod(t *testing.T) {
 	count := 5
 
 	for i := 0; i < count; i++ {
-		pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "module-"+strconv.Itoa(i))] = "1.0.0"
+		pod.Labels[fmt.Sprintf(label.ModuleLabelPrefix+"module-"+strconv.Itoa(i))] = "true"
 	}
 
 	actual := GetModuleCountFromPod(pod)

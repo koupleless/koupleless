@@ -2,21 +2,18 @@ package controller
 
 import (
 	"context"
-	"fmt"
+	"github.com/sofastack/sofa-serverless/internal/utils"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"time"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
-
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 )
 
@@ -28,7 +25,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	namespaceObj := prepareNamespace(namespace)
 	deployment := prepareDeployment(namespace)
 	moduleDeploymentName := "module-deployment-test-demo"
-	moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
+	moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
 	pod := preparePod(namespace, "fake-pod-1")
 	Context("create module deployment", func() {
 		It("prepare deployment and pod", func() {
@@ -49,7 +46,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 				set := map[string]string{
 					label.ModuleDeploymentLabel: moduleDeployment.Name,
 				}
-				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+				replicaSetList := &v1alpha1.ModuleReplicaSetList{}
 				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 				if err != nil {
 					return false
@@ -75,7 +72,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 				set := map[string]string{
 					label.ModuleDeploymentLabel: moduleDeployment.Name,
 				}
-				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+				replicaSetList := &v1alpha1.ModuleReplicaSetList{}
 				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 				if err != nil || len(replicaSetList.Items) > 1 {
 					return false
@@ -114,26 +111,30 @@ var _ = Describe("ModuleDeployment Controller", func() {
 				Namespace: namespace,
 			}
 			var newModuleDeployment v1alpha1.ModuleDeployment
-			Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
-			newModuleDeployment.Spec.Replicas += 1
 			Eventually(func() bool {
+				Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
+				newModuleDeployment.Spec.Replicas += 1
 				err := k8sClient.Update(context.TODO(), &newModuleDeployment)
-				log.Log.Error(err, "update module replicas error")
-				return err == nil
+				if err == nil {
+					return true
+				} else {
+					log.Log.Error(err, "update module deployment error")
+					return false
+				}
 			}, timeout, interval).Should(BeTrue())
 
 			Eventually(func() bool {
 				set := map[string]string{
 					label.ModuleDeploymentLabel: moduleDeployment.Name,
 				}
-				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+				replicaSetList := &v1alpha1.ModuleReplicaSetList{}
 				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 				if err != nil || len(replicaSetList.Items) == 0 {
 					return false
 				}
 
 				maxVersion := 0
-				var newRS *moduledeploymentv1alpha1.ModuleReplicaSet
+				var newRS *v1alpha1.ModuleReplicaSet
 				for i := 0; i < len(replicaSetList.Items); i++ {
 					version, err := getRevision(&replicaSetList.Items[i])
 					if err != nil {
@@ -165,7 +166,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	Context("test batchConfirm strategy", func() {
 		moduleDeploymentName := "module-deployment-test-for-batch-confirm"
 		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
-		moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
+		moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
 		moduleDeployment.Spec.Replicas = 2
 		moduleDeployment.Spec.OperationStrategy.NeedConfirm = true
 		moduleDeployment.Spec.OperationStrategy.BatchCount = 2
@@ -173,7 +174,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		It("0. prepare 2 pods", func() {
 			Eventually(func() bool {
 				pod := preparePod(namespace, "fake-pod-3")
-				pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
+				pod.Labels[label.ModuleLabelPrefix+"dynamic-provider"] = "true"
 				if err := k8sClient.Create(context.TODO(), &pod); err != nil {
 					return false
 				}
@@ -225,7 +226,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 					return false
 				}
 
-				return moduleDeployment.Status.ReleaseStatus.Progress == moduledeploymentv1alpha1.ModuleDeploymentReleaseProgressCompleted
+				return moduleDeployment.Status.ReleaseStatus.Progress == v1alpha1.ModuleDeploymentReleaseProgressCompleted
 			}, timeout, interval).Should(BeTrue())
 		})
 
@@ -237,7 +238,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 	Context("test useBeta strategy", func() {
 		moduleDeploymentName := "module-deployment-test-for-use-beta"
 		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
-		moduleDeployment := prepareModuleDeployment(namespace, moduleDeploymentName)
+		moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
 		moduleDeployment.Spec.Replicas = 4
 		moduleDeployment.Spec.OperationStrategy.UseBeta = true
 		moduleDeployment.Spec.OperationStrategy.NeedConfirm = true
@@ -246,7 +247,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		It("0. prepare pods", func() {
 			Eventually(func() bool {
 				pod := preparePod(namespace, "fake-pod-use-beta")
-				pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "dynamic-provider")] = "1.0.0"
+				pod.Labels[label.ModuleLabelPrefix+"dynamic-provider"] = "true"
 				if err := k8sClient.Create(context.TODO(), &pod); err != nil {
 					return false
 				}
@@ -286,7 +287,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 				set := map[string]string{
 					label.ModuleDeploymentLabel: moduleDeployment.Name,
 				}
-				replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+				replicaSetList := &v1alpha1.ModuleReplicaSetList{}
 				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
 				if err != nil {
 					if errors.IsNotFound(err) {
@@ -304,14 +305,14 @@ func checkModuleDeploymentReplicas(nn types.NamespacedName, replicas int32) bool
 	set := map[string]string{
 		label.ModuleDeploymentLabel: nn.Name,
 	}
-	replicaSetList := &moduledeploymentv1alpha1.ModuleReplicaSetList{}
+	replicaSetList := &v1alpha1.ModuleReplicaSetList{}
 	err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(nn.Namespace))
 	if err != nil || len(replicaSetList.Items) == 0 {
 		return false
 	}
 
 	maxVersion := 0
-	var newRS *moduledeploymentv1alpha1.ModuleReplicaSet
+	var newRS *v1alpha1.ModuleReplicaSet
 	for i := 0; i < len(replicaSetList.Items); i++ {
 		version, err := getRevision(&replicaSetList.Items[i])
 		if err != nil {
@@ -324,38 +325,8 @@ func checkModuleDeploymentReplicas(nn types.NamespacedName, replicas int32) bool
 	}
 
 	// the replicas of new replicaset must be equal to newModuleDeployment
+	log.Log.Info("checkModuleDeploymentReplicas", "newRS.Status.Replicas", newRS.Status.Replicas, "newRS.Spec.Replicas", newRS.Spec.Replicas, "replicas", replicas)
 	return newRS != nil &&
 		newRS.Status.Replicas == newRS.Spec.Replicas &&
 		newRS.Status.Replicas == replicas
-}
-
-func prepareModuleDeployment(namespace, moduleDeploymentName string) v1alpha1.ModuleDeployment {
-	baseDeploymentName := "dynamic-stock-deployment"
-
-	moduleDeployment := v1alpha1.ModuleDeployment{
-		Spec: v1alpha1.ModuleDeploymentSpec{
-			BaseDeploymentName: baseDeploymentName,
-			Template: v1alpha1.ModuleTemplateSpec{
-				Spec: v1alpha1.ModuleSpec{
-					Module: v1alpha1.ModuleInfo{
-						Name:    "dynamic-provider",
-						Version: "1.0.0",
-						Url:     "http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar",
-					},
-				},
-			},
-			SchedulingStrategy: v1alpha1.ModuleSchedulingStrategy{
-				SchedulingPolicy: v1alpha1.Scatter,
-			},
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      moduleDeploymentName,
-			Namespace: namespace,
-			Labels: map[string]string{
-				"app": "dynamic-stock",
-			},
-			Annotations: map[string]string{},
-		},
-	}
-	return moduleDeployment
 }

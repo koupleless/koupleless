@@ -22,7 +22,7 @@ spec:
     grayTimeBetweenBatchSeconds: 120
     useBeta: false
     batchCount: 1
-  schedulingStrategy:
     upgradePolicy: install_then_uninstall
+  schedulingStrategy:
     schedulingPolicy: scatter
 
