@@ -77,6 +77,16 @@
             </dependency>
             <dependency>
                 <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-all</artifactId>
+                <version>${sofa.ark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-springboot-starter</artifactId>
+                <version>${sofa.ark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
                 <artifactId>web-ark-plugin</artifactId>
                 <version>${sofa.ark.version}</version>
                 <exclusions>
@@ -94,6 +104,12 @@
                 <groupId>com.lmax</groupId>
                 <artifactId>disruptor</artifactId>
                 <version>${disruptor.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>sofa-serverless-app-starter</artifactId>
+                <version>${sofa.serverless.runtime.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
