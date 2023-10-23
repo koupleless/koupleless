@@ -144,4 +144,21 @@ jobs:
           kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng'
           kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng/sofa-ark'
           kubectl exec -it $podname -- sh -c 'grep "dynamic-provider:1.0.0 started" logs/stock-mng/sofa-ark/*.log'
-          
+
+      - name: scaledown module
+        run:
+          kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_provider_scaledown.yaml
+
+      - run: sleep 15
+
+      - name: get module
+        run: |
+          kubectl get module -oyaml
+
+      - name: not exist module
+        run: |
+          moduleCount=$(kubectl get module | wc -l)
+          if [[ $moduleCount -gt 0 ]]; then
+            echo "ERROR: module依旧存在"
+            exit 1
+          fi
