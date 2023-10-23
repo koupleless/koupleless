@@ -106,7 +106,7 @@ public class InstallBizHandler
             throw new RuntimeException(e);
         }
         notBlank(input.getBizName(), "bizName should not be blank");
-        notBlank(input.getBizVersion(), "bizVersion should not be blank");;
+        notBlank(input.getBizVersion(), "bizVersion should not be blank");
     }
 
     private void getBizInfo(Input input) throws IOException {
@@ -114,7 +114,7 @@ public class InstallBizHandler
         URL url = new URL((String) input.getBizUrl());
         String suffix = (new SimpleDateFormat("yyyyMMddHHmmssSSS")).format(new Date());
         File bizFile = ArkClient.createBizSaveFile((String) input.getBizName(),
-                (String) input.getBizVersion(), suffix);
+            (String) input.getBizVersion(), suffix);
         FileUtils.copyInputStreamToFile(url.openStream(), bizFile);
         Biz biz = bizFactoryService.createBiz(bizFile);
         input.setBizName(biz.getBizName());
