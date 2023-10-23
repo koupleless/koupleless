@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -316,6 +317,33 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 
 		It("3. clean environment", func() {
 			Expect(k8sClient.Delete(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+	})
+
+	Context("delete module deployment", func() {
+		It("clean module replicaset and deployment", func() {
+			key := types.NamespacedName{
+				Name:      moduleDeploymentName,
+				Namespace: namespace,
+			}
+			var newModuleDeployment v1alpha1.ModuleDeployment
+			Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
+			Expect(k8sClient.Delete(context.TODO(), &newModuleDeployment)).Should(Succeed())
+
+			Eventually(func() bool {
+				set := map[string]string{
+					label.ModuleDeploymentLabel: moduleDeployment.Name,
+				}
+				replicaSetList := &v1alpha1.ModuleReplicaSetList{}
+				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
+				if err != nil {
+					if errors.IsNotFound(err) {
+						return true
+					}
+					return false
+				}
+				return len(replicaSetList.Items) == 0
+			}, timeout, interval).Should(BeTrue())
 		})
 	})
 })
