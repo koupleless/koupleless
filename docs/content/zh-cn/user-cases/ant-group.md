@@ -37,7 +37,7 @@ weight: 1000
 <a name="flzsk"></a>
 ## 模块化研发极致提效
 
-在蚂蚁集团，很多部门存在开发者人数较多的应用，由于人数多，导致环境抢占、联调抢占、测试资源抢占情况严重，互相阻塞，一人 Delay 多人 Delay，导致需求交付效率低下。<br />通过使用 SOFAServerless，蚂蚁集团将协作人数较多的应用，一步步重构为基座代码和不同功能的模块代码。基座代码沉淀了各种 SDK 和业务的公共接口，由专人维护，而模块代码则内聚了某一个功能领域特有的业务逻辑，可以调用本地基座接口。模块采用热部署实现了**十秒级**构建、发布、伸缩，同时模块开发者**完全不用关心**服务器和基础设施，这样普通应用便以**很低的接入成本**实现了 **Serverless** 的研发体验。<br />以蚂蚁集团资金业务为例，资金通过将应用拆分为一个基座与多个模块，实现了发布运维、组织协作、集群流量隔离多个维度的极致提效。<br /><img src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1697011295180-dfc3def2-968b-4456-95f5-447cfe6b8282.png#clientId=u2fc31cce-a2b2-4&from=paste&height=814&id=u32abf9c9&originHeight=1628&originWidth=2924&originalType=binary&ratio=2&rotation=0&showTitle=false&size=1774843&status=done&style=none&taskId=u08c84de5-b5eb-4c19-b724-9826d13e397&title=&width=1462" width="1100">
+在蚂蚁集团，很多部门存在开发者人数较多的应用，由于人数多，导致环境抢占、联调抢占、测试资源抢占情况严重，互相阻塞，一人 Delay 多人 Delay，导致需求交付效率低下。<br />通过使用 SOFAServerless，蚂蚁集团将协作人数较多的应用，一步步重构为基座代码和不同功能的模块代码。基座代码沉淀了各种 SDK 和业务的公共接口，由专人维护，而模块代码则内聚了某一个功能领域特有的业务逻辑，可以调用本地基座接口。模块采用热部署实现了**十秒级**构建、发布、伸缩，同时模块开发者**完全不用关心**服务器和基础设施，这样普通应用便以**很低的接入成本**实现了 **Serverless** 的研发体验。<br />以蚂蚁集团资金业务为例，资金通过将应用拆分为一个基座与多个模块，实现了发布运维、组织协作、集群流量隔离多个维度的极致提效。<br /><img src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1697011295180-dfc3def2-968b-4456-95f5-447cfe6b8282.png#clientId=u2fc31cce-a2b2-4&from=paste&height=814&id=u32abf9c9&originHeight=1628&originWidth=2924&originalType=binary&ratio=2&rotation=0&showTitle=false&size=1774843&status=done&style=none&taskId=u08c84de5-b5eb-4c19-b724-9826d13e397&title=&width=1462" width="1200">
 
 蚂蚁集团资金业务 SOFAServerless 架构演进和实践，详见：[https://mp.weixin.qq.com/s/uN0SyzkW_elYIwi03gis-Q](https://mp.weixin.qq.com/s/uN0SyzkW_elYIwi03gis-Q)
 
@@ -55,7 +55,7 @@ weight: 1000
 <a name="DOpxO"></a>
 ## 低成本实现高效中台
 
-在蚂蚁集团，有不少中台类业务，典型如各个业务线的玩法、营销、公益、搜索推荐、广告投放等。通过使用 SOFAServerless，这些中台业务逐渐演进成了基座 + 模块的交付方式，其中基座代码沉淀了通用逻辑，也定义了一些 SPI，而模块负责实现这些 SPI，流量会从基座代码进入，调用模块的 SPI 实现。<br />在中台场景下，模块一般都很轻，甚至只是一个代码片段，大部分模块都能在 **5 秒内**发布、扩容完成，而且模块开发者完全不关心基础设施，享受到了极致的 Serverless 研发体验。<br />以蚂蚁集团**搜索推荐**业务中台为例，搜索推荐业务将公共依赖、通用逻辑、流程引擎全部下沉到基座，并且定义了一些 SPI，搜索推荐算法由各个模块开发者实现，当前搜索推荐已经接入了 **1000+** 模块，平均代码发布上线不到 **1 天**，真正实现了代码的 “**朝写夕发**”。<br /><br/><img src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1697024085963-a8b74e7b-37d5-469f-97da-7ef7b3e6889f.png#clientId=u2fc31cce-a2b2-4&from=paste&height=684&id=u44c95749&originHeight=1368&originWidth=1412&originalType=binary&ratio=2&rotation=0&showTitle=false&size=728809&status=done&style=none&taskId=u34dbef7c-95c4-4e42-9613-0a25f3362a3&title=&width=706" width="1100">
+在蚂蚁集团，有不少中台类业务，典型如各个业务线的玩法、营销、公益、搜索推荐、广告投放等。通过使用 SOFAServerless，这些中台业务逐渐演进成了基座 + 模块的交付方式，其中基座代码沉淀了通用逻辑，也定义了一些 SPI，而模块负责实现这些 SPI，流量会从基座代码进入，调用模块的 SPI 实现。<br />在中台场景下，模块一般都很轻，甚至只是一个代码片段，大部分模块都能在 **5 秒内**发布、扩容完成，而且模块开发者完全不关心基础设施，享受到了极致的 Serverless 研发体验。<br />以蚂蚁集团**搜索推荐**业务中台为例，搜索推荐业务将公共依赖、通用逻辑、流程引擎全部下沉到基座，并且定义了一些 SPI，搜索推荐算法由各个模块开发者实现，当前搜索推荐已经接入了 **1000+** 模块，平均代码发布上线不到 **1 天**，真正实现了代码的 “**朝写夕发**”。<br /><br/><img src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1697024085963-a8b74e7b-37d5-469f-97da-7ef7b3e6889f.png#clientId=u2fc31cce-a2b2-4&from=paste&height=684&id=u44c95749&originHeight=1368&originWidth=1412&originalType=binary&ratio=2&rotation=0&showTitle=false&size=728809&status=done&style=none&taskId=u34dbef7c-95c4-4e42-9613-0a25f3362a3&title=&width=706" width="700">
 
 <br/>
 <br/>
