@@ -196,12 +196,38 @@ jobs:
 
       - name: delete pod
         run: |
-          podname=$(kubectl get pod -l app=dynamic-stock -o name)
+          podname=$(kubectl get pod -l app=dynamic-stock -o name | cut -d/ -f2)
           kubectl delete -n default pod $podname
 
       - run: sleep 30
 
       - name: check module
+        run: |
+          podname=$(kubectl get pod -l app=dynamic-stock -o name)
+          kubectl exec -it $podname -- sh -c 'ls -al'
+          kubectl exec -it $podname -- sh -c 'ls -al logs'
+          kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng'
+          kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng/sofa-ark'
+          kubectl exec -it $podname -- sh -c 'grep "dynamic-provider:1.0.0 started" logs/stock-mng/sofa-ark/*.log'
+
+      - name: delete module
+        run: |
+          moduleName=$(kubectl get module -o name | cut -d/ -f2)
+          kubectl delete -n default module $moduleName
+
+      - run: sleep 30
+
+      - name: delete module then check module is existed
+        run: |
+          moduleCount=$(kubectl get module | wc -l)
+          if [[ $moduleCount -lt 1 ]]; then
+            echo "ERROR: 不存在module"
+            exit 1
+          fi
+
+      - run: sleep 15
+
+      - name: delete module then check module
         run: |
           podname=$(kubectl get pod -l app=dynamic-stock -o name)
           kubectl exec -it $podname -- sh -c 'ls -al'
