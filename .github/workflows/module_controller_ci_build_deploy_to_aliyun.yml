@@ -199,9 +199,21 @@ jobs:
           podname=$(kubectl get pod -l app=dynamic-stock -o name | cut -d/ -f2)
           kubectl delete -n default pod $podname
 
-      - run: sleep 30
+      - run: sleep 15
 
-      - name: check module
+      - name: get pod
+        run: |
+          kubectl get pod
+
+      - name: describe pod
+        run: |
+          kubectl describe pod
+
+      - name: wait base pod available
+        run: |
+          kubectl wait --for=condition=available deployment/dynamic-stock-deployment --timeout=300s
+
+      - name: delete pod then check module
         run: |
           podname=$(kubectl get pod -l app=dynamic-stock -o name)
           kubectl exec -it $podname -- sh -c 'ls -al'
