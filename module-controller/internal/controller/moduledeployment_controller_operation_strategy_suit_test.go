@@ -2,19 +2,20 @@ package controller
 
 import (
 	"context"
-	"github.com/sofastack/sofa-serverless/internal/utils"
-	"sigs.k8s.io/controller-runtime/pkg/log"
+	"fmt"
 	"time"
+
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/utils"
 )
 
 var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
@@ -97,11 +98,11 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 			newModuleDeployment.Spec.Template.Spec.Module.Version = "1.0.1"
 			Expect(k8sClient.Update(context.TODO(), &newModuleDeployment)).Should(Succeed())
 
-			Eventually(func() bool {
+			Eventually(func() error {
 				return checkModuleDeploymentReplicas(
 					types.NamespacedName{Name: moduleDeploymentName, Namespace: namespace},
 					newModuleDeployment.Spec.Replicas)
-			}, timeout, interval).Should(BeTrue())
+			}, timeout, interval).Should(Succeed())
 		})
 	})
 
@@ -200,20 +201,20 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 
 		It("2. check if the replicas is 1", func() {
 			// todo: we just check deployment.status.replicas rather than modulereplicaset
-			Eventually(func() bool {
+			Eventually(func() error {
 				if err := k8sClient.Get(context.TODO(), nn, &moduleDeployment); err != nil {
-					return false
+					return err
 				}
 
 				if !moduleDeployment.Spec.Pause {
-					return false
+					return fmt.Errorf("the deployment is not paused")
 				}
 
 				return checkModuleDeploymentReplicas(
 					types.NamespacedName{
 						Name:      moduleDeploymentName,
 						Namespace: moduleDeployment.Namespace}, 1)
-			}, timeout, interval).Should(BeTrue())
+			}, timeout, interval).Should(Succeed())
 		})
 
 		It("3. resume", func() {
@@ -239,8 +240,45 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 			}, timeout, interval).Should(BeTrue())
 		})
 
-		It("5. delete moduleDeployment", func() {
+		It("5. add another finalizer to prevent module-deployment from being deleted ", func() {
+			utils.AddFinalizer(&moduleDeployment.ObjectMeta, "test")
+			Expect(k8sClient.Update(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+
+		It("6. delete moduleDeployment", func() {
 			Expect(k8sClient.Delete(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+
+		It("7. check if the replicas is 1", func() {
+			// todo: we just check deployment.status.replicas rather than modulereplicaset
+			Eventually(func() error {
+				if err := k8sClient.Get(context.TODO(), nn, &moduleDeployment); err != nil {
+					return err
+				}
+
+				if !moduleDeployment.Spec.Pause {
+					return fmt.Errorf("the deployment is not paused")
+				}
+
+				return checkModuleDeploymentReplicas(
+					types.NamespacedName{
+						Name:      moduleDeploymentName,
+						Namespace: moduleDeployment.Namespace}, 1)
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("8. resume", func() {
+			Eventually(func() bool {
+				Expect(k8sClient.Get(context.TODO(), nn, &moduleDeployment)).Should(Succeed())
+
+				moduleDeployment.Spec.Pause = false
+				return Expect(k8sClient.Update(context.TODO(), &moduleDeployment)).Should(Succeed())
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("9. clean module-deployment", func() {
+			utils.RemoveFinalizer(&moduleDeployment.ObjectMeta, "test")
+			Expect(k8sClient.Update(context.TODO(), &moduleDeployment))
 		})
 	})
 
@@ -271,7 +309,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 		})
 
 		It("2. check if use Beta strategy", func() {
-			Eventually(func() bool {
+			Eventually(func() error {
 				return checkModuleDeploymentReplicas(nn, 1)
 			})
 		})
@@ -279,45 +317,17 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 		It("3. clean environment", func() {
 			Expect(k8sClient.Delete(context.TODO(), &moduleDeployment)).Should(Succeed())
 		})
-
-	})
-
-	Context("delete module deployment", func() {
-		It("clean module replicaset and deployment", func() {
-			key := types.NamespacedName{
-				Name:      moduleDeploymentName,
-				Namespace: namespace,
-			}
-			var newModuleDeployment v1alpha1.ModuleDeployment
-			Expect(k8sClient.Get(context.TODO(), key, &newModuleDeployment)).Should(Succeed())
-			Expect(k8sClient.Delete(context.TODO(), &newModuleDeployment)).Should(Succeed())
-
-			Eventually(func() bool {
-				set := map[string]string{
-					label.ModuleDeploymentLabel: moduleDeployment.Name,
-				}
-				replicaSetList := &v1alpha1.ModuleReplicaSetList{}
-				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
-				if err != nil {
-					if errors.IsNotFound(err) {
-						return true
-					}
-					return false
-				}
-				return len(replicaSetList.Items) == 0
-			}, timeout, interval).Should(BeTrue())
-		})
 	})
 })
 
-func checkModuleDeploymentReplicas(nn types.NamespacedName, replicas int32) bool {
+func checkModuleDeploymentReplicas(nn types.NamespacedName, replicas int32) error {
 	set := map[string]string{
 		label.ModuleDeploymentLabel: nn.Name,
 	}
 	replicaSetList := &v1alpha1.ModuleReplicaSetList{}
 	err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(nn.Namespace))
 	if err != nil || len(replicaSetList.Items) == 0 {
-		return false
+		return fmt.Errorf("the replicasetList is empty")
 	}
 
 	maxVersion := 0
@@ -325,7 +335,7 @@ func checkModuleDeploymentReplicas(nn types.NamespacedName, replicas int32) bool
 	for i := 0; i < len(replicaSetList.Items); i++ {
 		version, err := getRevision(&replicaSetList.Items[i])
 		if err != nil {
-			return false
+			return err
 		}
 		if version > maxVersion {
 			maxVersion = version
@@ -334,10 +344,18 @@ func checkModuleDeploymentReplicas(nn types.NamespacedName, replicas int32) bool
 	}
 
 	// the replicas of new replicaset must be equal to newModuleDeployment
-	log.Log.Info("checkModuleDeploymentReplicas", "newRS.Status.Replicas", newRS.Status.Replicas, "newRS.Spec.Replicas", newRS.Spec.Replicas, "replicas", replicas)
-	return newRS != nil &&
-		newRS.Status.Replicas == newRS.Spec.Replicas &&
-		newRS.Status.Replicas == replicas
+	if newRS == nil {
+		return fmt.Errorf("the replicaset is nil")
+	}
+	if newRS.Status.Replicas != newRS.Spec.Replicas {
+		return fmt.Errorf("the replicaset is not ready, expect replicas is %v, but got %v",
+			newRS.Spec.Replicas, newRS.Status.ReadyReplicas)
+	}
+	if newRS.Spec.Replicas != replicas {
+		return fmt.Errorf("the deployment is not ready, expect replicas is %v, but got %v",
+			replicas, newRS.Spec.Replicas)
+	}
+	return nil
 }
 
 func waitModuleDeploymentCompleted(moduleDeploymentName string, namespace string) {
