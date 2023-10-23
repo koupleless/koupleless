@@ -197,7 +197,7 @@ jobs:
       - name: delete pod
         run: |
           podname=$(kubectl get pod -l app=dynamic-stock -o name)
-          kubectl delete pod $podname
+          kubectl delete -n default pod $podname
 
       - run: sleep 30
 
