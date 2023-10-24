@@ -17,7 +17,7 @@ spec:
       serviceAccountName: controller-manager
       containers:
         - name: module-controller
-          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/module-controller:v0.6
+          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/module-controller:ci-test-master-latest
           resources:
             limits:
               cpu: "500m"
