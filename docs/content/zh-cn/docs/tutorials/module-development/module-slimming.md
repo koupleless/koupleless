@@ -15,9 +15,9 @@ weight: 200
 <a name="QcLTH"></a>
 ### 瘦身原则
 
-打包 ark-biz jar 包的原则是，在保证模块功能的前提下，将框架、中间件等通用的包尽量放置到基座中，模块中复用基座的包，这样打出的 ark-biz jar 会更加轻量。在复杂应用中，为了更好的使用模块自动瘦身功能，需要在模块瘦身配置 (模块根目录/conf/ark/文件名.txt)，按照既定格式，排除更多的通用依赖包。
+打包 ark-biz jar 包的原则是，在保证模块功能的前提下，将框架、中间件等通用的包尽量放置到基座中，模块中复用基座的包，这样打出的 ark-biz jar 会更加轻量。在复杂应用中，为了更好的使用模块自动瘦身功能，需要在模块瘦身配置 (模块根目录/conf/ark/文件名.txt) 中，在样例给出的配置名单的基础上，按照既定格式，排除更多的通用依赖包。
 ### 步骤一
-在模块 「应用根目录/conf/ark/文件.txt」中，按照既定格式，配置需要下沉到基座的框架、中间件常用包。配置举例如下（初步的通用配置参见 [samples/springboot-samples](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming/log4j2/biz1/conf/ark)）：
+在模块 「应用根目录/conf/ark/文件.txt」中，按照既定格式，配置需要下沉到基座的框架、中间件常用包。配置举例如下（下沉到基座的通用包基础名单配置参见 [samples/springboot-samples](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming/log4j2/biz1/conf/ark)）：
 
 ```xml
 excludeGroupIds=org.apache*
