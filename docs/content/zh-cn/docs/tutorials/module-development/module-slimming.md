@@ -2,6 +2,7 @@
 title: 模块瘦身
 weight: 200
 ---
+
 <a name="umatY"></a>
 ## 为什么要瘦身
 为了让模块安装更快、内存消耗更小：
@@ -10,21 +11,26 @@ weight: 200
 - 模块启动后 Spring 上下文中会创建很多对象，如果启用了模块热卸载，可能无法完全回收，安装次数过多会造成 Old 区、Metaspace 区开销大，触发频繁 FullGC，所有要控制单模块包大小 < 5MB。**这样不替换或重启基座也能热部署热卸载数百次。**
 
 <a name="IJ7WJ"></a>
-## 自动瘦身实验
+## 一键自动瘦身
 
 <a name="QcLTH"></a>
 ### 瘦身原则
 
-打包 ark-biz jar 包的原则是，在保证模块功能的前提下，将框架、中间件等通用的包尽量放置到基座中，模块中复用基座的包，这样打出的 ark-biz jar 会更加轻量。在复杂应用中，为了更好的使用模块自动瘦身功能，需要在模块瘦身配置 (模块根目录/conf/ark/文件名.txt) 中，在样例给出的配置名单的基础上，按照既定格式，排除更多的通用依赖包。
+构建 ark-biz jar 包的原则是，在保证模块功能的前提下，将框架、中间件等通用的包尽量放置到基座中，模块中复用基座的包，这样打出的 ark-biz jar 会更加轻量。在复杂应用中，为了更好的使用模块自动瘦身功能，需要在模块瘦身配置 (模块根目录/conf/ark/文件名.txt) 中，在样例给出的配置名单的基础上，按照既定格式，排除更多的通用依赖包。
+
 ### 步骤一
-在模块 「应用根目录/conf/ark/文件.txt」中，按照既定格式，配置需要下沉到基座的框架、中间件常用包。配置举例如下（下沉到基座的通用包基础名单配置参见 [samples/springboot-samples](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming/log4j2/biz1/conf/ark) )：
+
+在「模块项目根目录/conf/ark/文件名.txt」中（比如：my-module/conf/ark/rules.txt），按照如下格式配置需要下沉到基座的框架和中间件常用包。您也可以直接复制[默认的 rules.txt 文件内容](https://github.com/sofastack/sofa-serverless/blob/module-slimming/samples/springboot-samples/slimming/log4j2/biz1/conf/ark/rules.txt)到您的项目中。
 
 ```xml
 excludeGroupIds=org.apache*
 excludeArtifactIds=commons-lang
 ```
+
 ### 步骤二
-在模块打包插件中，引入上述配置文件
+
+在模块打包插件中，引入上述配置文件：
+
 ```xml
     <!-- 插件1：打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
     <plugin>
@@ -57,10 +63,11 @@ excludeArtifactIds=commons-lang
 
 ### 步骤三
 
-打包构建模块 ark-biz jar 包即可。实验过程中，可以对照查看引入模块瘦身文件后，打出的 ark-biz jar 包大小差异
+打包构建出模块 ark-biz jar 包即可，您可以明显看出瘦身后的 ark-biz jar 包大小差异。
 
-### 精彩提示
-下文将继续介绍模块瘦身原理，想要了解模块自动瘦身实验详情，可以跳转到 [samples/springboot-samples](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming)
+您可[点击此处](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming)查看完整模块瘦身样例工程。您也可以阅读下文继续了解模块的瘦身原理。
+
+<br/>
 
 <a name="IJ7WJ"></a>
 ## 基本原理
