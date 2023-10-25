@@ -1,23 +1,31 @@
 ---
-title: SpringBoot 或 SOFABoot 升级为模块
+title: SpringBoot 或 SOFABoot 一键升级为模块
 weight: 100
 ---
+
+本文讲解了 SpringBoot 或 SOFABoot 一键升级为模块的接入和验证步骤，仅需加一个 ark 打包插件即可实现普通应用一键升级为模块应用，并且能做到同一套代码分支，既能像原来 SpringBoot 一样独立启动，也能作为模块与其它应用合并部署在一起启动。
 
 <a name="mrj6h"></a>
 ## 前提条件
 1. SpringBoot 版本 >= 2.0.0
-2. SOFABoot >= 3.9
+2. SOFABoot >= 3.9.0 或 SOFABoot >= 4.0.0
+
+<br/>
 
 <a name="EmaQ2"></a>
 ## 接入步骤
+
 <a name="A2kxP"></a>
-### 修改 application.properties
+### 步骤 1：修改 application.properties
+
 ```properties
 # 需要定义应用名
 spring.application.name = ${替换为实际模块名}
 ```
 <a name="HOwyD"></a>
-### 添加模块打包插件
+
+### 步骤 2：添加模块打包插件
+
 ```xml
 <plugins>
     <!--这里添加ark 打包插件-->
@@ -44,35 +52,28 @@ spring.application.name = ${替换为实际模块名}
 </plugins>
 ```
 <a name="PumLP"></a>
-### 模块瘦身：模块里的依赖如果已经里也有，则将模块的该依赖 scope 设置成 provided，如
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter</artifactId>
-    <scope>provided</scope>
-</dependency>
-<dependency>
-<groupId>org.springframework.boot</groupId>
-<artifactId>spring-boot-starter-web</artifactId>
-<scope>provided</scope>
-</dependency>
-<dependency>
-<groupId>org.springframework.boot</groupId>
-<artifactId>spring-boot-starter-logging</artifactId>
-<scope>provided</scope>
-</dependency>
-```
-如果不设置成 provided，会出现报错[如果模块独立引入 SpringBoot 框架部分会怎样？](/docs/faq/import-full-springboot-in-module)
+
+### 步骤 3：自动化瘦身模块
+
+您可以使用 ark 打包插件的自动化瘦身能力，自动化瘦身模块应用里的 maven 依赖。这一步是必选的，否则构建出的模块 jar 包会非常大，而且启动会报错。
+_扩展阅读_：如果模块不做依赖瘦身[独立引入 SpringBoot 框架会怎样？](/docs/faq/import-full-springboot-in-module)
+
 <a name="BBCza"></a>
-### 构建成模块 jar 包
+### 步骤 4：构建成模块 jar 包
+
 执行 `mvn clean package -DskipTest`, 可以在 target 目录下找到打包生成的 ark biz jar 包。
 
+<br/>
+
 <a name="znPA9"></a>
-## 校验内容
+## 实验：验证模块既能独立启动，也能被合并部署
+
 <a name="ufgZF"></a>
 ### 本地启动
+
 普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
 <a name="tLuMm"></a>
+
 ### 部署到基座上
 
 1. **启动上一个实验部署的基座**
@@ -92,7 +93,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 
 ![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695021372335-9fbce7ae-ab41-44e8-ab51-6a771bddfef3.png#clientId=ueb52f3f0-186e-4&from=paste&height=367&id=u301dd5fb&originHeight=734&originWidth=1186&originalType=binary&ratio=2&rotation=0&showTitle=false&size=97949&status=done&style=none&taskId=u8570e201-b10d-460a-946a-d9c94529834&title=&width=593)
 
-5. 卸载模块
+4. 卸载模块
 ```json
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
@@ -112,7 +113,7 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
 }
 ```
 
-6. 查看卸载后模块列表
+5. 查看卸载后模块列表
 ```json
 curl --location --request POST 'localhost:1238/queryAllBiz'
 ```
@@ -131,10 +132,3 @@ curl --location --request POST 'localhost:1238/queryAllBiz'
     ]
 }
 ```
-
-<a name="fm1IU"></a>
-## 自动化改造
-SOFAServerless 会在 Arkctl 提供自动化改造能力。10 月底会支持一键将 SpringBoot 应用改造为模块。
-
-<br/>
-<br/>
