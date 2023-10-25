@@ -12,5 +12,5 @@ func TestModuleReplicaSetReplicasChangedHandler(t *testing.T) {
 }
 
 type TestModuleReplicaSetReplicasChangedClient struct {
-	utils.MockOnBaseClient
+	utils.MockClient
 }

@@ -2,12 +2,14 @@ package handler
 
 import (
 	"fmt"
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 	"github.com/sofastack/sofa-serverless/internal/event"
 	"github.com/sofastack/sofa-serverless/internal/utils"
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -50,13 +52,15 @@ func (h ModuleReplicaSetReplicasChangedHandler) Handle(e event.Event) error {
 	var totalInstanceCount int
 	for index, item := range allPods.Items {
 		var moduleInstanceCount int
-		if cntStr, ok := item.Labels[label.ModuleInstanceCount]; ok {
-			moduleInstanceCount, err = strconv.Atoi(cntStr)
-			if err != nil {
-				log.Log.Error(err, fmt.Sprintf("invalid ModuleInstanceCount in pod %v", item.Name))
-				continue
-			}
+		moduleList := &v1alpha1.ModuleList{}
+		err := k8sClient.List(ctx, moduleList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(map[string]string{
+			label.BaseInstanceIpLabel: item.Status.PodIP,
+		})}, client.InNamespace(moduleReplicaSet.Namespace))
+		if err != nil {
+			log.Log.Error(err, fmt.Sprintf("can't find any module in pod %v", item.Name))
+			continue
 		}
+		moduleInstanceCount = len(moduleList.Items)
 		// 赋值第一个pod的安装数量为最小值
 		if index == 0 {
 			minInstanceCount = moduleInstanceCount
