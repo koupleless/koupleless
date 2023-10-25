@@ -67,14 +67,14 @@ _扩展阅读_：如果模块不做依赖瘦身[独立引入 SpringBoot 框架�
 ## 实验：验证模块既能独立启动，也能被合并部署
 
 <a name="ufgZF"></a>
-### 本地启动
+### 验证能独立启动
 
 普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
 <a name="tLuMm"></a>
 
-### 部署到基座上
+### 验证能合并部署到基座上
 
-1. **启动上一个实验部署的基座**
+1. 启动上一步（验证能独立启动步骤）的基座
 2. 发起模块部署
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
