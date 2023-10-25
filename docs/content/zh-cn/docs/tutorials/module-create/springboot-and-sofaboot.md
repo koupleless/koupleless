@@ -47,6 +47,14 @@ spring.application.name = ${替换为实际模块名}
             <declaredMode>true</declaredMode>
         </configuration>
     </plugin>
+    <plugin>
+        <!--原来 spring-boot 打包插件 -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+            <outputDirectory>./target/boot</outputDirectory>
+        </configuration>
+    </plugin>
 </plugins>
 ```
 <a name="PumLP"></a>
@@ -59,7 +67,7 @@ _扩展阅读_：如果模块不做依赖瘦身[独立引入 SpringBoot 框架�
 <a name="BBCza"></a>
 ### 步骤 4：构建成模块 jar 包
 
-执行 `mvn clean package -DskipTest`, 可以在 target 目录下找到打包生成的 ark biz jar 包。
+执行 `mvn clean package -DskipTest`, 可以在 target 目录下找到打包生成的 ark biz jar 包，也可以在 target/boot 目录下找到打包生成的普通的 springboot jar 包。
 
 <br/>
 
@@ -69,7 +77,7 @@ _扩展阅读_：如果模块不做依赖瘦身[独立引入 SpringBoot 框架�
 <a name="ufgZF"></a>
 ### 验证能独立启动
 
-普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
+普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。通过自动瘦身改造的模块，也可以在 `target/boot` 目录下直接通过 springboot jar 包启动，[点击此处](https://github.com/sofastack/sofa-serverless/blob/module-slimming/samples/springboot-samples/slimming )查看详情。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
 <a name="tLuMm"></a>
 
 ### 验证能合并部署到基座上
