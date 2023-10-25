@@ -170,6 +170,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 				return reconcile.Result{}, err
 			}
 		}
+		event.PublishModuleReplicaSetReplicasChangedEvent(r.Client, ctx, moduleReplicaSet)
 	} else {
 		// replicas not change, directly update module
 		err = r.compareAndUpdateModule(ctx, sameReplicaSetModules, moduleReplicaSet)

@@ -113,9 +113,8 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	switch releaseStatus.Progress {
 	case v1alpha1.ModuleDeploymentReleaseProgressInit:
 		handleInitModuleDeployment(moduleDeployment, newRS)
-		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
-			return ctrl.Result{}, err
-		}
+		err := r.Status().Update(ctx, moduleDeployment)
+		return ctrl.Result{}, err
 	case v1alpha1.ModuleDeploymentReleaseProgressExecuting:
 		return r.updateModuleReplicaSet(ctx, moduleDeployment, newRS)
 	case v1alpha1.ModuleDeploymentReleaseProgressCompleted:
@@ -141,12 +140,12 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
 			return ctrl.Result{}, err
 		}
+		return ctrl.Result{}, nil
 	case v1alpha1.ModuleDeploymentReleaseProgressPaused:
 		if !moduleDeployment.Spec.Pause && time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 {
 			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
-			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
-				return ctrl.Result{}, err
-			}
+			err := r.Status().Update(ctx, moduleDeployment)
+			return ctrl.Result{}, err
 		}
 	}
 
