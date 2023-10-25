@@ -10,8 +10,6 @@ weight: 100
 1. SpringBoot 版本 >= 2.0.0
 2. SOFABoot >= 3.9.0 或 SOFABoot >= 4.0.0
 
-<br/>
-
 <a name="EmaQ2"></a>
 ## 接入步骤
 
