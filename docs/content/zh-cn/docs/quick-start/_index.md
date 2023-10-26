@@ -12,7 +12,7 @@ weight: 200
 ## 步骤 3：秒级发布模块
 执行以下命令：
 ```bash
-kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment.yaml
+kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_provider.yaml
 ```
 即可秒级发布上线模块应用。请等待本地 Module CR 资源 Status 字段值变更为 Available**（约 1 秒，表示模块发布完毕）**，再刷新步骤 2 自动打开的网页，即可看到一个简单的卖书页面，这个卖书逻辑就是在模块里实现的：<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694161452232-15aec134-3b2a-491f-9295-0c5f8f7341af.png#clientId=ue383ca9b-aa63-4&from=paste&height=443&id=ub3eb7eb8&originHeight=1318&originWidth=1626&originalType=binary&ratio=2&rotation=0&showTitle=false&size=168110&status=done&style=none&taskId=u07f60163-67e4-42fa-bc41-76e43a09c1f&title=&width=546)
 
