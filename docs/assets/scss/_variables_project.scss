@@ -31,6 +31,10 @@ body {
   }
 }
 
+.td-sidebar-nav__section.dropdown {
+  display: none !important;
+}
+
 header > nav.td-navbar {
 
   padding: 0px;
@@ -264,13 +268,24 @@ aside.td-sidebar {
     }
 
     ul {
+
       padding: 0px;
+
       > li {
+
         &:not(.with-child) {
           height: 44px;
         }
-        &.with-child > .td-sidebar-link {
-          margin-bottom: -6px;
+
+        &.with-child {
+
+          > .td-sidebar-link {
+            margin-bottom: -6px;
+          }
+
+          > a:first-child {
+            pointer-events: none;
+          }
         }
       }
     }
@@ -413,12 +428,19 @@ aside.td-sidebar {
   }
 }
 
-div.td-main {
-  width: calc(100% - 293px);
+li.active-path > a {
+  font-weight: 600 !important;
 }
 
-@media (min-width: 1200px) {
-  div.td-main main {
+.td-page main.td-main {
+  padding-right: 245px !important;
+}
+
+div.td-main main {
+  @media screen and (min-width: 768px) {
+    width: calc(100% - 293px);
+  }
+  @media screen and (min-width: 1200px) {
     width: calc(100% - 538px);
   }
 }
@@ -430,12 +452,28 @@ main.td-main, div.td-main main {
   color: #FFFFFF;
   letter-spacing: 0;
 
+  .td-content > * {
+    @media screen and (min-width: 992px) {
+      max-width: 80%;
+    }
+  }
+
   //.td-content {
 
     font-family: PingFangSC-Regular;
     font-size: 15px;
     color: rgb(161, 164, 175);
     line-height: 24px;
+
+    table tr {
+      td, th {
+        font-family: PingFangSC-Regular;
+        font-size: 15px;
+        color: rgb(161, 164, 175) !important;
+        border: 1px solid rgb(161, 164, 175) !important;
+        line-height: 24px;
+      }
+    }
 
     ol, ul {
       margin-top: 6px;
@@ -470,6 +508,11 @@ main.td-main, div.td-main main {
         margin: 0px;
         height: 0px;
       }
+
+      > a[aria-hidden="true"] {
+        position: relative;
+        top: -2px;
+      }
     }
 
     .article-meta {
@@ -502,7 +545,7 @@ main.td-main, div.td-main main {
 
     h3 {
 
-      margin: 20px 0px 15px 0px !important;
+      margin: 20px 0px 16px 0px !important;
       font-size: 16px;
       font-weight: normal;
       line-height: 28px;
@@ -514,7 +557,7 @@ main.td-main, div.td-main main {
 
     h4 {
 
-      margin: 15px 0px 15px 0px !important;
+      margin: 16px 0px 10px 0px !important;
       font-size: 15px;
       font-weight: normal;
       line-height: 24px;
@@ -569,7 +612,6 @@ main.td-main, div.td-main main {
     }
 
     .text-muted {
-
       border-width: 0px !important;
       opacity: 0.65;
       font-family: PingFangSC-Regular;
@@ -577,9 +619,6 @@ main.td-main, div.td-main main {
       letter-spacing: 0;
       line-height: 24px;
       color: #FFFFFF !important;
-
-      > a {
-      }
     }
 
     .btn {
@@ -686,7 +725,7 @@ aside.td-sidebar-toc {
   .td-page-meta {
 
     margin: 0 !important;
-    padding: 20px 0 16px 0 !important;
+    padding: 18px 0 16px 0 !important;
 
     > a {
       padding: 0 16px;
@@ -694,7 +733,6 @@ aside.td-sidebar-toc {
       font-family: PingFangSC-Regular;
       font-size: 15px;
       color: #0077FF;
-
       //background: rgba(255,255,255,0.08);
       //border-radius: 8px;
       //font-family: PingFangSC-Regular;

@@ -66,7 +66,7 @@ title: SOFAServerless
         <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 20px; color: #FFFFFF; letter-spacing: 0;
             line-height: 26px; margin: 0px; margin-bottom: 16px;">欢迎加入社区协作钉钉群</p>
         <p style="opacity: 1; font-family: PingFangSC-Regular; font-size: 16px; color: rgba(255,255,255,0.7); letter-spacing: 0;
-            line-height: 24px; margin: 0px; margin-bottom: 16px;"><img src="/img/wechat-qcode.png" width="120px" /></p>
+            line-height: 24px; margin: 0px; margin-bottom: 12px;"><img src="/img/dingtalk-qcode.png" width="120px" /></p>
         <p style="opacity: 1; font-family: PingFangSC-Regular; font-size: 16px; color: rgba(255,255,255,0.7); letter-spacing: 0;
             line-height: 24px; margin: 0px;">社区钉钉群号：24970018417</p>
     </div>

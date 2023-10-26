@@ -4,7 +4,7 @@ date: 2023-09-21T10:28:35+08:00
 menu: {main: {weight: 40}}
 ---
 
-<div style="text-align: center; margin-bottom: 100px;">
+<div style="text-align: center; margin-bottom: 100px; max-width: 100%;">
 <svg width="1200px" height="279px" viewBox="0 0 1200 279" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
         <linearGradient x1="2.51195109%" y1="39.5674809%" x2="100%" y2="61.3339992%" id="linearGradient-0brcq1m7k2-1">
