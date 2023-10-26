@@ -7,8 +7,6 @@ weight: 1100
 
 > 作者: 朱林(封渊)、张建明(明门)
 
-<br/>
-
 # 项目背景
 过去几年，AIDC（阿里巴巴海外数字商业）业务板块在全球多个国家和地区拓展。国际电商业务模式上分为"跨境"和"本对本"两种，分别基于AE(跨境)、Lazada、Daraz、Mirivia、Trendyol 等多个电商平台承载。以下将不同的电商平台统称为“站点”。
 
@@ -30,8 +28,6 @@ Serverless 的技术理念中，强调关注点分离，让业务研发专注在
 
 <img src="https://github.com/sofastack/sofa-serverless/assets/11410549/8b6d120f-42b3-495d-9879-6be1a8000ebc" width="1200"></img>
 
-<br/>
-<br/>
 
 # 概念阐述
 
@@ -51,8 +47,6 @@ Serverless 普遍的理解是“无服务器架构”。它是云原生的主要
    - 基座具备不同站点间的可复用性，一个交易的基座可以被 AE、Lazada、Daraz等不同的站点 App 共用
 - **Serverless App**：为了最大程度减少业务的改造成本，业务团队维护的 App 依旧保持其自身的发布运维职责的独立性不变，Serverless 化后业务开发人员只需要关心业务代码即可。JVM 对外服务的载体依旧是业务应用。
 
-<br/>
-<br/>
 
 # 技术实施
 
@@ -63,8 +57,6 @@ Serverless 架构演技的实施过程分为两个部分：
 1. 重新设计 Serverless 架构模型下的应用架构分层与职责划分，让业务减负，让 SRE 提效。
 2. 在研发、发布&运维等领域采用新的研发框架、交付模型与发布运维产品来支持业务快速迭代。
    
-<br/>
-<br/>
 
 ## 应用架构
 以 Daraz 基础链路为例，应用架构的分层结构、交互关系、团队职责如下：
@@ -73,17 +65,12 @@ Serverless 架构演技的实施过程分为两个部分：
 
 我们将一个 Serverless 应用完整交付所需的支撑架构进行逻辑分层与开发职责划分，并且清晰定义出 App 与基座之间交互的协议标准。
 
-<br/>
-<br/>
-
 ## 研发域
 
 <img src="https://github.com/sofastack/sofa-serverless/assets/11410549/e7957e02-0f14-4f79-9b00-d748ce806722" width="700"></img>
 
 - 构建了 Serverless 运行时框架，驱动"基座-Serverless App"的运行与交互
 - 与 Aone 研发平台团队协作，建设一整套 Serverless 模式下基座与 App 的发布&运维产品体系
-
-<br/>
 
 ### voyager-serverless framework
 
@@ -94,8 +81,6 @@ Serverless 架构演技的实施过程分为两个部分：
 整套框架提供以下关键能力:
 
 <img src="https://github.com/sofastack/sofa-serverless/assets/11410549/b2bc97cb-2a0c-4d6d-a971-0dbc78dd2959" width="600"></img>
-
-<br/>
 
 #### 隔离性与运行时原理
 
@@ -112,8 +97,6 @@ Serverless 架构演技的实施过程分为两个部分：
    - **第三步**: `Serverless App启动`，由 ArkContainer 内置组件接受 `Fiber` 调度请求下载 App 制品并触发 App Launch
       - 创建 BizClassLoader，作为线程 ClassLoader 初始化 SpringContext，加载 `App自有类、基座Plugin类、依赖包类、中间件SDK类` 等
 
-<br/>
-
 #### 通信机制
 
 在 Serverless 形态下，基座与 App 之间可以通过 `进程内通信方式` 进行交互，目前提供两种通信模型: **SPI **和**基座Bean服务导出**
@@ -129,22 +112,16 @@ Serverless 架构演技的实施过程分为两个部分：
    3. App 在基座上启动，App 的 SpringContext 初始化过程中，会在初始化阶段读取到缓冲区中需要导入的 Bean
    4. App 的 SpringContext 中的其他组件可以正常 `@Autowired` 这些导出的 Bean
 
-<br/>
-
 #### 插件机制
 
 Serverless 插件提供了一种能够让 App 运行时所需的类默认从基座中加载的机制，框架支持将平台基座需要暴露给上层 App 使用的SDK/二方包等包装成一个插件(Ark Plugin)，最终实现中台控制的包下沉到基座而不需要让上层业务改动：
 
 <img src="https://github.com/sofastack/sofa-serverless/assets/11410549/7bbbcbb9-46d4-46d0-b82d-1e9f21c754b0" width="500"></img>
 
-<br/>
-
 ### 中间件适配
 
 在 Serverless 架构演进中，由于一个完整应用的启动过程被拆分成基座启动和 App 启动，因此在一二阶段相关中间件的初始化逻辑也发生了变化。我们对国际侧常用的中间件和产品组件进行了测试，并对部分中间件进行了适配改造。
 总结起来，大部分问题都出现在中间件一些流程逻辑没设计这种多 ClassLoader 的场景，很多类/方法使用中不会将ClassLoader 对象作为参数传递进来，进而在初始化模型对象时出错，导致上下文交互异常。
-
-<br/>
 
 ### 开发配套
 
@@ -152,8 +129,6 @@ Serverless 插件提供了一种能够让 App 运行时所需的类默认从基�
 
 <img src="https://github.com/sofastack/sofa-serverless/assets/11410549/2d7c3c88-0924-4a9b-9d01-c6c718fcd4b0" width="600"></img>
 
-<br/>
-<br/>
 
 ## 发布 & 运维域
 
@@ -170,14 +145,10 @@ Serverless 插件提供了一种能够让 App 运行时所需的类默认从基�
 
 <img src="https://github.com/sofastack/sofa-serverless/assets/11410549/a2637716-0883-48fd-bad2-928aca1f5af3" width="700"></img>
 
-<br/>
-
 ### 构建效率提升
 
 - **Maven 构建优化**: 由于很多依赖包都已经下沉到已经就绪的基座，因此对于 App 来说就可以减少需要构建的二方包数量以及 Class 文件数量，进而整体优化制品大小，提升构建效率
 - **Docker 构建移除**: 由于 Serverless 模式下业务 App 部署的制品就是轻量化 Fat Jar，因此也无需进行 docker 构建
-
-<br/>
 
 ### 发布效率提升
 
@@ -216,8 +187,6 @@ Serverless 插件提供了一种能够让 App 运行时所需的类默认从基�
 
 同时，我们也在生产环境配置一定数量的基座 Buffer，支持站点 App 的快速弹性扩容。
 
-<br/>
-<br/>
 
 # 总结与展望
 

@@ -3,20 +3,17 @@ title: SpringBoot 或 SOFABoot 升级为模块
 weight: 100
 ---
 
-<a name="mrj6h"></a>
 ## 前提条件
 1. SpringBoot 版本 >= 2.0.0
 2. SOFABoot >= 3.9
 
-<a name="EmaQ2"></a>
 ## 接入步骤
-<a name="A2kxP"></a>
 ### 修改 application.properties
 ```properties
 # 需要定义应用名
 spring.application.name = ${替换为实际模块名}
 ```
-<a name="HOwyD"></a>
+
 ### 添加模块打包插件
 ```xml
 <plugins>
@@ -43,7 +40,7 @@ spring.application.name = ${替换为实际模块名}
     </plugin>
 </plugins>
 ```
-<a name="PumLP"></a>
+
 ### 模块瘦身：模块里的依赖如果已经里也有，则将模块的该依赖 scope 设置成 provided，如
 ```xml
 <dependency>
@@ -63,16 +60,13 @@ spring.application.name = ${替换为实际模块名}
 </dependency>
 ```
 如果不设置成 provided，会出现报错[如果模块独立引入 SpringBoot 框架部分会怎样？](/docs/faq/import-full-springboot-in-module)
-<a name="BBCza"></a>
+
 ### 构建成模块 jar 包
 执行 `mvn clean package -DskipTest`, 可以在 target 目录下找到打包生成的 ark biz jar 包。
 
-<a name="znPA9"></a>
 ## 校验内容
-<a name="ufgZF"></a>
 ### 本地启动
 普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
-<a name="tLuMm"></a>
 ### 部署到基座上
 
 1. **启动上一个实验部署的基座**
@@ -132,7 +126,6 @@ curl --location --request POST 'localhost:1238/queryAllBiz'
 }
 ```
 
-<a name="fm1IU"></a>
 ## 自动化改造
 SOFAServerless 会在 Arkctl 提供自动化改造能力。10 月底会支持一键将 SpringBoot 应用改造为模块。
 
