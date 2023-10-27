@@ -23,7 +23,9 @@ import com.alipay.sofa.ark.spi.service.biz.BizManagerService;
 import com.alipay.sofa.serverless.common.api.AutowiredFromBase;
 import com.alipay.sofa.serverless.common.api.AutowiredFromBiz;
 import com.alipay.sofa.serverless.common.api.SpringServiceFinder;
+import com.alipay.sofa.serverless.common.service.ArkAutowiredBeanPostProcessor;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -33,11 +35,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ReflectionUtils;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 
 import static org.mockito.Mockito.when;
 
@@ -60,8 +66,8 @@ public class SpringServiceFinderTest {
     @Mock
     private BizManagerService bizManagerService;
 
-    @Test
-    public void testSpringServiceFinder() {
+    @Before
+    public void prepare() {
         ConfigurableApplicationContext masterCtx = buildApplicationContext("masterBiz");
         masterCtx.getBeanFactory().registerSingleton("baseBean", new BaseBean());
 
@@ -86,7 +92,10 @@ public class SpringServiceFinderTest {
         when(biz1.getBizVersion()).thenReturn("version1");
         BizRuntimeContext bizRuntime = new BizRuntimeContext(biz1, bizCtx);
         BizRuntimeContextRegistry.registerBizRuntimeManager(bizRuntime);
+    }
 
+    @Test
+    public void testSpringServiceFinder() {
         BaseBean baseBean = SpringServiceFinder.getBaseService("baseBean", BaseBean.class);
         Assert.assertNotNull(baseBean);
         BaseBean baseBean1 = SpringServiceFinder.getBaseService(BaseBean.class);
@@ -134,6 +143,20 @@ public class SpringServiceFinderTest {
 
     }
 
+    @Test
+    public void testArkAutowired() {
+        ModuleBean moduleBean = new ModuleBean();
+        ArkAutowiredBeanPostProcessor arkAutowiredBeanPostProcessor = new ArkAutowiredBeanPostProcessor();
+        Object testBean = arkAutowiredBeanPostProcessor.postProcessBeforeInitialization(moduleBean, "moduleBean");
+        Assert.assertNotNull(testBean);
+        Assert.assertEquals(moduleBean, testBean);
+        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBean")), testBean));
+        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanList")), testBean));
+        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanSet")), testBean));
+        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanMap")), testBean));
+        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "moduleBean")), testBean));
+    }
+
     public ConfigurableApplicationContext buildApplicationContext(String appName) {
         Properties properties = new Properties();
         properties.setProperty("spring.application.name", appName);
@@ -158,10 +181,19 @@ public class SpringServiceFinderTest {
     public static class ModuleBean {
 
         @AutowiredFromBase
-        private String baseBean;
+        private BaseBean baseBean;
+
+        @AutowiredFromBase
+        private List<BaseBean> baseBeanList;
+
+        @AutowiredFromBase
+        private Set<BaseBean> baseBeanSet;
+
+        @AutowiredFromBase
+        private Map<String, BaseBean> baseBeanMap;
 
         @AutowiredFromBiz(bizName = "biz1", bizVersion = "version1")
-        private String bizBean;
+        private ModuleBean moduleBean;
 
         public String test() {
             return "module";
