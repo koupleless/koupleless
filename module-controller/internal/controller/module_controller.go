@@ -129,7 +129,7 @@ func (r *ModuleReconciler) parseModuleInstanceStatus(ctx context.Context, module
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", moduleInstanceStatus), "moduleName", module.Name)
 	err := r.Status().Update(ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module status failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -287,7 +287,7 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 		log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusPrepare), "moduleName", module.Name)
 		err := r.Status().Update(ctx, module)
 		if err != nil {
-			return ctrl.Result{}, err
+			return ctrl.Result{}, utils.Error(err, "update module status from pending to prepare failed")
 		}
 		return ctrl.Result{}, nil
 	}
@@ -360,7 +360,7 @@ func (r *ModuleReconciler) handlePrepareModuleInstance(ctx context.Context, modu
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusUpgrading), "moduleName", module.Name)
 	err := r.Status().Update(ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module from prepare to upgrading failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -385,7 +385,7 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, mo
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusCompleting), "moduleName", module.Name)
 	err = r.Status().Update(ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module from upgrading to completing failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -399,7 +399,7 @@ func (r *ModuleReconciler) handleCompletingModuleInstance(ctx context.Context, m
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusAvailable), "moduleName", module.Name)
 	err := r.Status().Update(ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module from completing to available failed")
 	}
 	return ctrl.Result{}, nil
 }

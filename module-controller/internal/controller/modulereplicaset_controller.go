@@ -110,21 +110,41 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	// update status.replicas
-	currentReplicas := int32(0)
+	currentReplicas := int32(len(sameReplicaSetModules))
+	availableReplicas := int32(0)
 	// calculate the modules that have been installed successfully
 	for i := 0; i < len(sameReplicaSetModules); i++ {
 		status := sameReplicaSetModules[i].Status.Status
 		if status == v1alpha1.ModuleInstanceStatusAvailable {
-			currentReplicas += 1
+			availableReplicas += 1
 		}
 	}
 
-	if currentReplicas != moduleReplicaSet.Status.CurrentReplicas {
+	if currentReplicas != moduleReplicaSet.Status.CurrentReplicas || availableReplicas != moduleReplicaSet.Status.AvailableReplicas {
 		// if current replicas isn't equal to status.replicas, then we need update status
 		moduleReplicaSet.Status.CurrentReplicas = currentReplicas
+		moduleReplicaSet.Status.AvailableReplicas = availableReplicas
+		log.Log.Info("update moduleReplicaSet current replicas and available replicas", "moduleReplicaSetName", moduleReplicaSet.Name)
 		err := r.Status().Update(ctx, moduleReplicaSet)
 		if err != nil {
+			return ctrl.Result{}, utils.Error(err, "update moduleReplicaSet current replicas and available replicas failed")
+		}
+		return ctrl.Result{}, nil
+	}
+
+	if moduleReplicaSet.ObjectMeta.Generation > 1 && moduleReplicaSet.Status.AvailableReplicas == moduleReplicaSet.Spec.Replicas {
+		// TODO available replicas equals to expect replicas
+		moduleDeployment := &v1alpha1.ModuleDeployment{}
+		err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleReplicaSet.Namespace, Name: moduleReplicaSet.Labels[label.ModuleDeploymentLabel]}, moduleDeployment)
+		if err != nil {
 			return ctrl.Result{}, err
+		}
+		// moduleReplicaSet is completed, update moduleDeployment batch progress
+		moduleDeployment.Status.ReleaseStatus.BatchProgress = v1alpha1.ModuleDeploymentReleaseProgressCompleted
+		log.Log.Info("update moduleDeployment BatchProgress to completed", "moduleDeploymentName", moduleDeployment.Name)
+		err = r.Status().Update(ctx, moduleDeployment)
+		if err != nil {
+			return ctrl.Result{}, utils.Error(err, "update moduleDeployment BatchProgress failed")
 		}
 	}
 
@@ -135,10 +155,10 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	if deltaReplicas != 0 {
 		if moduleReplicaSet.Status.Replicas != moduleReplicaSet.Spec.Replicas {
 			moduleReplicaSet.Status.Replicas = moduleReplicaSet.Spec.Replicas
-			moduleReplicaSet.Status.CurrentReplicas = currentReplicas
+			log.Log.Info("update moduleReplicaSet status Replicas", "moduleReplicaSetName", moduleReplicaSet.Name)
 			err := r.Status().Update(ctx, moduleReplicaSet)
 			if err != nil {
-				return ctrl.Result{}, err
+				return ctrl.Result{}, utils.Error(err, "update moduleReplicaSet status Replicas failed")
 			}
 		} else {
 			log.Log.Info("Already try to reconcile to the desired replicas", "moduleReplicaSetName", moduleReplicaSet.Name)
