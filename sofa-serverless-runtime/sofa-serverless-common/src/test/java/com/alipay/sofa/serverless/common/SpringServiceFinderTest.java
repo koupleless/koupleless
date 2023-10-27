@@ -118,10 +118,12 @@ public class SpringServiceFinderTest {
         Assert.assertEquals("module", moduleBean.test());
 
         // test to invoke crossing classloader
-        URLClassLoader loader = new URLClassLoader(((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs(), null);
+        URLClassLoader loader = new URLClassLoader(
+            ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs(), null);
         Object newModuleBean = null;
         try {
-            Class<?> aClass = loader.loadClass("com.alipay.sofa.serverless.common.SpringServiceFinderTest$ModuleBean");
+            Class<?> aClass = loader
+                .loadClass("com.alipay.sofa.serverless.common.SpringServiceFinderTest$ModuleBean");
             newModuleBean = aClass.newInstance();
         } catch (Exception e) {
             System.out.println(e);
@@ -136,7 +138,7 @@ public class SpringServiceFinderTest {
         BizRuntimeContext biz2Runtime = new BizRuntimeContext(biz2, biz2Ctx);
         BizRuntimeContextRegistry.registerBizRuntimeManager(biz2Runtime);
         ModuleBean foundModuleBean = SpringServiceFinder.getModuleService("biz2", "version1",
-                "moduleBean", ModuleBean.class);
+            "moduleBean", ModuleBean.class);
         Assert.assertNotNull(foundModuleBean);
         Assert.assertEquals(newModuleBean.toString(), foundModuleBean.toString());
         Assert.assertEquals("module", foundModuleBean.test());
@@ -147,14 +149,25 @@ public class SpringServiceFinderTest {
     public void testArkAutowired() {
         ModuleBean moduleBean = new ModuleBean();
         ArkAutowiredBeanPostProcessor arkAutowiredBeanPostProcessor = new ArkAutowiredBeanPostProcessor();
-        Object testBean = arkAutowiredBeanPostProcessor.postProcessBeforeInitialization(moduleBean, "moduleBean");
+        Object testBean = arkAutowiredBeanPostProcessor.postProcessBeforeInitialization(moduleBean,
+            "moduleBean");
         Assert.assertNotNull(testBean);
         Assert.assertEquals(moduleBean, testBean);
-        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBean")), testBean));
-        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanList")), testBean));
-        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanSet")), testBean));
-        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanMap")), testBean));
-        Assert.assertNotNull(ReflectionUtils.getField(Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "moduleBean")), testBean));
+        Assert.assertNotNull(ReflectionUtils.getField(
+            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBean")),
+            testBean));
+        Assert.assertNotNull(ReflectionUtils.getField(
+            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanList")),
+            testBean));
+        Assert.assertNotNull(ReflectionUtils.getField(
+            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanSet")),
+            testBean));
+        Assert.assertNotNull(ReflectionUtils.getField(
+            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanMap")),
+            testBean));
+        Assert.assertNotNull(ReflectionUtils.getField(
+            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "moduleBean")),
+            testBean));
     }
 
     public ConfigurableApplicationContext buildApplicationContext(String appName) {
@@ -181,19 +194,19 @@ public class SpringServiceFinderTest {
     public static class ModuleBean {
 
         @AutowiredFromBase
-        private BaseBean baseBean;
+        private BaseBean              baseBean;
 
         @AutowiredFromBase
-        private List<BaseBean> baseBeanList;
+        private List<BaseBean>        baseBeanList;
 
         @AutowiredFromBase
-        private Set<BaseBean> baseBeanSet;
+        private Set<BaseBean>         baseBeanSet;
 
         @AutowiredFromBase
         private Map<String, BaseBean> baseBeanMap;
 
         @AutowiredFromBiz(bizName = "biz1", bizVersion = "version1")
-        private ModuleBean moduleBean;
+        private ModuleBean            moduleBean;
 
         public String test() {
             return "module";
