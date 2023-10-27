@@ -20,6 +20,8 @@ import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizState;
 import com.alipay.sofa.ark.spi.service.biz.BizManagerService;
+import com.alipay.sofa.serverless.common.api.AutowiredFromBase;
+import com.alipay.sofa.serverless.common.api.AutowiredFromBiz;
 import com.alipay.sofa.serverless.common.api.SpringServiceFinder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,6 +39,8 @@ import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.Properties;
 
+import static org.mockito.Mockito.when;
+
 /**
  * @author: yuanyuan
  * @date: 2023/9/26 9:40 下午
@@ -49,6 +53,9 @@ public class SpringServiceFinderTest {
 
     @Mock
     private Biz               biz1;
+
+    @Mock
+    private Biz               biz2;
 
     @Mock
     private BizManagerService bizManagerService;
@@ -64,19 +71,19 @@ public class SpringServiceFinderTest {
         ArkClient.setBizManagerService(bizManagerService);
 
         ArkClient.setMasterBiz(masterBiz);
-        Mockito.when(bizManagerService.getBiz("master", "1.0.0")).thenReturn(masterBiz);
-        Mockito.when(masterBiz.getBizState()).thenReturn(BizState.ACTIVATED);
-        Mockito.when(masterBiz.getBizClassLoader()).thenReturn(ClassLoader.getSystemClassLoader());
-        Mockito.when(masterBiz.getBizName()).thenReturn("master");
-        Mockito.when(masterBiz.getBizVersion()).thenReturn("1.0.0");
+        when(bizManagerService.getBiz("master", "1.0.0")).thenReturn(masterBiz);
+        when(masterBiz.getBizState()).thenReturn(BizState.ACTIVATED);
+        when(masterBiz.getBizClassLoader()).thenReturn(ClassLoader.getSystemClassLoader());
+        when(masterBiz.getBizName()).thenReturn("master");
+        when(masterBiz.getBizVersion()).thenReturn("1.0.0");
         BizRuntimeContext masterBizRuntime = new BizRuntimeContext(masterBiz, masterCtx);
         BizRuntimeContextRegistry.registerBizRuntimeManager(masterBizRuntime);
 
-        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
-        Mockito.when(biz1.getBizState()).thenReturn(BizState.ACTIVATED);
-        Mockito.when(biz1.getBizClassLoader()).thenReturn(new URLClassLoader(new URL[0]));
-        Mockito.when(biz1.getBizName()).thenReturn("biz1");
-        Mockito.when(biz1.getBizVersion()).thenReturn("version1");
+        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        when(biz1.getBizState()).thenReturn(BizState.ACTIVATED);
+        when(biz1.getBizClassLoader()).thenReturn(new URLClassLoader(new URL[0]));
+        when(biz1.getBizName()).thenReturn("biz1");
+        when(biz1.getBizVersion()).thenReturn("version1");
         BizRuntimeContext bizRuntime = new BizRuntimeContext(biz1, bizCtx);
         BizRuntimeContextRegistry.registerBizRuntimeManager(bizRuntime);
 
@@ -100,6 +107,31 @@ public class SpringServiceFinderTest {
 
         Assert.assertEquals("base", baseBean.test());
         Assert.assertEquals("module", moduleBean.test());
+
+        // test to invoke crossing classloader
+        URLClassLoader loader = new URLClassLoader(((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs(), null);
+        Object newModuleBean = null;
+        try {
+            Class<?> aClass = loader.loadClass("com.alipay.sofa.serverless.common.SpringServiceFinderTest$ModuleBean");
+            newModuleBean = aClass.newInstance();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        ConfigurableApplicationContext biz2Ctx = buildApplicationContext("biz2");
+        biz2Ctx.getBeanFactory().registerSingleton("moduleBean", newModuleBean);
+        Mockito.when(bizManagerService.getBiz("biz2", "version1")).thenReturn(biz2);
+        Mockito.when(biz2.getBizState()).thenReturn(BizState.ACTIVATED);
+        Mockito.when(biz2.getBizClassLoader()).thenReturn(loader);
+        Mockito.when(biz2.getBizName()).thenReturn("biz2");
+        Mockito.when(biz2.getBizVersion()).thenReturn("version1");
+        BizRuntimeContext biz2Runtime = new BizRuntimeContext(biz2, biz2Ctx);
+        BizRuntimeContextRegistry.registerBizRuntimeManager(biz2Runtime);
+        ModuleBean foundModuleBean = SpringServiceFinder.getModuleService("biz2", "version1",
+                "moduleBean", ModuleBean.class);
+        Assert.assertNotNull(foundModuleBean);
+        Assert.assertEquals(newModuleBean.toString(), foundModuleBean.toString());
+        Assert.assertEquals("module", foundModuleBean.test());
+
     }
 
     public ConfigurableApplicationContext buildApplicationContext(String appName) {
@@ -116,14 +148,20 @@ public class SpringServiceFinderTest {
 
     }
 
-    public class BaseBean {
+    public static class BaseBean {
 
         public String test() {
             return "base";
         }
     }
 
-    public class ModuleBean {
+    public static class ModuleBean {
+
+        @AutowiredFromBase
+        private String baseBean;
+
+        @AutowiredFromBiz(bizName = "biz1", bizVersion = "version1")
+        private String bizBean;
 
         public String test() {
             return "module";
