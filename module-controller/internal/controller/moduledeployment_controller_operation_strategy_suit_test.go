@@ -191,9 +191,18 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 				}
 				// when install module, the podIP is necessary
 				pod.Status.PodIP = "127.0.0.1"
-				return k8sClient.Status().Update(context.TODO(), &pod) == nil
-			}, timeout, interval).Should(BeTrue())
+				if k8sClient.Status().Update(context.TODO(), &pod) != nil {
+					return false
+				}
 
+				pod2 := preparePod(namespace, "fake-pod-4")
+				if err := k8sClient.Create(context.TODO(), &pod2); err != nil {
+					return false
+				}
+				// when install module, the podIP is necessary
+				pod.Status.PodIP = "127.0.0.1"
+				return k8sClient.Status().Update(context.TODO(), &pod2) == nil
+			}, timeout, interval).Should(BeTrue())
 		})
 
 		It("1. create a new moduleDeployment", func() {
@@ -277,7 +286,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 			}, timeout, interval).Should(BeTrue())
 		})
 
-		It("9. check if the moduleDeployment status is completed", func() {
+		It("9. check if the moduleDeployment status is Terminated", func() {
 			Eventually(func() error {
 				if err := k8sClient.Get(context.TODO(), nn, &moduleDeployment); err != nil {
 					return err
@@ -287,12 +296,16 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 					return fmt.Errorf("the module-deployment is paused")
 				}
 
+				if moduleDeployment.Status.ReleaseStatus == nil {
+					return fmt.Errorf("release status is nil")
+				}
+
 				if moduleDeployment.Status.ReleaseStatus.Progress != v1alpha1.ModuleDeploymentReleaseProgressTerminated {
 					return fmt.Errorf("expect status %v, but got %v",
 						v1alpha1.ModuleDeploymentReleaseProgressTerminated, moduleDeployment.Status.ReleaseStatus.Progress)
 				}
 				return nil
-			}, timeout, interval).Should(BeTrue())
+			}, timeout, interval).Should(Succeed())
 		})
 
 		It("10. clean module-deployment", func() {

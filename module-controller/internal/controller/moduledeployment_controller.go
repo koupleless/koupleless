@@ -82,7 +82,6 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	if moduleDeployment.DeletionTimestamp != nil {
-		// delete moduleDeployment
 		event.PublishModuleDeploymentDeleteEvent(r.Client, ctx, moduleDeployment)
 		if !utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer) &&
 			!utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleExistedFinalizer) {
@@ -254,6 +253,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 				return ctrl.Result{}, utils.Error(err, "Failed to delete moduleReplicaSet", "moduleReplicaSetName", replicaSetList.Items[i].Name)
 			}
 		}
+		log.Log.Info("replicaset删除完毕")
 		requeueAfter := utils.GetNextReconcileTime(moduleDeployment.DeletionTimestamp.Time)
 		return ctrl.Result{RequeueAfter: requeueAfter}, nil
 	} else {
@@ -340,6 +340,9 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 			log.Log.Info("module has changed, need create a new replicaset")
 		}
 
+		if moduleDeployment.DeletionTimestamp != nil {
+			return nil, nil, false, nil
+		}
 		// create a new moduleReplicaset
 		moduleReplicaSet, err := r.createNewReplicaSet(ctx, moduleDeployment, maxVersion+1)
 		if err != nil {
@@ -417,6 +420,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	}
 
 	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS)
+
 	if err != nil {
 		return ctrl.Result{}, err
 	}
