@@ -11,7 +11,7 @@ import static com.alipay.sofa.ark.spi.constant.Constants.PLUGIN_EXPORT_CLASS_ENA
  * @author: yuanyuan
  * @date: 2023/10/30 9:38 下午
  */
-public class ServerlessRuntimeApplicationListener implements ApplicationListener<SpringApplicationEvent> {
+public class ServerlessApplicationListener implements ApplicationListener<SpringApplicationEvent> {
 
     @Override
     public void onApplicationEvent(SpringApplicationEvent event) {
