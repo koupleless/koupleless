@@ -4,8 +4,40 @@ Add styles or override variables from the theme here.
 
 */
 
+@font-face {
+  font-family: "Alibaba PuHuiTi";
+  src: url("/font/AlibabaPuHuiTi-2-105-Heavy.ttf");
+}
+
+@font-face {
+  font-family: "AlibabaPuHuiTiR";
+  src: url("/font/AlibabaPuHuiTi-2-105-Heavy.ttf");
+}
+
+@font-face {
+  font-family: "AlibabaPuHuiTiH";
+  src: url("/font/AlibabaPuHuiTi-2-105-Heavy.ttf");
+}
+
+@font-face {
+  font-family: "PingFangSC-Regular";
+  src: url("/font/PingFang.ttc");
+}
+
+@font-face {
+  font-family: "PingFangSC-Medium";
+  src: url("/font/PingFang.ttc");
+}
+
 * {
   font-family: "AlibabaPuHuiTiH, Alibaba PuHuiTi";
+}
+
+#home-page {
+  * {
+    border: none;
+    border-radius: 0;
+  }
 }
 
 a, input {
@@ -15,17 +47,62 @@ a, input {
 }
 
 .td-overlay--dark::after {
-  background: linear-gradient(180deg, rgb(18, 27, 57), #06080cf0) !important;
+  margin: -84px -20px -20px -20px;
+  background-image: linear-gradient(180deg, rgb(18, 27, 57), #06080cf0);
 }
 
-body {
-  background: linear-gradient(180deg, rgb(18, 27, 57), #06080cf0) !important;
+.td-overlay--dark::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 520px; right: 0; bottom: 0;
+  margin-left: -20px;
+  margin-right: -20px;
+  height: 628px;
+  background: url("/img/star-sky-background.png") round;
+  z-index: 1;
+  opacity: 0.5;
 }
 
 #main_navbar {
+
   .nav-link {
-    color: white;
+
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    padding: 0;
+    height: 63px;
+    line-height: 59px;
+    font-family: AlibabaPuHuiTiR;
+    font-size: 16px;
+    color: rgb(178, 181, 191);
+    letter-spacing: 0;
+    font-weight: normal;
+
+    > span {
+      height: 34px;
+      line-height: 34px;
+      padding-left: 8px;
+      padding-right: 8px;
+      display: inline-block;
+    }
+
+    &.active {
+      color: white;
+      opacity: 0.95;
+      border-bottom-color: white;
+      font-weight: 600;
+    }
+
+    &:not(.active) {
+      &:hover, &:focus {
+        > span {
+          background: rgb(35, 43, 73);
+          border-radius: 6px;
+        }
+      }
+    }
   }
+
   .nav-item:last-child {
     display: none !important;
   }
@@ -39,34 +116,29 @@ header > nav.td-navbar {
 
   padding: 0px;
   margin: 0px;
+  height: 63px;
+  min-height: 63px;
+  max-height: 63px;
+  border-bottom: 1px solid rgba(255,255,255,0.65);
   background: rgb(18, 24, 52) !important;
 
   > .container-fluid {
     padding: 0px;
     margin: 0px;
-  }
-
-  > .navbar-brand {
-    padding: 0px;
-    margin: 0px;
+    height: 100%;
   }
 }
 
 .container-fluid.td-outer {
 
+  margin-top: 63px;
   padding: 0px;
 
-  > .td-main {
+  > main.td-main {
+    padding-bottom: 0 !important;
+  }
 
-    //> * {
-    //  max-width: 1440px !important;
-    //  margin-left: auto !important;
-    //  margin-right: auto !important;
-    //}
-
-    > .linkbox {
-      display: none;
-    }
+  > div.td-main, > main.td-main {
 
     > .row {
 
@@ -123,8 +195,9 @@ header > nav.td-navbar {
 
 .td-navbar  {
 
-  height: 62px;
-  border-bottom: 1px solid rgba(255,255,255,0.25);
+  height: 63px;
+  min-height: 63px;
+  max-height: 63px;
 
   a.navbar-brand {
 
@@ -186,8 +259,8 @@ header > nav.td-navbar {
 
 footer.td-footer.row.d-print-none {
 
-  height: 62px;
-  min-height: 62px;
+  height: 63px;
+  min-height: 63px;
   margin: 0px;
   padding: 0px;
   border-top: 1px solid rgba(255,255,255,0.25);
@@ -215,7 +288,6 @@ footer.td-footer.row.d-print-none {
 #td-cover-block-0 {
 
   padding-top: 50px;
-  padding-bottom: 100px;
 
   .lead {
     padding: 0 !important;
@@ -240,15 +312,13 @@ a.navbar-brand {
 aside.td-sidebar {
 
   padding: 0;
-  padding-top: 64px;
-  border-right: 1px solid rgba(255, 255, 255, 0.25);
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
   width: 293px;
-  background: linear-gradient(180deg, rgb(18, 27, 57), #06080cf0) !important;
+  background: white !important;
 
   #td-sidebar-menu {
 
     width: 292px;
-    padding: 20px 0px;
 
     #m-docs, #m-user-cases {
       display: none;
@@ -296,19 +366,17 @@ aside.td-sidebar {
 
         > .td-sidebar-link {
           width: 292px;
-          opacity: 0.7;
           font-family: PingFangSC-Regular;
           font-size: 16px;
-          color: #FFFFFF;
+          color: rgba(0, 0, 0, 0.65);
           padding: 0 20px !important;
         }
 
         &.active-path {
           > .td-sidebar-link {
-            opacity: 1;
             font-family: PingFangSC-Medium;
             font-size: 16px;
-            color: #FFFFFF;
+            color: rgba(0, 0, 0, 0.95);
           }
         }
       }
@@ -335,10 +403,9 @@ aside.td-sidebar {
 
         > .td-sidebar-link {
 
-          opacity: 0.7;
           font-family: PingFangSC-Regular;
           font-size: 16px;
-          color: #FFFFFF;
+          color: rgba(0, 0, 0, 0.65);
 
           > span:before {
             content: url(/img/menu-item-icon-inactive.svg);
@@ -346,6 +413,12 @@ aside.td-sidebar {
             margin-right: 8px;
             position: relative;
             top: -2px;
+            width: 8px;
+            display: inline-block;
+          }
+
+          &:hover, &:focus {
+            background: rgba(7, 7, 7, 0.05);
           }
         }
 
@@ -354,20 +427,18 @@ aside.td-sidebar {
           &.with-child {
 
             > .td-sidebar-link {
-              opacity: 1;
               font-family: PingFangSC-Medium;
               font-size: 16px;
-              color: #FFFFFF;
+              color: rgba(0, 0, 0, 0.95);
             }
           }
 
           &:not(.with-child) > .td-sidebar-link {
 
-            opacity: 1;
             font-family: PingFangSC-Medium;
             font-size: 16px;
-            color: #FFFFFF;
-            background: rgb(29, 42, 77);
+            color: rgba(0, 0, 0, 0.95);
+            background: rgba(7, 7, 7, 0.05);
 
             > span:before {
               content: url(/img/menu-item-icon-active.svg);
@@ -378,17 +449,18 @@ aside.td-sidebar {
     }
 
     .td-sidebar__search {
-      margin: 0;
-      margin-bottom: 16px;
+      margin: 20px 0 16px 0;
       padding: 0 20px;
     }
 
     .td-search__icon {
 
       left: 12px;
+      margin-right: 8px;
+      margin-top: 2px;
 
       &:before {
-        content: url(/img/search.svg);
+        content: url(/img/side-bar-search.svg);
       }
     }
 
@@ -398,15 +470,19 @@ aside.td-sidebar {
       height: 36px;
       margin: 0px;
       padding: 6px 12px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.25);
       border-radius: 8px;
+      font-family: PingFangSC-Regular;
       font-size: 14px;
+      color: rgba(0, 0, 0, 0.95);
+      letter-spacing: 0;
 
       &:focus {
-        opacity: 0.95;
+        //border: 1px solid rgba(0, 0, 0, 0.25) !important;
+        //border-radius: 8px;
         background: white;
-        color: black;
+        color: rgba(0, 0, 0, 0.95);
       }
     }
 
@@ -432,6 +508,10 @@ li.active-path > a {
   font-weight: 600 !important;
 }
 
+//div.td-main {
+//  border-top: 1px solid white;
+//}
+
 .td-page main.td-main {
   padding-right: 245px !important;
 }
@@ -445,186 +525,195 @@ div.td-main main {
   }
 }
 
+.td-main > .row > main {
+  background: white !important;
+}
+
+main.td-main {
+  background-image: linear-gradient(180deg, rgb(18, 27, 57), #06080cf0);
+}
+
 main.td-main, div.td-main main {
 
-  padding: 84px 20px 20px 20px !important;
-  background: linear-gradient(180deg, rgb(18, 27, 57), #06080cf0) !important;
-  color: #FFFFFF;
+  padding: 20px !important;
+  color: rgba(0, 0, 0, 0.95);
+  font-family: PingFangSC-Regular;
+  font-size: 15px;
+  line-height: 24px;
   letter-spacing: 0;
+
+  > .linkbox {
+    display: none;
+  }
 
   .td-content > * {
     @media screen and (min-width: 992px) {
-      max-width: 80%;
+      max-width: 100%;
     }
   }
 
-  //.td-content {
+  //.td-content > h1:first-child {
+  //  margin-bottom: 72px !important;
+  //}
 
-    font-family: PingFangSC-Regular;
-    font-size: 15px;
-    color: rgb(161, 164, 175);
+  table tr {
+    td, th {
+      font-family: PingFangSC-Regular;
+      font-size: 15px;
+      line-height: 24px;
+    }
+  }
+
+  ol, ul {
+    margin-top: 6px;
+  }
+
+  p, li {
+    margin-bottom: 0;
+  }
+
+  img {
+    margin: 10px 0 12px 0;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+  }
+
+  .highlight {
+    margin-top: 15px;
+    margin-bottom: 28px;
+  }
+
+  h1, h2, h3, h4, h5 {
+
+    font-family: PingFangSC-Medium;
+    max-width: 100%;
+    color: rgba(0, 0, 0, 0.95);
+    letter-spacing: 0;
+
+    &[id]:before {
+      margin: 0px;
+      height: 0px;
+    }
+
+    > a[aria-hidden="true"] {
+      position: relative;
+      top: -1px;
+    }
+  }
+
+  .article-meta {
+    margin-bottom: 0px;
+  }
+
+  h1 {
+
+    margin: 40px 0px 20px 0px !important;
+    font-size: 28px;
+    font-weight: normal;
+    line-height: 36px;
+
+    &:first-child {
+      margin-top: 0px !important;
+    }
+  }
+
+  h2 {
+
+    margin: 32px 0px 20px 0px !important;
+    font-size: 24px;
+    font-weight: normal;
+    line-height: 28px;
+
+    &:first-child {
+      margin-top: 0px !important;
+    }
+  }
+
+  h3 {
+
+    margin: 20px 0px 16px 0px !important;
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 28px;
+
+    &:first-child {
+      margin-top: 0px !important;
+    }
+  }
+
+  h4 {
+
+    margin: 16px 0px 10px 0px !important;
+    font-size: 16px;
+    font-weight: normal;
     line-height: 24px;
 
-    table tr {
-      td, th {
-        font-family: PingFangSC-Regular;
-        font-size: 15px;
-        color: rgb(161, 164, 175) !important;
-        border: 1px solid rgb(161, 164, 175) !important;
-        line-height: 24px;
-      }
+    &:first-child {
+      margin-top: 0px !important;
+    }
+  }
+
+  h5 {
+
+    margin-top: 15px !important;
+    font-size: 15px;
+    font-weight: normal;
+    line-height: 18px;
+
+    &:first-child {
+      margin-top: 0px !important;
+    }
+  }
+
+  //a:not(.btn) {
+  //  color: #0077FF !important;
+  //}
+
+  .section-index {
+
+    > .panel-line {
+      display: none;
     }
 
-    ol, ul {
-      margin-top: 6px;
-    }
+    .entry {
 
-    p, li {
-      margin-bottom: 0;
-    }
+      margin: 0;
+      padding: 0;
 
-    code {
-      color: orange;
-    }
+      h5 {
+        margin: 32px 0px 20px 0px !important;
+        max-width: 100%;
 
-    img {
-      margin: 6px 0 8px 0;
-    }
-
-    .highlight {
-      margin-top: 15px;
-      margin-bottom: 28px;
-    }
-
-    h1, h2, h3, h4, h5 {
-
-      font-family: PingFangSC-Medium;
-      max-width: 100%;
-      opacity: 0.95;
-      color: #FFFFFF;
-      letter-spacing: 0;
-
-      &[id]:before {
-        margin: 0px;
-        height: 0px;
-      }
-
-      > a[aria-hidden="true"] {
-        position: relative;
-        top: -2px;
-      }
-    }
-
-    .article-meta {
-      margin-bottom: 0px;
-    }
-
-    h1 {
-
-      margin: 40px 0px 20px 0px !important;
-      font-size: 28px;
-      font-weight: normal;
-      line-height: 36px;
-
-      &:first-child {
-        margin-top: 0px !important;
-      }
-    }
-
-    h2 {
-
-      margin: 32px 0px 20px 0px !important;
-      font-size: 20px;
-      font-weight: normal;
-      line-height: 28px;
-
-      &:first-child {
-        margin-top: 0px !important;
-      }
-    }
-
-    h3 {
-
-      margin: 20px 0px 16px 0px !important;
-      font-size: 16px;
-      font-weight: normal;
-      line-height: 28px;
-
-      &:first-child {
-        margin-top: 0px !important;
-      }
-    }
-
-    h4 {
-
-      margin: 16px 0px 10px 0px !important;
-      font-size: 15px;
-      font-weight: normal;
-      line-height: 24px;
-
-      &:first-child {
-        margin-top: 0px !important;
-      }
-    }
-
-    h5 {
-
-      margin-top: 15px !important;
-      font-size: 15px;
-      font-weight: normal;
-      line-height: 18px;
-
-      &:first-child {
-        margin-top: 0px !important;
-      }
-    }
-
-    a:not(.btn) {
-      color: #0077FF !important;
-    }
-
-    .section-index {
-
-      > .panel-line {
-        display: none;
-      }
-
-      .entry {
-
-        margin: 0;
-        padding: 0;
-
-        h5 {
-          margin: 32px 0px 20px 0px !important;
-          max-width: 100%;
-
-          > a {
-            font-family: PingFangSC-Medium;
-            font-size: 20px;
-            font-weight: normal !important;
-            line-height: 28px;
-            opacity: 0.7;
-            color: #FFFFFF !important;
-            letter-spacing: 0;
-          }
+        > a {
+          font-family: PingFangSC-Medium;
+          font-size: 20px;
+          font-weight: normal !important;
+          line-height: 28px;
+          letter-spacing: 0;
         }
       }
     }
+  }
 
-    .text-muted {
-      border-width: 0px !important;
-      opacity: 0.65;
-      font-family: PingFangSC-Regular;
-      font-size: 14px;
-      letter-spacing: 0;
-      line-height: 24px;
-      color: #FFFFFF !important;
-    }
+  .text-muted {
 
-    .btn {
-      background: none;
-      border-radius: 12px;
+    border-width: 0px !important;
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.45) !important;
+    //position: absolute;
+    //top: 66px;
+
+    > a {
+      opacity: 0.85;
     }
+  }
+
+  .btn {
+    border-radius: 12px;
+  }
 
   .d-print-none {
 
@@ -633,10 +722,9 @@ main.td-main, div.td-main main {
     }
 
     .feedback--question {
-      opacity: 0.65;
+      color: rgba(0, 0, 0, 0.65);
       font-family: PingFangSC-Regular;
       font-size: 14px;
-      color: #FFFFFF;
       letter-spacing: 0;
       line-height: 22px;
       display: inline;
@@ -644,24 +732,25 @@ main.td-main, div.td-main main {
 
     .feedback--answer {
       margin: 0 !important;
-      background: none;
-      border-radius: 12px;
-      //padding: 0;
-      //border: none;
-      //background-image: url(/img/feedback-good.svg);
+      width: 16px;
+      height: 16px;
+      border-radius: 0;
+      padding: 0;
+      border: none;
+      color: transparent;
+      color: transparent;
+      background-color: transparent;
     }
 
     .feedback--answer-yes {
-      margin: 0px 6px 0px 8px !important;
+      margin: 0px 10px 2px 16px !important;
+      background-image: url(/img/feedback-yes.svg);
     }
 
-    .feedback--response {
-      a {
-        color: skyblue;
-      }
+    .feedback--answer-no {
+      background-image: url(/img/feedback-no.svg);
     }
   }
-  //}
 }
 
 aside.td-sidebar-toc {
@@ -670,10 +759,9 @@ aside.td-sidebar-toc {
   width: 245px;
   height: auto;
   margin: 0px;
-  padding: 0px;
-  padding-top: 64px;
-  border-left: 1px solid rgba(255, 255, 255, 0.25);
-  background: linear-gradient(180deg, rgb(18, 27, 57), #06080cf0) !important;
+  padding: 0;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  background: white !important;
 
   #TableOfContents {
 
@@ -688,18 +776,16 @@ aside.td-sidebar-toc {
         line-height: 36px;
         font-family: PingFangSC-Regular;
         font-size: 15px;
-        opacity: 0.65;
-        color: #FFFFFF;
+        color: rgba(0, 0, 0, 0.65);
         letter-spacing: 0;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
 
         &:hover, &:focus {
-          opacity: 0.95;
           font-family: PingFangSC-Medium;
-          color: #FFFFFF;
-          background: rgb(29, 35, 69);
+          color: rgba(0, 0, 0, 0.95);
+          background: rgba(7, 7, 7, 0.05);
         }
       }
 
@@ -715,7 +801,7 @@ aside.td-sidebar-toc {
 
         &:hover, &:focus {
           &:before {
-            content: url(/img/menu-item-icon-active.svg);
+            //content: url(/img/menu-item-icon-active.svg);
           }
         }
       }
@@ -733,12 +819,6 @@ aside.td-sidebar-toc {
       font-family: PingFangSC-Regular;
       font-size: 15px;
       color: #0077FF;
-      //background: rgba(255,255,255,0.08);
-      //border-radius: 8px;
-      //font-family: PingFangSC-Regular;
-      //font-size: 14px;
-      //letter-spacing: 0;
-      //line-height: 22px;
     }
   }
 }
@@ -751,8 +831,8 @@ aside.td-sidebar-toc {
 
   li.td-sidebar-nav__section {
 
-    &.active-path {
-      background: rgb(29, 38, 66);
+    &.active-path, &:hover, &:focus {
+      background: rgba(7, 7, 7, 0.05);
     }
 
     > .td-sidebar-link > span:before {

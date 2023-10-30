@@ -35,7 +35,7 @@ public class FacadeAroundHandler implements AnnotionService {
 ```
 
 ### 步骤 3：
-在模块里使用 @Aspect 注解实现一个 Aspect，SOFABoot 通过 @SofaReference 注入基座上的 FacadeAroundHandler。<br />**注意：**这里不要声明成一个 Bean，不要加 @Component 或者 @Service 注解，主需要 @Aspect 注解。
+在模块里使用 @Aspect 注解实现一个 Aspect，SOFABoot 通过 @SofaReference 注入基座上的 FacadeAroundHandler。<br />**注意**：这里不要声明成一个 Bean，不要加 @Component 或者 @Service 注解，主需要 @Aspect 注解。
 ```java
 //注意，这里不必申明成一个bean，不要加@Component或者@Service
 @Aspect
@@ -56,7 +56,7 @@ public class FacadeAroundAspect {
 ```
 
 ### 步骤 4：
-使用 @Configuration 注解写个 Configuration 配置类，把模块需要的 aspectj 对象都声明成 Spring Bean。<br />**注意：**这个 Configuration 类需要对模块可见，相关 Spring Jar 依赖需要以 <scope>provided</scope> 方式引进来。
+使用 @Configuration 注解写个 Configuration 配置类，把模块需要的 aspectj 对象都声明成 Spring Bean。<br />**注意**：这个 Configuration 类需要对模块可见，相关 Spring Jar 依赖需要以 <scope>provided</scope> 方式引进来。
 ```java
 @Configuration
 public class MngAspectConfiguration {
