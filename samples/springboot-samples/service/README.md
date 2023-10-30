@@ -5,7 +5,6 @@
 base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
 ```xml
 
-
 <!-- 这里添加动态模块相关依赖 -->
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
@@ -20,50 +19,16 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 </dependency>
 <!-- end 单 host 部署的依赖 -->
 
-<!-- log4j2 相关依赖 -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-log4j2</artifactId>
-</dependency>
-
-<!-- log4j2 异步队列 -->
-<dependency>
-    <groupId>com.lmax</groupId>
-    <artifactId>disruptor</artifactId>
-    <version>${disruptor.version}</version>
-</dependency>
-<dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-log4j2-starter</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
-</dependency>
-<!-- end log4j2 依赖引入 -->
-
-<!-- 引入 kafka 依赖 -->
-<dependency>
-    <groupId>org.springframework.kafka</groupId>
-    <artifactId>spring-kafka</artifactId>
-</dependency>
-<!-- end kafka -->
 ```
 
 ### biz
 biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
 ```xml
-<!-- 模块需要引入专门的 log4j2 adapter -->
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-adapter-log4j2</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <artifactId>sofa-serverless-app-starter</artifactId>
     <scope>provided</scope>
 </dependency>
-<!-- 引入 kafka 依赖 -->
-<dependency>
-    <groupId>org.springframework.kafka</groupId>
-    <artifactId>spring-kafka</artifactId>
-    <scope>provided</scope>
-</dependency>
-<!-- end kafka -->
 
 <!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
 <plugin>
@@ -93,35 +58,30 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 
 ## 实验步骤
 
-### 构建与启动 kafka 服务段
-#### 
-进入到 config 目录，执行如下命令，网络如果不通，需要开代理
-```shell
-docker build .
-```
+### 启动基座应用 base
 
-如果网络还是连不通，可以按照 Dockfile 里的命令，本地执行，也可以启动 kafka 服务段
+可以使用 IDEA run 启动基座应用
 
-#### 运行镜像
-```shell
-docker run -p 2181:2181 -p 9092:9092 -e ADVERTISED_HOST=localhost serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/samples/kafka-zookeeper:0.1.1
-```
+### 打包模块应用 biz1、biz2
 
+在samples/springboot-samples/service/sample-service-biz 和 samples/springboot-samples/service/sample-service-biz2 目录下分别执行 mvn clean package -Dmaven.test.skip=true 进行模块打包， 打包完成后可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
 
-#### 执行 mvn clean package -DskipTests
-可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
-#### 启动基座应用 base，确保基座启动成功
-#### 执行 curl 命令安装 biz1 和 biz2
+### 安装模块应用 biz1、biz2
+
+#### 执行 curl 命令安装 biz1
+
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
 --data '{
-    "bizName": "biz1",
+    "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///path/to/springboot-samples/samples/web/tomcat/biz1/target/biz1-kafka-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/xxxx/xxxx/Code/sofa-serverless/samples/springboot-samples/service/sample-service-biz/biz-bootstrap/target/biz-bootstrap-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
+
+#### 执行 curl 命令安装 biz2
 
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
@@ -130,45 +90,41 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz2",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///path/to/springboot-samples/samples/web/tomcat/biz2/target/biz2-kafka-0.0.1-SNAPSHOT-ark-biz.jar"
-}'
-```
-
-如果想验证卸载也可以执行
-```shell
-curl --location --request POST 'localhost:1238/uninstallBiz' \
---header 'Content-Type: application/json' \
---data '{
-    "bizName": "biz1",
-    "bizVersion": "0.0.1-SNAPSHOT"
+    "bizUrl": "file:///Users/xxxx/xxxx/Code/sofa-serverless/samples/springboot-samples/service/sample-service-biz2/biz2-bootstrap/target/biz2-bootstrap-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 
 ### 发起请求验证
 
+#### 验证基座调用模块
+
+访问基座 base 的 web 服务
 ```shell
-curl http://localhost:8080/biz1/send/fadsfasdfa
+curl http://localhost:8080
 ```
-返回 `hello to /biz1 deploy`
+返回 `hello to ark master biz`
 
-且日志里能看到 
-```text
-INFO  rest.SampleController - =================================
-INFO  rest.SampleController - biz1 consumer input value: fadsfasdfa
-INFO  rest.SampleController - =================================
-```
+且日志里能看到对模块biz的调用都是成功的，证明基座通过 SpringServiceFinder.getModuleService 方式调用模块是成功的
 
+#### 验证模块调用基座
+
+访问 biz2 的 web 服务
 ```shell
-curl http://localhost:8080/biz2/send/fadsfasdfa
+curl http://localhost:8080/biz2
 ```
-返回 `hello to /biz2 deploy`
+返回 `hello to ark2 dynamic deploy`
 
-且日志里能看到
-```text
-INFO  rest.SampleController - =================================
-INFO  rest.SampleController - biz2 consumer input value: fadsfasdfa
-INFO  rest.SampleController - =================================
+且日志里能看到对基座base的调用都是成功的，证明模块通过 @AutowiredFromBase 或者 SpringServiceFinder.getBaseService() 方式调用基座是成功的
+
+#### 验证模块调用模块
+
+访问 biz2 的 web 服务
+```shell
+curl http://localhost:8080/biz2
 ```
+返回 `hello to ark2 dynamic deploy`
+
+且日志里能看到对模块biz的调用都是成功的，证明模块通过 @AutowiredFromBiz 或者 SpringServiceFinder.getModuleService 方式调用模块biz是成功的
 
 ## 注意事项
 这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
