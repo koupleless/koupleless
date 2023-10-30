@@ -36,7 +36,7 @@ weight: 200
 
 #### 单体应用/大应用过大
 
-#### ![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695109775918-de436da0-8187-45a8-a30a-62177a55181e.png#clientId=u02591eed-2e18-4&from=paste&height=106&id=u28baf164&originHeight=304&originWidth=1412&originalType=binary&ratio=2&rotation=0&showTitle=false&size=97660&status=done&style=none&taskId=u468dfc48-8b76-484e-abb6-36aed56dfd8&title=&width=494)
+![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695109775918-de436da0-8187-45a8-a30a-62177a55181e.png#clientId=u02591eed-2e18-4&from=paste&height=106&id=u28baf164&originHeight=304&originWidth=1412&originalType=binary&ratio=2&rotation=0&showTitle=false&size=97660&status=done&style=none&taskId=u468dfc48-8b76-484e-abb6-36aed56dfd8&title=&width=494)
 
 ##### 多人协作阻塞
 业务不断发展，应用会不断变大，这主要体现在开发人员不断增多，出现多人协作阻塞问题。

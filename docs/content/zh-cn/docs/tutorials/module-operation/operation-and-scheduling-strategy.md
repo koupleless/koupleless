@@ -18,8 +18,8 @@ weight: 600
 
 ## 调度策略
 可以为基座 K8S Pod Deployment 配置 Label "serverless.alipay.com/max-module-count"，指定每个 Pod 最多可以安装多少个模块。支持配置为 0 - N 的整数。模块支持打散调度和堆叠调度。<br />
-**打散调度：**设置 ModuleDeployment.spec.schedulingStrategy.schedulingPolicy 为 **scatter**。打散调度表示在模块上线、扩容、替换时，优先把模块调度到模块数最少的机器上去安装。<br />
-**堆叠调度：**设置 ModuleDeployment.spec.schedulingStrategy.schedulingPolicy 为 **stacking**。堆叠调度表示在模块上线、扩容、替换时，优先把模块调度到模块数最多且没达到基座 max-module-count 上限的机器上去安装。
+**打散调度**：设置 ModuleDeployment.spec.schedulingStrategy.schedulingPolicy 为 **scatter**。打散调度表示在模块上线、扩容、替换时，优先把模块调度到模块数最少的机器上去安装。<br />
+**堆叠调度**：设置 ModuleDeployment.spec.schedulingStrategy.schedulingPolicy 为 **stacking**。堆叠调度表示在模块上线、扩容、替换时，优先把模块调度到模块数最多且没达到基座 max-module-count 上限的机器上去安装。
 
 
 ## 保护机制
@@ -28,8 +28,8 @@ _(正在开发中，10.15 上线)_ 您可以配置 ModuleDeployment.spec.maxUnav
 
 ## 对等和非对等
 您可以配置 ModuleDeployment.spec.replicas 指定模块采用对等还是非对等部署架构。<br />
-**非对等架构：**设置 ModuleDeployment.spec.replicas 为 **0 - N **表示非对等架构。非对等架构下必须要为 ModuleDeployment、ModueRepicaSet 设置副本数，因此非对等架构下支持模块的扩容和缩容操作。<br />
-**对等架构：**设置 ModuleDeployment.spec.replicas 为 **-1 **表示对等架构**。**对等架构下，K8S Pod Deployment 有多少副本数模块就自动安装到多少个 Pod，模块的副本数始终与 K8S Pod Deployment 副本数一致。因此对等架构下不支持模块的扩缩容操作。_对等架构正在建设中，预计 10.30 发布。_
+**非对等架构**：设置 ModuleDeployment.spec.replicas 为 **0 - N **表示非对等架构。非对等架构下必须要为 ModuleDeployment、ModueRepicaSet 设置副本数，因此非对等架构下支持模块的扩容和缩容操作。<br />
+**对等架构**：设置 ModuleDeployment.spec.replicas 为 **-1 **表示对等架构**。**对等架构下，K8S Pod Deployment 有多少副本数模块就自动安装到多少个 Pod，模块的副本数始终与 K8S Pod Deployment 副本数一致。因此对等架构下不支持模块的扩缩容操作。_对等架构正在建设中，预计 10.30 发布。_
 
 
 <br/>
