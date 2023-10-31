@@ -253,7 +253,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 				return ctrl.Result{}, utils.Error(err, "Failed to delete moduleReplicaSet", "moduleReplicaSetName", replicaSetList.Items[i].Name)
 			}
 		}
-		log.Log.Info("replicaset删除完毕")
+
 		requeueAfter := utils.GetNextReconcileTime(moduleDeployment.DeletionTimestamp.Time)
 		return ctrl.Result{RequeueAfter: requeueAfter}, nil
 	} else {

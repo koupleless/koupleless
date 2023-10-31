@@ -268,7 +268,6 @@ func (r *ModuleReplicaSetReconciler) handleDeletingModuleReplicaSet(ctx context.
 
 // generate module
 func (r *ModuleReplicaSetReconciler) generateModule(moduleReplicaSet *v1alpha1.ModuleReplicaSet, pod corev1.Pod) *v1alpha1.Module {
-	log.Log.Info(fmt.Sprintf("生成新的module, name 为%v", moduleReplicaSet.Spec.Template.Spec.Module.Name))
 
 	moduleLabels := moduleReplicaSet.Labels
 	moduleLabels[label.ModuleNameLabel] = moduleReplicaSet.Spec.Template.Spec.Module.Name
