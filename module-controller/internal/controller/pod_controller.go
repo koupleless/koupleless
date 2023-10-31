@@ -77,7 +77,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 			if pod.Labels[label.DeletePodLabel] == "true" {
 				if module.Labels[label.DeleteModuleLabel] != "true" {
 					module.Labels[label.DeleteModuleLabel] = "true"
-					err = r.Client.Update(ctx, &module)
+					err = utils.UpdateResource(r.Client, ctx, &module)
 					if err != nil {
 						log.Log.Error(err, "delete module failed when update delete module label", "moduleName", module.Name, "podName", pod.Name)
 						return ctrl.Result{}, err
@@ -86,7 +86,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 			} else if pod.Labels[label.DeletePodDirectlyLabel] == "true" {
 				if module.Labels[label.DeleteModuleDirectlyLabel] != "true" {
 					module.Labels[label.DeleteModuleDirectlyLabel] = "true"
-					err = r.Client.Update(ctx, &module)
+					err = utils.UpdateResource(r.Client, ctx, &module)
 					if err != nil {
 						log.Log.Error(err, "delete module failed when update delete module label", "moduleName", module.Name, "podName", pod.Name)
 						return ctrl.Result{}, err

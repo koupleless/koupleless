@@ -125,7 +125,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		moduleReplicaSet.Status.CurrentReplicas = currentReplicas
 		moduleReplicaSet.Status.AvailableReplicas = availableReplicas
 		log.Log.Info("update moduleReplicaSet current replicas and available replicas", "moduleReplicaSetName", moduleReplicaSet.Name)
-		err := r.Status().Update(ctx, moduleReplicaSet)
+		err := utils.UpdateStatus(r.Client, ctx, moduleReplicaSet)
 		if err != nil {
 			return ctrl.Result{}, utils.Error(err, "update moduleReplicaSet current replicas and available replicas failed")
 		}
@@ -133,7 +133,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	if moduleReplicaSet.ObjectMeta.Generation > 1 && moduleReplicaSet.Status.AvailableReplicas == moduleReplicaSet.Spec.Replicas {
-		// TODO available replicas equals to expect replicas
+		// available replicas equals to expect replicas
 		moduleDeployment := &v1alpha1.ModuleDeployment{}
 		err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleReplicaSet.Namespace, Name: moduleReplicaSet.Labels[label.ModuleDeploymentLabel]}, moduleDeployment)
 		if err != nil {
@@ -142,10 +142,11 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		// moduleReplicaSet is completed, update moduleDeployment batch progress
 		moduleDeployment.Status.ReleaseStatus.BatchProgress = v1alpha1.ModuleDeploymentReleaseProgressCompleted
 		log.Log.Info("update moduleDeployment BatchProgress to completed", "moduleDeploymentName", moduleDeployment.Name)
-		err = r.Status().Update(ctx, moduleDeployment)
+		err = utils.UpdateStatus(r.Client, ctx, moduleDeployment)
 		if err != nil {
 			return ctrl.Result{}, utils.Error(err, "update moduleDeployment BatchProgress failed")
 		}
+		return ctrl.Result{}, nil
 	}
 
 	// replicas change
@@ -156,7 +157,7 @@ func (r *ModuleReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		if moduleReplicaSet.Status.Replicas != moduleReplicaSet.Spec.Replicas {
 			moduleReplicaSet.Status.Replicas = moduleReplicaSet.Spec.Replicas
 			log.Log.Info("update moduleReplicaSet status Replicas", "moduleReplicaSetName", moduleReplicaSet.Name)
-			err := r.Status().Update(ctx, moduleReplicaSet)
+			err := utils.UpdateStatus(r.Client, ctx, moduleReplicaSet)
 			if err != nil {
 				return ctrl.Result{}, utils.Error(err, "update moduleReplicaSet status Replicas failed")
 			}
@@ -212,7 +213,7 @@ func (r *ModuleReplicaSetReconciler) compareAndUpdateModule(ctx context.Context,
 			existedModule.Spec.Module.Name = desiredModule.Name
 			existedModule.Spec.Module.Version = desiredModule.Version
 			existedModule.Spec.Module.Url = desiredModule.Url
-			err := r.Client.Update(ctx, &existedModule)
+			err := utils.UpdateResource(r.Client, ctx, &existedModule)
 			if err != nil {
 				return utils.Error(err, "Failed to update module", "moduleName", existedModule.Name)
 			}
@@ -234,7 +235,7 @@ func (r *ModuleReplicaSetReconciler) handleDeletingModuleReplicaSet(ctx context.
 			// all module is removed, remove module replicaset finalizer
 			log.Log.Info("all modules are deleted, remove moduleReplicaSet finalizer", "moduleReplicaSetName", moduleReplicaSet.Name)
 			utils.RemoveFinalizer(&moduleReplicaSet.ObjectMeta, finalizer.ModuleExistedFinalizer)
-			err := r.Client.Update(ctx, moduleReplicaSet)
+			err := utils.UpdateResource(r.Client, ctx, moduleReplicaSet)
 			if err != nil {
 				return ctrl.Result{}, err
 			}
@@ -246,7 +247,7 @@ func (r *ModuleReplicaSetReconciler) handleDeletingModuleReplicaSet(ctx context.
 			log.Log.Info("moduleReplicaSet is deleting, delete module", "moduleReplicaSetName", moduleReplicaSet.Name, "module", existedModule.Name, "ip", existedModule.Labels[label.BaseInstanceIpLabel])
 			if existedModule.Labels[label.DeleteModuleLabel] != "true" {
 				existedModule.Labels[label.DeleteModuleLabel] = "true"
-				err = r.Client.Update(ctx, &existedModule)
+				err = utils.UpdateResource(r.Client, ctx, &existedModule)
 				if err != nil {
 					log.Log.Error(err, "Failed to update uninstall module label", "moduleName", existedModule.Name)
 				}
@@ -379,7 +380,7 @@ func (r *ModuleReplicaSetReconciler) scaledown(ctx context.Context, existedModul
 			targetPod := moduleToPod[module.Name]
 			if targetPod.Labels[label.DeletePodDirectlyLabel] != "true" {
 				targetPod.Labels[label.DeletePodDirectlyLabel] = "true"
-				err = r.Client.Update(ctx, targetPod)
+				err = utils.UpdateResource(r.Client, ctx, targetPod)
 				if err != nil {
 					log.Log.Error(err, "Failed to update delete pod label", "module", module, "podName", targetPod.Name)
 				}
@@ -387,7 +388,7 @@ func (r *ModuleReplicaSetReconciler) scaledown(ctx context.Context, existedModul
 		} else {
 			if module.Labels[label.DeleteModuleLabel] != "true" {
 				module.Labels[label.DeleteModuleLabel] = "true"
-				err = r.Client.Update(ctx, &module)
+				err = utils.UpdateResource(r.Client, ctx, &module)
 				if err != nil {
 					log.Log.Error(err, "Failed to delete module", "module", module)
 				}
@@ -427,7 +428,7 @@ func (r *ModuleReplicaSetReconciler) scaleDownOldPods(ctx context.Context, toAll
 				deleteReplicas -= otherModuleReplicaSet.Spec.Replicas
 				otherModuleReplicaSet.Spec.Replicas = 0
 			}
-			if err := r.Client.Update(ctx, otherModuleReplicaSet); err != nil {
+			if err := utils.UpdateResource(r.Client, ctx, otherModuleReplicaSet); err != nil {
 				return utils.Error(err, "Failed to update other replicaset", "moduleReplicaSetName", otherModuleReplicaSet.Name)
 			}
 		}
@@ -470,7 +471,7 @@ func (r *ModuleReplicaSetReconciler) getScaleUpCandidatePods(sameReplicaSetModul
 		if cntStr, ok := pod.Labels[label.ModuleInstanceCount]; !ok {
 			instanceCount = utils.GetModuleCountFromPod(&pod)
 			pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(instanceCount)
-			if err = r.Client.Update(context.TODO(), &pod); err != nil {
+			if err = utils.UpdateResource(r.Client, context.TODO(), &pod); err != nil {
 				log.Log.Error(err, fmt.Sprintf("failed to update pod label"))
 				continue
 			}
@@ -498,7 +499,7 @@ func (r *ModuleReplicaSetReconciler) doAllocatePod(ctx context.Context, toAlloca
 	var podIps []string
 	for _, pod := range toAllocatePod {
 		UpdatePodLabelBeforeInstallModule(pod, moduleReplicaSet.Spec.Template.Spec.Module.Name)
-		err := r.Client.Update(ctx, &pod)
+		err := utils.UpdateResource(r.Client, ctx, &pod)
 		// add pod finalizer
 		if err != nil {
 			return podIps, err

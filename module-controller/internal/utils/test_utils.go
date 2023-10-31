@@ -89,9 +89,24 @@ func (m MockClient) DeleteAllOf(ctx context.Context, obj client.Object, opts ...
 }
 
 func (m MockClient) Status() client.SubResourceWriter {
-	return nil
+	return MockSubResourceWriter{}
 }
 
 func (m MockClient) SubResource(subResource string) client.SubResourceClient {
+	return nil
+}
+
+type MockSubResourceWriter struct {
+}
+
+func (m MockSubResourceWriter) Create(ctx context.Context, obj client.Object, subResource client.Object, opts ...client.SubResourceCreateOption) error {
+	return nil
+}
+
+func (m MockSubResourceWriter) Update(ctx context.Context, obj client.Object, opts ...client.SubResourceUpdateOption) error {
+	return nil
+}
+
+func (m MockSubResourceWriter) Patch(ctx context.Context, obj client.Object, patch client.Patch, opts ...client.SubResourcePatchOption) error {
 	return nil
 }

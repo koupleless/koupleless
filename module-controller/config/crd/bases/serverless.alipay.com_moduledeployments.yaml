@@ -227,7 +227,7 @@ spec:
               releaseStatus:
                 properties:
                   batchProgress:
-                    description: the phase current bath release reach
+                    description: the phase current batch release reach
                     type: string
                   currentBatch:
                     description: Records the current batch serial number.

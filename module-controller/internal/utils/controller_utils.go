@@ -3,6 +3,8 @@ package utils
 import (
 	"fmt"
 	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"golang.org/x/net/context"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
 	"strings"
 	"time"
@@ -115,4 +117,26 @@ func AppendModuleDeploymentCondition(conditions []v1alpha1.ModuleDeploymentCondi
 	} else {
 		return append(conditions[1:], condition)
 	}
+}
+
+func UpdateResource(client client.Client, ctx context.Context, obj client.Object, opts ...client.UpdateOption) error {
+	resourceName := obj.GetName()
+	log.Log.Info("start update resource", "resourceName", resourceName)
+	err := client.Update(ctx, obj, opts...)
+	if err != nil {
+		log.Log.Error(err, "update resource failed", "resourceName", resourceName)
+		return err
+	}
+	return nil
+}
+
+func UpdateStatus(client client.Client, ctx context.Context, obj client.Object, opts ...client.SubResourceUpdateOption) error {
+	resourceName := obj.GetName()
+	log.Log.Info("start update status", "resourceName", resourceName)
+	err := client.Status().Update(ctx, obj, opts...)
+	if err != nil {
+		log.Log.Error(err, "update status failed", "resourceName", resourceName)
+		return err
+	}
+	return nil
 }

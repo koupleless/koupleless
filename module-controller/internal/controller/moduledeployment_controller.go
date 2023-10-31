@@ -96,7 +96,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	// update moduleDeployment owner reference
-	if utils.HasOwnerReference(&moduleDeployment.ObjectMeta, moduleDeployment.Spec.BaseDeploymentName) {
+	if !utils.HasOwnerReference(&moduleDeployment.ObjectMeta, moduleDeployment.Spec.BaseDeploymentName) {
 		err = r.updateOwnerReference(ctx, moduleDeployment)
 		if err != nil {
 			return ctrl.Result{}, err
@@ -123,7 +123,7 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	case v1alpha1.ModuleDeploymentReleaseProgressInit:
 		handleInitModuleDeployment(moduleDeployment, newRS)
 		log.Log.Info("update moduleDeployment release status", "moduleDeploymentName", moduleDeployment.Name)
-		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
+		if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
 			return ctrl.Result{}, utils.Error(err, "update release status failed when init moduleDeployment")
 		}
 	case v1alpha1.ModuleDeploymentReleaseProgressExecuting:
@@ -132,13 +132,13 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		if moduleDeployment.Spec.Replicas != newRS.Spec.Replicas {
 			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressInit
 			log.Log.Info("update release status progress to init when complete moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
-			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
+			if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
 				return ctrl.Result{}, utils.Error(err, "update release status progress to init failed when complete moduleDeployment")
 			}
 		}
 		if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
 			newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
-			if err := r.Client.Update(ctx, newRS); err != nil {
+			if err := utils.UpdateResource(r.Client, ctx, newRS); err != nil {
 				return ctrl.Result{}, err
 			}
 		}
@@ -150,14 +150,14 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 
 		moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressPaused
 		log.Log.Info("update moduleDeployment releaseStatus progress to paused", "moduleDeploymentName", moduleDeployment.Name)
-		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
+		if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
 			return ctrl.Result{}, utils.Error(err, "update moduleDeployment releaseStatus progress to paused failed")
 		}
 	case v1alpha1.ModuleDeploymentReleaseProgressPaused:
 		if !moduleDeployment.Spec.Pause && time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 {
 			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 			log.Log.Info("update moduleDeployment progress from paused to executing", "moduleDeploymentName", moduleDeployment.Name)
-			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
+			if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
 				return ctrl.Result{}, utils.Error(err, "update moduleDeployment progress from paused to executing failed")
 			}
 		}
@@ -223,7 +223,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 	} else {
 		log.Log.Info("moduleReplicaSet is deleted, remove moduleDeployment finalizer", "moduleDeploymentName", moduleDeployment.Name)
 		utils.RemoveFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
-		err := r.Client.Update(ctx, moduleDeployment)
+		err := utils.UpdateResource(r.Client, ctx, moduleDeployment)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -249,7 +249,7 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, m
 	})
 	moduleDeployment.SetOwnerReferences(ownerReference)
 	utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
-	err = r.Client.Update(ctx, moduleDeployment)
+	err = utils.UpdateResource(r.Client, ctx, moduleDeployment)
 	if err != nil {
 		return utils.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
 	}
@@ -326,7 +326,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 		log.Log.Info("prepare to update newRS", "moduleReplicaSetName", newRS.Name)
 		newRS.Spec.Replicas = replicas
 		newRS.Spec.Template.Spec.Module = moduleSpec.Module
-		err := r.Client.Update(ctx, newRS)
+		err := utils.UpdateResource(r.Client, ctx, newRS)
 		if err != nil {
 			return utils.Error(err, "Failed to update newRS", "moduleReplicaSetName", newRS.Name)
 		}
@@ -356,8 +356,8 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 			LastTransitionTime: metav1.Now(),
 			Message:            "deployment release progress completed",
 		})
-		log.Log.Info("update moduleDeployment to completed failed", "moduleDeploymentName", moduleDeployment.Name)
-		return ctrl.Result{}, utils.Error(r.Status().Update(ctx, moduleDeployment), "update moduleDeployment to completed failed")
+		log.Log.Info("update moduleDeployment to completed", "moduleDeploymentName", moduleDeployment.Name)
+		return ctrl.Result{}, utils.Error(utils.UpdateStatus(r.Client, ctx, moduleDeployment), "update moduleDeployment to completed failed")
 	}
 
 	// wait moduleReplicaset ready
@@ -422,7 +422,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
 	moduleDeployment.Status.ReleaseStatus.BatchProgress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 	log.Log.Info("update moduleDeployment batch progress to executing", "moduleDeploymentName", moduleDeployment.Name)
-	err = r.Status().Update(ctx, moduleDeployment)
+	err = utils.UpdateStatus(r.Client, ctx, moduleDeployment)
 	if err != nil {
 		return ctrl.Result{}, utils.Error(err, "update moduleDeployment batch progress to executing failed")
 	}
