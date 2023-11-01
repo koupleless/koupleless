@@ -8,6 +8,7 @@
 | log4j2                 | 基座与模块独立日志目录  | [samples/springboot-samples/logging/log4j2](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/logging/log4j2) |
 | kafka                  | 模块独立使用 kafka | [samples/springboot-samples/msg/kafka](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/msg/kafka/)         |
 | mybatis                | 模块使用独立数据源    | [samples/springboot-samples](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/db/mybatis)   |
+| slimming               | 模块瘦身  | [samples/springboot-samples](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming/log4j2)   |
 | dubbo + grpc           | 模块使用 grpc    | [samples/springboot-samples/service/dubbo](https://github.com/sofastack/sofa-serverless/tree/master/samples/dubbo-samples/rpc/grpc)|
 
 ### 注意请在编译器单独导入sofa-serverless/samples/springboot-samples 工程，否则会出现 BizRuntieContext Not found 的报错。

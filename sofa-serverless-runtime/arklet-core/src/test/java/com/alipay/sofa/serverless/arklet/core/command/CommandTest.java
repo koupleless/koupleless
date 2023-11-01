@@ -59,20 +59,29 @@ public class CommandTest extends BaseTest {
         InstallBizHandler.Input input = new InstallBizHandler.Input();
         input.setBizName("testBizName");
         input.setBizVersion("testBizVersion");
-        input.setAsync(true);
-        input.setRequestId(rid);
         input.setBizUrl("testBizUrl");
         Map map = JSONObject.parseObject(JSONObject.toJSONString(input), Map.class);
-        Output<?> output = commandService.process(BuiltinCommand.INSTALL_BIZ.getId(), map);
-        Assert.assertNotNull(output);
-        ProcessRecord processRecord = (ProcessRecord) output.getData();
+        try {
+            commandService.process(BuiltinCommand.INSTALL_BIZ.getId(), map);
+        } catch (Exception e) {
+            Assert.assertTrue(true);
+        }
+
+        input.setAsync(true);
+        input.setRequestId(rid);
+        Map map1 = JSONObject.parseObject(JSONObject.toJSONString(input), Map.class);
+        Output<?> output1 = commandService.process(BuiltinCommand.INSTALL_BIZ.getId(), map1);
+        Assert.assertNotNull(output1);
+        ProcessRecord processRecord = (ProcessRecord) output1.getData();
         Assert.assertNotNull(processRecord);
+
+        Thread.sleep(2000);
 
         QueryBizOpsHandler.Input input1 = new QueryBizOpsHandler.Input();
         input1.setRequestId(rid);
-        Map map1 = JSONObject.parseObject(JSONObject.toJSONString(input1), Map.class);
-        Output<?> output1 = commandService.process(BuiltinCommand.QUERY_BIZ_OPS.getId(), map1);
-        Assert.assertNotNull(output1);
+        Map map2 = JSONObject.parseObject(JSONObject.toJSONString(input1), Map.class);
+        Output<?> output2 = commandService.process(BuiltinCommand.QUERY_BIZ_OPS.getId(), map2);
+        Assert.assertNotNull(output2);
     }
 
 }
