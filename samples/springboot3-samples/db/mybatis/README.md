@@ -19,38 +19,39 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     </exclusions>
 </dependency>
 <dependency>
-<groupId>com.alipay.sofa</groupId>
-<artifactId>sofa-ark-springboot-starter</artifactId>
-<version>2.2.4-jakarta-SNAPSHOT</version>
+    <groupId>com.alipay.sofa</groupId>
+    <artifactId>sofa-ark-springboot-starter</artifactId>
+    <version>2.2.4-jakarta-SNAPSHOT</version>
 </dependency>
 <dependency>
-<groupId>com.alipay.sofa</groupId>
-<artifactId>sofa-ark-support-starter</artifactId>
+    <groupId>com.alipay.sofa</groupId>
+    <artifactId>sofa-ark-support-starter</artifactId>
+    <version>2.2.4-SNAPSHOT</version>
 </dependency>
 
 <dependency>
-<groupId>com.alipay.sofa</groupId>
-<artifactId>web-ark-plugin</artifactId>
-<!-- 排除 web-ark-plugin 中 log-sofa-boot-starter -->
-<exclusions>
-    <exclusion>
-        <groupId>com.alipay.sofa</groupId>
-        <artifactId>log-sofa-boot-starter</artifactId>
-    </exclusion>
-</exclusions>
+    <groupId>com.alipay.sofa</groupId>
+    <artifactId>web-ark-plugin</artifactId>
+    <!-- 排除 web-ark-plugin 中 log-sofa-boot-starter -->
+    <exclusions>
+        <exclusion>
+            <groupId>com.alipay.sofa</groupId>
+            <artifactId>log-sofa-boot-starter</artifactId>
+        </exclusion>
+    </exclusions>
 </dependency>
 <dependency>
 <!-- 增加适配 springboot3 的 log-sofa-boot-starter 版本 -->
-<groupId>com.alipay.sofa</groupId>
-<artifactId>log-sofa-boot-starter</artifactId>
-<version>999-not-exist</version>
-<exclusions>
-    <!-- 排除 sofa-boot-alipay-autoconfigure -->
-    <exclusion>
-        <groupId>com.alipay.sofa</groupId>
-        <artifactId>sofa-boot-alipay-autoconfigure</artifactId>
-    </exclusion>
-</exclusions>
+    <groupId>com.alipay.sofa</groupId>
+    <artifactId>log-sofa-boot-starter</artifactId>
+    <version>999-not-exist</version>
+    <exclusions>
+        <!-- 排除 sofa-boot-alipay-autoconfigure -->
+        <exclusion>
+            <groupId>com.alipay.sofa</groupId>
+            <artifactId>sofa-boot-alipay-autoconfigure</artifactId>
+        </exclusion>
+    </exclusions>
 </dependency>
 
 <!-- log4j2 相关依赖 -->
