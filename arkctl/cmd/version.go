@@ -26,7 +26,7 @@ import (
 )
 
 import (
-	"serverless.alipay.com/sofa-serverless/v1/arkctl/constant"
+	"serverless.alipay.com/sofa-serverless/arkctl/constant"
 )
 
 // versionCmd represents the version command

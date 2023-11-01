@@ -1,4 +1,4 @@
-module serverless.alipay.com/sofa-serverless/v1/arkctl
+module serverless.alipay.com/sofa-serverless/arkctl
 
 go 1.18
 

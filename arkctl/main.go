@@ -18,7 +18,7 @@
 package main
 
 import (
-	"serverless.alipay.com/sofa-serverless/v1/arkctl/cmd"
+	"serverless.alipay.com/sofa-serverless/arkctl/cmd"
 )
 
 func main() {
