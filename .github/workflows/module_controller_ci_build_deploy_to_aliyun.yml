@@ -216,6 +216,37 @@ jobs:
             exit 1
           fi
 
+      - name: scaleup then wait module available
+        run: |
+          # 定义要等待的资源名称和字段值
+          modulename=$(kubectl get module -o name)
+          desired_field_value="Available"
+          
+          # 定义等待的超时时间（以秒为单位）
+          timeout_seconds=300
+          
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+          
+          while true; do
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+              exit 1
+            fi
+          
+            # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
+            field_value=$(kubectl get $modulename -o custom-columns=STATUS:.status.status --no-headers)
+          
+            if [ "$field_value" == "$desired_field_value" ]; then
+              echo "字段值已满足条件"
+              exit 0
+            else
+              echo "等待字段值满足条件..."
+              sleep 5  # 等待一段时间后再次检查
+            fi
+          done
+
       - name: scaleup then check module
         run: |
           podname=$(kubectl get pod -l app=dynamic-stock -o name)
@@ -240,7 +271,36 @@ jobs:
             exit 1
           fi
 
-      - run: sleep 30
+      - name: delete then wait module available
+        run: |
+          # 定义要等待的资源名称和字段值
+          modulename=$(kubectl get module -o name)
+          desired_field_value="Available"
+          
+          # 定义等待的超时时间（以秒为单位）
+          timeout_seconds=300
+          
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+          
+          while true; do
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+              exit 1
+            fi
+          
+            # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
+            field_value=$(kubectl get $modulename -o custom-columns=STATUS:.status.status --no-headers)
+          
+            if [ "$field_value" == "$desired_field_value" ]; then
+              echo "字段值已满足条件"
+              exit 0
+            else
+              echo "等待字段值满足条件..."
+              sleep 5  # 等待一段时间后再次检查
+            fi
+          done
 
       - name: delete module then check module
         run: |
@@ -270,7 +330,36 @@ jobs:
         run: |
           kubectl wait --for=condition=available deployment/dynamic-stock-deployment --timeout=300s
 
-      - run: sleep 30
+      - name: delete pod then wait module available
+        run: |
+          # 定义要等待的资源名称和字段值
+          modulename=$(kubectl get module -o name)
+          desired_field_value="Available"
+          
+          # 定义等待的超时时间（以秒为单位）
+          timeout_seconds=300
+          
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+          
+          while true; do
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+              exit 1
+            fi
+          
+            # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
+            field_value=$(kubectl get $modulename -o custom-columns=STATUS:.status.status --no-headers)
+          
+            if [ "$field_value" == "$desired_field_value" ]; then
+              echo "字段值已满足条件"
+              exit 0
+            else
+              echo "等待字段值满足条件..."
+              sleep 5  # 等待一段时间后再次检查
+            fi
+          done
 
       - name: delete pod then check module
         run: |
@@ -280,3 +369,46 @@ jobs:
           kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng'
           kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng/sofa-ark'
           kubectl exec -it $podname -- sh -c 'grep "dynamic-provider:1.0.0 started" logs/stock-mng/sofa-ark/*.log'
+
+      - name: delete deployment
+        run: |
+          deploymentname=$(kubectl get deployment -o name | cut -d/ -f2)
+          kubectl delete -n default deployment $deploymentname
+
+      - name: delete deployment then wait source clean
+        run: |
+          timeout_seconds=300
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+          
+          while true; do
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+              exit 1
+            fi
+          
+            moduleCount=$(kubectl get module | wc -l)
+            moduleReplicaSetCount=$(kubectl get moduleReplicaSet | wc -l)
+            moduleDeploymentCount=$(kubectl get moduleDeployment | wc -l)
+            deploymentCount=$(kubectl get deployment | wc -l)
+            
+            if [[ $deploymentCount -lt 1 && $moduleCount -lt 1 && $moduleReplicaSetCount -lt 1 && $moduleDeploymentCount -lt 1 ]]; then
+              echo "所有资源已删除"
+              exit 0
+            else
+            if [[ $moduleCount -ge 1 ]]; then
+              echo "等待module删除..."
+            fi
+            if [[ $moduleReplicaSetCount -ge 1 ]]; then
+              echo "等待moduleReplicaSet删除..."
+            fi
+            if [[ $moduleDeploymentCount -ge 1 ]]; then
+              echo "等待moduleDeployment删除..."
+            fi
+            if [[ $deploymentCount -ge 1 ]]; then
+              echo "等待deployment删除..."
+            fi
+            sleep 5
+            fi
+          done
