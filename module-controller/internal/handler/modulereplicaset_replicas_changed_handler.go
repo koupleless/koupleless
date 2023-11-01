@@ -52,15 +52,24 @@ func (h ModuleReplicaSetReplicasChangedHandler) Handle(e event.Event) error {
 	var totalInstanceCount int
 	for index, item := range allPods.Items {
 		var moduleInstanceCount int
-		moduleList := &v1alpha1.ModuleList{}
-		err := k8sClient.List(ctx, moduleList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(map[string]string{
-			label.BaseInstanceIpLabel: item.Status.PodIP,
-		})}, client.InNamespace(moduleReplicaSet.Namespace))
-		if err != nil {
-			log.Log.Error(err, fmt.Sprintf("can't find any module in pod %v", item.Name))
-			continue
+		if cntStr, ok := item.Labels[label.ModuleInstanceCount]; ok {
+			moduleInstanceCount, err = strconv.Atoi(cntStr)
+			if err != nil {
+				log.Log.Error(err, fmt.Sprintf("invalid ModuleInstanceCount in pod %v", item.Name))
+				continue
+			}
+		} else {
+			moduleList := &v1alpha1.ModuleList{}
+			err := k8sClient.List(ctx, moduleList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(map[string]string{
+				label.BaseInstanceIpLabel: item.Status.PodIP,
+			})}, client.InNamespace(moduleReplicaSet.Namespace))
+			if err != nil {
+				log.Log.Error(err, fmt.Sprintf("can't find any module in pod %v", item.Name))
+				continue
+			}
+			moduleInstanceCount = len(moduleList.Items)
 		}
-		moduleInstanceCount = len(moduleList.Items)
+
 		// 赋值第一个pod的安装数量为最小值
 		if index == 0 {
 			minInstanceCount = moduleInstanceCount

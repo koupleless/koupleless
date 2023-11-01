@@ -114,16 +114,21 @@ func (m MockClient) List(ctx context.Context, list client.ObjectList, opts ...cl
 	switch itemsType {
 	case reflect.TypeOf(corev1.Pod{}):
 		var mockPodList []corev1.Pod
+
 		for i := 3; i > 0; i-- {
+			mockLabel := map[string]string{}
+			if i == 3 {
+				mockLabel = map[string]string{
+					label.ModuleInstanceCount: strconv.Itoa(i),
+				}
+			}
 			podName := "mock-pod-" + strconv.Itoa(i)
 			podIp := "127.0.0." + strconv.Itoa(i)
 			pod := &corev1.Pod{
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
-					Name: podName,
-					Labels: map[string]string{
-						label.ModuleInstanceCount: strconv.Itoa(i),
-					},
+					Name:   podName,
+					Labels: mockLabel,
 				},
 				Spec: corev1.PodSpec{},
 				Status: corev1.PodStatus{
