@@ -1,7 +1,8 @@
 package com.alipay.sofa.base.model;
 
+
 /**
- * @author: yuanyuan
+ * @author: chaya
  * @date: 2023/10/19 5:01 下午
  */
 public class Book {

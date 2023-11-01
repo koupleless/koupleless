@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Update;
 import java.util.List;
 
 /**
- * @author: yuanyuan
+ * @author: chaya
  * @date: 2023/10/18 4:50 下午
  */
 public interface UserMapper {

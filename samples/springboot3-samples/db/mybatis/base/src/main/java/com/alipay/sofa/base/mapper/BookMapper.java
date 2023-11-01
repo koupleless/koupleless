@@ -3,7 +3,6 @@ package com.alipay.sofa.base.mapper;
 import com.alipay.sofa.base.model.Book;
 
 import java.util.List;
-
 public interface BookMapper {
 
     List<Book> getAll();
