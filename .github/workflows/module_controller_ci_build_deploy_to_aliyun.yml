@@ -136,6 +136,37 @@ jobs:
             exit 1
           fi
 
+      - name: wait module available
+        run: |
+          # 定义要等待的资源名称和字段值
+          modulename=$(kubectl get module -o name)
+          desired_field_value="Available"
+          
+          # 定义等待的超时时间（以秒为单位）
+          timeout_seconds=300
+          
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+          
+          while true; do
+          current_time=$(date +%s)
+          if [ $current_time -gt $end_time ]; then
+          echo "等待超时"
+          exit 1
+          fi
+        
+          # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
+          field_value=$(kubectl get $modulename -o jsonpath='{.status.Status}')
+        
+          if [ "$field_value" == "$desired_field_value" ]; then
+          echo "字段值已满足条件"
+          exit 0
+          else
+          echo "等待字段值满足条件..."
+          sleep 5  # 等待一段时间后再次检查
+          fi
+          done
+
       - name: check module
         run: |
           podname=$(kubectl get pod -l app=dynamic-stock -o name)
