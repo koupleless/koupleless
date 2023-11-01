@@ -19,14 +19,11 @@ package cmd
 
 import (
 	"fmt"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/constant"
 )
 
 import (
 	"github.com/spf13/cobra"
-)
-
-import (
-	"serverless.alipay.com/sofa-serverless/arkctl/constant"
 )
 
 // versionCmd represents the version command
