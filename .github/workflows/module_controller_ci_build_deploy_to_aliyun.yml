@@ -156,7 +156,7 @@ jobs:
             fi
           
             # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
-            field_value=$(kubectl get $modulename -o custom-columns=STATUS:.status.status)
+            field_value=$(kubectl get $modulename -o custom-columns=STATUS:.status.status --no-headers)
           
             if [ "$field_value" == "$desired_field_value" ]; then
               echo "字段值已满足条件"
