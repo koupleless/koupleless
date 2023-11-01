@@ -3,7 +3,7 @@ title: 模块扩缩容与替换
 weight: 400
 ---
 
-<a name="uHuOJ"></a>
+
 ## 模块扩缩容
 修改 ModuleDeployment CR 的 replicas 字段并重新 apply，即可实现模块扩缩容，例如：
 ```bash
@@ -41,7 +41,7 @@ spec:
 
 如果要自定义模块发布运维策略可配置 operationStrategy 和 schedulingStrategy，具体可参考[模块发布运维策略](../operation-and-scheduling-strategy)。<br />样例演示的是使用 kubectl 方式，直接调用 K8S APIServer 修改 ModuleDeployment CR 一样能实现扩缩容。
 
-<a name="T0hpZ"></a>
+
 ## 模块替换
 在 K8S 集群中删除一个 Module CR 资源即可完成模块替换，例如：
 ```bash

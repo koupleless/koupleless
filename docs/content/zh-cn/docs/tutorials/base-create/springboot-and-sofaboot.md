@@ -3,22 +3,20 @@ title: SpringBoot 或 SOFABoot 升级为基座
 weight: 100
 ---
 
-<a name="mrj6h"></a>
 ## 前提条件
 1. SpringBoot 版本 >= 2.0.0
 2. SOFABoot >= 3.9
 
-<a name="UzMMy"></a>
 ## 接入步骤
-<a name="bnUC0"></a>
+
 ### 代码与配置修改
-<a name="A2kxP"></a>
+
 #### 修改 application.properties
 ```properties
 # 需要定义应用名
 spring.application.name = ${替换为实际基座名}
 ```
-<a name="HOwyD"></a>
+
 #### 修改主 pom.xml
 ```xml
 <properties>
@@ -40,11 +38,10 @@ spring.application.name = ${替换为实际基座名}
     <artifactId>web-ark-plugin</artifactId>
 </dependency>
 ```
-<a name="fpmps"></a>
+
 #### 修改启动参数
 启动参数增加 `-Dsofa.ark.embed.enable=true`
 
-<a name="Dr2cS"></a>
 ### 启动验证
 
 1. 基座正常启动

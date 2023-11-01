@@ -3,7 +3,7 @@ title: 模块发布
 weight: 200
 ---
 
-<a name="uHuOJ"></a>
+
 ## 模块发布
 修改 ModuleDeployment.spec.template.spec.module.version 字段和 ModuleDeployment.spec.template.spec.module.url（可选）字段并重新 apply，即可实现新版本模块的分组发布，例如：
 ```bash
@@ -43,7 +43,7 @@ spec:
 
 如果要自定义模块发布运维策略可配置 operationStrategy，具体可参考[模块发布运维策略](/docs/contribution-guidelines/module-controller/crd-definition)。<br />样例演示的是使用 kubectl 方式，直接调用 K8S APIServer 修改 ModuleDeployment CR 一样能实现分组发布。
 
-<a name="rxPNz"></a>
+
 ## 模块回滚
 重新修改 ModuleDeployment.spec.template.spec.module.version 字段和 ModuleDeployment.spec.template.spec.module.url（可选）字段并重新 apply，即可实现模块的分组回滚发布。
 

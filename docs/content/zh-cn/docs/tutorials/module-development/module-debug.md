@@ -3,7 +3,6 @@ title: 模式测试
 weight: 400
 ---
 
-<a name="OezGJ"></a>
 ## 本地调试
 您可以在本地或远程先启动基座，然后使用客户端 Arklet 暴露的 HTTP 接口在本地或远程部署模块，并且可以给模块代码打断点实现模块的本地或远程 Debug。<br />Arklet HTTP 接口主要提供了以下能力：
 
@@ -11,7 +10,6 @@ weight: 400
 2. 查询所有已部署的模块信息。
 3. 查询各项系统和业务指标。
 
-<a name="DhgNQ"></a>
 ### 部署模块
 ```shell
 curl -X POST -H "Content-Type: application/json" http://127.0.0.1:1238/installBiz 
@@ -58,7 +56,6 @@ curl -X POST -H "Content-Type: application/json" http://127.0.0.1:1238/installBi
 }
 ```
 
-<a name="MFfsM"></a>
 ### 卸载模块
 ```shell
 curl -X POST -H "Content-Type: application/json" http://127.0.0.1:1238/uninstallBiz 
@@ -87,7 +84,6 @@ curl -X POST -H "Content-Type: application/json" http://127.0.0.1:1238/uninstall
 }
 ```
 
-<a name="FTd3I"></a>
 ### 查询模块
 ```shell
 curl -X POST -H "Content-Type: application/json" http://127.0.0.1:1238/queryAllBiz 
@@ -119,7 +115,6 @@ curl -X POST -H "Content-Type: application/json" http://127.0.0.1:1238/queryAllB
 }
 ```
 
-<a name="xTQ9r"></a>
 ### 获取帮助
 Arklet 暴露的所有对外 HTTP 接口，可以查看 Arklet 接口帮助：
 ```shell
@@ -158,7 +153,6 @@ curl -X POST -H "Content-Type: application/json" http://127.0.0.1:1238/help
 }
 ```
 
-<a name="YpCQN"></a>
 ## 本地构建如何不改变模块版本号
 添加以下 maven profile，本地构建模块使用命令 mvn clean package -Plocal
 ```xml
@@ -179,7 +173,6 @@ curl -X POST -H "Content-Type: application/json" http://127.0.0.1:1238/help
 </profile>
 ```
 
-<a name="IAbRl"></a>
 ## 单元测试
 模块里支持使用标准 JUnit4 和 TestNG 编写和执行单元测试。
 

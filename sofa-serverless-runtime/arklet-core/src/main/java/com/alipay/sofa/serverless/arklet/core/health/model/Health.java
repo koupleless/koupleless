@@ -29,23 +29,12 @@ public class Health {
 
     private final Map<String, Object> healthData;
 
-    public Health(Map<String, Object> healthData) {
-        AssertUtils.assertNotNull(healthData, "health data must not null");
-        this.healthData = healthData;
-    }
-
     public Health(HealthBuilder builder) {
         this.healthData = Collections.unmodifiableMap(builder.healthData);
     }
 
     public Map<String, Object> getHealthData() {
         return healthData;
-    }
-
-    public void setHealthData(Map<String, ?> healthData) {
-        AssertUtils.assertNotNull(healthData, "health data must not null");
-        this.healthData.clear();
-        this.healthData.putAll(healthData);
     }
 
     public boolean containsError(String errorCode) {
