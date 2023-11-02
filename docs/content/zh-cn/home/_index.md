@@ -333,7 +333,7 @@ url: "/home/"
                     <text opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                         <tspan x="70" y="179">传统应用镜像化构建 + 发布速度很慢，</tspan>
                         <tspan x="70" y="203">通过模块化方式，应用单次构建+发布</tspan>
-                        <tspan x="90" y="227">耗时可从 5 分钟级减少到 1 分钟</tspan>
+                        <tspan x="85" y="227">耗时可从 5 分钟级减少到 1 分钟</tspan>
                     </text>
                 </g>
                 <g id="编组-33备份" transform="translate(410.000000, 0.000000)">
