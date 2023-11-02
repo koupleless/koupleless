@@ -95,6 +95,15 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return ctrl.Result{}, nil
 	}
 
+	// update moduleDeployment owner reference
+	if !utils.HasOwnerReference(&moduleDeployment.ObjectMeta, moduleDeployment.Spec.BaseDeploymentName) {
+		err = r.updateOwnerReference(ctx, moduleDeployment)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+		return ctrl.Result{}, nil
+	}
+
 	// create moduleReplicaSet
 	newRS, _, moduleVersionChanged, err := r.createOrGetModuleReplicas(ctx, moduleDeployment)
 	if err != nil {
@@ -113,21 +122,23 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	switch releaseStatus.Progress {
 	case v1alpha1.ModuleDeploymentReleaseProgressInit:
 		handleInitModuleDeployment(moduleDeployment, newRS)
-		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
-			return ctrl.Result{}, err
+		log.Log.Info("update moduleDeployment release status", "moduleDeploymentName", moduleDeployment.Name)
+		if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
+			return ctrl.Result{}, utils.Error(err, "update release status failed when init moduleDeployment")
 		}
 	case v1alpha1.ModuleDeploymentReleaseProgressExecuting:
 		return r.updateModuleReplicaSet(ctx, moduleDeployment, newRS)
 	case v1alpha1.ModuleDeploymentReleaseProgressCompleted:
 		if moduleDeployment.Spec.Replicas != newRS.Spec.Replicas {
 			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressInit
-			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
-				return ctrl.Result{}, err
+			log.Log.Info("update release status progress to init when complete moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
+			if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
+				return ctrl.Result{}, utils.Error(err, "update release status progress to init failed when complete moduleDeployment")
 			}
 		}
 		if !moduleVersionChanged && isUrlChange(moduleDeployment.Spec.Template.Spec.Module, newRS.Spec.Template.Spec.Module) {
 			newRS.Spec.Template.Spec.Module = moduleDeployment.Spec.Template.Spec.Module
-			if err := r.Client.Update(ctx, newRS); err != nil {
+			if err := utils.UpdateResource(r.Client, ctx, newRS); err != nil {
 				return ctrl.Result{}, err
 			}
 		}
@@ -138,22 +149,18 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		}
 
 		moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressPaused
-		if err := r.Status().Update(ctx, moduleDeployment); err != nil {
-			return ctrl.Result{}, err
+		log.Log.Info("update moduleDeployment releaseStatus progress to paused", "moduleDeploymentName", moduleDeployment.Name)
+		if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
+			return ctrl.Result{}, utils.Error(err, "update moduleDeployment releaseStatus progress to paused failed")
 		}
 	case v1alpha1.ModuleDeploymentReleaseProgressPaused:
 		if !moduleDeployment.Spec.Pause && time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 {
 			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
-			if err := r.Status().Update(ctx, moduleDeployment); err != nil {
-				return ctrl.Result{}, err
+			log.Log.Info("update moduleDeployment progress from paused to executing", "moduleDeploymentName", moduleDeployment.Name)
+			if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
+				return ctrl.Result{}, utils.Error(err, "update moduleDeployment progress from paused to executing failed")
 			}
 		}
-	}
-
-	// update moduleDeployment owner reference
-	err = r.updateOwnerReference(ctx, moduleDeployment)
-	if err != nil {
-		return ctrl.Result{}, err
 	}
 	return ctrl.Result{}, nil
 }
@@ -216,7 +223,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 	} else {
 		log.Log.Info("moduleReplicaSet is deleted, remove moduleDeployment finalizer", "moduleDeploymentName", moduleDeployment.Name)
 		utils.RemoveFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
-		err := r.Client.Update(ctx, moduleDeployment)
+		err := utils.UpdateResource(r.Client, ctx, moduleDeployment)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -226,34 +233,25 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 
 // update moduleDeployment owner reference
 func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, moduleDeployment *v1alpha1.ModuleDeployment) error {
-	moduleDeploymentOwnerReferenceExist := false
-	for _, ownerReference := range moduleDeployment.GetOwnerReferences() {
-		if moduleDeployment.Spec.BaseDeploymentName == ownerReference.Name {
-			moduleDeploymentOwnerReferenceExist = true
-		}
+	deployment := &v1.Deployment{}
+	err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}, deployment)
+	if err != nil {
+		return utils.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
 	}
-
-	if !moduleDeploymentOwnerReferenceExist {
-		deployment := &v1.Deployment{}
-		err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}, deployment)
-		if err != nil {
-			return utils.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
-		}
-		ownerReference := moduleDeployment.GetOwnerReferences()
-		ownerReference = append(ownerReference, metav1.OwnerReference{
-			APIVersion:         deployment.APIVersion,
-			Kind:               deployment.Kind,
-			UID:                deployment.UID,
-			Name:               deployment.Name,
-			BlockOwnerDeletion: pointer.Bool(true),
-			Controller:         pointer.Bool(true),
-		})
-		moduleDeployment.SetOwnerReferences(ownerReference)
-		utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
-		err = r.Client.Update(ctx, moduleDeployment)
-		if err != nil {
-			return utils.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
-		}
+	ownerReference := moduleDeployment.GetOwnerReferences()
+	ownerReference = append(ownerReference, metav1.OwnerReference{
+		APIVersion:         deployment.APIVersion,
+		Kind:               deployment.Kind,
+		UID:                deployment.UID,
+		Name:               deployment.Name,
+		BlockOwnerDeletion: pointer.Bool(true),
+		Controller:         pointer.Bool(true),
+	})
+	moduleDeployment.SetOwnerReferences(ownerReference)
+	utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
+	err = utils.UpdateResource(r.Client, ctx, moduleDeployment)
+	if err != nil {
+		return utils.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
 	}
 	return nil
 }
@@ -328,7 +326,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicas(
 		log.Log.Info("prepare to update newRS", "moduleReplicaSetName", newRS.Name)
 		newRS.Spec.Replicas = replicas
 		newRS.Spec.Template.Spec.Module = moduleSpec.Module
-		err := r.Client.Update(ctx, newRS)
+		err := utils.UpdateResource(r.Client, ctx, newRS)
 		if err != nil {
 			return utils.Error(err, "Failed to update newRS", "moduleReplicaSetName", newRS.Name)
 		}
@@ -352,19 +350,23 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	if deltaReplicas == 0 {
 		moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressCompleted
 		moduleDeployment.Status.ReleaseStatus.LastTransitionTime = metav1.Now()
-		moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, v1alpha1.ModuleDeploymentCondition{
+		moduleDeployment.Status.Conditions = utils.AppendModuleDeploymentCondition(moduleDeployment.Status.Conditions, v1alpha1.ModuleDeploymentCondition{
 			Type:               v1alpha1.DeploymentAvailable,
 			Status:             corev1.ConditionTrue,
 			LastTransitionTime: metav1.Now(),
 			Message:            "deployment release progress completed",
 		})
-		return ctrl.Result{}, r.Status().Update(ctx, moduleDeployment)
+		log.Log.Info("update moduleDeployment to completed", "moduleDeploymentName", moduleDeployment.Name)
+		return ctrl.Result{}, utils.Error(utils.UpdateStatus(r.Client, ctx, moduleDeployment), "update moduleDeployment to completed failed")
 	}
 
 	// wait moduleReplicaset ready
-	if newRS.Spec.Replicas != curReplicas {
-		log.Log.Info(fmt.Sprintf("newRs is not ready, expect replicas %v, but got %v", newRS.Spec.Replicas, curReplicas))
-		return ctrl.Result{Requeue: true, RequeueAfter: utils.GetNextReconcileTime(time.Now())}, nil
+	// TODO wait batch release completed
+	//if newRS.Spec.Replicas != curReplicas {
+	if moduleDeployment.Status.ReleaseStatus.BatchProgress == v1alpha1.ModuleDeploymentReleaseProgressExecuting {
+		log.Log.Info("module replicaset  is not ready", "expectReplicas", newRS.Spec.Replicas, "curReplicas", curReplicas, "availableReplicas", newRS.Status.AvailableReplicas)
+		//return ctrl.Result{Requeue: true, RequeueAfter: utils.GetNextReconcileTime(time.Now())}, nil
+		return ctrl.Result{}, nil
 	}
 
 	replicas := int32(0)
@@ -395,16 +397,12 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	moduleDeployment.Status.ReleaseStatus.LastTransitionTime = now
 	moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 
-	moduleDeployment.Status.Conditions = append(moduleDeployment.Status.Conditions, v1alpha1.ModuleDeploymentCondition{
+	moduleDeployment.Status.Conditions = utils.AppendModuleDeploymentCondition(moduleDeployment.Status.Conditions, v1alpha1.ModuleDeploymentCondition{
 		Type:               v1alpha1.DeploymentProgressing,
 		Status:             corev1.ConditionTrue,
 		LastTransitionTime: now,
 		Message:            message,
 	})
-
-	//if len(moduleDeployment.Status.Conditions) > 10 {
-	//	moduleDeployment.Status.Conditions = moduleDeployment.Status.Conditions[]
-	//}
 
 	var grayTime int
 	if curBatch != realBatchCount {
@@ -420,8 +418,15 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 			}
 		}
 	}
+	// TODO update current batch
 	moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
-	return ctrl.Result{Requeue: true, RequeueAfter: time.Duration(grayTime) * time.Second}, r.Status().Update(ctx, moduleDeployment)
+	moduleDeployment.Status.ReleaseStatus.BatchProgress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
+	log.Log.Info("update moduleDeployment batch progress to executing", "moduleDeploymentName", moduleDeployment.Name)
+	err = utils.UpdateStatus(r.Client, ctx, moduleDeployment)
+	if err != nil {
+		return ctrl.Result{}, utils.Error(err, "update moduleDeployment batch progress to executing failed")
+	}
+	return ctrl.Result{Requeue: true, RequeueAfter: time.Duration(grayTime) * time.Second}, nil
 }
 
 // generate module replicas

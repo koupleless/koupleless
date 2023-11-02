@@ -11,6 +11,8 @@ spec:
     kind: ModuleReplicaSet
     listKind: ModuleReplicaSetList
     plural: modulereplicasets
+    shortNames:
+    - mdrs
     singular: modulereplicaset
   scope: Namespaced
   versions:
