@@ -178,7 +178,7 @@ jobs:
 
       - name: scaledown module
         run:
-          kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_provider_scaledown.yaml
+          kubectl apply -f config/samples/ci/module-deployment_v1alpha1_moduledeployment_provider_scaledown.yaml
 
       - run: sleep 15
 
@@ -374,7 +374,7 @@ jobs:
 
       - name: scaledown module then delete deployment
         run:
-          kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_provider_scaledown.yaml
+          kubectl apply -f config/samples/ci/module-deployment_v1alpha1_moduledeployment_provider_scaledown.yaml
 
       - name: wait module delete
         run: |
