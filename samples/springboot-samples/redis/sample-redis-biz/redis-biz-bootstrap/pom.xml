@@ -52,6 +52,14 @@
             <artifactId>sofa-serverless-app-starter</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <!-- redis 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
