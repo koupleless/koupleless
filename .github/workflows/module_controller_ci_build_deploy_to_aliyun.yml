@@ -378,7 +378,6 @@ jobs:
 
       - name: wait module delete
         run: |
-          moduleCount=$(kubectl get module | wc -l)
           
           timeout_seconds=300
           
@@ -386,19 +385,20 @@ jobs:
           end_time=$((start_time + timeout_seconds))
           
           while true; do
-          current_time=$(date +%s)
-          if [ $current_time -gt $end_time ]; then
-            echo "等待超时"
-          exit 1
-          fi
-          
-          if [[ $moduleCount -lt 1 ]]; then
-            echo "module已缩容"
-            exit 0
-          else
-            echo "等待module删除"
-            sleep 5
-          fi
+            moduleCount=$(kubectl get module | wc -l)
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+            exit 1
+            fi
+            
+            if [[ $moduleCount -lt 1 ]]; then
+              echo "module已缩容"
+              exit 0
+            else
+              echo "等待module删除"
+              sleep 5
+            fi
           done
 
       - name: delete deployment
