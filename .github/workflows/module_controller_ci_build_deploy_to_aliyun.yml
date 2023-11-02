@@ -374,8 +374,7 @@ jobs:
 
       - name: delete deployment
         run: |
-          deploymentname=$(kubectl get deployment -o name | cut -d/ -f2)
-          kubectl delete -n default deployment $deploymentname
+          kubectl delete -n default deployment dynamic-stock-deployment
 
       - run: sleep 10
 
@@ -392,10 +391,10 @@ jobs:
               exit 1
             fi
           
-            moduleCount=$(kubectl get module | wc -l)
-            moduleReplicaSetCount=$(kubectl get moduleReplicaSet | wc -l)
-            moduleDeploymentCount=$(kubectl get moduleDeployment | wc -l)
-            deploymentCount=$(kubectl get deployment | wc -l)
+            moduleCount=$(kubectl get -n default module | wc -l)
+            moduleReplicaSetCount=$(kubectl get -n default moduleReplicaSet | wc -l)
+            moduleDeploymentCount=$(kubectl get -n default moduleDeployment | wc -l)
+            deploymentCount=$(kubectl get -n default deployment dynamic-stock-deployment | wc -l)
             
             if [[ $deploymentCount -lt 1 && $moduleCount -lt 1 && $moduleReplicaSetCount -lt 1 && $moduleDeploymentCount -lt 1 ]]; then
               echo "所有资源已删除"
