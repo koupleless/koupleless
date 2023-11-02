@@ -386,7 +386,7 @@ jobs:
 
       - name: log module-controller
         run: |  
-          podname=&(kubectl get po -l app=module-controller -o name)
+          podname=&(kubectl get po -l app=module-controller -o name | cut -d/ -f2)
           kubectl logs &podname
 
       - name: delete deployment then wait source clean
