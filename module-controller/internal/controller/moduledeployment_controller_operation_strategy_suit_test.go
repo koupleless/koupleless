@@ -17,7 +17,8 @@ import (
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 )
 
-var _ = Describe("ModuleDeployment Controller", func() {
+var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
+
 	const timeout = time.Second * 30
 	const interval = time.Second * 5
 
@@ -174,7 +175,7 @@ var _ = Describe("ModuleDeployment Controller", func() {
 		It("0. prepare 2 pods", func() {
 			Eventually(func() bool {
 				pod := preparePod(namespace, "fake-pod-3")
-				pod.Labels[label.ModuleLabelPrefix+"dynamic-provider"] = "true"
+				//pod.Labels[label.ModuleLabelPrefix+"dynamic-provider"] = "true"
 				if err := k8sClient.Create(context.TODO(), &pod); err != nil {
 					return false
 				}

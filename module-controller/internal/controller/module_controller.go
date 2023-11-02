@@ -127,9 +127,9 @@ func (r *ModuleReconciler) parseModuleInstanceStatus(ctx context.Context, module
 	module.Status.Status = moduleInstanceStatus
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", moduleInstanceStatus), "moduleName", module.Name)
-	err := r.Status().Update(ctx, module)
+	err := utils.UpdateStatus(r.Client, ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module status failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -246,7 +246,7 @@ func (r *ModuleReconciler) cleanLabelAndFinalizer(ctx context.Context, module *v
 	// remove finalizer
 	log.Log.Info("start clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 	utils.RemoveFinalizer(&module.ObjectMeta, finalizer.AllocatePodFinalizer)
-	err := r.Client.Update(ctx, module)
+	err := utils.UpdateResource(r.Client, ctx, module)
 	if err != nil {
 		return utils.Error(err, "failed to clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 	}
@@ -268,7 +268,7 @@ func (r *ModuleReconciler) cleanLabelAndFinalizer(ctx context.Context, module *v
 				pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(count - 1)
 			}
 		}
-		err = r.Client.Update(ctx, pod)
+		err = utils.UpdateResource(r.Client, ctx, pod)
 		if err != nil {
 			return err
 		}
@@ -285,9 +285,9 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 		module.Status.Status = v1alpha1.ModuleInstanceStatusPrepare
 		module.Status.LastTransitionTime = metav1.Now()
 		log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusPrepare), "moduleName", module.Name)
-		err := r.Status().Update(ctx, module)
+		err := utils.UpdateStatus(r.Client, ctx, module)
 		if err != nil {
-			return ctrl.Result{}, err
+			return ctrl.Result{}, utils.Error(err, "update module status from pending to prepare failed")
 		}
 		return ctrl.Result{}, nil
 	}
@@ -325,7 +325,7 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 		return ctrl.Result{RequeueAfter: requeueAfter}, nil
 	}
 	UpdatePodLabelBeforeInstallModule(pod, module.Spec.Module.Name)
-	err = r.Client.Update(ctx, &pod)
+	err = utils.UpdateResource(r.Client, ctx, &pod)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -344,7 +344,7 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 	}
 	module.SetOwnerReferences(owner)
 	utils.AddFinalizer(&module.ObjectMeta, finalizer.AllocatePodFinalizer)
-	err = r.Client.Update(ctx, module)
+	err = utils.UpdateResource(r.Client, ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -358,9 +358,9 @@ func (r *ModuleReconciler) handlePrepareModuleInstance(ctx context.Context, modu
 	module.Status.Status = v1alpha1.ModuleInstanceStatusUpgrading
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusUpgrading), "moduleName", module.Name)
-	err := r.Status().Update(ctx, module)
+	err := utils.UpdateStatus(r.Client, ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module from prepare to upgrading failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -383,9 +383,9 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, mo
 	module.Status.Status = v1alpha1.ModuleInstanceStatusCompleting
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusCompleting), "moduleName", module.Name)
-	err = r.Status().Update(ctx, module)
+	err = utils.UpdateStatus(r.Client, ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module from upgrading to completing failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -397,9 +397,9 @@ func (r *ModuleReconciler) handleCompletingModuleInstance(ctx context.Context, m
 	module.Status.Status = v1alpha1.ModuleInstanceStatusAvailable
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusAvailable), "moduleName", module.Name)
-	err := r.Status().Update(ctx, module)
+	err := utils.UpdateStatus(r.Client, ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module from completing to available failed")
 	}
 	return ctrl.Result{}, nil
 }
