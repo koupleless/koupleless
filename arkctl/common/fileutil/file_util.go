@@ -26,25 +26,25 @@ const (
 	LocalFileUrlType FileUrlType = "local"
 )
 
-// FileUtil is an interface for all fileutil
-type FileUtil interface {
+// FileUtils is an interface for all fileutil
+type FileUtils interface {
 	// Download file from fileUrl to local file system.
 	Download(ctx context.Context, fileUrl FileUrl) (string, error)
 }
 
 var (
-	defaultFileUtil FileUtil = &fileUtil{}
+	defaultFileUtil FileUtils = &fileUtil{}
 )
 
-// DefaultFileUtil return a default FileUtil.
-func DefaultFileUtil() FileUtil {
+// DefaultFileUtil return a default FileUtils.
+func DefaultFileUtil() FileUtils {
 	return defaultFileUtil
 }
 
 type fileUtil struct {
 }
 
-func (f fileUtil) Download(ctx context.Context, fileUrl FileUrl) (string, error) {
+func (f fileUtil) Download(_ context.Context, fileUrl FileUrl) (string, error) {
 	switch fileUrl.getFileUrlType() {
 	case LocalFileUrlType:
 		return (string)(fileUrl), nil

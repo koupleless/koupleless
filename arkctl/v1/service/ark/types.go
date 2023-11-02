@@ -10,6 +10,26 @@ const (
 	ArkContainerRunTypeK8s   ArkContainerRunType = "pod"
 )
 
+// ArkResponseData is the response data of ark api.
+type ArkResponseData struct {
+	Code         string        `json:"code"`
+	Message      string        `json:"message"`
+	ElapsedSpace int           `json:"elapsedSpace"`
+	BizInfos     []interface{} `json:"bizInfos"`
+}
+
+// ArkResponseBase is the base response of ark api.
+type ArkResponseBase struct {
+	// Code is the response code
+	Code string `json:"code"`
+
+	// Data is the response data
+	Data ArkResponseData `json:"data"`
+
+	// Message is the error message
+	Message string `json:"message"`
+}
+
 // ArkContainerRuntimeInfo contains necessary info of an ark container.
 type ArkContainerRuntimeInfo struct {
 	// RunType is the type of ark container, like local, vm server, pod, etc.
@@ -67,16 +87,19 @@ type InstallBizRequest struct {
 
 // InstallBizResponse is the response for installing biz module to ark container.
 type InstallBizResponse struct {
-	// Success is true if install biz successfully.
-	Code string `json:"code"`
+	ArkResponseBase
+}
 
-	// Msg is the error message if install biz failed.
-	Data struct {
-		Code         string        `json:"code"`
-		Message      string        `json:"message"`
-		ElapsedSpace int           `json:"elapsedSpace"`
-		BizInfos     []interface{} `json:"bizInfos"`
-	}
+// UnInstallBizRequest is the request for installing biz module to ark container.
+type UnInstallBizRequest struct {
+	// BizModel is the metadata a given biz module.
+	BizModel BizModel `json:"bizModel"`
 
-	Message string `json:"message"`
+	// TargetContainer is the target ark container we want to install a biz module to.
+	TargetContainer ArkContainerRuntimeInfo `json:"targetContainer"`
+}
+
+// UnInstallBizResponse is the response for installing biz module to ark container.
+type UnInstallBizResponse struct {
+	ArkResponseBase
 }
