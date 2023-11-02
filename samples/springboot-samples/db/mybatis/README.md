@@ -4,8 +4,6 @@
 ### base
 base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
 ```xml
-
-
 <!-- 这里添加动态模块相关依赖 -->
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
