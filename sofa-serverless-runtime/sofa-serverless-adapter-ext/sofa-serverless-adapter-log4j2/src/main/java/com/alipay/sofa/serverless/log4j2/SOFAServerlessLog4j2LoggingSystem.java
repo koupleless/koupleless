@@ -31,6 +31,8 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.apache.logging.log4j.core.util.NameUtil;
 import org.apache.logging.log4j.message.Message;
+import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -311,10 +313,26 @@ public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
 
     @Override
     public void cleanUp() {
+        try {
+            if (isBridgeHandlerAvailable()) {
+                removeJdkLoggingBridgeHandler();
+            }
+        } catch (Exception e) {
+            // Ignore and continue
+        }
         removeDefaultRootHandler();
         LoggerContext loggerContext = getLoggerContext();
         markAsUninitialized(loggerContext);
         loggerContext.getConfiguration().removeFilter(FILTER);
+    }
+
+    private void removeJdkLoggingBridgeHandler() {
+        try {
+            removeDefaultRootHandler();
+            SLF4JBridgeHandler.uninstall();
+        } catch (Throwable ex) {
+            // Ignore and continue
+        }
     }
 
     private void removeDefaultRootHandler() {
