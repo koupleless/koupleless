@@ -61,7 +61,8 @@ public class ArkHealthzEndpointTest extends SpringbootBaseTest {
                                     EndpointResponseCode code) {
         testEndpointHeader(response);
         Assert.assertEquals(response.getCode(), code.getCode());
-        Assert.assertEquals(response.getCodeType(), code);
+        Assert.assertEquals(response.getCodeType(),
+            EndpointResponseCode.getEndpointResponseCode(code.getCode()));
         Assert.assertEquals(response.isHealthy(), EndpointResponseCode.HEALTHY.equals(code));
     }
 

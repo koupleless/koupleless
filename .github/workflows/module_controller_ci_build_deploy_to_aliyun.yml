@@ -85,9 +85,9 @@ jobs:
           kubectl apply -f config/rbac/role.yaml
           kubectl apply -f config/rbac/role_binding.yaml
           kubectl apply -f config/rbac/service_account.yaml
-          kubectl apply -f config/samples/dynamic-stock-deployment.yaml
-          kubectl apply -f config/samples/module-deployment-controller.yaml
-          kubectl apply -f config/samples/dynamic-stock-service.yaml
+          kubectl apply -f config/samples/ci/dynamic-stock-deployment.yaml
+          kubectl apply -f config/samples/ci/module-deployment-controller.yaml
+          kubectl apply -f config/samples/ci/dynamic-stock-service.yaml
 
       - run: sleep 60
 

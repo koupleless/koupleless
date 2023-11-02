@@ -71,6 +71,7 @@ type ModuleReplicaSetStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:shortName=mdrs
 
 // ModuleReplicaSet is the Schema for the modulereplicasets API
 type ModuleReplicaSet struct {

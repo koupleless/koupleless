@@ -1,7 +1,0 @@
----
-title: 一键将 SpringBoot 应用转为模块并保持原有代码
-weight: 200
----
-
-SOFAServerless 支持应用使用同一套代码库，既可以独立作为 SpringBoot 应用部署，也可以作为模块应用部署到一个存量应用之上实现合并部署。
-SOFAServerless 模块构建插件支持将独立 SpringBoot 应用构建为模块包，并能对模块自动完成依赖瘦身（300MB 的应用可以瘦身为 几十MB）。

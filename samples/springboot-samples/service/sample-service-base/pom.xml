@@ -9,7 +9,7 @@
 	</modules>
 	<parent>
 		<groupId>com.alipay.sofa</groupId>
-		<artifactId>sofa-ark-spring-guides</artifactId>
+		<artifactId>springboot-samples</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
@@ -36,12 +36,6 @@
 				<groupId>com.alipay.sofa.service</groupId>
 				<artifactId>biz-facade</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.alipay.sofa.serverless</groupId>
-				<artifactId>sofa-serverless-base-starter</artifactId>
-				<version>0.5.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
