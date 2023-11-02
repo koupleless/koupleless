@@ -320,7 +320,6 @@ public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
         } catch (Exception e) {
             // Ignore and continue
         }
-        removeDefaultRootHandler();
         LoggerContext loggerContext = getLoggerContext();
         markAsUninitialized(loggerContext);
         loggerContext.getConfiguration().removeFilter(FILTER);
