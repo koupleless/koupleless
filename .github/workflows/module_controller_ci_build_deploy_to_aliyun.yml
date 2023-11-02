@@ -384,6 +384,10 @@ jobs:
           kubectl get -n default moduleReplicaSet
           kubectl get -n default moduleDeployment
 
+      - name: get source
+        run: |  
+          kubectl logs module-controller
+
       - name: delete deployment then wait source clean
         run: |
           timeout_seconds=300
