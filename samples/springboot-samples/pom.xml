@@ -43,6 +43,8 @@
         <module>msg/kafka/biz2</module>
         <module>db/mybatis/base</module>
         <module>db/mybatis/biz1</module>
+        <module>redis/sample-redis-base</module>
+        <module>redis/sample-redis-biz</module>
     </modules>
 
     <dependencyManagement>
