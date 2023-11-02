@@ -327,13 +327,13 @@ url: "/home/"
                             </g>
                         </g>
                     </g>
-                    <text id="大幅加速应用构建和发布" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
-                        <tspan x="108" y="145">大幅加速应用构建和发布</tspan>
+                    <text id="大幅加速应用构建与发布" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
+                        <tspan x="59" y="145">大幅加速应用构建与发布</tspan>
                     </text>
-                    <text id="传统应用镜像化构建+发布速度很慢，通过模" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
-                        <tspan x="74.765" y="179">传统应用镜像化构建+发布速度很慢，</tspan>
-                        <tspan x="74.765" y="203">通过模块化方式，应用单次构建+发布</tspan>
-                        <tspan x="90.669" y="227">耗时可从 5 分钟级减少到 1 分钟</tspan>
+                    <text opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                        <tspan x="70" y="179">传统应用镜像化构建 + 发布速度很慢，</tspan>
+                        <tspan x="70" y="203">通过模块化方式，应用单次构建+发布</tspan>
+                        <tspan x="90" y="227">耗时可从 5 分钟级减少到 1 分钟</tspan>
                     </text>
                 </g>
                 <g id="编组-33备份" transform="translate(410.000000, 0.000000)">
@@ -350,8 +350,8 @@ url: "/home/"
                             <use fill="url(#linearGradient-rcmrlfv22p-12)" fill-rule="evenodd" xlink:href="#path-rcmrlfv22p-13"></use>
                         </g>
                     </g>
-                    <text id="实现 SDK 无感升级" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
-                        <tspan x="117" y="145">实现 SDK 无感升级</tspan>
+                    <text id="SDK 无感升级" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
+                        <tspan x="114" y="145">SDK 无感升级</tspan>
                     </text>
                     <text id="借助-SOFAServerless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                         <tspan x="71.629" y="179">借助 SOFAServerless 将应用依赖尽可</tspan>
@@ -380,7 +380,7 @@ url: "/home/"
                     </g>
                 </g>
                 <text id="极致裁剪长尾应用资源成本" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
-                    <tspan x="61" y="145">极致裁剪长尾应用资源成本</tspan>
+                    <tspan x="46" y="145">极致裁剪长尾应用资源成本</tspan>
                 </text>
                 <text id="通过-SOFAServerless-将多" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                     <tspan x="71.629" y="179">通过 SOFAServerless 将多个应用合并</tspan>
@@ -404,7 +404,7 @@ url: "/home/"
                     </g>
                 </g>
                 <text id="大幅提升应用研发协作效率" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
-                    <tspan x="72" y="145">大幅提升应用研发协作效率</tspan>
+                    <tspan x="46.5" y="145">大幅提升应用研发协作效率</tspan>
                 </text>
                 <text id="通过-SOFAServerless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                     <tspan x="64.629" y="179">通过 SOFAServerless 将应用快速划分成</tspan>
@@ -426,7 +426,7 @@ url: "/home/"
                     </g>
                 </g>
                 <text id="简化中台业务的资产沉淀" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
-                    <tspan x="72" y="145">简化中台业务的资产沉淀</tspan>
+                    <tspan x="60" y="145">简化中台业务的资产沉淀</tspan>
                 </text>
                 <text id="支持低成本将业务公共代码下沉到基座并在基" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                     <tspan x="65" y="179">支持低成本将业务公共代码下沉到基座并</tspan>
@@ -449,7 +449,7 @@ url: "/home/"
                     </g>
                 </g>
                 <text id="降低微服务演进成本" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
-                    <tspan x="96" y="145">降低微服务演进成本</tspan>
+                    <tspan x="82.5" y="145">降低微服务演进成本</tspan>
                 </text>
                 <text id="支持业务架构低成本地在单体应用、多模块、" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                     <tspan x="65" y="179">支持业务架构低成本地在单体应用、多模</tspan>
