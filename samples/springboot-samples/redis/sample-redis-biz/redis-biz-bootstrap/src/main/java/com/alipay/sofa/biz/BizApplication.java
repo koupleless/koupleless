@@ -1,5 +1,6 @@
 package com.alipay.sofa.biz;
 
+import com.alipay.sofa.biz.rest.SampleController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +22,10 @@ public class BizApplication {
 		builder.resourceLoader(resourceLoader);
 
 		ConfigurableApplicationContext context = builder.build().run(args);
+
+		SampleController controller = context.getBean(SampleController.class);
+		controller.hello();
+
 		System.out.println("Biz start!");
 		System.out.println("Biz spring boot version: " + SpringApplication.class.getPackage().getImplementationVersion());
 		System.out.println("Biz classLoader: " + BizApplication.class.getClassLoader());
