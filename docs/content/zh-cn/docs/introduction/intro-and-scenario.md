@@ -4,21 +4,21 @@ weight: 100
 ---
 
 # 简介
-SOFAServerless 是一种模块化的 Serverless 技术，它能让普通应用以比较低的代价演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。<br />随着各行各业的信息化数字化转型，企业面临越来越多的研发效率、协作效率、资源成本和服务治理痛点，接下来带领大家逐一体验这些痛点，以及它们在 SOFAServerless 中是如何被解决的。
+SOFAServerless 是一种模块化的 Serverless 技术解决方案，它能让普通应用以比较低的代价演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。<br />随着各行各业的信息化数字化转型，企业面临越来越多的研发效率、协作效率、资源成本和服务治理痛点，接下来带领大家逐一体验这些痛点，以及它们在 SOFAServerless 中是如何被解决的。
 
 # 适用场景
 
-## 痛点 1：构建发布慢且 SDK 升级繁琐
+## 痛点 1：应用构建发布慢或者 SDK 升级繁琐
 传统应用镜像化构建一般要 3 - 5 分钟，单机代码发布到启动完成也要 3 - 5 分钟，开发者每次验证代码修改或上线代码修改，都需要经历**数次 6 - 10 分钟**的构建发布等待，严重影响开发效率。此外，每次 SDK 升级（比如中间件框架、rpc、logging、json 等），都需要修改所有应用代码并重新构建发布，对开发者也造成了不必要的打扰。<br />通过使用 **SOFAServerless** **通用基座**与配套工具，您可以低成本的将应用切分为 “**基座**” 与 “**模块**”，其中基座沉淀了公司或者某个业务部门的公共 SDK，基座升级可以由专人负责，对业务开发者无感，业务开发者只需要编写模块。在我们目前支持的 Java 技术栈中，模块就是一个 SpringBoot 应用代码包（FatJar），只不过 SpringBoot 框架本身和其他的企业公共依赖在运行时会让基座提前加载预热，模块每次发布都会找一台预热 SpringBoot 的基座进行热部署，整个过程类似 AppEngine，能够帮用户实现应用 **10 秒级构建发布**和**公共 SDK 升级无感**。
 
 <img width="800px" src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694592240984-8ea49823-ebd0-4bb7-909c-380f0439382b.png#clientId=u0d56718b-4144-4&from=paste&height=164&id=uab4fd245&originHeight=328&originWidth=2350&originalType=binary&ratio=2&rotation=0&showTitle=false&size=259703&status=done&style=none&taskId=u4aa5d723-f988-41e6-86fc-8c08d59e517&title=&width=1175" />
 
-## 痛点 2：长尾应用资源成本高昂
+## 痛点 2：长尾应用资源成本高
 在企业中，80% 的应用只服务了不到 20% 的流量，同时伴随着业务的变化，企业存在大量的**长尾应用**，这些长尾应用 CPU 使用率长期不到 10%，造成了极大的**资源浪费**。<br />通过使用 **SOFAServerless** **合并部署**与配套工具，您可以低成本的实现多个应用的合并部署，从而解决企业应用过度拆分和低流量业务带来的**资源浪费**，**节约成本**。<br />
 <img width="700px" src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694593117757-d2932c29-c4c2-4ecc-9a41-59a750d53823.png#clientId=u0d56718b-4144-4&from=paste&height=132&id=u349c574f&originHeight=318&originWidth=1382&originalType=binary&ratio=2&rotation=0&showTitle=false&size=158864&status=done&style=none&taskId=u1389af9d-06db-468f-810a-09bc615b751&title=&width=574" /><br />
 这里 “业务A 应用1” 在 SOFAServerless 术语中叫 “模块”。多个模块应用可以使用 SOFAArk 技术合并到同一个基座。基座可以是完全空的 SpringBoot应用（Java 技术栈），也可以下沉一些公共 SDK 到基座，模块应用每次发布会重启基座机器。在这种方式下，模块应用最大程度复用了基座的**内存**（Metaspace 和 Heap），构建产物**大小**也能从**数百 MB** 瘦身到**几十 MB** 甚至更激进，**CPU 使用率**也得到了有效提升。
 
-## 痛点 3：研发协作效率低
+## 痛点 3：企业研发协作效率低
 在企业中，一些应用需要**多人开发**协作。在传统研发模式下，每一个人的代码变更都需要发布整个应用，这就导致应用需要以**赶火车**式的方式进行研发迭代，大家需要统一一个时间窗口做迭代开发，统一的时间点做发布上线，因此存在大量的需求上线相互**等待**、环境机器**抢占**、迭代**冲突**等情况。<br />通过使用 **SOFAServerless**，您可以方便的将应用拆分为一个**基座**与多个功能**模块**，一个功能模块就是一组代码文件。不同的功能模块可以**同时进行**迭代开发和发布运维，模块间**互不感知互不影响**，这样就消除了传统应用迭代赶火车式的相互等待，每个模块拥有自己的独立迭代，**需求交付效率**因此得到了极大提升。如果您对模块额外启用了**热部署**方式（也可以每次发布模块重启整个基座），那么模块的单次构建+发布也会从普通应用的 **6 - 10 分钟减少到十秒级。**<br />
 <img width="800px" src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694594675815-3037ffe1-2048-4c86-bc50-456697b197d5.png#clientId=u0d56718b-4144-4&from=paste&height=552&id=u36ac4b83&originHeight=1066&originWidth=1154&originalType=binary&ratio=2&rotation=0&showTitle=false&size=428189&status=done&style=none&taskId=u7fc53ae9-ff48-4ae5-a821-44dbee64aaa&title=&width=598" />
 
