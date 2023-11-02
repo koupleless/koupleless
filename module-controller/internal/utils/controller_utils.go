@@ -2,6 +2,9 @@ package utils
 
 import (
 	"fmt"
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"golang.org/x/net/context"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
 	"strings"
 	"time"
@@ -52,12 +55,25 @@ func HasFinalizer(meta *metav1.ObjectMeta, needle string) bool {
 			}
 		}
 	}
+	return false
+}
 
+func HasOwnerReference(meta *metav1.ObjectMeta, needle string) bool {
+	for _, ownerReference := range meta.GetOwnerReferences() {
+		if needle == ownerReference.Name {
+			return true
+		}
+	}
 	return false
 }
 
 func Key(req ctrl.Request) string {
 	return fmt.Sprintf("%s/%s", req.Namespace, req.Name)
+}
+
+func Error(err error, msg string, keysAndValues ...interface{}) error {
+	log.Log.Error(err, msg, keysAndValues...)
+	return err
 }
 
 func GetNextReconcileTime(currentTime time.Time) time.Duration {
@@ -84,11 +100,6 @@ func GetModuleCountFromPod(pod *corev1.Pod) (count int) {
 	return count
 }
 
-func Error(err error, msg string, keysAndValues ...interface{}) error {
-	log.Log.Error(err, msg, keysAndValues...)
-	return err
-}
-
 func GetModuleInstanceCount(pod corev1.Pod) int {
 	if pod.Labels[label.ModuleInstanceCount] == "" {
 		return 0
@@ -98,4 +109,34 @@ func GetModuleInstanceCount(pod corev1.Pod) int {
 		return 0
 	}
 	return count
+}
+
+func AppendModuleDeploymentCondition(conditions []v1alpha1.ModuleDeploymentCondition, condition v1alpha1.ModuleDeploymentCondition) []v1alpha1.ModuleDeploymentCondition {
+	if len(conditions) < 10 {
+		return append(conditions, condition)
+	} else {
+		return append(conditions[1:], condition)
+	}
+}
+
+func UpdateResource(client client.Client, ctx context.Context, obj client.Object, opts ...client.UpdateOption) error {
+	resourceName := obj.GetName()
+	log.Log.Info("start update resource", "resourceName", resourceName)
+	err := client.Update(ctx, obj, opts...)
+	if err != nil {
+		log.Log.Error(err, "update resource failed", "resourceName", resourceName)
+		return err
+	}
+	return nil
+}
+
+func UpdateStatus(client client.Client, ctx context.Context, obj client.Object, opts ...client.SubResourceUpdateOption) error {
+	resourceName := obj.GetName()
+	log.Log.Info("start update status", "resourceName", resourceName)
+	err := client.Status().Update(ctx, obj, opts...)
+	if err != nil {
+		log.Log.Error(err, "update status failed", "resourceName", resourceName)
+		return err
+	}
+	return nil
 }

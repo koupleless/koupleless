@@ -1,4 +1,4 @@
-baseURL = "/"
+baseURL = ""
 title = "SOFAServerless"
 
 # Language settings
@@ -212,6 +212,8 @@ no = '很抱歉文档对您没帮助。邀请您<a href="https://github.com/sofa
 #  desc = "Discuss development issues around the project"
 
 # hugo module configuration
+
+
 
 [module]
   # uncomment line below for temporary local development of module
