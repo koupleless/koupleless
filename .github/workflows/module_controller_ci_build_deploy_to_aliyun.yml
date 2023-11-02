@@ -261,7 +261,7 @@ jobs:
           moduleName=$(kubectl get module -o name | cut -d/ -f2)
           kubectl delete -n default module $moduleName
 
-      - run: sleep 30
+      - run: sleep 10
 
       - name: delete module then check module is existed
         run: |
@@ -384,9 +384,10 @@ jobs:
           kubectl get -n default moduleReplicaSet
           kubectl get -n default moduleDeployment
 
-      - name: get source
+      - name: log module-controller
         run: |  
-          kubectl logs module-controller
+          podname=&(kubectl get po -l app=module-controller -o name)
+          kubectl logs &podname
 
       - name: delete deployment then wait source clean
         run: |
