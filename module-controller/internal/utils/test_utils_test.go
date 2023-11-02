@@ -35,7 +35,7 @@ func TestMockClient(t *testing.T) {
 	assert.Equal(t, nil, mockClient.Update(nil, nil))
 	assert.Equal(t, nil, mockClient.Patch(nil, nil, nil))
 	assert.Equal(t, nil, mockClient.DeleteAllOf(nil, nil))
-	assert.Equal(t, nil, mockClient.Status())
+	assert.Equal(t, MockSubResourceWriter{}, mockClient.Status())
 	assert.Equal(t, nil, mockClient.SubResource(""))
 
 	assert.Equal(t, nil, mockClient.List(nil, &v1alpha1.ModuleList{}))
