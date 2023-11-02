@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.common.spring;
 
 import com.alipay.sofa.ark.api.ArkClient;
@@ -21,27 +37,25 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.alipay.sofa.serverless.common.util.CollectionUtils.newHashSet;
 
-
 /**
  * @author: yuanyuan
  * @date: 2023/10/30 9:48 下午
  */
 public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
 
-    public static final String SPRING_CONFIG_LOCATION = "spring.config.location";
+    public static final String                        SPRING_CONFIG_LOCATION                     = "spring.config.location";
 
-    public static final String SPRING_ADDITIONAL_LOCATION = "spring.config.additional-location";
-
+    public static final String                        SPRING_ADDITIONAL_LOCATION                 = "spring.config.additional-location";
 
     // 框架定义的允许共享的配置列表
-    private static final Set<String> DEFAULT_SHARE_KEYS = newHashSet();
+    private static final Set<String>                  DEFAULT_SHARE_KEYS                         = newHashSet();
 
     // 允许用户扩展的配置列表
-    private static final String ENV_SHARE_KEY = "ark.common.env.share.keys";
-    private static final String MASTER_BIZ_PROPERTIES_PROPERTY_SOURCE_NAME = "MasterBiz-Config resource";
-    private static final Set<String> BASE_APP_SHARE_ENV_KEYS = new HashSet<>();
+    private static final String                       ENV_SHARE_KEY                              = "ark.common.env.share.keys";
+    private static final String                       MASTER_BIZ_PROPERTIES_PROPERTY_SOURCE_NAME = "MasterBiz-Config resource";
+    private static final Set<String>                  BASE_APP_SHARE_ENV_KEYS                    = new HashSet<>();
 
-    private static final AtomicReference<Environment> MASTER_ENV = new AtomicReference<>();
+    private static final AtomicReference<Environment> MASTER_ENV                                 = new AtomicReference<>();
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
@@ -79,19 +93,22 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
         // 增加框架定义的共享配置列表
         BASE_APP_SHARE_ENV_KEYS.addAll(DEFAULT_SHARE_KEYS);
         // 增加基座用户定义的共享配置列表
-        BASE_APP_SHARE_ENV_KEYS.addAll(org.springframework.util.StringUtils.commaDelimitedListToSet(environment.getProperty(ENV_SHARE_KEY)));
+        BASE_APP_SHARE_ENV_KEYS.addAll(org.springframework.util.StringUtils
+            .commaDelimitedListToSet(environment.getProperty(ENV_SHARE_KEY)));
         MASTER_ENV.set(environment);
     }
 
-    private void registerMasterBizPropertySource(Environment masterEnv, ConfigurableEnvironment bizEnv) {
+    private void registerMasterBizPropertySource(Environment masterEnv,
+                                                 ConfigurableEnvironment bizEnv) {
         //Master Biz 创建 MasterBizPropertySource 时基座已经安装完成，必然不为 null
         Assert.notNull(masterEnv, "Master biz environment is null");
 
         //构建 MasterBizPropertySource，注册到 environment 中
-        MasterBizPropertySource masterBizPropertySource = new MasterBizPropertySource(MASTER_BIZ_PROPERTIES_PROPERTY_SOURCE_NAME,
-                masterEnv, BASE_APP_SHARE_ENV_KEYS);
+        MasterBizPropertySource masterBizPropertySource = new MasterBizPropertySource(
+            MASTER_BIZ_PROPERTIES_PROPERTY_SOURCE_NAME, masterEnv, BASE_APP_SHARE_ENV_KEYS);
         bizEnv.getPropertySources().addLast(masterBizPropertySource);
-        getLogger().info("register master biz property source to biz, shareKeys: {}", BASE_APP_SHARE_ENV_KEYS);
+        getLogger().info("register master biz property source to biz, shareKeys: {}",
+            BASE_APP_SHARE_ENV_KEYS);
     }
 
     public String getCanonicalPath(String path) {
@@ -119,7 +136,6 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
     }
 
     private Logger getLogger() {
-        return LoggerFactory
-                .getLogger(ServerlessEnvironmentPostProcessor.class);
+        return LoggerFactory.getLogger(ServerlessEnvironmentPostProcessor.class);
     }
 }
