@@ -372,17 +372,40 @@ jobs:
           kubectl exec -it $podname -- sh -c 'ls -al logs/stock-mng/sofa-ark'
           kubectl exec -it $podname -- sh -c 'grep "dynamic-provider:1.0.0 started" logs/stock-mng/sofa-ark/*.log'
 
+      - name: scaledown module then delete deployment
+        run:
+          kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_provider_scaledown.yaml
+
+      - name: wait module delete
+        run: |
+          moduleCount=$(kubectl get module | wc -l)
+          
+          timeout_seconds=300
+          
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+          
+          while true; do
+          current_time=$(date +%s)
+          if [ $current_time -gt $end_time ]; then
+            echo "等待超时"
+          exit 1
+          fi
+          
+          if [[ $moduleCount -lt 1 ]]; then
+            echo "module已缩容"
+            exit 0
+          else
+            echo "等待module删除"
+            sleep 5
+          fi
+          done
+
       - name: delete deployment
         run: |
           kubectl delete -n default deployment dynamic-stock-deployment
 
       - run: sleep 10
-
-      - name: get source
-        run: |
-          kubectl get -n default module
-          kubectl get -n default moduleReplicaSet
-          kubectl get -n default moduleDeployment
 
       - name: log module-controller
         run: |  
