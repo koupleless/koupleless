@@ -378,6 +378,12 @@ jobs:
 
       - run: sleep 10
 
+      - name: get source
+        run: |
+          kubectl get -n default module
+          kubectl get -n default moduleReplicaSet
+          kubectl get -n default moduleDeployment
+
       - name: delete deployment then wait source clean
         run: |
           timeout_seconds=300
@@ -396,6 +402,11 @@ jobs:
             moduleDeploymentCount=$(kubectl get -n default moduleDeployment | wc -l)
             deploymentCount=$(kubectl get -n default deployment dynamic-stock-deployment | wc -l)
             
+            echo deploymentCount is $deploymentCount
+            echo moduleDeploymentCount is $moduleDeploymentCount
+            echo moduleReplicaSetCount is $moduleReplicaSetCount
+            echo moduleCount is $moduleCount
+          
             if [[ $deploymentCount -lt 1 && $moduleCount -lt 1 && $moduleReplicaSetCount -lt 1 && $moduleDeploymentCount -lt 1 ]]; then
               echo "所有资源已删除"
               exit 0
