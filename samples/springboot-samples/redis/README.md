@@ -1,6 +1,8 @@
 
-# 实验内容  模块与基座相互调用
+# 实验内容： 基座、模块使用 Redis
+
 ## 实验应用
+
 ### sample-redis-base
 base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
 ```xml
@@ -55,13 +57,12 @@ biz 是普通 springboot 应用，修改打包插件方式为 sofaArk biz 模块
 ```
 注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
 
-
 ## 实验步骤
 
 ### 本地安装 Redis 并启动
 
 1. 官网 [下载](https://redis.io/docs/install/) 安装 
-2. MacOS 可 brew 安装，安装完成后执行 redis-server 就可以启动 Redis 服务了
+2. MacOS 可 brew 安装 (brew install redis)，安装完成后执行 redis-server 就可以启动 Redis 服务了
 ![img.png](img.png)
 
 ### 启动基座应用 sample-redis-base
@@ -222,11 +223,18 @@ curl --location --request POST 'localhost:1238/installBiz' \
 ```
 
 ### 发起请求验证
-模块中发布了 web 服务，可通过访问 web 服务，触发 redis 操作，模块 web 服务访问成功
+模块中发布了 web 服务，可通过访问 web 服务，触发 redis 操作。
+
+模块 web 服务访问成功
+
 ![img_1.png](img_1.png)
+
 查看 console 控制台输出说明 redis 返回符合预期
+
 ![img_3.png](img_3.png)
+
 检查 redis 数据库可以发现，数据也成功写入
+
 ![img_2.png](img_2.png)
 
 ## 注意事项
