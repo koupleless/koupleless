@@ -330,6 +330,8 @@ jobs:
         run: |
           kubectl wait --for=condition=available deployment/dynamic-stock-deployment --timeout=300s
 
+      - run: sleep 15
+
       - name: delete pod then wait module available
         run: |
           # 定义要等待的资源名称和字段值
@@ -374,6 +376,8 @@ jobs:
         run: |
           deploymentname=$(kubectl get deployment -o name | cut -d/ -f2)
           kubectl delete -n default deployment $deploymentname
+
+      - run: sleep 10
 
       - name: delete deployment then wait source clean
         run: |
