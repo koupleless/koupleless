@@ -62,7 +62,7 @@ public class ServerlessEnvironmentPostProcessorTest {
         // process other biz
         ArkClient.setMasterBiz(masterBiz);
         when(masterBiz.getBizClassLoader()).thenReturn(ClassLoader.getSystemClassLoader());
-//        Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
+        //        Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
 
         MutablePropertySources propertySources = new MutablePropertySources();
         PropertiesPropertySource propertySource = new PropertiesPropertySource("xxxx111",
@@ -75,7 +75,7 @@ public class ServerlessEnvironmentPostProcessorTest {
             Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
             System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
             serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
-                    springApplication);
+                springApplication);
         } finally {
             System.clearProperty(SPRING_CONFIG_LOCATION);
             Thread.currentThread().setContextClassLoader(tccl);
