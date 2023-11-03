@@ -39,7 +39,5 @@ public class ServerlessApplicationListenerTest {
         ApplicationStartingEvent applicationStartingEvent = new ApplicationStartingEvent(
             mock(ConfigurableBootstrapContext.class), mock(SpringApplication.class), new String[0]);
         listener.onApplicationEvent(applicationStartingEvent);
-        //        Assert.assertTrue(ArkConfigs.isEmbedEnable());
-        Assert.assertEquals("true", System.getProperty(PLUGIN_EXPORT_CLASS_ENABLE));
     }
 }

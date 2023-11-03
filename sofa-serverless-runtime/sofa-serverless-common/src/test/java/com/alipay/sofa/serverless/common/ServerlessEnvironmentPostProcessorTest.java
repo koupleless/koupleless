@@ -32,6 +32,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
 
+import static com.alipay.sofa.serverless.common.spring.ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -61,7 +62,7 @@ public class ServerlessEnvironmentPostProcessorTest {
         // process other biz
         ArkClient.setMasterBiz(masterBiz);
         when(masterBiz.getBizClassLoader()).thenReturn(ClassLoader.getSystemClassLoader());
-        Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
+//        Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
 
         MutablePropertySources propertySources = new MutablePropertySources();
         PropertiesPropertySource propertySource = new PropertiesPropertySource("xxxx111",
@@ -69,10 +70,18 @@ public class ServerlessEnvironmentPostProcessorTest {
         propertySources.addLast(propertySource);
         when(otherEnvironment.getPropertySources()).thenReturn(propertySources);
 
-        //        System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
+        ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
+            System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
+            serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
+                    springApplication);
+        } finally {
+            System.clearProperty(SPRING_CONFIG_LOCATION);
+            Thread.currentThread().setContextClassLoader(tccl);
+        }
         serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
             springApplication);
-        //        System.clearProperty(SPRING_CONFIG_LOCATION);
 
         PropertySource<?> masterPropertySource = propertySources.get("MasterBiz-Config resource");
         Assert.assertTrue(masterPropertySource instanceof MasterBizPropertySource);
