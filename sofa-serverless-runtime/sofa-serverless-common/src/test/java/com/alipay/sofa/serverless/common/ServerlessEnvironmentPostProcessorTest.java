@@ -50,11 +50,6 @@ public class ServerlessEnvironmentPostProcessorTest {
 
     private final Biz                     masterBiz         = mock(Biz.class);
 
-    //    @Rule
-    //    public final ProvideSystemProperty    myPropertyHasMyValue = new ProvideSystemProperty(
-    //                                                                   SPRING_CONFIG_LOCATION,
-    //                                                                   "MyValue");
-
     @Test
     public void testPostProcessEnvironment() {
         // process master biz
@@ -74,9 +69,6 @@ public class ServerlessEnvironmentPostProcessorTest {
             new Properties());
         propertySources.addLast(propertySource);
         when(otherEnvironment.getPropertySources()).thenReturn(propertySources);
-
-        //        MockedStatic<System> systemMockedStatic = mockStatic(System.class);
-        //        systemMockedStatic.when(() -> System.getProperty(SPRING_CONFIG_LOCATION)).thenReturn("xxxx");
 
         System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
         serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
