@@ -70,10 +70,10 @@ public class ServerlessEnvironmentPostProcessorTest {
         propertySources.addLast(propertySource);
         when(otherEnvironment.getPropertySources()).thenReturn(propertySources);
 
-        System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
+//        System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
         serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
             springApplication);
-        System.clearProperty(SPRING_CONFIG_LOCATION);
+//        System.clearProperty(SPRING_CONFIG_LOCATION);
 
         PropertySource<?> masterPropertySource = propertySources.get("MasterBiz-Config resource");
         Assert.assertTrue(masterPropertySource instanceof MasterBizPropertySource);
