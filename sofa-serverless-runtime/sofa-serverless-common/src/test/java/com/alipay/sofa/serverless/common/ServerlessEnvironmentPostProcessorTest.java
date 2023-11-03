@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.common;
 
 import com.alipay.sofa.ark.api.ArkClient;
@@ -28,11 +44,11 @@ public class ServerlessEnvironmentPostProcessorTest {
 
     private final ConfigurableEnvironment masterEnvironment = mock(ConfigurableEnvironment.class);
 
-    private final ConfigurableEnvironment otherEnvironment = mock(ConfigurableEnvironment.class);
+    private final ConfigurableEnvironment otherEnvironment  = mock(ConfigurableEnvironment.class);
 
-    private final SpringApplication springApplication = mock(SpringApplication.class);
+    private final SpringApplication       springApplication = mock(SpringApplication.class);
 
-    private final Biz masterBiz = mock(Biz.class);
+    private final Biz                     masterBiz         = mock(Biz.class);
 
     @Test
     public void testPostProcessEnvironment() {
@@ -40,7 +56,8 @@ public class ServerlessEnvironmentPostProcessorTest {
         when(masterEnvironment.getProperty("ark.common.env.share.keys")).thenReturn("masterKey");
         when(masterEnvironment.getProperty("masterKey")).thenReturn("masterValue");
         ServerlessEnvironmentPostProcessor serverlessEnvironmentPostProcessor = new ServerlessEnvironmentPostProcessor();
-        serverlessEnvironmentPostProcessor.postProcessEnvironment(masterEnvironment, springApplication);
+        serverlessEnvironmentPostProcessor.postProcessEnvironment(masterEnvironment,
+            springApplication);
 
         // process other biz
         ArkClient.setMasterBiz(masterBiz);
@@ -48,10 +65,12 @@ public class ServerlessEnvironmentPostProcessorTest {
         Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
         System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
         MutablePropertySources propertySources = new MutablePropertySources();
-        PropertiesPropertySource propertySource = new PropertiesPropertySource("xxxx111", new Properties());
+        PropertiesPropertySource propertySource = new PropertiesPropertySource("xxxx111",
+            new Properties());
         propertySources.addLast(propertySource);
         when(otherEnvironment.getPropertySources()).thenReturn(propertySources);
-        serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment, springApplication);
+        serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
+            springApplication);
 
         PropertySource<?> masterPropertySource = propertySources.get("MasterBiz-Config resource");
         Assert.assertTrue(masterPropertySource instanceof MasterBizPropertySource);
