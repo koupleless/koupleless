@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Build Docs
 
 on:
   # Runs on pushes targeting the default branch
@@ -30,9 +30,6 @@ defaults:
 jobs:
   # Single deploy job since we're just deploying
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -47,12 +44,4 @@ jobs:
       - run: npm install -D autoprefixer
       - run: npm install -D postcss-cli
       - run: npm install -D postcss
-      - run: npm run build:production:github-pages
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          # Upload entire repository
-          path: 'docs/public'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+      - run: npm run build:production
