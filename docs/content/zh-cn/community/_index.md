@@ -103,7 +103,7 @@ menu: {main: {weight: 40}}
                     </text>
                     <g id="编组-7" transform="translate(52.000000, 183.000000)">
                         <text id="社区交流群，和我们一起讨论-Server" font-family="PingFangSC-Regular, PingFang SC" font-size="16" font-weight="normal" line-spacing="24">
-                            <a xlink:href="docs/contribution-guidelines/communication-channel/" target="_blank"><tspan x="60" y="17" fill="#0077FF">社区交流群</tspan></a>
+                            <a xlink:href="/docs/contribution-guidelines/communication-channel/" target="_blank"><tspan x="60" y="17" fill="#0077FF">社区交流群</tspan></a>
                             <tspan x="140" y="17" fill="#FFFFFF" fill-opacity="0.65">，和我们一起讨论 Serverless！</tspan>
                         </text>
                         <text id="加入" font-family="PingFangSC-Regular, PingFang SC" font-size="16" font-weight="normal" line-spacing="24" fill="#FFFFFF" fill-opacity="0.65">
@@ -156,7 +156,7 @@ menu: {main: {weight: 40}}
                         <text id="完成您的第一次提交，想了解如何为SOFA" font-family="PingFangSC-Regular, PingFang SC" font-size="16" font-weight="normal" line-spacing="24">
                             <tspan x="99" y="17" fill="#FFFFFF" fill-opacity="0.65">完成您的第一次提交，想了解如何为SOFAServerless 做</tspan>
                             <tspan x="0" y="41" fill="#FFFFFF" fill-opacity="0.65">出贡献，请参考我们的</tspan>
-                            <a xlink:href="docs/contribution-guidelines/contribution/first-pr/" target="_blank"><tspan x="160" y="41" fill="#0077FF">贡献指南</tspan></a>
+                            <a xlink:href="https://sofaserverless.netlify.app/docs/contribution-guidelines/contribution/first-pr/" target="_blank"><tspan x="160" y="41" fill="#0077FF">贡献指南</tspan></a>
                             <tspan x="224" y="41" fill="#FFFFFF" fill-opacity="0.65">。</tspan>
                         </text>
                         <a xlink:href="https://github.com/sofastack/sofa-serverless/pulls" target="_blank">

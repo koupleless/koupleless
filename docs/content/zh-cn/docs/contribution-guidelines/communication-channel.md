@@ -8,10 +8,10 @@ SOFAServerless 提供如下沟通交流渠道，欢迎加入我们一起分享�
 
 #### SOFAServerless 社区交流与协作钉钉群：24970018417
 如果您对 SOFAServerless 感兴趣、或者有初步意向使用 SOFAServerless、或者已经是 SOFAServerless / SOFAArk 的用户、或者有兴趣成为社区 Contributor，都可以加入该钉钉群和我们随时随地一起交流讨论、一起贡献代码。<br/>
-<img width="200px" src="img/dingtalk-qcode.png" />
+<img width="200px" src="/img/dingtalk-qcode.png" />
 
 #### SOFAServerless 用户微信群
-<img width="200px" src="img/wechat-qcode.png" />
+<img width="200px" src="/img/wechat-qcode.png" />
 <br/>
 如果您对 SOFAServerless 感兴趣、或者有初步意向使用 SOFAServerless、或者已经是 SOFAServerless / SOFAArk 的用户，都可以加入该微信群随时随地一起交流讨论。<br/>
 

@@ -3,7 +3,7 @@ title: SOFAServerless
 linkTitle: 首页
 date: 2023-10-21T10:28:35+08:00
 menu: {main: {weight: 10}}
-url: "home/"
+url: "/home/"
 ---
 
 {{< blocks/cover image_anchor="top" height="min" >}}
@@ -37,11 +37,11 @@ url: "home/"
     letter-spacing: 0; line-height: 26px; margin-top: 16px !important; margin-bottom: 64px !important; 
     font-weight: normal; "
     >让普通应用低成本享受 Serverless 体验，帮助企业降本增效！</p>
-<a href="docs/quick-start/" style="display: inline-block; width: 176px; margin-right: 12px;">
-  <img style="margin: 0;" src="img/local-quick-start-btn.png" width="176px" />
+<a href="/docs/quick-start/" style="display: inline-block; width: 176px; margin-right: 12px;">
+  <img style="margin: 0;" src="/img/local-quick-start-btn.png" width="176px" />
 </a>
-<a href="docs/introduction/intro-and-scenario" style="display: inline-block; width: 176px;">
-  <img style="margin: 0;" src="img/more-details-btn.png" width="176px" />
+<a href="/docs/introduction/intro-and-scenario" style="display: inline-block; width: 176px;">
+  <img style="margin: 0;" src="/img/more-details-btn.png" width="176px" />
 </a>
 
 
@@ -90,7 +90,7 @@ url: "home/"
                 <path d="M427,0 L776,0 C784.836556,-1.623249e-15 792,7.163444 792,16 L792,98 C792,106.836556 784.836556,114 776,114 L427,114 C418.163444,114 411,106.836556 411,98 L411,16 C411,7.163444 418.163444,1.623249e-15 427,0 Z" id="矩形备份-21" fill="url(#linearGradient-j7tnbb2t-6-1)"></path>
                 <path d="M835,0 L1184,0 C1192.83656,-1.623249e-15 1200,7.163444 1200,16 L1200,98 C1200,106.836556 1192.83656,114 1184,114 L835,114 C826.163444,114 819,106.836556 819,98 L819,16 C819,7.163444 826.163444,1.623249e-15 835,0 Z" id="矩形备份-19" fill="url(#linearGradient-j7tnbb2t-6-1)"></path>
                 <g id="编组-64" transform="translate(26.000000, 28.000000)">
-                    <a xlink:href="user-cases/alibaba-aidc/" target="_blank">
+                    <a xlink:href="/user-cases/alibaba-aidc/" target="_blank">
                     <text id="助力阿里国际数字商业三倍提效！" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
                         <tspan x="32" y="21">助力阿里国际数字商业三倍提效！</tspan>
                     </text>
@@ -103,13 +103,13 @@ url: "home/"
                         </g>
                     </g>
                 </g>
-                <a xlink:href="user-cases/alibaba-aidc/" target="_blank">
+                <a xlink:href="/user-cases/alibaba-aidc/" target="_blank">
                 <text id="全新企业案例：阿里国际数字商业集团研发运" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
                     <tspan x="15" y="80">全新企业案例：阿里国际数字商业集团研发运维极致提效</tspan>
                 </text>
                 </a>
                 <g id="编组-69" transform="translate(433.000000, 28.000000)">
-                    <a xlink:href="docs/tutorials/module-create/springboot-and-sofaboot/" target="_blank">
+                    <a xlink:href="/docs/tutorials/module-create/springboot-and-sofaboot/" target="_blank">
                     <text id="SpringBoot-一键升级为模块上线" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
                         <tspan x="30.63" y="21">SpringBoot 一键升级为模块上线！</tspan>
                     </text>
@@ -122,13 +122,13 @@ url: "home/"
                         </g>
                     </g>
                 </g>
-                <a xlink:href="docs/tutorials/module-create/springboot-and-sofaboot/" target="_blank">
+                <a xlink:href="/docs/tutorials/module-create/springboot-and-sofaboot/" target="_blank">
                 <text id="让您实现同一套代码既能独立启动，又能合并" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
                     <tspan x="444" y="80">让您实现同一套代码既能独立启动，又能合并部署！</tspan>
                 </text>
                 </a>
                 <g id="编组-70" transform="translate(893.000000, 28.000000)">
-                    <a xlink:href="docs/contribution-guidelines/communication-channel/#社区双周会" target="_blank">
+                    <a xlink:href="/docs/contribution-guidelines/communication-channel/#社区双周会" target="_blank">
                     <text id="社区周会时间调整通知" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
                         <tspan x="32" y="21">社区周会时间调整通知</tspan>
                     </text>
@@ -141,7 +141,7 @@ url: "home/"
                         </g>
                     </g>
                 </g>
-                <a xlink:href="docs/contribution-guidelines/communication-channel/#社区双周会" target="_blank">
+                <a xlink:href="/docs/contribution-guidelines/communication-channel/#社区双周会" target="_blank">
                 <text id="双周会时间调整到周二-19:30，下次会" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
                     <tspan x="843" y="80">双周会时间调整到周二 19:30，下次会议时间 11.14 晚</tspan>
                 </text>
@@ -163,7 +163,7 @@ url: "home/"
 <!-- For 搜索引擎检索，修改无用 --><p style="visibility: hidden; margin: 0; height: 0px;">十亿级可统计的企业线上每分钟流量。50%企业需求交付效率提升。75%长尾应用机器数量减少。</p>
 
 <div style="margin-left: -25px; margin-top: 24px;">
-    <img style="margin: 0; border: none;" src="img/statistic-digest.png" width="1003px" />
+    <img style="margin: 0; border: none;" src="/img/statistic-digest.png" width="1003px" />
 </div>
 <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 40px; color: #FFFFFF; letter-spacing: 0;
     text-align: center; line-height: 48px; margin-top: 120px; margin-bottom: 48px;">适用场景</p>
@@ -501,7 +501,7 @@ url: "home/"
         <g transform="translate(-141.000000, -1244.000000)">
             <path d="M219,1244 L259,1244 L259,1244 L299,1244 C307.836556,1244 315,1251.16344 315,1260 L315,1340 C315,1348.83656 307.836556,1356 299,1356 L219,1356 C210.163444,1356 203,1348.83656 203,1340 L203,1260 C203,1251.16344 210.163444,1244 219,1244 Z" id="矩形" fill="url(#linearGradient-kjfcqduzsr-1)"></path>
             <g transform="translate(229.000000, 1270.000000)" filter="url(#filter-kjfcqduzsr-2)">
-                <image x="2px" width="60px" xlink:href="img/speed-as-you-need.png" />
+                <image x="2px" width="60px" xlink:href="/img/speed-as-you-need.png" />
             </g>
             <text id="Speed-as-you-need" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                 <tspan x="149" y="1409">Speed as you need</tspan>
@@ -509,7 +509,7 @@ url: "home/"
             <g transform="translate(515.000000, 1244.000000)">
                 <path d="M16,0 L56,0 L56,0 L96,0 C104.836556,4.4488325e-15 112,7.163444 112,16 L112,96 C112,104.836556 104.836556,112 96,112 L16,112 C7.163444,112 7.1542475e-15,104.836556 0,96 L0,16 C-2.85852284e-15,7.163444 7.163444,-1.53107837e-16 16,0 Z" id="矩形" fill="url(#linearGradient-kjfcqduzsr-1)"></path>
                 <g transform="translate(26.000000, 26.000000)">
-                    <image x="2px" width="60px" xlink:href="img/pay-as-you-need.png" />
+                    <image x="2px" width="60px" xlink:href="/img/pay-as-you-need.png" />
                 </g>
             </g>
             <text id="Pay-as-you-need" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
@@ -517,7 +517,7 @@ url: "home/"
             </text>
             <path d="M833,1244 L873,1244 L873,1244 L913,1244 C921.836556,1244 929,1251.16344 929,1260 L929,1340 C929,1348.83656 921.836556,1356 913,1356 L833,1356 C824.163444,1356 817,1348.83656 817,1340 L817,1260 C817,1251.16344 824.163444,1244 833,1244 Z" id="矩形" fill="url(#linearGradient-kjfcqduzsr-1)"></path>
             <g transform="translate(843.000000, 1270.000000)">
-                <image x="2px" width="60px" xlink:href="img/deploy-as-you-need.png" />
+                <image x="2px" width="60px" xlink:href="/img/deploy-as-you-need.png" />
             </g>
             <text id="Deploy-as-you-need" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                 <tspan x="758" y="1409">Deploy as you need</tspan>
@@ -539,7 +539,7 @@ url: "home/"
             <path d="M1140,1244 L1180,1244 L1180,1244 L1220,1244 C1228.83656,1244 1236,1251.16344 1236,1260 L1236,1340 C1236,1348.83656 1228.83656,1356 1220,1356 L1140,1356 C1131.16344,1356 1124,1348.83656 1124,1340 L1124,1260 C1124,1251.16344 1131.16344,1244 1140,1244 Z" id="矩形" fill="url(#linearGradient-kjfcqduzsr-1)"></path>
             <rect id="矩形" x="1150" y="1270" width="60" height="60"></rect>
             <g transform="translate(1150.997213, 1273.869600)">
-                <image x="-1px" width="60px" xlink:href="img/evolution-as-you-need.png" />
+                <image x="-1px" width="60px" xlink:href="/img/evolution-as-you-need.png" />
             </g>
             <text id="Evolution-as-you-nee" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                 <tspan x="1052" y="1409">Evolution as you need</tspan>
@@ -557,7 +557,7 @@ url: "home/"
 </div>
 
 
-<div style="margin: 120px -20px 0 -20px; background: url('img/communication-channel-background.png') round;">
+<div style="margin: 120px -20px 0 -20px; background: url('/img/communication-channel-background.png') round;">
     <div style="height: 120px;"></div>
     <div style="display: inline-block; width: 360px; vertical-align: top;" >
         <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 20px; font-weight: 600; color: #FFFFFF; 
@@ -574,7 +574,7 @@ url: "home/"
             line-height: 24px; margin: 0px; margin-bottom: 12px;">
             <img style="background-image: linear-gradient(134deg, rgba(255,255,255,0.12) 0%, 
                 rgba(255,255,255,0.10) 100%); border: 8px solid transparent; border-radius: 8px; width: 204px;" 
-                src="img/dingtalk-qcode.png" />
+                src="/img/dingtalk-qcode.png" />
         </p>
         <p style="opacity: 1; font-family: PingFangSC-Regular; font-size: 16px; color: rgba(255,255,255,0.65); letter-spacing: 0;
             line-height: 24px; margin: 0px;">社区钉钉群号：24970018417</p>
@@ -586,7 +586,7 @@ url: "home/"
             letter-spacing: 0; line-height: 24px; margin: 0px;">
             <img style="background-image: linear-gradient(134deg, rgba(255,255,255,0.12) 0%, 
                 rgba(255,255,255,0.10) 100%); border: 8px solid transparent; border-radius: 8px; width: 204px;" 
-                src="img/dingtalk-qcode.png" src="img/wechat-qcode.png" />
+                src="/img/dingtalk-qcode.png" src="/img/wechat-qcode.png" />
         </p>
     </div>
     <div style="height: 82px;"></div>

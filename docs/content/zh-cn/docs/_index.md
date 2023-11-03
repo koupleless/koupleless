@@ -4,5 +4,5 @@ menu: {main: {weight: 20}}
 ---
 
 <script>
-    window.location="docs/introduction/intro-and-scenario/";
+    window.location="/docs/introduction/intro-and-scenario/";
 </script>

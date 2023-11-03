@@ -6,27 +6,27 @@ Add styles or override variables from the theme here.
 
 @font-face {
   font-family: "Alibaba PuHuiTi";
-  src: url("font/AlibabaPuHuiTi-2-105-Heavy.ttf");
+  src: url("/font/AlibabaPuHuiTi-2-105-Heavy.ttf");
 }
 
 @font-face {
   font-family: "AlibabaPuHuiTiR";
-  src: url("font/AlibabaPuHuiTi-2-105-Heavy.ttf");
+  src: url("/font/AlibabaPuHuiTi-2-105-Heavy.ttf");
 }
 
 @font-face {
   font-family: "AlibabaPuHuiTiH";
-  src: url("font/AlibabaPuHuiTi-2-105-Heavy.ttf");
+  src: url("/font/AlibabaPuHuiTi-2-105-Heavy.ttf");
 }
 
 @font-face {
   font-family: "PingFangSC-Regular";
-  src: url("font/PingFang.ttc");
+  src: url("/font/PingFang.ttc");
 }
 
 @font-face {
   font-family: "PingFangSC-Medium";
-  src: url("font/PingFang.ttc");
+  src: url("/font/PingFang.ttc");
 }
 
 * {
@@ -58,7 +58,7 @@ a, input {
   margin-left: -20px;
   margin-right: -20px;
   height: 628px;
-  background: url("img/star-sky-background.png") round;
+  background: url("/img/star-sky-background.png") round;
   z-index: 1;
   opacity: 0.5;
 }
@@ -218,7 +218,7 @@ header > nav.td-navbar {
 
     &:before {
 
-      content: url("img/before-search.svg");
+      content: url(/img/before-search.svg);
       position: absolute;
       top: 16px;
       right: 254px;
@@ -230,7 +230,7 @@ header > nav.td-navbar {
       left: 12px;
 
       &:before {
-        content: url("img/search.svg");
+        content: url(/img/search.svg);
       }
     }
 
@@ -408,7 +408,7 @@ aside.td-sidebar {
           color: rgba(0, 0, 0, 0.65);
 
           > span:before {
-            content: url("img/menu-item-icon-inactive.svg");
+            content: url(/img/menu-item-icon-inactive.svg);
             opacity: 1;
             margin-right: 8px;
             position: relative;
@@ -441,7 +441,7 @@ aside.td-sidebar {
             background: rgba(7, 7, 7, 0.05);
 
             > span:before {
-              content: url("img/menu-item-icon-active.svg");
+              content: url(/img/menu-item-icon-active.svg);
             }
           }
         }
@@ -460,7 +460,7 @@ aside.td-sidebar {
       margin-top: 2px;
 
       &:before {
-        content: url("img/side-bar-search.svg");
+        content: url(/img/side-bar-search.svg);
       }
     }
 
@@ -744,11 +744,11 @@ main.td-main, div.td-main main {
 
     .feedback--answer-yes {
       margin: 0px 10px 2px 16px !important;
-      background-image: url("img/feedback-yes.svg");
+      background-image: url(/img/feedback-yes.svg);
     }
 
     .feedback--answer-no {
-      background-image: url("img/feedback-no.svg");
+      background-image: url(/img/feedback-no.svg);
     }
   }
 }
@@ -792,7 +792,7 @@ aside.td-sidebar-toc {
       li > a {
 
         &:before {
-          content: url("img/menu-item-icon-inactive.svg");
+          content: url(/img/menu-item-icon-inactive.svg);
           opacity: 1;
           margin-right: 8px;
           position: relative;
@@ -801,7 +801,7 @@ aside.td-sidebar-toc {
 
         &:hover, &:focus {
           &:before {
-            //content: url(img/menu-item-icon-active.svg);
+            //content: url(/img/menu-item-icon-active.svg);
           }
         }
       }
@@ -842,19 +842,19 @@ aside.td-sidebar-toc {
     }
 
     &:nth-child(1) > .td-sidebar-link > span:before {
-      content: url("img/docs-and-videos.svg");
+      content: url(/img/docs-and-videos.svg);
     }
 
     &:nth-child(2) > .td-sidebar-link > span:before {
-      content: url("img/awards.svg");
+      content: url(/img/awards.svg);
     }
 
     &:nth-child(3) > .td-sidebar-link > span:before {
-      content: url("img/meeting-minutes.svg");
+      content: url(/img/meeting-minutes.svg);
     }
 
     &:nth-child(4) > .td-sidebar-link > span:before {
-      content: url("img/release-notes.svg");
+      content: url(/img/release-notes.svg);
     }
   }
 }

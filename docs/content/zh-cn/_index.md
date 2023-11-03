@@ -3,5 +3,6 @@ date: 2023-10-21T10:28:35+08:00
 ---
 
 <script>
-    window.location="home/";
+    if (window.location.pathname == "/")
+        window.location="/home/";
 </script>
