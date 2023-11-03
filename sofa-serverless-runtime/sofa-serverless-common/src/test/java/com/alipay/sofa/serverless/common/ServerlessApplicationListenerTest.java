@@ -16,15 +16,12 @@
  */
 package com.alipay.sofa.serverless.common;
 
-import com.alipay.sofa.ark.api.ArkConfigs;
 import com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 
-import static com.alipay.sofa.ark.spi.constant.Constants.PLUGIN_EXPORT_CLASS_ENABLE;
 import static org.mockito.Mockito.mock;
 
 /**

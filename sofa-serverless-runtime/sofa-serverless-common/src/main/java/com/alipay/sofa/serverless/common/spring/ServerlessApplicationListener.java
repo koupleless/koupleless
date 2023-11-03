@@ -16,6 +16,7 @@
  */
 package com.alipay.sofa.serverless.common.spring;
 
+import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ArkConfigs;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.boot.context.event.SpringApplicationEvent;
@@ -31,7 +32,7 @@ public class ServerlessApplicationListener implements ApplicationListener<Spring
 
     @Override
     public void onApplicationEvent(SpringApplicationEvent event) {
-        if (this.getClass().getClassLoader() == Thread.currentThread().getContextClassLoader()) {
+        if (ArkClient.class.getClassLoader() == Thread.currentThread().getContextClassLoader()) {
             if (event instanceof ApplicationStartingEvent) {
                 // 开启ark2.0 embed
                 ArkConfigs.setEmbedEnable(true);

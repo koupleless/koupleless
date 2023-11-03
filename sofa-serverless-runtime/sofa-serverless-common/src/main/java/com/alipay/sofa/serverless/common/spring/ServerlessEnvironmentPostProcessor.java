@@ -35,8 +35,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.alipay.sofa.serverless.common.util.CollectionUtils.newHashSet;
-
 /**
  * @author: yuanyuan
  * @date: 2023/10/30 9:48 下午
@@ -48,7 +46,7 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
     public static final String                        SPRING_ADDITIONAL_LOCATION                 = "spring.config.additional-location";
 
     // 框架定义的允许共享的配置列表
-    private static final Set<String>                  DEFAULT_SHARE_KEYS                         = newHashSet();
+    private static final Set<String>                  DEFAULT_SHARE_KEYS                         = new HashSet<>();
 
     // 允许用户扩展的配置列表
     private static final String                       ENV_SHARE_KEY                              = "ark.common.env.share.keys";
