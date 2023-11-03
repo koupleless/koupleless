@@ -35,7 +35,7 @@ var versionCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
+	RootCmd.AddCommand(versionCmd)
 }
 
 func versionFunc(cmd *cobra.Command, _ []string) {

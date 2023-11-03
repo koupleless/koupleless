@@ -14,6 +14,12 @@ type Command interface {
 	// Exec execute the command
 	Exec() error
 
+	// GetCommand return the command
+	GetCommand() string
+
+	// GetArgs return the args
+	GetArgs() []string
+
 	// Output return the output of command
 	Output() <-chan string
 
@@ -29,11 +35,22 @@ type Command interface {
 }
 
 // BuildCommand return a new Command
-func BuildCommand(ctx context.Context, cmd string, args ...string) Command {
+func BuildCommand(
+	ctx context.Context,
+	cmd string, args ...string) Command {
+	return BuildCommandWithWorkDir(ctx, "", cmd, args...)
+}
+
+func BuildCommandWithWorkDir(
+	ctx context.Context,
+	workdir string,
+	cmd string,
+	args ...string) Command {
 	cancableContext, cancelFunc := context.WithCancel(ctx)
 	return &command{
 		ctx:            cancableContext,
 		cmd:            cmd,
+		workdir:        workdir,
 		args:           args,
 		output:         make(chan string, 1),
 		completeSignal: make(chan error, 1),
@@ -44,6 +61,7 @@ func BuildCommand(ctx context.Context, cmd string, args ...string) Command {
 type command struct {
 	started *atomic.Bool
 	ctx     context.Context
+	workdir string
 	cmd     string
 	args    []string
 
@@ -53,12 +71,21 @@ type command struct {
 	exitState      error
 }
 
+func (c *command) GetCommand() string {
+	return c.cmd
+}
+
+func (c *command) GetArgs() []string {
+	return c.args
+}
+
 func (c *command) GetExitError() error {
 	return c.exitState
 }
 
 func (c *command) Exec() error {
 	execCmd := exec.CommandContext(c.ctx, c.cmd, c.args...)
+	execCmd.Dir = c.workdir
 
 	stdoutpipeline, err := execCmd.StdoutPipe()
 

@@ -25,8 +25,8 @@ type Service interface {
 	UnInstallBiz(ctx context.Context, req UnInstallBizRequest) error
 }
 
-// BuildClient return a new Service.
-func BuildClient(_ context.Context) Service {
+// BuildService return a new Service.
+func BuildService(_ context.Context) Service {
 	return &service{
 		client: resty.New(),
 	}

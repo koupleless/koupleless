@@ -31,7 +31,7 @@ var showCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(showCmd)
+	RootCmd.AddCommand(showCmd)
 	showCmd.Flags().String("r", "", "")
 	showCmd.Flags().String("mc", "", "Get Metadata in MetadataCenter")
 	showCmd.Flags().String("h", "h", "")

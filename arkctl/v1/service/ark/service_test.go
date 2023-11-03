@@ -44,7 +44,7 @@ func mockHttpServer(
 
 func TestInstallBiz_Success(t *testing.T) {
 	ctx := context.Background()
-	client := BuildClient(ctx)
+	client := BuildService(ctx)
 	port, cancel := mockHttpServer("/installBiz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]interface{}{
@@ -73,7 +73,7 @@ func TestInstallBiz_Success(t *testing.T) {
 
 func TestInstallBiz_Failed(t *testing.T) {
 	ctx := context.Background()
-	client := BuildClient(ctx)
+	client := BuildService(ctx)
 	port, cancel := mockHttpServer("/installBiz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]interface{}{
@@ -102,7 +102,7 @@ func TestInstallBiz_Failed(t *testing.T) {
 
 func TestInstallBiz_NoServer(t *testing.T) {
 	ctx := context.Background()
-	client := BuildClient(ctx)
+	client := BuildService(ctx)
 	port := 8888
 
 	err := client.InstallBiz(ctx, InstallBizRequest{
@@ -122,7 +122,7 @@ func TestInstallBiz_NoServer(t *testing.T) {
 
 func TestUnInstallBiz_Success(t *testing.T) {
 	ctx := context.Background()
-	client := BuildClient(ctx)
+	client := BuildService(ctx)
 	port, cancel := mockHttpServer("/uninstallBiz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]interface{}{
@@ -151,7 +151,7 @@ func TestUnInstallBiz_Success(t *testing.T) {
 
 func TestUnInstallBiz_NotInstalled(t *testing.T) {
 	ctx := context.Background()
-	client := BuildClient(ctx)
+	client := BuildService(ctx)
 	port, cancel := mockHttpServer("/uninstallBiz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]interface{}{
@@ -183,7 +183,7 @@ func TestUnInstallBiz_NotInstalled(t *testing.T) {
 
 func TestUnInstallBiz_Failed(t *testing.T) {
 	ctx := context.Background()
-	client := BuildClient(ctx)
+	client := BuildService(ctx)
 	port, cancel := mockHttpServer("/uninstallBiz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]interface{}{
@@ -216,7 +216,7 @@ func TestUnInstallBiz_Failed(t *testing.T) {
 
 func TestUnInstallBiz_NoServer(t *testing.T) {
 	ctx := context.Background()
-	client := BuildClient(ctx)
+	client := BuildService(ctx)
 	port := 8888
 
 	err := client.UnInstallBiz(ctx, UnInstallBizRequest{

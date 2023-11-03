@@ -33,7 +33,7 @@ var newServerlessApp = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(newServerlessApp)
+	RootCmd.AddCommand(newServerlessApp)
 }
 
 func createApp(cmd *cobra.Command, args []string) {
