@@ -57,13 +57,13 @@ spring.application.name = ${替换为实际模块应用名}
 ### 步骤 3：自动化瘦身模块
 
 您可以使用 ark 打包插件的自动化瘦身能力，自动化瘦身模块应用里的 maven 依赖。这一步是必选的，否则构建出的模块 jar 包会非常大，而且启动会报错。
-_扩展阅读_：如果模块不做依赖瘦身[独立引入 SpringBoot 框架会怎样？](/docs/faq/import-full-springboot-in-module)
+_扩展阅读_：如果模块不做依赖瘦身[独立引入 SpringBoot 框架会怎样？](docs/faq/import-full-springboot-in-module)
 
 ### 步骤 4：构建成模块 jar 包
 
 执行 `mvn clean package -DskipTest`, 可以在 target 目录下找到打包生成的 ark biz jar 包，也可以在 target/boot 目录下找到打包生成的普通的 springboot jar 包。
 
-**小贴士**：[模块中支持的完整中间件清单](/docs/tutorials/module-development/runtime-compatibility-list/)。
+**小贴士**：[模块中支持的完整中间件清单](docs/tutorials/module-development/runtime-compatibility-list/)。
 
 
 ## 实验：验证模块既能独立启动，也能被合并部署

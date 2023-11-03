@@ -41,7 +41,7 @@ spec:
     schedulingPolicy: scatter
 ```
 
-如果要自定义模块发布运维策略可配置 operationStrategy，具体可参考[模块发布运维策略](/docs/contribution-guidelines/module-controller/crd-definition)。<br />样例演示的是使用 kubectl 方式，直接调用 K8S APIServer 修改 ModuleDeployment CR 一样能实现分组发布。
+如果要自定义模块发布运维策略可配置 operationStrategy，具体可参考[模块发布运维策略](docs/contribution-guidelines/module-controller/crd-definition)。<br />样例演示的是使用 kubectl 方式，直接调用 K8S APIServer 修改 ModuleDeployment CR 一样能实现分组发布。
 
 
 ## 模块回滚

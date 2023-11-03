@@ -39,7 +39,7 @@ spec:
     schedulingType: Scatter
 ```
 
-ModuleDeployment 所有字段可参考 [ModuleDeployment CRD 字段解释](/docs/contribution-guidelines/module-controller/crd-definition)。<br />如果要自定义模块发布运维策略（比如分组、Beta、暂停等）可配置 operationStrategy 和 schedulingStrategy，具体可参考[模块发布运维策略](../operation-and-scheduling-strategy)。<br />样例演示的是使用 kubectl 方式，直接调用 K8S APIServer 创建 ModuleDeployment CR 一样能实现模块分组上线。
+ModuleDeployment 所有字段可参考 [ModuleDeployment CRD 字段解释](docs/contribution-guidelines/module-controller/crd-definition)。<br />如果要自定义模块发布运维策略（比如分组、Beta、暂停等）可配置 operationStrategy 和 schedulingStrategy，具体可参考[模块发布运维策略](../operation-and-scheduling-strategy)。<br />样例演示的是使用 kubectl 方式，直接调用 K8S APIServer 创建 ModuleDeployment CR 一样能实现模块分组上线。
 
 
 ## 模块下线

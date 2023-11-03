@@ -8,7 +8,7 @@ weight: 100
 SOFAArk 是一个普通 Java SDK 项目，使用 Maven 作为依赖管理和构建工具，只需要本地安装 Maven 3.6 及以上版本即可正常开发代码和单元测试，无需其它的环境准备工作。<br />关于代码提交细节请参考：[完成第一次 PR 提交](../first-pr)。
 
 ## ModuleController
-ModuleController 是一个标准的 K8S Golang Operator 组件，里面包含了 ModuleDeployment Operator、ModuleReplicaSet Operator、Module Operator，在本地可以使用 minikube 做开发测试，具体请参考[本地快速开始](/docs/quick-start)。<br />
+ModuleController 是一个标准的 K8S Golang Operator 组件，里面包含了 ModuleDeployment Operator、ModuleReplicaSet Operator、Module Operator，在本地可以使用 minikube 做开发测试，具体请参考[本地快速开始](docs/quick-start)。<br />
 编译构建请在 module-controller 目录下执行：
 ```bash
 go mod download   # if compile module-controller first time
