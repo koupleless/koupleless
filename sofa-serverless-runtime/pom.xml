@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <sofa.ark.version>2.2.4</sofa.ark.version>
-        <revision>0.5.2</revision>
+        <sofa.ark.version.default>2.2.4</sofa.ark.version.default>
+        <revision.default>0.5.2</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -445,8 +445,8 @@
         <profile>
             <id>jakarta</id>
             <properties>
-                <revision>0.5.2-jakarta</revision>
-                <sofa.ark.version>2.2.4-jakarta</sofa.ark.version>
+                <revision>${revision.default}-jakarta</revision>
+                <sofa.ark.version>${sofa.ark.version.default}-jakarta</sofa.ark.version>
             </properties>
             <activation>
                 <jdk>17</jdk>
@@ -562,6 +562,10 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
+            </properties>
             <repositories>
                 <repository>
                     <snapshots>
