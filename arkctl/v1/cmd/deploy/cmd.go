@@ -1,6 +1,7 @@
 package deploy
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -100,7 +101,7 @@ func execMavenBuild(ctx *contextutil.Context) bool {
 	return true
 }
 
-func parseBizModel(ctx *contextutil.Context) bool {
+func execParseBizModel(ctx *contextutil.Context) bool {
 	var (
 		logger = contextutil.GetLogger(ctx)
 	)
@@ -123,6 +124,7 @@ func parseBizModel(ctx *contextutil.Context) bool {
 			logger.Error("can not find pre built biz bundle in build dir!")
 			return false
 		}
+		bundlePath = "file://" + bundlePath
 	}
 
 	bizModel, err := ark.ParseBizModel(ctx, fileutil.FileUrl(bundlePath))
@@ -190,7 +192,7 @@ func execInstall(ctx *contextutil.Context) bool {
 }
 
 func generateContext(cmd *cobra.Command) *contextutil.Context {
-	ctx := contextutil.NewContext(cmd.Context())
+	ctx := contextutil.NewContext(context.Background())
 
 	arkService := ark.BuildService(ctx)
 	ctx.Put(ctxKeyArkService, arkService)
@@ -220,6 +222,7 @@ func executeDeploy(cobracmd *cobra.Command, _ []string) {
 
 	todos := []func(context2 *contextutil.Context) bool{
 		execMavenBuild,
+		execParseBizModel,
 		execUnInstall,
 		execInstall,
 	}
