@@ -11,6 +11,8 @@ spec:
     kind: Module
     listKind: ModuleList
     plural: modules
+    shortNames:
+    - md
     singular: module
   scope: Namespaced
   versions:

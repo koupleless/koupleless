@@ -6,8 +6,8 @@ weight: 100
 本文讲解了 SpringBoot 或 SOFABoot 一键升级为模块的操作和验证步骤，仅需加一个 ark 打包插件即可实现普通应用一键升级为模块应用，并且能做到同一套代码分支，既能像原来 SpringBoot 一样独立启动，也能作为模块与其它应用合并部署在一起启动。
 
 ## 前提条件
-1. SpringBoot 版本 >= 2.0.0
-2. SOFABoot >= 3.9.0 或 SOFABoot >= 4.0.0
+1. SpringBoot 版本 >= 2.0.0（针对 SpringBoot 用户）
+2. SOFABoot >= 3.9.0 或 SOFABoot >= 4.0.0（针对 SOFABoot 用户）
 
 ## 接入步骤
 
@@ -15,7 +15,7 @@ weight: 100
 
 ```properties
 # 需要定义应用名
-spring.application.name = ${替换为实际模块名}
+spring.application.name = ${替换为实际模块应用名}
 ```
 
 ### 步骤 2：添加模块打包插件
@@ -63,10 +63,13 @@ _扩展阅读_：如果模块不做依赖瘦身[独立引入 SpringBoot 框架�
 
 执行 `mvn clean package -DskipTest`, 可以在 target 目录下找到打包生成的 ark biz jar 包，也可以在 target/boot 目录下找到打包生成的普通的 springboot jar 包。
 
-**扩展阅读**：[模块中支持的完整中间件清单](/docs/tutorials/module-development/runtime-compatibility-list/)。
+**小贴士**：[模块中支持的完整中间件清单](/docs/tutorials/module-development/runtime-compatibility-list/)。
 
 
 ## 实验：验证模块既能独立启动，也能被合并部署
+
+增加模块打包插件（sofa-ark-maven-plugin）进行打包后，只会新增 ark-biz.jar 构建产物，与原生 spring-boot-maven-plugin 打包的可执行Jar 互相不冲突、不影响。
+当服务器部署时，期望独立启动，就使用原生 spring-boot-maven-plugin 构建出的可执行 Jar 作为构建产物；期望作为 ark 模块部署到基座中时，就使用 sofa-ark-maven-plugin 构建出的 xxx-ark-biz.jar 作为构建产物
 
 ### 验证能独立启动
 
@@ -108,25 +111,5 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
         "code": "SUCCESS",
         "message": "Uninstall biz: dynamic-provider:0.0.1-SNAPSHOT success."
     }
-}
-```
-
-5. 查看卸载后模块列表
-```json
-curl --location --request POST 'localhost:1238/queryAllBiz'
-```
-返回信息，只有一个基座（mainClass = embed main）, 没有刚刚安装的模块，表示卸载已经成功
-```json
-{
-    "code": "SUCCESS",
-    "data": [
-        {
-            "bizName": "base",
-            "bizState": "ACTIVATED",
-            "bizVersion": "1.0.0",
-            "mainClass": "embed main",
-            "webContextPath": "/"
-        }
-    ]
 }
 ```

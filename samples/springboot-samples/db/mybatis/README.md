@@ -4,8 +4,6 @@
 ### base
 base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
 ```xml
-
-
 <!-- 这里添加动态模块相关依赖 -->
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
@@ -124,19 +122,19 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 
 请提前创建代码所需要的 库，表等
 
-#### 启动基座应用 base
+### 启动基座应用 base
 
 1. 请修改 samples/springboot-samples/db/mybatis/base/src/main/resources/application.properties 中的 datasource 配置，确保链接到正确的本地数据库
 
 2. 启动基座应用
 
-#### 打包模块应用 biz1
+### 打包模块应用 biz1
 
 1. 请提前修改 samples/springboot-samples/db/mybatis/biz1/src/main/resources/application.properties 中的 datasource 配置，确保链接到正确的本地数据库
 
 2. 执行 mvn clean package -Dmaven.test.skip=true 进行模块打包， 打包完成后可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
 
-#### 安装模块应用 biz1
+### 安装模块应用 biz1
 ```shell
 telnet localhost 1234
 biz -i file://${你的项目目录}/samples/springboot-samples/db/mybatis/biz1/target/biz1-mybatis-0.0.1-SNAPSHOT-ark-biz.jar

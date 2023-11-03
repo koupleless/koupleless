@@ -11,6 +11,8 @@ spec:
     kind: ModuleDeployment
     listKind: ModuleDeploymentList
     plural: moduledeployments
+    shortNames:
+    - mddeploy
     singular: moduledeployment
   scope: Namespaced
   versions:
@@ -224,6 +226,9 @@ spec:
                 type: integer
               releaseStatus:
                 properties:
+                  batchProgress:
+                    description: the phase current batch release reach
+                    type: string
                   currentBatch:
                     description: Records the current batch serial number.
                     format: int32
@@ -241,7 +246,7 @@ spec:
                     format: int32
                     type: integer
                   progress:
-                    description: The phase current release reach
+                    description: The phase current whole release reach
                     type: string
                   realBatchCount:
                     description: Records the real batch count
