@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <properties>
+        <sofa.ark.version>2.2.4</sofa.ark.version>
         <revision>0.5.2</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,7 +35,6 @@
         <junit.version>4.13.1</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <sofa.ark.version>2.2.4</sofa.ark.version>
         <spring.boot.version>2.7.15</spring.boot.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
@@ -150,7 +150,7 @@
             <dependency>
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>sofa-ark-springboot-starter</artifactId>
-                <version>${sofa.ark.version}-jakarta</version>
+                <version>${sofa.ark.version}</version>
             </dependency>
 
             <dependency>
@@ -442,6 +442,17 @@
 
 
     <profiles>
+        <profile>
+            <id>jakarta</id>
+            <properties>
+                <revision>0.5.2-jakarta</revision>
+                <sofa.ark.version>2.2.4-jakarta</sofa.ark.version>
+            </properties>
+            <activation>
+                <jdk>17</jdk>
+            </activation>
+        </profile>
+
         <profile>
             <id>release</id>
             <build>
