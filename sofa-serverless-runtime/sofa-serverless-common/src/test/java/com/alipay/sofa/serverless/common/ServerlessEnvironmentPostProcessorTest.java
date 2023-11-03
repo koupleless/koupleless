@@ -32,7 +32,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
 
-import static com.alipay.sofa.serverless.common.spring.ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -70,10 +69,10 @@ public class ServerlessEnvironmentPostProcessorTest {
         propertySources.addLast(propertySource);
         when(otherEnvironment.getPropertySources()).thenReturn(propertySources);
 
-//        System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
+        //        System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
         serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
             springApplication);
-//        System.clearProperty(SPRING_CONFIG_LOCATION);
+        //        System.clearProperty(SPRING_CONFIG_LOCATION);
 
         PropertySource<?> masterPropertySource = propertySources.get("MasterBiz-Config resource");
         Assert.assertTrue(masterPropertySource instanceof MasterBizPropertySource);
