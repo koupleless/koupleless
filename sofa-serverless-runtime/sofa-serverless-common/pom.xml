@@ -52,14 +52,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!-- In order to simulate system properties without affecting the parallel execution of test cases   -->
-<!--        <dependency>-->
-<!--            <groupId>com.github.stefanbirkner</groupId>-->
-<!--            <artifactId>system-rules</artifactId>-->
-<!--            <version>1.16.0</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-
     </dependencies>
 
 </project>
