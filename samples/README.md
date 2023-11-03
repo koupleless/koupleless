@@ -10,7 +10,13 @@
 | springboot | slimming               | 模块瘦身         | [samples/springboot-samples/slimming/log4j2](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming/log4j2)               |
 | springboot | redis                  | 模块使用 redis   | [samples/springboot-samples/redis](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/redis)               |
 | dubbo      | dubbo + grpc           | 模块使用 grpc    | [samples/dubbo-samples/rpc/grpc](https://github.com/sofastack/sofa-serverless/tree/master/samples/dubbo-samples/rpc/grpc)             |
-| sofaboot   | sofarpc/tomcat         | 基座调用模块、中台模式  | [samples/sofaboot-samples/dynamic-stock](https://github.com/sofastack/sofa-serverless/tree/master/samples/sofaboot-samples/dynamic-stock)       |                                                                                                    |
+| sofaboot   | sofarpc/tomcat         | 基座调用模块、中台模式  | [samples/sofaboot-samples/dynamic-stock](https://github.com/sofastack/sofa-serverless/tree/master/samples/sofaboot-samples/dynamic-stock)       | 
+| springboot3   | springboot3         | springboot3  | [samples/sofaboot3-samples](https://github.com/sofastack/sofa-serverless/tree/master/samples/sofaboot3-samples)       |       |
 ### 注意请在编译器单独导入对应 samples 工程，例如 sofa-serverless/samples/springboot-samples 工程，否则会出现 BizRuntieContext Not found 的报错。
 ![biz runtime context not found](bizruntimecontext_not_found.png)
 原因：samples 工程与 sofa-serverless-runtime 在一个工程目录里，会优先使用本地的 sofa-serverless-runtime，而不是 maven 依赖的 sofa-serverless-runtime，导致找不到 BizRuntimeContext 类。
+
+### 支持 Java EE/Jakarta EE
+
+随着 Oracle 将 Java EE 交给 Eclipse 开始 Java EE 就成为了历史，取而代之的是新的 Jakarta EE 系列。对于开发者而言，最大的改变便是从 jakarta EE 9 开始， EE 相关的类的命名空间从 javax.* 迁移到了 jakarta.*。
+对于这一变更，开源社区的组件也均在不同进度的进行升级适配：例如 Tomcat 从 10.x 版本开始便迁移到了 jakarta 命名空间。而 SpringBoot 3.x 版本也不再支持 Java EE 8，而是基于 Jakarta EE 9 构建。 为了支持 Jakarta EE，sofa-ark 将从 2.2.4 同时发布不带后缀和携带后缀为 `-jakarta`的包。
