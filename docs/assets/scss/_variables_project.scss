@@ -6,12 +6,22 @@ Add styles or override variables from the theme here.
 
 @font-face {
   font-family: "Alibaba PuHuiTi";
-  src: url("/font/Alibaba-PuHuiTi-Medium.otf");
+  src: url("/font/Alibaba-PuHuiTi-Regular.otf");
 }
 
 @font-face {
   font-family: "AlibabaPuHuiTiR";
   src: url("/font/Alibaba-PuHuiTi-Regular.otf");
+}
+
+@font-face {
+  font-family: "AlibabaPuHuiTiM";
+  src: url("/font/Alibaba-PuHuiTi-Medium.otf");
+}
+
+@font-face {
+  font-family: "AlibabaPuHuiTiB";
+  src: url("/font/Alibaba-PuHuiTi-Bold.otf");
 }
 
 @font-face {
@@ -29,7 +39,7 @@ Add styles or override variables from the theme here.
   src: url("/font/PingFang.ttc");
 }
 
-* {
+body {
   font-family: "Alibaba PuHuiTi";
 }
 
@@ -206,6 +216,7 @@ header > nav.td-navbar {
     }
 
     .navbar-brand__name {
+      font-family: "AlibabaPuHuiTiB";
       font-size: 24px;
       vertical-align: middle;
       color: #FFFFFF;
