@@ -44,6 +44,9 @@ jobs:
         with:
           hugo-version: 0.119.0
           extended: true
+      - run: npm install -D autoprefixer
+      - run: npm install -D postcss-cli
+      - run: npm install -D postcss
       - run: npm run build:production:github-pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
