@@ -6,17 +6,17 @@ Add styles or override variables from the theme here.
 
 @font-face {
   font-family: "Alibaba PuHuiTi";
-  src: url("/font/AlibabaPuHuiTi-2-105-Heavy.ttf");
+  src: url("/font/Alibaba-PuHuiTi-Medium.otf");
 }
 
 @font-face {
   font-family: "AlibabaPuHuiTiR";
-  src: url("/font/AlibabaPuHuiTi-2-105-Heavy.ttf");
+  src: url("/font/Alibaba-PuHuiTi-Regular.otf");
 }
 
 @font-face {
   font-family: "AlibabaPuHuiTiH";
-  src: url("/font/AlibabaPuHuiTi-2-105-Heavy.ttf");
+  src: url("/font/Alibaba-PuHuiTi-Heavy.otf");
 }
 
 @font-face {
@@ -30,7 +30,7 @@ Add styles or override variables from the theme here.
 }
 
 * {
-  font-family: "AlibabaPuHuiTiH, Alibaba PuHuiTi";
+  font-family: "Alibaba PuHuiTi";
 }
 
 #home-page {
