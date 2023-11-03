@@ -29,16 +29,6 @@ Add styles or override variables from the theme here.
   src: url("/font/Alibaba-PuHuiTi-Heavy.otf");
 }
 
-@font-face {
-  font-family: "PingFangSC-Regular";
-  src: url("/font/PingFang.ttc");
-}
-
-@font-face {
-  font-family: "PingFangSC-Medium";
-  src: url("/font/PingFang.ttc");
-}
-
 body {
   font-family: "Alibaba PuHuiTi";
 }
@@ -284,7 +274,7 @@ footer.td-footer.row.d-print-none {
     }
 
     .td-footer__copyright-etc {
-      font-family: PingFangSC-Regular;
+      font-family: PingFangSC-Regular, "Microsoft Yahei";
       font-size: 16px;
       color: rgba(255,255,255,0.45);
       letter-spacing: 0;
@@ -377,7 +367,7 @@ aside.td-sidebar {
 
         > .td-sidebar-link {
           width: 292px;
-          font-family: PingFangSC-Regular;
+          font-family: PingFangSC-Regular, "Microsoft Yahei";
           font-size: 16px;
           color: rgba(0, 0, 0, 0.65);
           padding: 0 20px !important;
@@ -385,7 +375,7 @@ aside.td-sidebar {
 
         &.active-path {
           > .td-sidebar-link {
-            font-family: PingFangSC-Medium;
+            font-family: PingFangSC-Medium, "Microsoft Yahei";
             font-size: 16px;
             color: rgba(0, 0, 0, 0.95);
           }
@@ -414,7 +404,7 @@ aside.td-sidebar {
 
         > .td-sidebar-link {
 
-          font-family: PingFangSC-Regular;
+          font-family: PingFangSC-Regular, "Microsoft Yahei";
           font-size: 16px;
           color: rgba(0, 0, 0, 0.65);
 
@@ -438,7 +428,7 @@ aside.td-sidebar {
           &.with-child {
 
             > .td-sidebar-link {
-              font-family: PingFangSC-Medium;
+              font-family: PingFangSC-Medium, "Microsoft Yahei";
               font-size: 16px;
               color: rgba(0, 0, 0, 0.95);
             }
@@ -446,7 +436,7 @@ aside.td-sidebar {
 
           &:not(.with-child) > .td-sidebar-link {
 
-            font-family: PingFangSC-Medium;
+            font-family: PingFangSC-Medium, "Microsoft Yahei";
             font-size: 16px;
             color: rgba(0, 0, 0, 0.95);
             background: rgba(7, 7, 7, 0.05);
@@ -484,7 +474,7 @@ aside.td-sidebar {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(0, 0, 0, 0.25);
       border-radius: 8px;
-      font-family: PingFangSC-Regular;
+      font-family: PingFangSC-Regular, "Microsoft Yahei";
       font-size: 14px;
       color: rgba(0, 0, 0, 0.95);
       letter-spacing: 0;
@@ -548,7 +538,7 @@ main.td-main, div.td-main main {
 
   padding: 20px !important;
   color: rgba(0, 0, 0, 0.95);
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Regular, "Microsoft Yahei";
   font-size: 15px;
   line-height: 24px;
   letter-spacing: 0;
@@ -569,7 +559,7 @@ main.td-main, div.td-main main {
 
   table tr {
     td, th {
-      font-family: PingFangSC-Regular;
+      font-family: PingFangSC-Regular, "Microsoft Yahei";
       font-size: 15px;
       line-height: 24px;
     }
@@ -596,7 +586,7 @@ main.td-main, div.td-main main {
 
   h1, h2, h3, h4, h5 {
 
-    font-family: PingFangSC-Medium;
+    font-family: PingFangSC-Medium, "Microsoft Yahei";
     max-width: 100%;
     color: rgba(0, 0, 0, 0.95);
     letter-spacing: 0;
@@ -696,7 +686,7 @@ main.td-main, div.td-main main {
         max-width: 100%;
 
         > a {
-          font-family: PingFangSC-Medium;
+          font-family: PingFangSC-Medium, "Microsoft Yahei";
           font-size: 20px;
           font-weight: normal !important;
           line-height: 28px;
@@ -709,7 +699,7 @@ main.td-main, div.td-main main {
   .text-muted {
 
     border-width: 0px !important;
-    font-family: PingFangSC-Regular;
+    font-family: PingFangSC-Regular, "Microsoft Yahei";
     font-size: 14px;
     letter-spacing: 0;
     line-height: 22px;
@@ -734,7 +724,7 @@ main.td-main, div.td-main main {
 
     .feedback--question {
       color: rgba(0, 0, 0, 0.65);
-      font-family: PingFangSC-Regular;
+      font-family: PingFangSC-Regular, "Microsoft Yahei";
       font-size: 14px;
       letter-spacing: 0;
       line-height: 22px;
@@ -785,7 +775,7 @@ aside.td-sidebar-toc {
         padding: 0px 16px;
         height: 36px;
         line-height: 36px;
-        font-family: PingFangSC-Regular;
+        font-family: PingFangSC-Regular, "Microsoft Yahei";
         font-size: 15px;
         color: rgba(0, 0, 0, 0.65);
         letter-spacing: 0;
@@ -794,7 +784,7 @@ aside.td-sidebar-toc {
         text-overflow: ellipsis;
 
         &:hover, &:focus {
-          font-family: PingFangSC-Medium;
+          font-family: PingFangSC-Medium, "Microsoft Yahei";
           color: rgba(0, 0, 0, 0.95);
           background: rgba(7, 7, 7, 0.05);
         }
@@ -827,7 +817,7 @@ aside.td-sidebar-toc {
     > a {
       padding: 0 16px;
       line-height: 24px;
-      font-family: PingFangSC-Regular;
+      font-family: PingFangSC-Regular, "Microsoft Yahei";
       font-size: 15px;
       color: #0077FF;
     }

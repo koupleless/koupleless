@@ -91,7 +91,7 @@ url: "/home/"
                 <path d="M835,0 L1184,0 C1192.83656,-1.623249e-15 1200,7.163444 1200,16 L1200,98 C1200,106.836556 1192.83656,114 1184,114 L835,114 C826.163444,114 819,106.836556 819,98 L819,16 C819,7.163444 826.163444,1.623249e-15 835,0 Z" id="矩形备份-19" fill="url(#linearGradient-j7tnbb2t-6-1)"></path>
                 <g id="编组-64" transform="translate(26.000000, 28.000000)">
                     <a xlink:href="/user-cases/alibaba-aidc/" target="_blank">
-                    <text id="助力阿里国际数字商业三倍提效！" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
+                    <text id="助力阿里国际数字商业三倍提效！" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
                         <tspan x="32" y="21">助力阿里国际数字商业三倍提效！</tspan>
                     </text>
                     </a>
@@ -104,13 +104,13 @@ url: "/home/"
                     </g>
                 </g>
                 <a xlink:href="/user-cases/alibaba-aidc/" target="_blank">
-                <text id="全新企业案例：阿里国际数字商业集团研发运" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
+                <text id="全新企业案例：阿里国际数字商业集团研发运" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
                     <tspan x="15" y="80">全新企业案例：阿里国际数字商业集团研发运维极致提效</tspan>
                 </text>
                 </a>
                 <g id="编组-69" transform="translate(433.000000, 28.000000)">
                     <a xlink:href="/docs/tutorials/module-create/springboot-and-sofaboot/" target="_blank">
-                    <text id="SpringBoot-一键升级为模块上线" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
+                    <text id="SpringBoot-一键升级为模块上线" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
                         <tspan x="30.63" y="21">SpringBoot 一键升级为模块上线！</tspan>
                     </text>
                     </a>
@@ -123,13 +123,13 @@ url: "/home/"
                     </g>
                 </g>
                 <a xlink:href="/docs/tutorials/module-create/springboot-and-sofaboot/" target="_blank">
-                <text id="让您实现同一套代码既能独立启动，又能合并" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
+                <text id="让您实现同一套代码既能独立启动，又能合并" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
                     <tspan x="444" y="80">让您实现同一套代码既能独立启动，又能合并部署！</tspan>
                 </text>
                 </a>
                 <g id="编组-70" transform="translate(893.000000, 28.000000)">
                     <a xlink:href="/docs/contribution-guidelines/communication-channel/#社区双周会" target="_blank">
-                    <text id="社区周会时间调整通知" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
+                    <text id="社区周会时间调整通知" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
                         <tspan x="32" y="21">社区周会时间调整通知</tspan>
                     </text>
                     </a>
@@ -142,7 +142,7 @@ url: "/home/"
                     </g>
                 </g>
                 <a xlink:href="/docs/contribution-guidelines/communication-channel/#社区双周会" target="_blank">
-                <text id="双周会时间调整到周二-19:30，下次会" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
+                <text id="双周会时间调整到周二-19:30，下次会" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
                     <tspan x="843" y="80">双周会时间调整到周二 19:30，下次会议时间 11.14 晚</tspan>
                 </text>
                 </a>
@@ -155,7 +155,7 @@ url: "/home/"
 
 <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 40px; color: #FFFFFF; letter-spacing: 0; 
     text-align: center; line-height: 48px; margin-top: 120px; margin-bottom: 24px; ">产品介绍</p>
-<p style="opacity: 0.5; font-family: PingFangSC-Regular; font-size: 16px; color: #FFFFFF; letter-spacing: 0;
+<p style="opacity: 0.5; font-family: PingFangSC-Regular, 'Microsoft Yahei'; font-size: 16px; color: #FFFFFF; letter-spacing: 0;
     text-align: center; line-height: 28px; max-width: 1056px; "
     >SOFAServerless 是一种模块化 Serverless 技术解决方案，它能让普通应用低成本演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，
 与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。</p>
@@ -330,7 +330,7 @@ url: "/home/"
                     <text id="大幅加速应用构建与发布" opacity="0.95" font-family="AlibabaPuHuiTiM" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                         <tspan x="59" y="145">大幅加速应用构建与发布</tspan>
                     </text>
-                    <text opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                    <text opacity="0.5" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                         <tspan x="70" y="179">传统应用镜像化构建 + 发布速度很慢，</tspan>
                         <tspan x="70" y="203">通过模块化方式，应用单次构建+发布</tspan>
                         <tspan x="85" y="227">耗时可从 5 分钟级减少到 1 分钟</tspan>
@@ -353,7 +353,7 @@ url: "/home/"
                     <text id="SDK 无感升级" opacity="0.95" font-family="AlibabaPuHuiTiM" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                         <tspan x="114" y="145">SDK 无感升级</tspan>
                     </text>
-                    <text id="借助-SOFAServerless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                    <text id="借助-SOFAServerless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                         <tspan x="71.629" y="179">借助 SOFAServerless 将应用依赖尽可</tspan>
                         <tspan x="73.176" y="203">能下沉到基座 (类似业务 Sidecar)，可</tspan>
                         <tspan x="109.142" y="227">以实现 SDK 的无打扰升级</tspan>
@@ -382,7 +382,7 @@ url: "/home/"
                 <text id="极致裁剪长尾应用资源成本" opacity="0.95" font-family="AlibabaPuHuiTiM" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                     <tspan x="46" y="145">极致裁剪长尾应用资源成本</tspan>
                 </text>
-                <text id="通过-SOFAServerless-将多" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                <text id="通过-SOFAServerless-将多" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                     <tspan x="71.629" y="179">通过 SOFAServerless 将多个应用合并</tspan>
                     <tspan x="72" y="203">部署在一起，可以实现大量的长尾应用</tspan>
                     <tspan x="156" y="227">服务器裁撤</tspan>
@@ -406,7 +406,7 @@ url: "/home/"
                 <text id="大幅提升应用研发协作效率" opacity="0.95" font-family="AlibabaPuHuiTiM" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                     <tspan x="46.5" y="145">大幅提升应用研发协作效率</tspan>
                 </text>
-                <text id="通过-SOFAServerless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                <text id="通过-SOFAServerless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                     <tspan x="64.629" y="179">通过 SOFAServerless 将应用快速划分成</tspan>
                     <tspan x="65.007" y="203">多个模块 (代码包)，且多个模块间可以同</tspan>
                     <tspan x="65" y="227">时迭代互不影响，进而大幅提升研发效率</tspan>
@@ -428,7 +428,7 @@ url: "/home/"
                 <text id="简化中台业务的资产沉淀" opacity="0.95" font-family="AlibabaPuHuiTiM" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                     <tspan x="73" y="145">简化中台业务资产沉淀</tspan>
                 </text>
-                <text id="支持低成本将业务公共代码下沉到基座并在基" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                <text id="支持低成本将业务公共代码下沉到基座并在基" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                     <tspan x="65" y="179">支持低成本将业务公共代码下沉到基座并</tspan>
                     <tspan x="65" y="203">在基座上长出各种轻薄的功能模块，从而</tspan>
                     <tspan x="65" y="227">让组织分工更加合理、需求交付更加高效</tspan>
@@ -451,7 +451,7 @@ url: "/home/"
                 <text id="降低微服务演进成本" opacity="0.95" font-family="AlibabaPuHuiTiM" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                     <tspan x="82.5" y="145">降低微服务演进成本</tspan>
                 </text>
-                <text id="支持业务架构低成本地在单体应用、多模块、" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                <text id="支持业务架构低成本地在单体应用、多模块、" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                     <tspan x="65" y="179">支持业务架构低成本地在单体应用、多模</tspan>
                     <tspan x="65" y="203">块、独立微服务应用之间来回切换，从而</tspan>
                     <tspan x="65" y="227">轻松让应用架构与业务发展保持及时同步</tspan>
@@ -522,17 +522,17 @@ url: "/home/"
             <text id="Deploy-as-you-need" opacity="0.95" font-family="AlibabaPuHuiTiM" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                 <tspan x="758" y="1409">Deploy as you need</tspan>
             </text>
-            <text id="灵活部署：模块可合并部署也可独立部署-变" opacity="0.55" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+            <text id="灵活部署：模块可合并部署也可独立部署-变" opacity="0.55" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                 <tspan x="747" y="1443">灵活部署：模块可合并部署也可独立部署</tspan>
                 <tspan x="747" y="1467">变更影响面小：一次部署只涉及模块自身</tspan>
                 <tspan x="789" y="1491">代码变更和对应的机器变更</tspan>
             </text>
-            <text id="模块粒度小，占用资源少，调度密度与资源复" opacity="0.55" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+            <text id="模块粒度小，占用资源少，调度密度与资源复" opacity="0.55" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                 <tspan x="453" y="1443">模块粒度小，占用资源少，调度密度与</tspan>
                 <tspan x="453" y="1467">资源复用率高。模块和基座支持自动弹</tspan>
                 <tspan x="516" y="1491">性伸缩，按需部署</tspan>
             </text>
-            <text id="十秒级构建与启动，应用多个功能之间独立并" opacity="0.55" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+            <text id="十秒级构建与启动，应用多个功能之间独立并" opacity="0.55" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                 <tspan x="141" y="1443">十秒级构建与启动，应用多个功能之间</tspan>
                 <tspan x="197" y="1467">独立并行迭代无阻塞</tspan>
             </text>
@@ -544,7 +544,7 @@ url: "/home/"
             <text id="Evolution-as-you-nee" opacity="0.95" font-family="AlibabaPuHuiTiM" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                 <tspan x="1052" y="1409">Evolution as you need</tspan>
             </text>
-            <text id="提供配套工具，传统应用能一键改造成模块，" opacity="0.55" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+            <text id="提供配套工具，传统应用能一键改造成模块，" opacity="0.55" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
                 <tspan x="1054" y="1443">提供配套工具，传统应用能一键改造成模</tspan>
                 <tspan x="1054" y="1467">块，大应用能低成本拆分成模块，模块能</tspan>
                 <tspan x="1068" y="1491">轻松演进成微服务或者回到单体应用</tspan>
@@ -562,7 +562,7 @@ url: "/home/"
     <div style="display: inline-block; width: 360px; vertical-align: top;" >
         <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 20px; font-weight: 600; color: #FFFFFF; 
             letter-spacing: 0; line-height: 26px; margin: 0px; margin-bottom: 16px;">欢迎参与开源社区</p>
-        <p style="opacity: 1; font-family: PingFangSC-Regular; font-size: 16px; color: rgb(255,255,255,0.65); letter-spacing: 0;
+        <p style="opacity: 1; font-family: PingFangSC-Regular, 'Microsoft Yahei'; font-size: 16px; color: rgb(255,255,255,0.65); letter-spacing: 0;
             line-height: 24px; margin: 0px; ">所有人都可以提交 <a href="https://github.com/sofastack/sofa-serverless/pulls"
                 style="color: rgb(45, 121, 246);">Pull Request</a>。
 欢迎参与 <a href="https://github.com/sofastack/sofa-serverless" style="color: rgba(45, 121, 246);">SOFAServerless</a> 开源社区！</p>
@@ -570,19 +570,19 @@ url: "/home/"
     <div style="display: inline-block; width: 360px; vertical-align: top;" >
         <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-weight: 600; font-size: 20px; color: #FFFFFF; 
             letter-spacing: 0; line-height: 26px; margin: 0px; margin-bottom: 16px;">欢迎加入社区协作钉钉群</p>
-        <p style="opacity: 1; font-family: PingFangSC-Regular; font-size: 16px; color: rgba(255,255,255,0.7); letter-spacing: 0;
+        <p style="opacity: 1; font-family: PingFangSC-Regular, 'Microsoft Yahei'; font-size: 16px; color: rgba(255,255,255,0.7); letter-spacing: 0;
             line-height: 24px; margin: 0px; margin-bottom: 12px;">
             <img style="background-image: linear-gradient(134deg, rgba(255,255,255,0.12) 0%, 
                 rgba(255,255,255,0.10) 100%); border: 8px solid transparent; border-radius: 8px; width: 204px;" 
                 src="/img/dingtalk-qcode.png" />
         </p>
-        <p style="opacity: 1; font-family: PingFangSC-Regular; font-size: 16px; color: rgba(255,255,255,0.65); letter-spacing: 0;
+        <p style="opacity: 1; font-family: PingFangSC-Regular, 'Microsoft Yahei'; font-size: 16px; color: rgba(255,255,255,0.65); letter-spacing: 0;
             line-height: 24px; margin: 0px;">社区钉钉群号：24970018417</p>
     </div>
     <div style="display: inline-block; width: 360px; vertical-align: top;" >
         <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 20px; color: #FFFFFF; letter-spacing: 0;
             line-height: 26px; margin: 0px; margin-bottom: 16px;">欢迎加入社区协作微信群</p>
-        <p style="opacity: 1; font-family: PingFangSC-Regular; font-weight: 600; font-size: 16px; color: rgba(255,255,255,0.7); 
+        <p style="opacity: 1; font-family: PingFangSC-Regular, 'Microsoft Yahei'; font-weight: 600; font-size: 16px; color: rgba(255,255,255,0.7); 
             letter-spacing: 0; line-height: 24px; margin: 0px;">
             <img style="background-image: linear-gradient(134deg, rgba(255,255,255,0.12) 0%, 
                 rgba(255,255,255,0.10) 100%); border: 8px solid transparent; border-radius: 8px; width: 204px;" 
