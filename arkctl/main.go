@@ -18,9 +18,10 @@
 package main
 
 import (
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd"
+	_ "serverless.alipay.com/sofa-serverless/arkctl/v1/cmd"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
 )
 
 func main() {
-	cmd.Execute()
+	root.Execute()
 }

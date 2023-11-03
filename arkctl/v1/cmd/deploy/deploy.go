@@ -10,7 +10,7 @@ import (
 	"serverless.alipay.com/sofa-serverless/arkctl/common/cmdutil"
 	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
 	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
 	"serverless.alipay.com/sofa-serverless/arkctl/v1/service/ark"
 
 	"github.com/spf13/cobra"
@@ -23,7 +23,6 @@ var (
 	podFlag    string
 
 	doLocalBuildBundle = false
-	doLocalDeploy      = false
 )
 
 const (
@@ -58,8 +57,14 @@ Scenario 3: Deploy a local bundleFlag to remote ark container running in k8s pod
 	ValidArgs:         nil,
 	ValidArgsFunction: nil,
 	Args: func(cmd *cobra.Command, args []string) error {
-		doLocalBuildBundle = cmd.Flags().Changed("buildFlag")
-		doLocalDeploy = (podFlag == "")
+		// if bundle is provided, then there is no need to build
+		doLocalBuildBundle = !cmd.Flags().Changed("bundle")
+
+		// if bundle is not provided and build is not provided as well, set to current directory
+		if doLocalBuildBundle && !cmd.Flags().Changed("build") {
+			buildFlag, _ = os.Getwd()
+		}
+
 		return nil
 	},
 	Run: executeDeploy,
@@ -236,22 +241,22 @@ func executeDeploy(cobracmd *cobra.Command, _ []string) {
 }
 
 func init() {
-	cmd.RootCmd.AddCommand(DeployCommand)
-	DeployCommand.Flags().StringVar(&buildFlag, "buildFlag", "", `
+	root.RootCmd.AddCommand(DeployCommand)
+	DeployCommand.Flags().StringVar(&buildFlag, "build", "", `
 Build the project at given directory and then deploy it to running containers.
 If not provided, arkctl will try to buildFlag the project in current directory.
 `)
 
-	DeployCommand.Flags().StringVar(&bundleFlag, "bundleFlag", "", `
+	DeployCommand.Flags().StringVar(&bundleFlag, "bundle", "", `
 Provide the pre-built bundleFlag url and then deploy it to running containers.
 If not provided, arkctl will try to find the bundleFlag in current directory.
 `)
 
-	DeployCommand.Flags().StringVar(&podFlag, "podFlag", "", `
+	DeployCommand.Flags().StringVar(&podFlag, "pod", "", `
 If Provided, arkctl will try to deploy the bundleFlag to the given podFlag instead of local running process.
 `)
 
-	DeployCommand.Flags().IntVar(&portFlag, "portFlag", 1238, `
+	DeployCommand.Flags().IntVar(&portFlag, "port", 1238, `
 The default portFlag of ark container is 1238.
 `)
 

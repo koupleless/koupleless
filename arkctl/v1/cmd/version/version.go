@@ -15,39 +15,30 @@
  * limitations under the License.
  */
 
-package cmd
+package version
 
 import (
 	"fmt"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/constant"
 )
 
 import (
 	"github.com/spf13/cobra"
 )
 
-// newServerlessApp represents the new command
-var newServerlessApp = &cobra.Command{
-	Use:   "newServerlessApp",
-	Short: "new a serverless app project",
-	Run:   createApp,
+// versionCmd represents the version command
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "show version",
+	Long:  ``,
+	Run:   versionFunc,
 }
 
 func init() {
-	RootCmd.AddCommand(newServerlessApp)
+	root.RootCmd.AddCommand(versionCmd)
 }
 
-func createApp(cmd *cobra.Command, args []string) {
-	if len(args) == 0 {
-		fmt.Println("Please tell me the generate path, like '.' ")
-		return
-	}
-	path := args[0]
-	if err := generate(path); err != nil {
-		fmt.Printf("generate error: %s\n", err)
-	}
-}
-
-func generate(path string) error {
-	// TODO: 生成模块代码
-	return nil
+func versionFunc(cmd *cobra.Command, _ []string) {
+	fmt.Printf("arkctl Version: %s\n", constant.Version)
 }

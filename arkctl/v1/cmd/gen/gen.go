@@ -15,29 +15,40 @@
  * limitations under the License.
  */
 
-package cmd
+package gen
 
 import (
 	"fmt"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
+)
+
+import (
 	"github.com/spf13/cobra"
 )
 
-// showCmd represents the show command
-var showCmd = &cobra.Command{
-	Use:   "show",
-	Short: "show serverless app status",
-	Long:  ``,
-	Run:   show,
+// newServerlessApp represents the new command
+var newServerlessApp = &cobra.Command{
+	Use:   "newServerlessApp",
+	Short: "new a serverless app project",
+	Run:   createApp,
 }
 
 func init() {
-	RootCmd.AddCommand(showCmd)
-	showCmd.Flags().String("r", "", "")
-	showCmd.Flags().String("mc", "", "Get Metadata in MetadataCenter")
-	showCmd.Flags().String("h", "h", "")
+	root.RootCmd.AddCommand(newServerlessApp)
 }
 
-func show(cmd *cobra.Command, _ []string) {
-	fmt.Printf("======================\n")
-	fmt.Printf("获取模块状态信息")
+func createApp(cmd *cobra.Command, args []string) {
+	if len(args) == 0 {
+		fmt.Println("Please tell me the generate path, like '.' ")
+		return
+	}
+	path := args[0]
+	if err := generate(path); err != nil {
+		fmt.Printf("generate error: %s\n", err)
+	}
+}
+
+func generate(path string) error {
+	// TODO: 生成模块代码
+	return nil
 }
