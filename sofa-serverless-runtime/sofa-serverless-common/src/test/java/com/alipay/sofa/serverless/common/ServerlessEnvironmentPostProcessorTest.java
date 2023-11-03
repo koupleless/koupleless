@@ -21,7 +21,10 @@ import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.common.spring.MasterBizPropertySource;
 import com.alipay.sofa.serverless.common.spring.ServerlessEnvironmentPostProcessor;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.ProvideSystemProperty;
+import org.mockito.MockedStatic;
 import org.springframework.boot.SpringApplication;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
@@ -34,6 +37,7 @@ import java.util.Properties;
 
 import static com.alipay.sofa.serverless.common.spring.ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 /**
@@ -42,13 +46,18 @@ import static org.mockito.Mockito.when;
  */
 public class ServerlessEnvironmentPostProcessorTest {
 
-    private final ConfigurableEnvironment masterEnvironment = mock(ConfigurableEnvironment.class);
+    private final ConfigurableEnvironment masterEnvironment    = mock(ConfigurableEnvironment.class);
 
-    private final ConfigurableEnvironment otherEnvironment  = mock(ConfigurableEnvironment.class);
+    private final ConfigurableEnvironment otherEnvironment     = mock(ConfigurableEnvironment.class);
 
-    private final SpringApplication       springApplication = mock(SpringApplication.class);
+    private final SpringApplication       springApplication    = mock(SpringApplication.class);
 
-    private final Biz                     masterBiz         = mock(Biz.class);
+    private final Biz                     masterBiz            = mock(Biz.class);
+
+    @Rule
+    public final ProvideSystemProperty    myPropertyHasMyValue = new ProvideSystemProperty(
+                                                                   SPRING_CONFIG_LOCATION,
+                                                                   "MyValue");
 
     @Test
     public void testPostProcessEnvironment() {
@@ -63,14 +72,20 @@ public class ServerlessEnvironmentPostProcessorTest {
         ArkClient.setMasterBiz(masterBiz);
         when(masterBiz.getBizClassLoader()).thenReturn(ClassLoader.getSystemClassLoader());
         Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
-        System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
+
         MutablePropertySources propertySources = new MutablePropertySources();
         PropertiesPropertySource propertySource = new PropertiesPropertySource("xxxx111",
             new Properties());
         propertySources.addLast(propertySource);
         when(otherEnvironment.getPropertySources()).thenReturn(propertySources);
+
+        //        MockedStatic<System> systemMockedStatic = mockStatic(System.class);
+        //        systemMockedStatic.when(() -> System.getProperty(SPRING_CONFIG_LOCATION)).thenReturn("xxxx");
+
+        //        System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
         serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
             springApplication);
+        //        System.clearProperty(SPRING_CONFIG_LOCATION);
 
         PropertySource<?> masterPropertySource = propertySources.get("MasterBiz-Config resource");
         Assert.assertTrue(masterPropertySource instanceof MasterBizPropertySource);
