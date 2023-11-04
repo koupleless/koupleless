@@ -449,9 +449,9 @@
         <profile>
             <id>jakarta</id>
             <properties>
-                <revision>${revision.default}-springboot3</revision>
-                <sofa.ark.version>${sofa.ark.version.default}-springboot3</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}-springboot3-jakarta</sofa.ark.starter.version>
+                <revision>${revision.default}-jdk17</revision>
+                <sofa.ark.version>${sofa.ark.version.default}-jdk17</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.default}-jdk17-jakarta</sofa.ark.starter.version>
             </properties>
             <activation>
                 <jdk>17</jdk>
