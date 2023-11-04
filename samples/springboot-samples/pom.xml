@@ -20,7 +20,7 @@
     <properties>
         <spring.boot.version>2.7.16</spring.boot.version>
         <java.version>1.8</java.version>
-        <sofa.ark.version>2.2.4-test-1104</sofa.ark.version>
+        <sofa.ark.version>2.2.4-SNAPSHOT</sofa.ark.version>
         <sofa.serverless.runtime.version>0.5.1</sofa.serverless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
@@ -43,8 +43,8 @@
         <module>msg/kafka/biz2</module>
         <module>db/mybatis/base</module>
         <module>db/mybatis/biz1</module>
-<!--        <module>redis/sample-redis-base</module>
-        <module>redis/sample-redis-biz</module>-->
+        <module>redis/sample-redis-base</module>
+        <module>redis/sample-redis-biz</module>
     </modules>
 
     <dependencyManagement>
