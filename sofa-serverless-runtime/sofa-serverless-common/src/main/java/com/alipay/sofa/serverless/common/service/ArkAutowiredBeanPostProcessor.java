@@ -136,7 +136,8 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, String beanName)
+                                                                              throws BeansException {
         return bean;
     }
 }
