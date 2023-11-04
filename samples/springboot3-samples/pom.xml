@@ -20,7 +20,7 @@
     <properties>
         <spring.boot.version>3.0.9</spring.boot.version>
         <java.version>17</java.version>
-        <sofa.ark.version>2.2.4</sofa.ark.version>
+        <sofa.ark.version>2.2.4-springboot3</sofa.ark.version>
         <sofa.serverless.runtime.version>0.5.1</sofa.serverless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
@@ -76,11 +76,6 @@
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>sofa-ark-all</artifactId>
                 <version>${sofa.ark.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.alipay.sofa</groupId>
-                <artifactId>sofa-ark-springboot-starter</artifactId>
-                <version>${sofa.ark.version}-jakarta</version>
             </dependency>
             <dependency>
                 <groupId>com.alipay.sofa</groupId>

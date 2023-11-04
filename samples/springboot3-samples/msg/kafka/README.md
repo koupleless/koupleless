@@ -11,13 +11,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-base-starter</artifactId>
     <!-- 以上版本支持springboot3 -->
-    <version>0.5.2-jakarta</version>
-</dependency>
-
-<dependency>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>sofa-ark-support-starter</artifactId>
-    <version>${sofa.ark.version}</version>
+    <version>0.5.1-springboot3</version>
 </dependency>
 <!-- end 动态模块相关依赖 -->
 

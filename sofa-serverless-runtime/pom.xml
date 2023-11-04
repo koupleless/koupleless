@@ -9,8 +9,12 @@
     <packaging>pom</packaging>
 
     <properties>
+        <!--    JDK 17   打包如下：
+        1. 切换到JDK 17
+        2. 修改 sofa.ark.version.default 和 revision.default 中的 "数字" 版本号
+        3. 开始打包，将所有打出的包都上传-->
         <sofa.ark.version.default>2.2.4</sofa.ark.version.default>
-        <revision.default>0.5.2</revision.default>
+        <revision.default>0.5.1</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -445,8 +449,9 @@
         <profile>
             <id>jakarta</id>
             <properties>
-                <revision>${revision.default}-jakarta</revision>
-                <sofa.ark.version>${sofa.ark.version.default}-jakarta</sofa.ark.version>
+                <revision>${revision.default}-springboot3</revision>
+                <sofa.ark.version>${sofa.ark.version.default}-springboot3</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.default}-springboot3-jakarta</sofa.ark.starter.version>
             </properties>
             <activation>
                 <jdk>17</jdk>
@@ -565,6 +570,7 @@
             <properties>
                 <revision>${revision.default}</revision>
                 <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
             </properties>
             <repositories>
                 <repository>
