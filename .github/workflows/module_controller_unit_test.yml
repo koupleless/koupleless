@@ -7,21 +7,21 @@ on:
       - master
     paths:
       - 'module-controller/**'
-      
+
   pull_request:
     branches:
       - master
     paths:
       - 'module-controller/**'
-      
+
   # enable manually running the workflow
   workflow_dispatch:
-  
+
 env:
   CGO_ENABLED: 0
   GOOS: linux
   WORK_DIR: module-controller
-  
+
 defaults:
   run:
     working-directory: module-controller
@@ -31,15 +31,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up go
         uses: actions/setup-go@v4
         with:
           go-version: '1.20.5'
           cache-dependency-path: ${{ env.WORK_DIR }}/go.sum
-          
+
       - name: Run go mod
         run: go mod download
-        
+
       - name: Test
         run: make test
+
+      #  https://about.codecov.io/blog/getting-started-with-code-coverage-for-golang/
+      - name: Upload coverage to CodeCov
+        uses: codecov/codecov-action@v3

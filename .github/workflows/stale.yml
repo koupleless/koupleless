@@ -1,4 +1,4 @@
-name: Layotto Env Pipeline 🌊
+name: stale issues monitor and close 🌊
 
 on:
   schedule:

@@ -11,6 +11,8 @@ spec:
     kind: ModuleReplicaSet
     listKind: ModuleReplicaSetList
     plural: modulereplicasets
+    shortNames:
+    - mdrs
     singular: modulereplicaset
   scope: Namespaced
   versions:
@@ -52,6 +54,21 @@ spec:
                     x-kubernetes-int-or-string: true
                   needConfirm:
                     type: boolean
+                  serviceStrategy:
+                    properties:
+                      enableModuleService:
+                        type: boolean
+                      port:
+                        format: int32
+                        type: integer
+                      targetPort:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        x-kubernetes-int-or-string: true
+                    type: object
+                  upgradePolicy:
+                    type: string
                   useBeta:
                     type: boolean
                 type: object
@@ -65,8 +82,6 @@ spec:
                     enum:
                     - scatter
                     - stacking
-                    type: string
-                  upgradePolicy:
                     type: string
                 type: object
               selector:

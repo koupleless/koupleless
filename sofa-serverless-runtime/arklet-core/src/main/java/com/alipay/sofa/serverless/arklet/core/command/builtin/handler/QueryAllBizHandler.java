@@ -18,6 +18,7 @@ package com.alipay.sofa.serverless.arklet.core.command.builtin.handler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
@@ -34,13 +35,16 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
  */
 public class QueryAllBizHandler extends AbstractCommandHandler<InputMeta, List<BizInfo>> {
 
+    private static final String BASE_ARK_MAIN_CLASS = "embed main";
+
     @Override
     public Output<List<BizInfo>> handle(InputMeta inputMeta) {
         List<Biz> bizList = getOperationService().queryBizList();
         List<BizInfo> bizInfos = new ArrayList<>(bizList.size());
         for (Biz biz : bizList) {
-            if (biz.getMainClass() == "embed main")
+            if (Objects.equals(biz.getMainClass(), BASE_ARK_MAIN_CLASS)) {
                 continue;
+            }
             BizInfo model = new BizInfo();
             model.setBizName(biz.getBizName());
             model.setBizVersion(biz.getBizVersion());

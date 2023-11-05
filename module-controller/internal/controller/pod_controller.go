@@ -24,7 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	moduledeploymentv1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
 	"github.com/sofastack/sofa-serverless/internal/utils"
 
@@ -68,7 +68,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 	if pod.DeletionTimestamp != nil {
 		// pod is deleting
 		log.Log.Info("start delete pod", "podName", pod.Name)
-		moduleList := &moduledeploymentv1alpha1.ModuleList{}
+		moduleList := &v1alpha1.ModuleList{}
 		err = r.Client.List(ctx, moduleList, &client.ListOptions{Namespace: req.Namespace, LabelSelector: labels.SelectorFromSet(map[string]string{
 			label.BaseInstanceNameLabel: pod.Name,
 		})})
@@ -77,7 +77,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 			if pod.Labels[label.DeletePodLabel] == "true" {
 				if module.Labels[label.DeleteModuleLabel] != "true" {
 					module.Labels[label.DeleteModuleLabel] = "true"
-					err = r.Client.Update(ctx, &module)
+					err = utils.UpdateResource(r.Client, ctx, &module)
 					if err != nil {
 						log.Log.Error(err, "delete module failed when update delete module label", "moduleName", module.Name, "podName", pod.Name)
 						return ctrl.Result{}, err
@@ -86,7 +86,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 			} else if pod.Labels[label.DeletePodDirectlyLabel] == "true" {
 				if module.Labels[label.DeleteModuleDirectlyLabel] != "true" {
 					module.Labels[label.DeleteModuleDirectlyLabel] = "true"
-					err = r.Client.Update(ctx, &module)
+					err = utils.UpdateResource(r.Client, ctx, &module)
 					if err != nil {
 						log.Log.Error(err, "delete module failed when update delete module label", "moduleName", module.Name, "podName", pod.Name)
 						return ctrl.Result{}, err

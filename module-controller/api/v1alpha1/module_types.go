@@ -89,6 +89,7 @@ type ModuleStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:shortName=md
 
 // Module is the Schema for the modules API
 type Module struct {

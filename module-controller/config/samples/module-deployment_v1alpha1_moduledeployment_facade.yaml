@@ -21,7 +21,7 @@ spec:
     needConfirm: true
     useBeta: false
     batchCount: 1
-  schedulingStrategy:
     upgradePolicy: uninstall_then_install
+  schedulingStrategy:
     schedulingPolicy: scatter
 

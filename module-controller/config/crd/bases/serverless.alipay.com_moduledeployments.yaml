@@ -11,6 +11,8 @@ spec:
     kind: ModuleDeployment
     listKind: ModuleDeploymentList
     plural: moduledeployments
+    shortNames:
+    - mddeploy
     singular: moduledeployment
   scope: Namespaced
   versions:
@@ -57,6 +59,21 @@ spec:
                     x-kubernetes-int-or-string: true
                   needConfirm:
                     type: boolean
+                  serviceStrategy:
+                    properties:
+                      enableModuleService:
+                        type: boolean
+                      port:
+                        format: int32
+                        type: integer
+                      targetPort:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        x-kubernetes-int-or-string: true
+                    type: object
+                  upgradePolicy:
+                    type: string
                   useBeta:
                     type: boolean
                 type: object
@@ -81,8 +98,6 @@ spec:
                     enum:
                     - scatter
                     - stacking
-                    type: string
-                  upgradePolicy:
                     type: string
                 type: object
               template:
@@ -211,6 +226,9 @@ spec:
                 type: integer
               releaseStatus:
                 properties:
+                  batchProgress:
+                    description: the phase current batch release reach
+                    type: string
                   currentBatch:
                     description: Records the current batch serial number.
                     format: int32
@@ -228,7 +246,7 @@ spec:
                     format: int32
                     type: integer
                   progress:
-                    description: The phase current release reach
+                    description: The phase current whole release reach
                     type: string
                   realBatchCount:
                     description: Records the real batch count

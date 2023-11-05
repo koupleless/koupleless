@@ -83,9 +83,12 @@ type ReleaseStatus struct {
 	// +optional
 	OriginalDeltaReplicas int32 `json:"originalDeltaReplicas,omitempty"`
 
-	// The phase current release reach
+	// The phase current whole release reach
 	// +optional
 	Progress ReleaseProgress `json:"progress,omitempty"`
+
+	// the phase current batch release reach
+	BatchProgress ReleaseProgress `json:"batchProgress,omitempty"`
 
 	// Last time the release transitioned from one status to another.
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
@@ -120,13 +123,25 @@ type ModuleOperationStrategy struct {
 	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty"`
 
 	GrayTimeBetweenBatchSeconds int32 `json:"grayTimeBetweenBatchSeconds,omitempty"`
+
+	UpgradePolicy ModuleUpgradeType `json:"upgradePolicy,omitempty"`
+
+	ServiceStrategy ModuleServiceStrategy `json:"serviceStrategy,omitempty"`
 }
 
 type ModuleSchedulingStrategy struct {
-	UpgradePolicy ModuleUpgradeType `json:"upgradePolicy,omitempty"`
+
 	// +kubebuilder:validation:Enum={"scatter","stacking"}
 	// +kubebuilder:default="scatter"
 	SchedulingPolicy ModuleSchedulingType `json:"schedulingPolicy,omitempty"`
+}
+
+type ModuleServiceStrategy struct {
+	EnableModuleService bool `json:"enableModuleService,omitempty"`
+
+	Port int32 `json:"port,omitempty"`
+
+	TargetPort intstr.IntOrString `json:"targetPort,omitempty" protobuf:"bytes,4,opt,name=targetPort"`
 }
 
 // ModuleDeploymentSpec defines the desired state of ModuleDeployment
@@ -186,6 +201,7 @@ type ModuleDeploymentStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:shortName=mddeploy
 
 // ModuleDeployment is the Schema for the moduledeployments API
 type ModuleDeployment struct {

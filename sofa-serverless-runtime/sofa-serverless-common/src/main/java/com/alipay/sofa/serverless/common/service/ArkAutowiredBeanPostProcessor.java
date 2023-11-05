@@ -78,11 +78,11 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
 
             Object serviceProxy = null;
             try {
+                Class<?> fieldType = field.getType();
                 if (StringUtils.hasText(name)) {
-                    serviceProxy = ServiceProxyFactory.createServiceProxy(biz, name, clientClassLoader);
+                    serviceProxy = ServiceProxyFactory.createServiceProxy(biz, name, fieldType, clientClassLoader);
                 }
 
-                Class<?> fieldType = field.getType();
                 if (serviceProxy == null) {
                     if (!Collection.class.isAssignableFrom(fieldType) && !Map.class.isAssignableFrom(fieldType)) {
                         serviceProxy = ServiceProxyFactory.createServiceProxy(biz, fieldType, clientClassLoader);

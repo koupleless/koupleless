@@ -37,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringContextManager.E100002;
 import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringContextManager.E100003;
 import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringContextManager.E100004;
+import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringContextManager.E100005;
 
 /**
  * @author: yuanyuan
@@ -44,9 +45,10 @@ import static com.alipay.sofa.serverless.common.exception.ErrorCodes.SpringConte
  */
 public class ServiceProxyFactory {
 
-    public static <T> T createServiceProxy(Biz biz, String name, ClassLoader clientClassLoader) {
+    public static <T> T createServiceProxy(Biz biz, String name, Class<T> serviceType,
+                                           ClassLoader clientClassLoader) {
         T service = getService(biz, name);
-        return (T) doCreateServiceProxy(biz, service, clientClassLoader);
+        return (T) doCreateServiceProxy(biz, service, serviceType, clientClassLoader);
     }
 
     public static <T> T createServiceProxy(Biz biz, Class<T> serviceType,
@@ -55,11 +57,11 @@ public class ServiceProxyFactory {
         try {
             serviceClass = biz.getBizClassLoader().loadClass(serviceType.getName());
         } catch (ClassNotFoundException e) {
-            throw new BizRuntimeException("", "Cannot found class " + serviceType.getName()
-                                              + " from the base");
+            throw new BizRuntimeException(E100005, "Cannot find class " + serviceType.getName()
+                                                   + " from the biz " + biz.getIdentity());
         }
         T service = (T) getService(biz, serviceClass);
-        return (T) doCreateServiceProxy(biz, service, clientClassLoader);
+        return (T) doCreateServiceProxy(biz, service, serviceType, clientClassLoader);
     }
 
     public static <T> Map<String, T> batchCreateServiceProxy(Biz biz, Class<T> serviceType,
@@ -68,14 +70,16 @@ public class ServiceProxyFactory {
         try {
             serviceClass = biz.getBizClassLoader().loadClass(serviceType.getName());
         } catch (ClassNotFoundException e) {
-            throw new BizRuntimeException("", "Cannot found class " + serviceType.getName()
-                                              + " from the base");
+            throw new BizRuntimeException(E100005, "Cannot find class " + serviceType.getName()
+                                                   + " from the biz " + biz.getIdentity());
         }
         Map<String, ?> serviceMap = listService(biz, serviceClass);
         Map<String, T> proxyMap = new HashMap<>();
         for (String beanName : serviceMap.keySet()) {
-            proxyMap.put(beanName,
-                (T) doCreateServiceProxy(biz, serviceMap.get(beanName), clientClassLoader));
+            proxyMap.put(
+                beanName,
+                (T) doCreateServiceProxy(biz, serviceMap.get(beanName), serviceType,
+                    clientClassLoader));
         }
         return proxyMap;
     }
@@ -118,7 +122,14 @@ public class ServiceProxyFactory {
         return bizRuntimeContext;
     }
 
-    private static Object doCreateServiceProxy(Biz biz, Object service, ClassLoader clientClassLoader) {
+    /**
+     * @param biz 目标biz
+     * @param service  目标biz中符合条件的bean
+     * @param serviceType  调用方serviceType
+     * @param clientClassLoader  调用方classloader
+     * @return 供调用方调用的代理对象
+     */
+    private static <T> T doCreateServiceProxy(Biz biz, Object service, Class<T> serviceType, ClassLoader clientClassLoader) {
         if (clientClassLoader == null) {
             Class<?> callerClass = ReflectionUtils.getCallerClass(5);
             clientClassLoader = callerClass.getClassLoader();
@@ -127,22 +138,21 @@ public class ServiceProxyFactory {
         BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContextByClassLoader(clientClassLoader);
         Map<ClassLoader, Map<String, ServiceProxyCache>> serviceProxyCaches =
                 bizRuntimeContext.getServiceProxyCaches();
-        Map<String, ServiceProxyCache> cacheMap = serviceProxyCaches.computeIfAbsent(service.getClass().getClassLoader(), o -> new ConcurrentHashMap<>());
+        Map<String, ServiceProxyCache> cacheMap = serviceProxyCaches.computeIfAbsent(biz.getBizClassLoader(), o -> new ConcurrentHashMap<>());
         // 服务端模块被卸载时，cacheMap会被清空，需要重新生成proxy并缓存
         if (cacheMap.containsKey(service.getClass().getName())) {
             ServiceProxyCache serviceProxyCache = cacheMap.get(service.getClass().getName());
-            return serviceProxyCache.getProxy();
+            return (T) serviceProxyCache.getProxy();
         }
 
         SpringServiceInvoker serviceInvoker = new SpringServiceInvoker(service, biz.getBizName(),
             biz.getBizVersion(), biz.getIdentity(), clientClassLoader, service
                 .getClass().getClassLoader());
         ProxyFactory factory = new ProxyFactory();
-        Class<?> targetClass = service.getClass();
-        if (targetClass.isInterface()) {
-            factory.addInterface(targetClass);
+        if (serviceType.isInterface()) {
+            factory.addInterface(serviceType);
         } else {
-            factory.setTargetClass(targetClass);
+            factory.setTargetClass(serviceType);
             factory.setProxyTargetClass(true);
         }
         factory.addAdvice(serviceInvoker);
@@ -150,7 +160,7 @@ public class ServiceProxyFactory {
 
         cacheMap.put(service.getClass().getName(), new ServiceProxyCache(proxy, serviceInvoker));
 
-        return proxy;
+        return (T) proxy;
     }
 
     public static Biz determineMostSuitableBiz(String moduleName, String moduleVersion) {

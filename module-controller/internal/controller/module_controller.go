@@ -38,6 +38,7 @@ import (
 	"github.com/sofastack/sofa-serverless/internal/arklet"
 	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
 	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/sofastack/sofa-serverless/internal/event"
 	"github.com/sofastack/sofa-serverless/internal/utils"
 )
 
@@ -126,9 +127,9 @@ func (r *ModuleReconciler) parseModuleInstanceStatus(ctx context.Context, module
 	module.Status.Status = moduleInstanceStatus
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", moduleInstanceStatus), "moduleName", module.Name)
-	err := r.Status().Update(ctx, module)
+	err := utils.UpdateStatus(r.Client, ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module status failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -137,6 +138,7 @@ func (r *ModuleReconciler) parseModuleInstanceStatus(ctx context.Context, module
 func (r *ModuleReconciler) handleTerminatingModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
 	log.Log.Info("start to terminate module", "moduleName", module.Spec.Module.Name, "module", module.Name)
 	if module.DeletionTimestamp != nil {
+		event.PublishModuleDeleteEvent(*module)
 		// deletionTimestamp is not null
 		if module.Labels[label.DeleteModuleDirectlyLabel] != "" {
 			log.Log.Info("delete module with DeleteModuleDirectlyLabel", "module", module.Name)
@@ -244,7 +246,7 @@ func (r *ModuleReconciler) cleanLabelAndFinalizer(ctx context.Context, module *v
 	// remove finalizer
 	log.Log.Info("start clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 	utils.RemoveFinalizer(&module.ObjectMeta, finalizer.AllocatePodFinalizer)
-	err := r.Client.Update(ctx, module)
+	err := utils.UpdateResource(r.Client, ctx, module)
 	if err != nil {
 		return utils.Error(err, "failed to clean module install finalizer", "moduleName", module.Spec.Module.Name, "module", module.Name)
 	}
@@ -256,7 +258,7 @@ func (r *ModuleReconciler) cleanLabelAndFinalizer(ctx context.Context, module *v
 		if err != nil {
 			return utils.Error(err, "Failed to get pod when removeFinalizer", "moduleName", module.Name, "podName", podName)
 		}
-		delete(pod.Labels, fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name))
+		delete(pod.Labels, label.ModuleLabelPrefix+module.Spec.Module.Name)
 		utils.RemoveFinalizer(&pod.ObjectMeta, fmt.Sprintf("%s-%s", finalizer.ModuleNameFinalizer, module.Spec.Module.Name))
 		if _, exist := pod.Labels[label.ModuleInstanceCount]; exist {
 			count, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
@@ -266,7 +268,7 @@ func (r *ModuleReconciler) cleanLabelAndFinalizer(ctx context.Context, module *v
 				pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(count - 1)
 			}
 		}
-		err = r.Client.Update(ctx, pod)
+		err = utils.UpdateResource(r.Client, ctx, pod)
 		if err != nil {
 			return err
 		}
@@ -283,9 +285,9 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 		module.Status.Status = v1alpha1.ModuleInstanceStatusPrepare
 		module.Status.LastTransitionTime = metav1.Now()
 		log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusPrepare), "moduleName", module.Name)
-		err := r.Status().Update(ctx, module)
+		err := utils.UpdateStatus(r.Client, ctx, module)
 		if err != nil {
-			return ctrl.Result{}, err
+			return ctrl.Result{}, utils.Error(err, "update module status from pending to prepare failed")
 		}
 		return ctrl.Result{}, nil
 	}
@@ -295,7 +297,7 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 	// find a new pod to schedule
 	selector, err := metav1.LabelSelectorAsSelector(&module.Spec.Selector)
 
-	noAllocatePod, _ := labels.NewRequirement(fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name), selection.DoesNotExist, nil)
+	noAllocatePod, _ := labels.NewRequirement(label.ModuleLabelPrefix+module.Spec.Module.Name, selection.DoesNotExist, nil)
 	selector = selector.Add(*noAllocatePod)
 
 	selectedPods := &corev1.PodList{}
@@ -322,20 +324,8 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 		requeueAfter := utils.GetNextReconcileTime(module.ObjectMeta.CreationTimestamp.Time)
 		return ctrl.Result{RequeueAfter: requeueAfter}, nil
 	}
-
-	// lock the pod, update the label
-	pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, module.Spec.Module.Name)] = module.Spec.Module.Version
-	if _, exist := pod.Labels[label.ModuleInstanceCount]; exist {
-		count, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
-		if err == nil {
-			pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(count + 1)
-		}
-	} else {
-		pod.Labels[label.ModuleInstanceCount] = "1"
-	}
-	// add pod finalizer
-	utils.AddFinalizer(&pod.ObjectMeta, fmt.Sprintf("%s-%s", finalizer.ModuleNameFinalizer, module.Spec.Module.Name))
-	err = r.Client.Update(ctx, &pod)
+	UpdatePodLabelBeforeInstallModule(pod, module.Spec.Module.Name)
+	err = utils.UpdateResource(r.Client, ctx, &pod)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -354,7 +344,7 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 	}
 	module.SetOwnerReferences(owner)
 	utils.AddFinalizer(&module.ObjectMeta, finalizer.AllocatePodFinalizer)
-	err = r.Client.Update(ctx, module)
+	err = utils.UpdateResource(r.Client, ctx, module)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -363,13 +353,14 @@ func (r *ModuleReconciler) handlePendingModuleInstance(ctx context.Context, modu
 
 // handle prepare module instance
 func (r *ModuleReconciler) handlePrepareModuleInstance(ctx context.Context, module *v1alpha1.Module) (ctrl.Result, error) {
-	// TODO pre hook
+	// pre hook event
+	event.PublishModuleCreateEvent(*module)
 	module.Status.Status = v1alpha1.ModuleInstanceStatusUpgrading
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusUpgrading), "moduleName", module.Name)
-	err := r.Status().Update(ctx, module)
+	err := utils.UpdateStatus(r.Client, ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module from prepare to upgrading failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -392,9 +383,9 @@ func (r *ModuleReconciler) handleUpgradingModuleInstance(ctx context.Context, mo
 	module.Status.Status = v1alpha1.ModuleInstanceStatusCompleting
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusCompleting), "moduleName", module.Name)
-	err = r.Status().Update(ctx, module)
+	err = utils.UpdateStatus(r.Client, ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module from upgrading to completing failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -406,9 +397,9 @@ func (r *ModuleReconciler) handleCompletingModuleInstance(ctx context.Context, m
 	module.Status.Status = v1alpha1.ModuleInstanceStatusAvailable
 	module.Status.LastTransitionTime = metav1.Now()
 	log.Log.Info(fmt.Sprintf("%s%s", "module status change to ", v1alpha1.ModuleInstanceStatusAvailable), "moduleName", module.Name)
-	err := r.Status().Update(ctx, module)
+	err := utils.UpdateStatus(r.Client, ctx, module)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, utils.Error(err, "update module from completing to available failed")
 	}
 	return ctrl.Result{}, nil
 }
@@ -449,6 +440,24 @@ func (r *ModuleReconciler) createNewModule(ctx context.Context, module *v1alpha1
 		},
 	}
 	return *newModule, r.Create(ctx, newModule)
+}
+
+func UpdatePodLabelBeforeInstallModule(pod corev1.Pod, moduleName string) {
+	// add module label
+	pod.Labels[label.ModuleLabelPrefix+moduleName] = "true"
+
+	// add module instance count label
+	if _, exist := pod.Labels[label.ModuleInstanceCount]; exist {
+		count, err := strconv.Atoi(pod.Labels[label.ModuleInstanceCount])
+		if err == nil {
+			pod.Labels[label.ModuleInstanceCount] = strconv.Itoa(count + 1)
+		}
+	} else {
+		pod.Labels[label.ModuleInstanceCount] = "1"
+	}
+
+	// add pod finalizer
+	utils.AddFinalizer(&pod.ObjectMeta, finalizer.ModuleNameFinalizer+moduleName)
 }
 
 // SetupWithManager sets up the controller with the Manager.

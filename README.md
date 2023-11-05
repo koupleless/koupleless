@@ -1,11 +1,10 @@
+[![Coverage Status](https://codecov.io/gh/sofastack/sofa-serverless/branch/master/graph/badge.svg)](https://codecov.io/gh/sofastack/sofa-serverless/branch/master/graph/badge.svg)
+![license](https://img.shields.io/badge/license-Apache--2.0-green.svg)
+![Maven Central](https://img.shields.io/maven-central/v/com.alipay.sofa.serverless/sofa-serverless-runtime)
+
 SOFAServerless 官网：https://sofaserverless.netlify.app/
 
 <br/>
-
-[![Coverage Status](https://codecov.io/gh/sofastack/sofa-serverless/branch/master/graph/badge.svg)](https://codecov.io/gh/sofastack/sofa-serverless/branch/master/graph/badge.svg)
-![license](https://img.shields.io/badge/license-Apache--2.0-green.svg)
-
-[//]: # (![maven]&#40;https://img.shields.io/nexus/r/https/oss.sonatype.org/com.alipay.sofa/sofa-ark-all.svg&#41;)
 
 Welcome to SOFAServerless open source comminity. SOFAServerless is a modularization application architecture patterns for company business rapid development, operation, evolution and cooperation with low cost. Please watch us or join us in DingDing Group: 24970018417 .
 

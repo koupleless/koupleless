@@ -2,6 +2,8 @@ package utils
 
 import (
 	"fmt"
+	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"golang.org/x/net/context"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"strconv"
 	"testing"
@@ -83,7 +85,7 @@ func TestGetModuleCountFromPod(t *testing.T) {
 	count := 5
 
 	for i := 0; i < count; i++ {
-		pod.Labels[fmt.Sprintf("%s-%s", label.ModuleNameLabel, "module-"+strconv.Itoa(i))] = "1.0.0"
+		pod.Labels[fmt.Sprintf(label.ModuleLabelPrefix+"module-"+strconv.Itoa(i))] = "true"
 	}
 
 	actual := GetModuleCountFromPod(pod)
@@ -111,3 +113,42 @@ func TestGetModuleInstanceCount(t *testing.T) {
 	pod.Labels[label.ModuleInstanceCount] = "1"
 	assert.Equal(t, 1, GetModuleInstanceCount(*pod))
 }
+
+func TestAppendModuleDeploymentCondition(t *testing.T) {
+	moduleDeployment := PrepareModuleDeployment("namespace", "testModuleDeploymentName")
+
+	i := 0
+	for i < 11 {
+		condition := v1alpha1.ModuleDeploymentCondition{
+			Type:    v1alpha1.DeploymentProgressing,
+			Status:  corev1.ConditionTrue,
+			Message: "message" + strconv.Itoa(i),
+		}
+		moduleDeployment.Status.Conditions = AppendModuleDeploymentCondition(moduleDeployment.Status.Conditions, condition)
+		i++
+	}
+	assert.Equal(t, 10, len(moduleDeployment.Status.Conditions))
+}
+
+func TestUpdateResource(t *testing.T) {
+	moduleDeployment := PrepareModuleDeployment("namespace", "testModuleDeploymentName")
+	client := MockClient{}
+	err := UpdateResource(client, context.TODO(), &moduleDeployment)
+	assert.True(t, err == nil)
+}
+
+func TestUpdateStatus(t *testing.T) {
+	moduleDeployment := PrepareModuleDeployment("namespace", "testModuleDeploymentName")
+	client := MockClient{}
+	err := UpdateStatus(client, context.TODO(), &moduleDeployment)
+	assert.True(t, err == nil)
+}
+
+//
+//type TestClient struct {
+//	MockClient
+//}
+//
+//func (m MockClient) Update(ctx context.Context, obj client.Object, opts ...client.UpdateOption) error {
+//	return nil
+//}
