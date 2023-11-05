@@ -3,26 +3,33 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>dubbo26</artifactId>
+	<artifactId>dubbo3</artifactId>
 	<groupId>com.alipay.sofa</groupId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>dubbo26base</module>
-		<module>dubbo26biz</module>
-		<module>dubbo26biz2</module>
-		<module>dubbo26model</module>
+		<module>dubbo3base</module>
+		<module>triplebiz</module>
+		<module>grpcbiz</module>
+		<module>common-model</module>
 	</modules>
 
 	<properties>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<dubbo.version>2.6.4</dubbo.version>
 		<spring.boot.version>2.7.16</spring.boot.version>
 		<sofa.ark.version>2.2.4-SNAPSHOT</sofa.ark.version>
 		<sofa.serverless.runtime.version>0.5.0</sofa.serverless.runtime.version>
 		<disruptor.version>3.4.2</disruptor.version>
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+		<dubbo.version>3.1.11</dubbo.version>
+		<protobuf.plugin.version>0.6.1</protobuf.plugin.version>
+		<protobuf.version>3.18.3</protobuf.version>
+		<protoc.version>3.18.3</protoc.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -33,10 +40,16 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<!-- Dubbo dependencies -->
 			<dependency>
-				<groupId>com.alibaba</groupId>
-				<artifactId>dubbo-dependencies-bom</artifactId>
+				<groupId>org.apache.dubbo</groupId>
+				<artifactId>dubbo-bom</artifactId>
+				<version>${dubbo.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.dubbo</groupId>
+				<artifactId>dubbo-dependencies-zookeeper</artifactId>
 				<version>${dubbo.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
@@ -67,16 +80,6 @@
 						<artifactId>logback-classic</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>net.java.dev.jna</groupId>
-				<artifactId>jna</artifactId>
-				<version>5.13.0</version>
-			</dependency>
-			<dependency>
-				<groupId>net.java.dev.jna</groupId>
-				<artifactId>jna-platform</artifactId>
-				<version>5.13.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.alipay.sofa</groupId>
