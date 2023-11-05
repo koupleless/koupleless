@@ -56,6 +56,7 @@
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy/>
         </RollingFile>
+
         <RollingFile name="NO-USAGE-APPENDER" fileName="${ctx:logging.file.path}/no-usage/no-usage.log"
                      filePattern="${ctx:logging.file.path}/no-usage/no-usage.log.%d{yyyy-MM-dd}"
                      append="true">
