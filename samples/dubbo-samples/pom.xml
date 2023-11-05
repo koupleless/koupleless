@@ -33,7 +33,9 @@
         <module>rpc/grpc/model</module>
         <module>rpc/grpc/base</module>
         <module>rpc/grpc/biz1</module>
-    </modules>
+		<module>rpc/grpc/biz2</module>
+		<module>rpc/dubbo26</module>
+	</modules>
 
     <dependencyManagement>
         <dependencies>
