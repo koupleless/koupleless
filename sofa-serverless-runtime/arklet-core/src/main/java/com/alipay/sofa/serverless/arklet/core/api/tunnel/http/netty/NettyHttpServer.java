@@ -78,6 +78,10 @@ public class NettyHttpServer {
         this.commandService = commandService;
     }
 
+    public Channel getChannel() {
+        return channel;
+    }
+
     public void open() throws InterruptedException {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024);
@@ -113,7 +117,7 @@ public class NettyHttpServer {
 
     }
 
-    static class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+    public static class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
         private final CommandService commandService;
 
@@ -163,13 +167,17 @@ public class NettyHttpServer {
                 HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer(
                     JSONObject.toJSONString(response), CharsetUtil.UTF_8));
             ChannelFuture future = ctx.writeAndFlush(httpResponse);
-            future.addListener(ChannelFutureListener.CLOSE);
+            if (future != null) {
+                future.addListener(ChannelFutureListener.CLOSE);
+            }
         }
 
         private void ret404(ChannelHandlerContext ctx) {
             ChannelFuture future = ctx.writeAndFlush(new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND));
-            future.addListener(ChannelFutureListener.CLOSE);
+            if (future != null) {
+                future.addListener(ChannelFutureListener.CLOSE);
+            }
         }
 
         private void ret500(ChannelHandlerContext ctx, String message) {
@@ -178,7 +186,9 @@ public class NettyHttpServer {
                     CharsetUtil.UTF_8));
             httpResponse.headers().set("Content_Length", httpResponse.content().readableBytes());
             ChannelFuture future = ctx.writeAndFlush(httpResponse);
-            future.addListener(ChannelFutureListener.CLOSE);
+            if (future != null) {
+                future.addListener(ChannelFutureListener.CLOSE);
+            }
         }
 
     }
