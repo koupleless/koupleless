@@ -3,34 +3,13 @@
 Add styles or override variables from the theme here.
 
 */
-
-@font-face {
-  font-family: "Alibaba PuHuiTi";
-  src: url("/font/Alibaba-PuHuiTi-Regular.otf");
-}
-
-@font-face {
-  font-family: "AlibabaPuHuiTiR";
-  src: url("/font/Alibaba-PuHuiTi-Regular.otf");
-}
-
-@font-face {
-  font-family: "AlibabaPuHuiTiM";
-  src: url("/font/Alibaba-PuHuiTi-Medium.otf");
-}
-
 @font-face {
   font-family: "AlibabaPuHuiTiB";
   src: url("/font/Alibaba-PuHuiTi-Bold.otf");
 }
 
-@font-face {
-  font-family: "AlibabaPuHuiTiH";
-  src: url("/font/Alibaba-PuHuiTi-Heavy.otf");
-}
-
 body {
-  font-family: "Alibaba PuHuiTi";
+  font-family: PingFangSC-Regular, "Microsoft Yahei";
 }
 
 #home-page {
@@ -72,7 +51,7 @@ a, input {
     padding: 0;
     height: 63px;
     line-height: 59px;
-    font-family: AlibabaPuHuiTiR;
+    font-family: PingFangSC-Medium, "Microsoft Yahei";
     font-size: 16px;
     color: rgb(178, 181, 191);
     letter-spacing: 0;
@@ -153,7 +132,7 @@ header > nav.td-navbar {
         max-width: 100%;
 
         h1 {
-          font-family: AlibabaPuHuiTiH;
+          font-family: AlibabaPuHuiTiB;
           font-size: 64px;
           color: rgba(255,255,255,0.95);
           letter-spacing: 0;
@@ -166,7 +145,7 @@ header > nav.td-navbar {
           margin-left: auto;
           margin-right: auto;
           opacity: 0.5;
-          font-family: AlibabaPuHuiTiR;
+          font-family: PingFangSC-Regular, "Microsoft Yahei";
           font-size: 20px;
           color: #FFFFFF;
           letter-spacing: 0;
@@ -206,7 +185,7 @@ header > nav.td-navbar {
     }
 
     .navbar-brand__name {
-      font-family: "AlibabaPuHuiTiB";
+      font-family: AlibabaPuHuiTiB;
       font-size: 24px;
       vertical-align: middle;
       color: #FFFFFF;
