@@ -10,7 +10,7 @@ weight: 200
 1. 选定一个应用作为底座（SOFAServerless 术语叫**基座**），将普通应用[一键升级为基座](/docs/tutorials/base-create/springboot-and-sofaboot/)。
 2. 选定一个应用作为上层应用（SOFAServerless 术语叫**模块**），将其[一键转为模块应用并完成合并部署](/docs/tutorials/module-create/springboot-and-sofaboot/)。
 <br/>
-您也可以直接使用 [官方 Demo 和文档](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/service)在本地完成实验。 
+您也可以直接使用 [官方 Demo 和文档](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/service) 在本地完成实验。 
 
 小贴士：无论**基座**还是**模块**，接入 SOFAServerless 后，同一套代码分支既能像原来一样独立启动，又能做到合并部署。
 
