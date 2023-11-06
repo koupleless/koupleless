@@ -25,4 +25,5 @@
 	<dubbo:reference id="demoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="remote" group="biz2" check="false"/>
 	<dubbo:reference id="secondDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="remote" group="biz2" check="false"/>
 	<dubbo:reference id="helloServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.HelloService" scope="remote" group="biz2" check="false"/>
+	<dubbo:reference id="baseDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="local" group="base" check="false"/>
 </beans>
