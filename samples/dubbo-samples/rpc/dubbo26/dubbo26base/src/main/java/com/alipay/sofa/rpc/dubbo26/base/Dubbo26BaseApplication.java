@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  *
@@ -21,8 +22,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
-public class BaseApplication implements CommandLineRunner {
-    private static Logger LOGGER = LoggerFactory.getLogger(BaseApplication.class);
+@ImportResource("classpath:provider.xml")
+public class Dubbo26BaseApplication implements CommandLineRunner {
+    private static Logger LOGGER = LoggerFactory.getLogger(Dubbo26BaseApplication.class);
 
     public static void main(String[] args) {
 
@@ -34,7 +36,7 @@ public class BaseApplication implements CommandLineRunner {
         System.setProperty("sofa.ark.embed.enable", "true");
         System.setProperty("sofa.ark.plugin.export.class.enable", "true");
 
-        SpringApplication.run(BaseApplication.class, args);
+        SpringApplication.run(Dubbo26BaseApplication.class, args);
     }
 
     /**

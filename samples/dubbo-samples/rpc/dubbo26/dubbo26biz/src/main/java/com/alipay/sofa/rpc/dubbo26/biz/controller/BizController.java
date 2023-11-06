@@ -37,6 +37,8 @@ public class BizController {
 
     @Resource
     private HelloService helloServiceRef;
+    @Resource
+    private DemoService baseDemoServiceRef;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -60,6 +62,15 @@ public class BizController {
         HelloRequest helloRequest = new HelloRequest();
         helloRequest.setName(name);
         return helloServiceRef.sayHello(helloRequest);
+    }
+
+    @RequestMapping(value = "/base", method = RequestMethod.GET)
+    @ResponseBody
+    public DemoResponse base(String ref) {
+        String appName = applicationContext.getId();
+        DemoRequest demoRequest = new DemoRequest();
+        demoRequest.setBiz(appName);
+        return baseDemoServiceRef.handle(demoRequest);
     }
 
     public void setDemoServiceRef(DemoService demoServiceRef) {

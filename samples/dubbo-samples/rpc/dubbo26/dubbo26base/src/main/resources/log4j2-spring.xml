@@ -73,11 +73,11 @@
             <AppenderRef ref="STDOUT-APPENDER"/>
         </AsyncLogger>
 
-        <AsyncLogger name="STDERR" additivity="false" level="${ctx:logging.level.com.alipay.sofa.rpc.dubbo3}">
+        <AsyncLogger name="STDERR" additivity="false" level="${ctx:logging.level.com.alipay.sofa.rpc.dubbo26}">
             <AppenderRef ref="STDERR-APPENDER"/>
         </AsyncLogger>
 
-        <AsyncLogger name="com.alipay.sofa.rpc.dubbo3" additivity="false" level="${ctx:logging.level.com.alipay.sofa.rpc.dubbo3}">
+        <AsyncLogger name="com.alipay.sofa.rpc.dubbo26" additivity="false" level="${ctx:logging.level.com.alipay.sofa.rpc.dubbo26}">
             <AppenderRef ref="APP-DEFAULT-APPENDER"/>
             <AppenderRef ref="WARN-APPENDER"/>
             <AppenderRef ref="ERROR-APPENDER"/>
@@ -85,14 +85,14 @@
         </AsyncLogger>
 
         <AsyncLogger name="org.springframework" additivity="false"
-                     level="${ctx:logging.level.com.alipay.sofa.rpc.dubbo3}">
+                     level="${ctx:logging.level.com.alipay.sofa.rpc.dubbo26}">
             <AppenderRef ref="ERROR-APPENDER"/>
             <AppenderRef ref="WARN-APPENDER"/>
             <AppenderRef ref="SPRING-APPENDER"/>
             <AppenderRef ref="STDOUT-APPENDER"/>
         </AsyncLogger>
 
-        <AsyncRoot level="${ctx:logging.level.com.alipay.sofa.rpc.dubbo3}">
+        <AsyncRoot level="${ctx:logging.level.com.alipay.sofa.rpc.dubbo26}">
             <AppenderRef ref="APP-DEFAULT-APPENDER"/>
             <AppenderRef ref="WARN-APPENDER"/>
             <AppenderRef ref="ERROR-APPENDER"/>
