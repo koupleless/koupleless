@@ -312,8 +312,12 @@ public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
 
     @Override
     public void cleanUp() {
-        if (isBridgeHandlerAvailable()) {
-            removeJdkLoggingBridgeHandler();
+        try {
+            if (isBridgeHandlerAvailable()) {
+                removeJdkLoggingBridgeHandler();
+            }
+        } catch (Exception e) {
+            // Ignore and continue
         }
         LoggerContext loggerContext = getLoggerContext();
         markAsUninitialized(loggerContext);
