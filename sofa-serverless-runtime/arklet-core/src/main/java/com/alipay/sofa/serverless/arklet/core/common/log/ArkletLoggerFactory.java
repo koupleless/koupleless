@@ -28,7 +28,7 @@ public class ArkletLoggerFactory {
 
     private static final String ARKLET_DEFAULT_LOGGER_NAME = "com.alipay.sofa.arklet";
 
-    public static ArkletLogger  defaultLogger              = getLogger(ARKLET_DEFAULT_LOGGER_NAME);
+    public static ArkletLogger  defaultLogger;
 
     public static ArkletLogger getLogger(Class<?> clazz) {
         if (clazz == null) {
@@ -45,6 +45,9 @@ public class ArkletLoggerFactory {
     }
 
     public static ArkletLogger getDefaultLogger() {
+        if (defaultLogger == null) {
+            defaultLogger = getLogger(ARKLET_DEFAULT_LOGGER_NAME);
+        }
         return defaultLogger;
     }
 
