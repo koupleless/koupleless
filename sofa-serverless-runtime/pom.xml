@@ -13,7 +13,7 @@
         1. 切换到JDK 17
         2. 修改 sofa.ark.version.default 和 revision.default 中的 "数字" 版本号
         3. 开始打包，将所有打出的包都上传-->
-        <sofa.ark.version.default>2.2.4-SNAPSHOT</sofa.ark.version.default>
+        <sofa.ark.version.default>2.2.4</sofa.ark.version.default>
         <revision.default>0.5.1</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -449,9 +449,9 @@
         <profile>
             <id>jakarta</id>
             <properties>
-                <revision>${revision.default}-jdk17</revision>
-                <sofa.ark.version>${sofa.ark.version.default}-jdk17</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}-jdk17-jakarta</sofa.ark.starter.version>
+                <revision>${revision.default}-jdk17-SNAPSHOT</revision>
+                <sofa.ark.version>${sofa.ark.version.default}-jdk17-SNAPSHOT</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.default}-jdk17-jakarta-SNAPSHOT</sofa.ark.starter.version>
             </properties>
             <activation>
                 <jdk>17</jdk>
