@@ -20,8 +20,11 @@ package deploy
 import (
 	"context"
 	"fmt"
+	"github.com/google/uuid"
+	"github.com/pterm/pterm"
 	"os"
 	"path/filepath"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/runtime"
 	"strings"
 
 	"serverless.alipay.com/sofa-serverless/arkctl/common/cmdutil"
@@ -37,15 +40,19 @@ var (
 	buildFlag  string
 	bundleFlag string
 	portFlag   int
-	podFlag    string
+
+	podFlag      string
+	podNamespace string // pre parsed pod namespace
+	podName      string // pre parsed pod name
 
 	doLocalBuildBundle = false
 )
 
 const (
-	ctxKeyArkService              = "ark.Service"
-	ctxKeyBizModel                = "ark.BizModel"
-	ctxKeyArkContainerRuntimeInfo = "ark.ContainerRuntimeInfo"
+	ctxKeyArkBizBundlePathInSidePod = "arkBizBundlePathInSidePod"
+	ctxKeyArkService                = "ark.Service"
+	ctxKeyBizModel                  = "ark.BizModel"
+	ctxKeyArkContainerRuntimeInfo   = "ark.ContainerRuntimeInfo"
 )
 
 var DeployCommand = &cobra.Command{
@@ -72,7 +79,7 @@ Scenario 2: Deploy a local bundleFlag to local running ark container:
 
 Scenario 3: Deploy a local bundleFlag to remote ark container running in k8s podFlag:
 !!Make sure you already have kubectl and exec permission to the k8s cluster in your working environment!!.
-	arkctl deploy --bundle ${url/to/your/bundle} --pod ${namespace}/${name} --dir ${bundle dir inside port} -port ${your ark container port}
+	arkctl deploy --bundle ${url/to/your/bundle} --pod ${namespace}/${name} -port ${your ark container port}
 `,
 	ValidArgs:         nil,
 	ValidArgsFunction: nil,
@@ -85,15 +92,24 @@ Scenario 3: Deploy a local bundleFlag to remote ark container running in k8s pod
 			buildFlag, _ = os.Getwd()
 		}
 
+		if podFlag != "" && strings.Contains(podFlag, "/") {
+			podNamespace, podName = strings.Split(podFlag, "/")[0], strings.Split(podFlag, "/")[1]
+		} else {
+			podNamespace, podName = "default", podFlag
+		}
+
 		return nil
 	},
 	Run: executeDeploy,
 }
 
 func execMavenBuild(ctx *contextutil.Context) bool {
-	logger := contextutil.GetLogger(ctx)
+	pterm.DefaultBasicText.Print(
+		pterm.LightBlue("Phase: ") + "deploy biz bundle started.\n",
+	)
 	if !doLocalBuildBundle {
-		logger.Info("build bundle skipped!")
+		pterm.DefaultBasicText.Print("Skip building bundle.")
+		return true
 	}
 
 	mvn := cmdutil.BuildCommandWithWorkDir(
@@ -102,9 +118,9 @@ func execMavenBuild(ctx *contextutil.Context) bool {
 		"mvn",
 		"clean", "package", "-Dmaven.test.skip=true")
 
-	logger.WithField("dir", buildFlag).Info("start to build bundle.")
+	pterm.DefaultBasicText.Println(pterm.LightBlue("Dir: ") + buildFlag)
 	if err := mvn.Exec(); err != nil {
-		logger.WithError(err).Error("build bundle failed!")
+		pterm.DefaultBasicText.PrintOnErrorf("Build bundle failed: %s!", err)
 	}
 
 	go func() {
@@ -114,12 +130,12 @@ func execMavenBuild(ctx *contextutil.Context) bool {
 	}()
 
 	if err := <-mvn.Wait(); err != nil {
-		logger.WithError(err).Error("build bundle failed!")
+		pterm.DefaultBasicText.PrintOnErrorf("Build bundle failed: %s!", err)
 		return false
 	}
 
 	if err := mvn.GetExitError(); err != nil {
-		logger.WithError(err).Error("build bundle failed!")
+		pterm.DefaultBasicText.PrintOnErrorf("Build bundle failed: %s!", err)
 		return false
 	}
 
@@ -163,8 +179,101 @@ func execParseBizModel(ctx *contextutil.Context) bool {
 	return true
 }
 
+func execUploadBizBundle(ctx *contextutil.Context) bool {
+	bizModel := ctx.Value(ctxKeyBizModel).(*ark.BizModel)
+
+	if podFlag != "" && bizModel.BizUrl.GetFileUrlType() == fileutil.FileUrlTypeLocal {
+
+		targetPath := fmt.Sprintf("/tmp/%s",
+			bizModel.BizName+"-"+
+				bizModel.BizVersion+"-"+
+				runtime.Must(uuid.NewUUID()).String()+"-"+
+				"ark-biz.jar",
+		)
+		kubecpcmd := cmdutil.BuildCommand(ctx,
+			"kubectl",
+			"-n",
+			podNamespace,
+			"cp",
+			string(bizModel.BizUrl)[7:],
+			podName+":"+targetPath,
+		)
+		pterm.Info.Println(pterm.LightBlue("【PHASE】:") + "Start to upload biz bundle to pod.")
+		pterm.Info.Println(pterm.LightBlue("【COMMAND】:") + kubecpcmd.String())
+
+		if err := kubecpcmd.Exec(); err != nil {
+			pterm.Error.PrintOnError(err)
+			return false
+		}
+
+		go func() {
+			for line := range kubecpcmd.Output() {
+				pterm.DefaultLogger.Print(line)
+			}
+		}()
+
+		if err := <-kubecpcmd.Wait(); err != nil {
+			pterm.Error.PrintOnError(err)
+			return false
+		}
+		ctx.Put(ctxKeyArkBizBundlePathInSidePod, targetPath)
+		pterm.Info.Println(pterm.LightGreen("【SUCCESS】:") + "Upload biz bundle to pod success!")
+
+	}
+	cmdutil.BuildCommand(ctx, "kubectl")
+	return true
+}
+
+func execInstallInKubePod(ctx *contextutil.Context) bool {
+	kubearkdeploycmd := cmdutil.BuildCommand(ctx,
+		"kubectl",
+		"-n", podNamespace,
+		"exec", podName, "--",
+		"arkctl",
+		"deploy",
+		"--bundle",
+		"file://"+ctx.Value(ctxKeyArkBizBundlePathInSidePod).(string),
+	)
+
+	pterm.Info.Println(pterm.LightBlue("【PHASE】:") + "Start to deploy biz bundle in pod.")
+	pterm.Info.Println(pterm.LightBlue("【COMMAND】:") + kubearkdeploycmd.String())
+	if err := kubearkdeploycmd.Exec(); err != nil {
+		pterm.Error.PrintOnError(err)
+		return false
+	}
+
+	// somehow kubectl exec would pipe the pod's realtime output to stderror pipeline
+	// so we check command exit state directly, instead of judging by the stderror pipeline output
+	if stderrpipe := <-kubearkdeploycmd.Wait(); stderrpipe != nil {
+		lines := stderrpipe.Error()
+		pterm.Println(lines)
+
+		if err := kubearkdeploycmd.GetExitError(); err != nil {
+			pterm.Error.PrintOnError(err)
+			return false
+		}
+	}
+
+	return true
+}
+
+// install the given package in target ark container
+func execInstallInLocal(ctx *contextutil.Context) bool {
+	return execUnInstallLocal(ctx) && execInstallLocal(ctx)
+}
+
+// install the given package in target ark container
+func execInstall(ctx *contextutil.Context) bool {
+	switch {
+	case podFlag != "":
+		return execInstallInKubePod(ctx)
+	default:
+		return execInstallInLocal(ctx)
+	}
+}
+
 // uninstall the given package in target ark container
-func execUnInstall(ctx *contextutil.Context) bool {
+func execUnInstallLocal(ctx *contextutil.Context) bool {
 	var (
 		arkService              = ctx.Value(ctxKeyArkService).(ark.Service)
 		bizModel                = ctx.Value(ctxKeyBizModel).(*ark.BizModel)
@@ -191,7 +300,7 @@ func execUnInstall(ctx *contextutil.Context) bool {
 }
 
 // install the given package in target ark container
-func execInstall(ctx *contextutil.Context) bool {
+func execInstallLocal(ctx *contextutil.Context) bool {
 	var (
 		arkService              = ctx.Value(ctxKeyArkService).(ark.Service)
 		bizModel                = ctx.Value(ctxKeyBizModel).(*ark.BizModel)
@@ -248,7 +357,7 @@ func executeDeploy(cobracmd *cobra.Command, _ []string) {
 	todos := []func(context2 *contextutil.Context) bool{
 		execMavenBuild,
 		execParseBizModel,
-		execUnInstall,
+		execUploadBizBundle,
 		execInstall,
 	}
 

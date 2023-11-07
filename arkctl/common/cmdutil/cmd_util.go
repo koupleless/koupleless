@@ -46,6 +46,9 @@ type Command interface {
 
 	// Kill the command
 	Kill() error
+
+	// String return the string representation of command
+	String() string
 }
 
 // BuildCommand return a new Command
@@ -85,6 +88,10 @@ type command struct {
 	exitState      error
 }
 
+func (c *command) String() string {
+	return c.cmd + " " + strings.Join(c.args, " ")
+}
+
 func (c *command) GetCommand() string {
 	return c.cmd
 }
@@ -112,12 +119,12 @@ func (c *command) Exec() error {
 		return err
 	}
 
-	closed := false
+	closed := &atomic.Bool{}
 	closeCompleteSignal := func(err error) {
-		if closed {
+		if closed.Load() {
 			return
 		}
-		closed = true
+		closed.CompareAndSwap(false, true)
 		if err != nil {
 			c.completeSignal <- err
 		}
@@ -137,6 +144,7 @@ func (c *command) Exec() error {
 		sb := &strings.Builder{}
 		for scanner.Scan() {
 			sb.WriteString(scanner.Text())
+			sb.WriteString("\n")
 		}
 
 		if len(sb.String()) != 0 {

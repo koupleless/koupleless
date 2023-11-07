@@ -21,6 +21,7 @@ import (
 
 	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
 	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/runtime"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -98,7 +99,7 @@ func (h *service) installBizInPod(_ context.Context, _ InstallBizRequest) error 
 
 func (h *service) InstallBiz(ctx context.Context, req InstallBizRequest) (err error) {
 	logger := contextutil.GetLogger(ctx)
-	logger.WithField("req", req).Info("install biz started")
+	logger.WithField("req", string(runtime.Must(json.Marshal(req)))).Info("install biz started")
 	defer func() {
 		if err != nil {
 			logger.Error(err)
@@ -155,7 +156,7 @@ func (h *service) unInstallBizInPod(_ context.Context, _ UnInstallBizRequest) er
 
 func (h *service) UnInstallBiz(ctx context.Context, req UnInstallBizRequest) (err error) {
 	logger := contextutil.GetLogger(ctx)
-	logger.WithField("req", req).Info("uninstall biz started")
+	logger.WithField("req", string(runtime.Must(json.Marshal(req)))).Info("uninstall biz started")
 	defer func() {
 		if err != nil {
 			logger.Error(err)
