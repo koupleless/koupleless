@@ -407,6 +407,15 @@
                 <version>${jacoco.maven.plugin}</version>
                 <configuration>
                     <skip>false</skip>
+                    <excludes>
+                        <exclude>**/arklet/core/api/model/**/*</exclude>
+                        <exclude>**/arklet/core/api/tunnel/http/**/*</exclude>
+                        <exclude>**/arklet/core/command/**/*</exclude>
+                        <exclude>**/arklet/core/common/**/*</exclude>
+                        <exclude>**/arklet/springboot/starter/health/endpoint/model/**/*</exclude>
+                        <exclude>**/sofa/serverless/common/environment/**/*</exclude>
+                        <exclude>**/sofa/serverless/common/exception/**/*</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -422,6 +431,28 @@
                             <goal>report-aggregate</goal>
                         </goals>
                     </execution>
+<!--                    如果需要本地验证覆盖率是否通过，可以解注释掉这段，注意这里检测每个bundle的行覆盖率     -->
+<!--                    <execution>-->
+<!--                        <id>jacoco-check</id>-->
+<!--                        <phase>test</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <rules>-->
+<!--                                <rule>-->
+<!--                                    <element>BUNDLE</element>-->
+<!--                                    <limits>-->
+<!--                                        <limit>-->
+<!--                                            <counter>LINE</counter>-->
+<!--                                            <value>COVEREDRATIO</value>-->
+<!--                                            <minimum>0.80</minimum>-->
+<!--                                        </limit>-->
+<!--                                    </limits>-->
+<!--                                </rule>-->
+<!--                            </rules>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
