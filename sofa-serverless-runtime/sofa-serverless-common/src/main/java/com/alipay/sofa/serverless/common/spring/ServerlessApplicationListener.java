@@ -44,6 +44,9 @@ public class ServerlessApplicationListener implements ApplicationListener<Spring
         }
     }
 
+    /**
+     * 优先级要高于 ArkApplicationStartListener 否则，会提前进入 ark 1.0 分支
+     */
     @Override
     public int getOrder() {
         return Ordered.HIGHEST_PRECEDENCE + 100;
