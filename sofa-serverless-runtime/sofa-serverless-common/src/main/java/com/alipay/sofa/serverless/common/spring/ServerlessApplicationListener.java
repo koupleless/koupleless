@@ -21,6 +21,7 @@ import com.alipay.sofa.ark.api.ArkConfigs;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.boot.context.event.SpringApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.Ordered;
 
 import static com.alipay.sofa.ark.spi.constant.Constants.PLUGIN_EXPORT_CLASS_ENABLE;
 
@@ -28,7 +29,8 @@ import static com.alipay.sofa.ark.spi.constant.Constants.PLUGIN_EXPORT_CLASS_ENA
  * @author: yuanyuan
  * @date: 2023/10/30 9:38 下午
  */
-public class ServerlessApplicationListener implements ApplicationListener<SpringApplicationEvent> {
+public class ServerlessApplicationListener implements ApplicationListener<SpringApplicationEvent>,
+                                          Ordered {
 
     @Override
     public void onApplicationEvent(SpringApplicationEvent event) {
@@ -40,5 +42,10 @@ public class ServerlessApplicationListener implements ApplicationListener<Spring
                 System.setProperty(PLUGIN_EXPORT_CLASS_ENABLE, "true");
             }
         }
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE + 100;
     }
 }
