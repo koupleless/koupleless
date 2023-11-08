@@ -109,3 +109,7 @@ jobs:
       - name: get module controller pod available
         run: |
           kubectl wait --for=condition=available deployment/module-controller --timeout=300s
+
+      - name: get pod
+        run: |
+          kubectl get pod
