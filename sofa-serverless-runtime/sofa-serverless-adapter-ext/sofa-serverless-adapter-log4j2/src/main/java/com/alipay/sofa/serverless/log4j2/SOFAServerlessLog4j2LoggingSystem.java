@@ -131,8 +131,19 @@ public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
         if (isAlreadyInitialized(loggerContext)) {
             return;
         }
-        super.beforeInitialize();
+        configureJdkLoggingBridgeHandler();
         loggerContext.getConfiguration().addFilter(FILTER);
+    }
+
+    private void configureJdkLoggingBridgeHandler() {
+        try {
+            if (this.isBridgeJulIntoSlf4j()) {
+                this.removeJdkLoggingBridgeHandler();
+                SLF4JBridgeHandler.install();
+            }
+        } catch (Throwable var2) {
+        }
+
     }
 
     @Override
