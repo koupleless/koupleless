@@ -132,8 +132,6 @@ undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/confi
 
 .PHONY: dev
 dev: ## create all resource
-	minikube image load $(MODULE_DEPLOYMENT_IMAGE)
-	minikube image load $(DYNAMIC_STOCK_IMAGE)
 	@cat config/dev/dev.txt | xargs -I {} $(KUBECTL) apply -f {}
 	sleep 5
 	minikube service dynamic-stock-service
