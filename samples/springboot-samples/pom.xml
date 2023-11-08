@@ -41,6 +41,8 @@
         <module>msg/kafka/base</module>
         <module>msg/kafka/biz1</module>
         <module>msg/kafka/biz2</module>
+        <module>msg/rocketmq/base</module>
+        <module>msg/rocketmq/biz1</module>
         <module>db/mybatis/base</module>
         <module>db/mybatis/biz1</module>
         <module>redis/sample-redis-base</module>
@@ -57,6 +59,12 @@
                 <artifactId>base-mongo-facade</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa.msg.rocketmq</groupId>
+                <artifactId>base-rocketmq-facade</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
