@@ -103,6 +103,19 @@
 
     <build>
         <plugins>
+			<plugin>
+				<groupId>com.alipay.sofa</groupId>
+				<artifactId>sofa-ark-maven-plugin</artifactId>
+				<version>2.2.3-packageBase-SNAPSHOT</version>
+				<configuration>
+					<!--要打包暴露给模块的java文件，支持*通配，逗号分割-->
+					<!--生成jar的artifactId（groupId和基座一致）-->
+					<artifactId>dubbo3base-dependencies</artifactId>
+					<!--生成jar的版本号-->
+					<version>1.0.0</version>
+					<cleanAfterPackage>false</cleanAfterPackage>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

@@ -13,6 +13,11 @@
     <artifactId>grpcbiz</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>grpcbiz</name>
+	<properties>
+		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<source.level>1.8</source.level>
+		<target.level>1.8</target.level>
+	</properties>
 
     <dependencies>
         <dependency>
@@ -74,7 +79,18 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa</groupId>
+			<artifactId>common-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+	</dependencies>
 
     <build>
         <plugins>
@@ -96,9 +112,6 @@
                     <bizName>grpcbiz</bizName>
                     <webContextPath>grpcbiz</webContextPath>
                     <declaredMode>true</declaredMode>
-                    <!--					打包、安装和发布 ark biz-->
-                    <!--					静态合并部署需要配置-->
-                    <!--					<attach>true</attach>-->
                 </configuration>
             </plugin>
         </plugins>
