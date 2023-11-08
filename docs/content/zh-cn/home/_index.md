@@ -40,9 +40,6 @@ url: "/home/"
 <a href="/docs/quick-start/" style="display: inline-block; width: 176px; margin-right: 12px;">
   <img style="margin: 0;" src="/img/local-quick-start-btn.png" width="176px" />
 </a>
-<a href="https://beta.oscollege.net/product?invite=true&key=1662838629963194399&sign=UtWAPq5uAiBuf6uqe7LWXOTdh0a8cyvo58Ft6z9TP4O4vqyRDnfgTSjPz3cpz2JM7yC1qdgQ%2BltrZP1pNtqqB4c%2FOrSkP6GD6o0qHbI4GzErPZGTHNES2VlbiGOPzF2NRzkKE1BxLmFwfQWSF844Qb7JoNlA24t24cm6ic%2Fuv1gq4L2XYq3hxVJ7xXL1QZcG7yfJTDBGsiNdrmqBNEMpyTwNcIdPko8RoB%2B1uQbEDYUDt5xOmQnUAOuJTNxSVU3sSVTukSpLNENM7deKUaTtoLJJ%2BH4bbgrkgsufGiD1KJ7c6LSSlnkH9Vd630O6TG8s13Z%2FwFp%2FuWnxUlA2YArgjA%3D%3D" style="display: inline-block; width: 176px; margin-right: 12px;">
-  <img style="margin: 0;" src="/img/local-quick-start-btn.png" width="176px" />
-</a>
 <a href="/docs/introduction/intro-and-scenario" style="display: inline-block; width: 176px;">
   <img style="margin: 0;" src="/img/more-details-btn.png" width="176px" />
 </a>

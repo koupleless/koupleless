@@ -38,3 +38,7 @@ kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_prov
 
 <br/>
 <br/>
+
+# 欢迎大家学习 SOFAServerless 视频教程
+
+[点击此处](/docs/tutorials/video-training)查看 SOFAServerless 平台与研发框架视频培训教程。
