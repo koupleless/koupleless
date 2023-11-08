@@ -20,6 +20,7 @@ import (
 )
 
 var _ = Describe("Module Controller", func() {
+
 	const timeout = time.Second * 30
 	const interval = time.Second * 3
 	moduleName := "test-module-name"
@@ -78,7 +79,7 @@ var _ = Describe("Module Controller", func() {
 			module.Labels[label.ModuleReplicasetLabel] = moduleReplicaSetName
 			module.Labels[label.ModuleNameLabel] = "test-module"
 			utils.AddFinalizer(&module.ObjectMeta, finalizer.AllocatePodFinalizer)
-			moduleReplicaSet := prepareModuleReplicaSet(namespaceName, moduleReplicaSetName)
+			moduleReplicaSet := prepareModuleReplicaSet(namespaceName, moduleReplicaSetName, "")
 			moduleReplicaSet.Spec.Template.Spec.Module.Url = updateModuleUrl
 			Expect(k8sClient.Create(context.TODO(), &moduleReplicaSet)).Should(Succeed())
 			Expect(k8sClient.Update(context.TODO(), &module)).Should(Succeed())

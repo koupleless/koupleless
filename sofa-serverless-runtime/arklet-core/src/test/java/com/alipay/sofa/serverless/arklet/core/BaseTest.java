@@ -20,14 +20,21 @@ import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.health.HealthService;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
 import org.junit.Before;
+import org.mockito.Mock;
 
 /**
  * @author mingmen
  * @date 2023/9/5
  */
 public class BaseTest {
+
+    @Mock
     public static CommandService          commandService;
+
+    @Mock
     public static UnifiedOperationService operationService;
+
+    @Mock
     public static HealthService           healthService;
 
     @Before

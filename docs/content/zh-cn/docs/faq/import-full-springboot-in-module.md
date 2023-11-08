@@ -5,7 +5,6 @@ weight: 100
 
 由于多模块运行时的逻辑在基座引入和加载，例如一些 Spring 的 Listener。如果模块启动使用完全自己的 SpringBoot，则会出现一些类的转换或赋值判断失败，例如：
 
-<a name="TAh7X"></a>
 ## CreateSpringFactoriesInstances
 ![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695020207040-788742b8-a1b1-4dc8-8ac2-f0675cf070d5.png#clientId=ufd4bb4ce-38f3-4&from=paste&height=280&id=EvWYQ&originHeight=560&originWidth=2778&originalType=binary&ratio=2&rotation=0&showTitle=false&size=201445&status=done&style=none&taskId=u342062f0-1d50-4344-9990-2377b42e6ca&title=&width=1389)
 
