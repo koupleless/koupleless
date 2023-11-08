@@ -56,30 +56,24 @@ const (
 )
 
 var DeployCommand = &cobra.Command{
-	Use: "deploy",
-	Short: `
-"deploy your biz module to running containers."
-`,
+	Use:   "deploy",
+	Short: "deploy your biz module to running containers",
 	Long: `
-The arkctl deploy command can help you quickly deploy your biz module to running containers.
+The arkctl deploy subcommand can help you quickly deploy your biz module to running ark container.
 We advice you to use this in local dev phase.
 `,
 	Example: `
-The arkctl deploy command can help you quickly deploy your biz module to running containers.
-Here is some scenarios and corresponding commands:
-
-Scenario 0: Build Bundle and Deploy It to local running ark container at current directory with default port:
+Scenario 0: Build bundle at current workspace and deploy it to a local running ark container with default port:
     arkctl deploy
 
-Scenario 1: Build Bundle and Deploy It to local running ark container:
+Scenario 1: Build bundle at given path and deploy it to local running ark container with given port:
 	arkctl deploy --build ${path/to/your/project} --port ${your ark container portFlag} 
 
-Scenario 2: Deploy a local bundleFlag to local running ark container:
-	arkctl deploy --bundle ${path/to/your/project} --port ${your ark container portFlag} 
+Scenario 2: Deploy a local pre-built bundle to local running ark container with given port:
+	arkctl deploy --bundle ${path/to/your/pre/built/bundle'} --port ${your ark container port} 
 
-Scenario 3: Deploy a local bundleFlag to remote ark container running in k8s podFlag:
-!!Make sure you already have kubectl and exec permission to the k8s cluster in your working environment!!.
-	arkctl deploy --bundle ${url/to/your/bundle} --pod ${namespace}/${name} -port ${your ark container port}
+Scenario 3: Build and deploy a bundle at current dir to a remote running ark container in k8s cluster with default port:
+	arkctl deploy --pod ${namespace}/${name}
 `,
 	ValidArgs:         nil,
 	ValidArgsFunction: nil,
@@ -372,21 +366,21 @@ func executeDeploy(cobracmd *cobra.Command, _ []string) {
 func init() {
 	root.RootCmd.AddCommand(DeployCommand)
 	DeployCommand.Flags().StringVar(&buildFlag, "build", "", `
-Build the project at given directory and then deploy it to running containers.
-If not provided, arkctl will try to buildFlag the project in current directory.
+Build the project at given directory and then deploy it to running ark container.
+If not provided, arkctl will try to build the project under current directory.
 `)
 
 	DeployCommand.Flags().StringVar(&bundleFlag, "bundle", "", `
-Provide the pre-built bundleFlag url and then deploy it to running containers.
-If not provided, arkctl will try to find the bundleFlag in current directory.
+Provide the pre-built bundle url and then deploy it to running ark container.
+If not provided, arkctl will try to find the pre-built bundle under current directory.
 `)
 
 	DeployCommand.Flags().StringVar(&podFlag, "pod", "", `
-If Provided, arkctl will try to deploy the bundleFlag to the given podFlag instead of local running process.
+If Provided, arkctl will try to deploy the bundle to the ark container running in given pod.
 `)
 
 	DeployCommand.Flags().IntVar(&portFlag, "port", 1238, `
-The default portFlag of ark container is 1238.
+The default port of ark container is 1238 if not provided.
 `)
 
 }

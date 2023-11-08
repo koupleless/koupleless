@@ -20,11 +20,8 @@ package root
 import (
 	"fmt"
 	"os"
-)
 
-import (
 	"github.com/spf13/cobra"
-
 	"github.com/spf13/viper"
 )
 
@@ -32,11 +29,7 @@ var cfgFile string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "arkctl",
-	Short: "",
-	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("hello")
 	},
 }
 
@@ -48,8 +41,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.arkctl-v1.yaml)")
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	RootCmd.Help()
 }
 
 // initConfig reads in config file and ENV variables if set.
