@@ -6,6 +6,7 @@
 | springboot  | tomcat                 | 单host模式                    | [samples/springboot-samples/web/tomcat/](https://github.com/sofastack-guides/springboot-samples/tree/master/samples/web/tomcat)                   | 
 | springboot  | log4j2                 | 基座与模块独立日志目录                | [samples/springboot-samples/logging/log4j2](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/logging/log4j2)   |
 | springboot  | kafka                  | 模块独立使用 kafka               | [samples/springboot-samples/msg/kafka](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/msg/kafka/)            |
+| springboot  | rocketmq               | 模块与基座可以共存生产和消费消息           | [samples/springboot-samples/msg/rocketmq](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/msg/rocketmq/)      |
 | springboot  | mybatis                | 模块使用独立数据源                  | [samples/springboot-samples/db/mybatis](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/db/mybatis)           |
 | springboot  | mongo                  | 1. 模块独立使用数据源， 2. 模块复用基座数据源 | [samples/springboot-samples/db/mongo](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/db/mongo)               |
 | springboot  | slimming               | 模块瘦身                       | [samples/springboot-samples/slimming/log4j2](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming/log4j2) |
