@@ -199,9 +199,9 @@ jobs:
 
       - name: get module
         run: |
-          kubectl get module -oyaml
+          kubectl get module
 
-      - name: exist module
+      - name: exist module more then 2
         run: |
           moduleCount=$(kubectl get module | wc -l)
           if [[ $moduleCount -lt 2 ]]; then
@@ -244,3 +244,52 @@ jobs:
               sleep 5  # 等待一段时间后再次检查
             fi
           done
+
+      - name: get module
+        run: |
+          kubectl get module
+
+      - name: exist module more then 3
+        run: |
+          moduleCount=$(kubectl get module | wc -l)
+          if [[ $moduleCount -lt 3 ]]; then
+            echo "ERROR: 不存在module"
+            exit 1
+          fi
+
+      - name: wait module available
+        run: |
+          # 定义要等待的资源名称和字段值
+          modulename=$(kubectl get module -o name)
+          desired_field_value="Available"
+
+          # 定义等待的超时时间（以秒为单位）
+          timeout_seconds=300
+
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+
+          while true; do
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+              exit 1
+            fi
+
+            # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
+            field_value=$(kubectl get $modulename -o custom-columns=STATUS:.status.status --no-headers)
+
+            if [ "$field_value" == "$desired_field_value" ]; then
+              echo "字段值已满足条件"
+              exit 0
+            else
+              echo "等待字段值满足条件..."
+              sleep 5  # 等待一段时间后再次检查
+            fi
+          done
+
+      - name: check module
+        run: |
+          podname=$(kubectl get pod -l app=dynamic-stock -o name)
+          logcount=(kubectl exec -it $podname -- sh -c 'grep "dynamic-provider:1.0.0 started" logs/stock-mng/sofa-ark/*.log' | wc -l)
+          echo $logcount
