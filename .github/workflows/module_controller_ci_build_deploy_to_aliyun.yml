@@ -363,6 +363,8 @@ jobs:
             fi
           done
 
+      - run: sleep 15
+
       - name: delete pod then check module
         run: |
           podname=$(kubectl get pod -l app=dynamic-stock -o name)
