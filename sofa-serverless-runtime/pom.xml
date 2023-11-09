@@ -447,7 +447,7 @@
 
     <profiles>
         <profile>
-            <id>jakarta</id>
+            <id>jakarta-snapshot</id>
             <properties>
                 <revision>${revision.default}-jdk17-SNAPSHOT</revision>
                 <sofa.ark.version>${sofa.ark.version.default}-jdk17-SNAPSHOT</sofa.ark.version>
