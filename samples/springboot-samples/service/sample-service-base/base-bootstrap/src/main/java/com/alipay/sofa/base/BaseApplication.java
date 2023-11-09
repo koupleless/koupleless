@@ -13,5 +13,4 @@ public class BaseApplication {
 		System.out.println("Spring Boot Version: " + SpringApplication.class.getPackage().getImplementationVersion());
 		System.out.println("SofaArkSpringGuidesApplication classLoader: " + BaseApplication.class.getClassLoader());
 	}
-
 }
