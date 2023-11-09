@@ -46,14 +46,7 @@ SOFAArk 提供了静态合并部署能力，在开发阶段，应用可以将其
 ```
 在 Master Biz（基座）的启动过程中，当 Master Biz（基座）启动成功后触发 ApplicationReadyEvent 时，一般情况下会根据优先级依次启动依赖的 Ark Biz 包。
 
-
-## 步骤 3：配置 JVM 启动参数
-```shell
--Dsofa.ark.embed.enable=true -Dsofa.ark.embed.static.biz.enable=true
-```
-
-
-## 步骤 4：验证 Ark Biz（模块）启动
+## 步骤 3：验证 Ark Biz（模块）启动
 在 Master Biz（基座）启动成功后，可以通过 telnet 启动 SOFAArk 客户端交互界面：
 ```shell
 telnet localhost 1234

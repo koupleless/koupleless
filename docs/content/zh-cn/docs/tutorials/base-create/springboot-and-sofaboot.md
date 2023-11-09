@@ -39,9 +39,6 @@ spring.application.name = ${替换为实际基座应用名}
 </dependency>
 ```
 
-#### 修改启动参数
-启动参数增加 `-Dsofa.ark.embed.enable=true`
-
 ### 启动验证
 基座应用能正常启动即表示验证成功！
 
