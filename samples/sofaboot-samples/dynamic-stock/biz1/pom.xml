@@ -57,6 +57,7 @@
                     <bizName>biz1</bizName>
                     <webContextPath>provider</webContextPath>
                     <declaredMode>true</declaredMode>
+                    <packExcludesConfig>rules.txt</packExcludesConfig>
                 </configuration>
             </plugin>
         </plugins>
