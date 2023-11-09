@@ -3,16 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.alipay.sofa</groupId>
-		<artifactId>springboot-samples</artifactId>
+		<groupId>com.alipay.sofa.slimming.log4j2</groupId>
+		<artifactId>slimming-log4j2</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../../pom.xml</relativePath> <!-- lookup parent from repository -->
+		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.alipay.sofa.logging.log4j2</groupId>
-	<artifactId>base-log4j2</artifactId>
+	<artifactId>base-slimming-log4j2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>base-log4j2</name>
-	<description>logging base for log4j2</description>
 
 	<dependencies>
 		<dependency>
