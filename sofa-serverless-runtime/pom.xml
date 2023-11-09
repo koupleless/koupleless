@@ -491,6 +491,11 @@
 
         <profile>
             <id>release</id>
+            <properties>
+                <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -556,6 +561,11 @@
 
         <profile>
             <id>snapshot</id>
+            <properties>
+                <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
