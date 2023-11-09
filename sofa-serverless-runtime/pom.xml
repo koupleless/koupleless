@@ -11,8 +11,11 @@
     <properties>
         <!--    JDK 17   打包如下：
         1. 切换到JDK 17
-        2. 修改 sofa.ark.version.default 和 revision.default 中的 "数字" 版本号
+        2. 修改 sofa.ark.version.default, sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
+        例如： sofa.ark.version.default 如果是2.2.5-SNAPSHOT，那么sofa.ark.version.base 的取值需要修改成2.2.5
+        例如： sofa.ark.version.default 如果是2.2.5，那么sofa.ark.version.base 的取值也修改成2.2.5
         3. 开始打包，将所有打出的包都上传-->
+        <sofa.ark.version.base>2.2.4</sofa.ark.version.base>
         <sofa.ark.version.default>2.2.4-SNAPSHOT</sofa.ark.version.default>
         <revision.default>0.5.2</revision.default>
         <project.encoding>UTF-8</project.encoding>
@@ -478,11 +481,11 @@
 
     <profiles>
         <profile>
-            <id>jakarta</id>
+            <id>jakarta-snapshot</id>
             <properties>
-                <revision>${revision.default}-jdk17</revision>
-                <sofa.ark.version>${sofa.ark.version.default}-jdk17</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}-jdk17-jakarta</sofa.ark.starter.version>
+                <revision>${revision.default}-jdk17-SNAPSHOT</revision>
+                <sofa.ark.version>${sofa.ark.version.base}-jdk17-SNAPSHOT</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta-SNAPSHOT</sofa.ark.starter.version>
             </properties>
             <activation>
                 <jdk>17</jdk>
