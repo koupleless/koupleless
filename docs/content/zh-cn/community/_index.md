@@ -98,15 +98,15 @@ menu: {main: {weight: 40}}
                         <use fill="url(#linearGradient-0brcq1m7k2-2)" fill-rule="evenodd" xlink:href="#path-0brcq1m7k2-3"></use>
                         <use fill="black" fill-opacity="1" filter="url(#filter-0brcq1m7k2-5)" xlink:href="#path-0brcq1m7k2-3"></use>
                     </g>
-                    <text id="获取更多信息" opacity="0.95" font-family="PingFangSC-Semibold, PingFang SC" font-size="16" font-weight="500" line-spacing="24" fill="#FFFFFF">
+                    <text id="获取更多信息" opacity="0.95" font-family="PingFangSC-Semibold, PingFang SC, Microsoft Yahei" font-size="16" font-weight="500" line-spacing="24" fill="#FFFFFF">
                         <tspan x="52" y="165">获取更多信息</tspan>
                     </text>
                     <g id="编组-7" transform="translate(52.000000, 183.000000)">
-                        <text id="社区交流群，和我们一起讨论-Server" font-family="PingFangSC-Regular, PingFang SC" font-size="16" font-weight="normal" line-spacing="24">
+                        <text id="社区交流群，和我们一起讨论-Server" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="16" font-weight="normal" line-spacing="24">
                             <a xlink:href="/docs/contribution-guidelines/communication-channel/" target="_blank"><tspan x="60" y="17" fill="#0077FF">社区交流群</tspan></a>
                             <tspan x="140" y="17" fill="#FFFFFF" fill-opacity="0.65">，和我们一起讨论 Serverless！</tspan>
                         </text>
-                        <text id="加入" font-family="PingFangSC-Regular, PingFang SC" font-size="16" font-weight="normal" line-spacing="24" fill="#FFFFFF" fill-opacity="0.65">
+                        <text id="加入" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="16" font-weight="normal" line-spacing="24" fill="#FFFFFF" fill-opacity="0.65">
                             <tspan x="0" y="17">加入</tspan>
                         </text>
                         <g id="twitter" transform="translate(34.000000, 0.000000)" fill="#0070EF" fill-rule="nonzero">
@@ -133,10 +133,10 @@ menu: {main: {weight: 40}}
                             </g>
                         </g>
                         <g id="编组-3" transform="translate(88.000000, 5.000000)" fill="#FFFFFF">
-                            <text id="学习和沟通" opacity="0.95" font-family="PingFangSC-Semibold, PingFang SC" font-size="24" font-weight="500" line-spacing="32">
+                            <text id="学习和沟通" opacity="0.95" font-family="PingFangSC-Semibold, PingFang SC, Microsoft Yahei" font-size="24" font-weight="500" line-spacing="32">
                                 <tspan x="0" y="25">学习和沟通</tspan>
                             </text>
-                            <text id="正在或打算使用-SOFAServerle" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="22">
+                            <text id="正在或打算使用-SOFAServerle" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22">
                                 <tspan x="0" y="55">正在或打算使用 SOFAServerless ？</tspan>
                             </text>
                         </g>
@@ -149,18 +149,18 @@ menu: {main: {weight: 40}}
                         <use fill="url(#linearGradient-0brcq1m7k2-2)" fill-rule="evenodd" xlink:href="#path-0brcq1m7k2-13"></use>
                         <use fill="black" fill-opacity="1" filter="url(#filter-0brcq1m7k2-15)" xlink:href="#path-0brcq1m7k2-13"></use>
                     </g>
-                    <text id="加入我们" opacity="0.95" font-family="PingFangSC-Semibold, PingFang SC" font-size="16" font-weight="500" line-spacing="24" fill="#FFFFFF">
+                    <text id="加入我们" opacity="0.95" font-family="PingFangSC-Semibold, PingFang SC, Microsoft Yahei" font-size="16" font-weight="500" line-spacing="24" fill="#FFFFFF">
                         <tspan x="52" y="165">加入我们</tspan>
                     </text>
                     <g id="编组-6" transform="translate(52.000000, 183.000000)">
-                        <text id="完成您的第一次提交，想了解如何为SOFA" font-family="PingFangSC-Regular, PingFang SC" font-size="16" font-weight="normal" line-spacing="24">
+                        <text id="完成您的第一次提交，想了解如何为SOFA" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="16" font-weight="normal" line-spacing="24">
                             <tspan x="99" y="17" fill="#FFFFFF" fill-opacity="0.65">完成您的第一次提交，想了解如何为SOFAServerless 做</tspan>
                             <tspan x="0" y="41" fill="#FFFFFF" fill-opacity="0.65">出贡献，请参考我们的</tspan>
-                            <a xlink:href="https://sofaserverless.netlify.app/docs/contribution-guidelines/contribution/first-pr/" target="_blank"><tspan x="160" y="41" fill="#0077FF">贡献指南</tspan></a>
+                            <a xlink:href="/docs/contribution-guidelines/contribution/first-pr/" target="_blank"><tspan x="160" y="41" fill="#0077FF">贡献指南</tspan></a>
                             <tspan x="224" y="41" fill="#FFFFFF" fill-opacity="0.65">。</tspan>
                         </text>
                         <a xlink:href="https://github.com/sofastack/sofa-serverless/pulls" target="_blank">
-                        <text id="点击此处" font-family="PingFangSC-Regular, PingFang SC" font-size="16" font-weight="normal" line-spacing="24" fill="#0077FF">
+                        <text id="点击此处" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="16" font-weight="normal" line-spacing="24" fill="#0077FF">
                             <tspan x="0" y="17">点击此处</tspan>
                         </text>
                         <g id="github-fill" transform="translate(68.000000, 0.000000)" fill="#0070EF" fill-rule="nonzero">
@@ -185,10 +185,10 @@ menu: {main: {weight: 40}}
                             </g>
                         </g>
                         <g id="编组-3" transform="translate(88.000000, 5.000000)" fill="#FFFFFF">
-                            <text id="开发和贡献" opacity="0.95" font-family="PingFangSC-Semibold, PingFang SC" font-size="24" font-weight="500" line-spacing="32">
+                            <text id="开发和贡献" opacity="0.95" font-family="PingFangSC-Semibold, PingFang SC, Microsoft Yahei" font-size="24" font-weight="500" line-spacing="32">
                                 <tspan x="0" y="25">开发和贡献</tspan>
                             </text>
-                            <text id="如果你想通过为-SOFAServerle" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="22">
+                            <text id="如果你想通过为-SOFAServerle" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22">
                                 <tspan x="0" y="55">如果你想通过为 SOFAServerless 贡献更多</tspan>
                             </text>
                         </g>

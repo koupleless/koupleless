@@ -55,6 +55,12 @@ public class ServerlessEnvironmentPostProcessorTest {
         // process master biz
         when(masterEnvironment.getProperty("ark.common.env.share.keys")).thenReturn("masterKey");
         when(masterEnvironment.getProperty("masterKey")).thenReturn("masterValue");
+        when(masterEnvironment.getProperty("logging.file.path")).thenReturn("./logs");
+        MutablePropertySources masterPropertySources = new MutablePropertySources();
+        masterPropertySources.addLast(new PropertiesPropertySource("masterProperties",
+            new Properties()));
+        when(masterEnvironment.getPropertySources()).thenReturn(masterPropertySources);
+
         ServerlessEnvironmentPostProcessor serverlessEnvironmentPostProcessor = new ServerlessEnvironmentPostProcessor();
         serverlessEnvironmentPostProcessor.postProcessEnvironment(masterEnvironment,
             springApplication);
@@ -86,5 +92,7 @@ public class ServerlessEnvironmentPostProcessorTest {
         PropertySource<?> masterPropertySource = propertySources.get("MasterBiz-Config resource");
         Assert.assertTrue(masterPropertySource instanceof MasterBizPropertySource);
         Assert.assertEquals("masterValue", masterPropertySource.getProperty("masterKey"));
+        Assert.assertEquals("./logs", masterPropertySources.get("compatiblePropertySource")
+            .getProperty("logging.path"));
     }
 }
