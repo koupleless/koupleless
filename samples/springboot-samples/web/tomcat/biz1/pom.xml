@@ -12,6 +12,12 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- 这里设置为 provided，使用基座的依赖，详细查看类委托加载机制 https://www.sofastack.tech/projects/sofa-boot/sofa-ark-class-loader-delegation/ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -28,6 +34,12 @@
         <dependency>
             <groupId>com.alipay.sofa.web</groupId>
             <artifactId>base-web-single-host-facade</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
             <scope>provided</scope>
         </dependency>
 

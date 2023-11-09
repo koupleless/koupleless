@@ -6,21 +6,23 @@ import com.alipay.sofa.serverless.common.api.SpringServiceFinder;
 import com.alipay.sofa.web.base.data.DatabaseSeed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@Controller
 public class SampleController {
 
     @Autowired
     private ApplicationContext applicationContext;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/")
+    @ResponseBody
     public String hello() {
         String appName = applicationContext.getId();
         return String.format("hello to %s deploy", appName);

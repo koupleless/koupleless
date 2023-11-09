@@ -74,13 +74,12 @@
 
 <header class="header">
     <div style="width: 80%;margin: 0 auto">
-        <div class="logo">SOFAChannel DEMO</div>
+        <div class="logo" th:text="'SOFAChannel DEMO ' + ${appName}"></div>
     </div>
 
 </header>
 
 <div class="main" style="margin-top: 15px;">
-    <div th:text="${appName}"></div>
     <div style="width: 80%;margin: 0 auto">
         <div class="item-list">
             <div class="item" th:each="product,productStat:${productList}">
