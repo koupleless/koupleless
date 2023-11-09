@@ -14,7 +14,7 @@
         2. 修改 sofa.ark.version.default 和 revision.default 中的 "数字" 版本号
         3. 开始打包，将所有打出的包都上传-->
         <sofa.ark.version.default>2.2.4-SNAPSHOT</sofa.ark.version.default>
-        <revision.default>0.5.1</revision.default>
+        <revision.default>0.5.2</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
