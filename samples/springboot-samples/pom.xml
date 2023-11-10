@@ -21,7 +21,7 @@
         <spring.boot.version>2.7.16</spring.boot.version>
         <java.version>1.8</java.version>
         <sofa.ark.version>2.2.4-SNAPSHOT</sofa.ark.version>
-        <sofa.serverless.runtime.version>0.5.1</sofa.serverless.runtime.version>
+        <sofa.serverless.runtime.version>0.5.2</sofa.serverless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
@@ -38,15 +38,39 @@
         <module>service/sample-service-base</module>
         <module>service/sample-service-biz</module>
         <module>service/sample-service-biz2</module>
+        <module>slimming/log4j2</module>
         <module>msg/kafka/base</module>
         <module>msg/kafka/biz1</module>
         <module>msg/kafka/biz2</module>
+        <module>msg/rocketmq/base</module>
+        <module>msg/rocketmq/biz1</module>
         <module>db/mybatis/base</module>
         <module>db/mybatis/biz1</module>
+        <module>redis/sample-redis-base</module>
+        <module>redis/sample-redis-biz</module>
+        <module>db/mongo/base</module>
+        <module>db/mongo/biz1</module>
+        <module>db/mongo/biz2</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.alipay.sofa.db.mongo</groupId>
+                <artifactId>base-mongo-facade</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa.msg.rocketmq</groupId>
+                <artifactId>base-rocketmq-facade</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>base-web-single-host-facade</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
@@ -109,6 +133,11 @@
             <dependency>
                 <groupId>com.alipay.sofa.serverless</groupId>
                 <artifactId>sofa-serverless-app-starter</artifactId>
+                <version>${sofa.serverless.runtime.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa.serverless</groupId>
+                <artifactId>sofa-serverless-adapter-log4j2</artifactId>
                 <version>${sofa.serverless.runtime.version}</version>
             </dependency>
         </dependencies>

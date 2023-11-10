@@ -9,7 +9,15 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>0.5.1</revision>
+        <!--    JDK 17   打包如下：
+        1. 切换到JDK 17
+        2. 修改 sofa.ark.version.default, sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
+        例如： sofa.ark.version.default 如果是2.2.5-SNAPSHOT，那么sofa.ark.version.base 的取值需要修改成2.2.5
+        例如： sofa.ark.version.default 如果是2.2.5，那么sofa.ark.version.base 的取值也修改成2.2.5
+        3. 开始打包，将所有打出的包都上传-->
+        <sofa.ark.version.base>2.2.4</sofa.ark.version.base>
+        <sofa.ark.version.default>2.2.4-SNAPSHOT</sofa.ark.version.default>
+        <revision.default>0.5.2</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -34,7 +42,6 @@
         <junit.version>4.13.1</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <sofa.ark.version>2.2.3</sofa.ark.version>
         <spring.boot.version>2.7.15</spring.boot.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
@@ -403,6 +410,15 @@
                 <version>${jacoco.maven.plugin}</version>
                 <configuration>
                     <skip>false</skip>
+                    <excludes>
+                        <exclude>**/arklet/core/api/model/**/*</exclude>
+                        <exclude>**/arklet/core/api/tunnel/http/**/*</exclude>
+                        <exclude>**/arklet/core/command/**/*</exclude>
+                        <exclude>**/arklet/core/common/**/*</exclude>
+                        <exclude>**/arklet/springboot/starter/health/endpoint/model/**/*</exclude>
+                        <exclude>**/sofa/serverless/common/environment/**/*</exclude>
+                        <exclude>**/sofa/serverless/common/exception/**/*</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -418,6 +434,28 @@
                             <goal>report-aggregate</goal>
                         </goals>
                     </execution>
+<!--                    如果需要本地验证覆盖率是否通过，可以解注释掉这段，注意这里检测每个bundle的行覆盖率     -->
+<!--                    <execution>-->
+<!--                        <id>jacoco-check</id>-->
+<!--                        <phase>test</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <rules>-->
+<!--                                <rule>-->
+<!--                                    <element>BUNDLE</element>-->
+<!--                                    <limits>-->
+<!--                                        <limit>-->
+<!--                                            <counter>LINE</counter>-->
+<!--                                            <value>COVEREDRATIO</value>-->
+<!--                                            <minimum>0.80</minimum>-->
+<!--                                        </limit>-->
+<!--                                    </limits>-->
+<!--                                </rule>-->
+<!--                            </rules>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -443,7 +481,24 @@
 
     <profiles>
         <profile>
+            <id>jakarta-snapshot</id>
+            <properties>
+                <revision>${revision.default}-jdk17-SNAPSHOT</revision>
+                <sofa.ark.version>${sofa.ark.version.base}-jdk17-SNAPSHOT</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta-SNAPSHOT</sofa.ark.starter.version>
+            </properties>
+            <activation>
+                <jdk>17</jdk>
+            </activation>
+        </profile>
+
+        <profile>
             <id>release</id>
+            <properties>
+                <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -509,6 +564,11 @@
 
         <profile>
             <id>snapshot</id>
+            <properties>
+                <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -551,6 +611,11 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
+            </properties>
             <repositories>
                 <repository>
                     <snapshots>

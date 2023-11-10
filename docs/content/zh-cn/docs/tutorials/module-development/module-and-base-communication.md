@@ -4,10 +4,13 @@ weight: 300
 ---
 
 基座与模块之间、模块与模块之间存在 spring 上下文隔离，互相的 bean 不会冲突、不可见。然而很多应用场景比如中台模式、独立模块模式等存在基座调用模块、模块调用基座、模块与模块互相调用的场景。
+当前支持3种方式调用，@AutowiredFromBiz, @AutowiredFromBase, SpringServiceFinder 方法调用，注意三个方式使用的情况不同。
 
 # Spring 环境
 
 ## 基座调用模块
+
+只能使用 SpringServiceFinder 
 
 ```java
 @RestController

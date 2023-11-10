@@ -1,5 +1,5 @@
 # log4j2 多应用分别打印不同目录
-原理详看[这里]()
+原理详看[这里](https://github.com/sofastack/sofa-serverless/blob/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/logj42.md)
 
 # 实验内容
 ## 实验应用
