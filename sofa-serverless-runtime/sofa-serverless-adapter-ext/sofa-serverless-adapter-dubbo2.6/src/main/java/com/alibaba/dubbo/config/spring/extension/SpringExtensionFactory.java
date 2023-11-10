@@ -97,7 +97,7 @@ public class SpringExtensionFactory implements ExtensionFactory {
         ClassLoader classLoader = findClassLoader();
         Set<ApplicationContext> contexts = null;
         if ((contexts = contextsWithClassLoader.get(classLoader)) == null) {
-            contextsWithClassLoader.put(classLoader, new ConcurrentHashSet<>());
+            contextsWithClassLoader.putIfAbsent(classLoader, new ConcurrentHashSet<>());
             contexts = contextsWithClassLoader.get(classLoader);
         }
         ;

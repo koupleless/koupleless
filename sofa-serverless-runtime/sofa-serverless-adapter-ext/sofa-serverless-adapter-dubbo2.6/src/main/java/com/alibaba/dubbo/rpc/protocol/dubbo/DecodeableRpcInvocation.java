@@ -99,11 +99,13 @@ public class DecodeableRpcInvocation extends RpcInvocation implements Codec, Dec
         setAttachment(Constants.DUBBO_VERSION_KEY, dubboVersion);
         String path = in.readUTF();
         setAttachment(Constants.PATH_KEY, path);
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
         if (in instanceof ClassLoaderJavaObjectInput) {
             InputStream is = ((ClassLoaderJavaObjectInput) in).getInputStream();
             if (is instanceof ClassLoaderObjectInputStream) {
                 ClassLoader cl = ClassLoaderUtil.getClassLoaderByPath(path);
                 ((ClassLoaderObjectInputStream) is).setClassLoader(cl);
+                Thread.currentThread().setContextClassLoader(cl);
             }
         }
         setAttachment(Constants.VERSION_KEY, in.readUTF());
@@ -153,6 +155,7 @@ public class DecodeableRpcInvocation extends RpcInvocation implements Codec, Dec
             if (in instanceof Cleanable) {
                 ((Cleanable) in).cleanup();
             }
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
         }
         return this;
     }

@@ -78,11 +78,8 @@ public class DecodeableRpcResult extends RpcResult implements Codec, Decodeable 
     public Object decode(Channel channel, InputStream input) throws IOException {
         ObjectInput in = CodecSupport.getSerialization(channel.getUrl(), serializationType)
             .deserialize(channel.getUrl(), input);
-        //表示应用的来源
-        String application = channel.getUrl().getParameter(Constants.APPLICATION_KEY);
-        String serviceName = channel.getUrl().getServiceKey();
-        ClassLoader cl = ClassLoaderUtil.getClassLoaderByServiceNameAndApplication(serviceName,
-            application);
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader cl = invocation.getInvoker().getInterface().getClassLoader();
         Thread.currentThread().setContextClassLoader(cl);
         if (in instanceof ClassLoaderJavaObjectInput) {
             InputStream is = ((ClassLoaderJavaObjectInput) in).getInputStream();
@@ -102,6 +99,8 @@ public class DecodeableRpcResult extends RpcResult implements Codec, Decodeable 
                             .readObject((Class<?>) returnType[0], returnType[1])));
                 } catch (ClassNotFoundException e) {
                     throw new IOException(StringUtils.toString("Read response data failed.", e));
+                } finally {
+                    Thread.currentThread().setContextClassLoader(originalClassLoader);
                 }
                 break;
             case DubboCodec.RESPONSE_WITH_EXCEPTION:
@@ -113,6 +112,8 @@ public class DecodeableRpcResult extends RpcResult implements Codec, Decodeable 
                     setException((Throwable) obj);
                 } catch (ClassNotFoundException e) {
                     throw new IOException(StringUtils.toString("Read response data failed.", e));
+                } finally {
+                    Thread.currentThread().setContextClassLoader(originalClassLoader);
                 }
                 break;
             case DubboCodec.RESPONSE_NULL_VALUE_WITH_ATTACHMENTS:
@@ -120,6 +121,8 @@ public class DecodeableRpcResult extends RpcResult implements Codec, Decodeable 
                     setAttachments((Map<String, String>) in.readObject(Map.class));
                 } catch (ClassNotFoundException e) {
                     throw new IOException(StringUtils.toString("Read response data failed.", e));
+                } finally {
+                    Thread.currentThread().setContextClassLoader(originalClassLoader);
                 }
                 break;
             case DubboCodec.RESPONSE_VALUE_WITH_ATTACHMENTS:
@@ -131,6 +134,8 @@ public class DecodeableRpcResult extends RpcResult implements Codec, Decodeable 
                     setAttachments((Map<String, String>) in.readObject(Map.class));
                 } catch (ClassNotFoundException e) {
                     throw new IOException(StringUtils.toString("Read response data failed.", e));
+                } finally {
+                    Thread.currentThread().setContextClassLoader(originalClassLoader);
                 }
                 break;
             case DubboCodec.RESPONSE_WITH_EXCEPTION_WITH_ATTACHMENTS:
@@ -143,6 +148,8 @@ public class DecodeableRpcResult extends RpcResult implements Codec, Decodeable 
                     setAttachments((Map<String, String>) in.readObject(Map.class));
                 } catch (ClassNotFoundException e) {
                     throw new IOException(StringUtils.toString("Read response data failed.", e));
+                } finally {
+                    Thread.currentThread().setContextClassLoader(originalClassLoader);
                 }
                 break;
             default:
@@ -151,6 +158,7 @@ public class DecodeableRpcResult extends RpcResult implements Codec, Decodeable 
         if (in instanceof Cleanable) {
             ((Cleanable) in).cleanup();
         }
+        Thread.currentThread().setContextClassLoader(originalClassLoader);
         return this;
     }
 

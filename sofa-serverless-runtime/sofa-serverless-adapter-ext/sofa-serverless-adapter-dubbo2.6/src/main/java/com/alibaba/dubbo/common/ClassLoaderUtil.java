@@ -16,16 +16,16 @@
  */
 package com.alibaba.dubbo.common;
 
+import java.lang.reflect.Field;
+
+import org.springframework.context.ApplicationContext;
+
 import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.dubbo.config.model.ApplicationModel;
-import com.alibaba.dubbo.config.model.ConsumerModel;
 import com.alibaba.dubbo.config.model.ProviderModel;
 import com.alibaba.dubbo.config.spring.ReferenceBean;
 import com.alibaba.dubbo.config.spring.ServiceBean;
-import org.springframework.context.ApplicationContext;
-
-import java.lang.reflect.Field;
 
 public class ClassLoaderUtil {
     static Field                serviceBeanApplicationContextField;
@@ -61,29 +61,10 @@ public class ClassLoaderUtil {
         try {
             ApplicationContext applicationContext = (ApplicationContext) serviceBeanApplicationContextField
                 .get(serviceBean);
-            ClassLoader classLoader = applicationContext.getClassLoader();
-            Thread.currentThread().setContextClassLoader(classLoader);
-            return classLoader;
+            return applicationContext.getClassLoader();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static ClassLoader getClassLoaderByServiceNameAndApplication(String serviceName,
-                                                                        String application) {
-        ConsumerModel consumerModel = ApplicationModel.getConsumerModel(ApplicationModel
-            .getConsumerModelKey(serviceName, application));
-        if (consumerModel == null)
-            return ClassLoader.getSystemClassLoader();
-        ReferenceBean referenceBean = (ReferenceBean) consumerModel.getMetadata();
-        try {
-            ApplicationContext applicationContext = (ApplicationContext) referenceBeanApplicationContextField
-                .get(referenceBean);
-            ClassLoader classLoader = applicationContext.getClassLoader();
-            Thread.currentThread().setContextClassLoader(classLoader);
-            return classLoader;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
