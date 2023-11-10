@@ -2,7 +2,7 @@
 ![license](https://img.shields.io/badge/license-Apache--2.0-green.svg)
 ![Maven Central](https://img.shields.io/maven-central/v/com.alipay.sofa.serverless/sofa-serverless-runtime)
 
-SOFAServerless 官网：https://sofaserverless.netlify.app/
+产品介绍欢迎查看 SOFAServerless 官网：[https://sofaserverless.netlify.app/](https://sofaserverless.gitee.io/home/)
 
 <br/>
 
