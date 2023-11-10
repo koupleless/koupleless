@@ -3,6 +3,7 @@ package com.alipay.sofa.web.base.rest;
 import com.alipay.sofa.dynamicstock.base.facade.StrategyService;
 import com.alipay.sofa.dynamicstock.base.model.ProductInfo;
 import com.alipay.sofa.serverless.common.api.SpringServiceFinder;
+import com.alipay.sofa.serverless.common.exception.BizRuntimeException;
 import com.alipay.sofa.web.base.data.DatabaseSeed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -30,8 +31,14 @@ public class SampleController {
 
     @RequestMapping(value = "/order1", method = RequestMethod.GET)
     public String biz1(Model model) {
-        StrategyService strategyService = SpringServiceFinder.getModuleService("biz1", "0.0.1-SNAPSHOT",
-                "strategyServiceImpl", StrategyService.class);
+        StrategyService strategyService;
+        try {
+            strategyService = SpringServiceFinder.getModuleService("biz1",
+                    "0.0.1-SNAPSHOT", "strategyServiceImpl", StrategyService.class);
+        } catch (BizRuntimeException e) {
+            model.addAttribute("appName", applicationContext.getId());
+            return "index";
+        }
 
         model.addAttribute("appName", strategyService.getAppName());
         model.addAttribute("productList", strategyService.strategy(initProducts()));
@@ -40,8 +47,18 @@ public class SampleController {
 
     @RequestMapping(value = "/order2", method = RequestMethod.GET)
     public String biz2(Model model) {
-        StrategyService strategyService = SpringServiceFinder.getModuleService("biz2", "0.0.1-SNAPSHOT",
-                "strategyServiceImpl", StrategyService.class);
+        StrategyService strategyService;
+        try {
+            strategyService = SpringServiceFinder.getModuleService("biz2",
+                    "0.0.1-SNAPSHOT", "strategyServiceImpl", StrategyService.class);
+        } catch (BizRuntimeException e) {
+            model.addAttribute("appName", applicationContext.getId());
+            return "index";
+        }
+
+        if (strategyService == null) {
+            return "index";
+        }
 
         model.addAttribute("appName", strategyService.getAppName());
         model.addAttribute("productList", strategyService.strategy(initProducts()));
