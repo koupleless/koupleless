@@ -1,0 +1,2 @@
+com.alipay.sofa.serverless.arklet.springboot.starter.ArkletAutoConfiguration
+com.alipay.sofa.serverless.arklet.springboot.starter.health.HealthAutoConfiguration

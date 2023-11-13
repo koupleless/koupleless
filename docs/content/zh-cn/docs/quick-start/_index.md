@@ -3,6 +3,23 @@ title: 快速开始
 weight: 200
 ---
 
+# 实验 1：一键实现多应用合并部署
+
+合并部署是指：选定一个应用作为底座，然后将多个其它应用合并部署到这个底座之上，从而实现长尾应用的极致资源降本。典型业务场景为应用的低成本交付 以及 微服务过度拆分一键重新合并。
+
+1. 选定一个应用作为底座（SOFAServerless 术语叫**基座**），将普通应用[一键升级为基座](/docs/tutorials/base-create/springboot-and-sofaboot/)。
+2. 选定一个应用作为上层应用（SOFAServerless 术语叫**模块**），将其[一键转为模块应用并完成合并部署](/docs/tutorials/module-create/springboot-and-sofaboot/)。
+<br/>
+您也可以直接使用 [官方 Demo 和文档](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/service) 在本地完成实验。 
+
+小贴士：无论**基座**还是**模块**，接入 SOFAServerless 后，同一套代码分支既能像原来一样独立启动，又能做到合并部署。
+
+<br/>
+<br/>
+
+
+# 实验 2：一键体验应用秒级热部署
+
 ## 步骤 1：本地软件安装
 下载安装 **go**（建议 1.20 或以上）、**docker**、**minikube**、**kubectl**。
 
@@ -21,3 +38,7 @@ kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_prov
 
 <br/>
 <br/>
+
+# 欢迎大家学习 SOFAServerless 视频教程
+
+[点击此处](/docs/tutorials/video-training)查看 SOFAServerless 平台与研发框架视频培训教程。

@@ -4,8 +4,8 @@ weight: 100
 ---
 
 ## 前提条件
-1. SpringBoot 版本 >= 2.0.0
-2. SOFABoot >= 3.9
+1. SpringBoot 版本 >= 2.3.0（针对 SpringBoot 用户）
+2. SOFABoot 版本 >= 3.9.0 或 SOFABoot >= 4.0.0（针对 SOFABoot 用户）
 
 ## 接入步骤
 
@@ -14,14 +14,14 @@ weight: 100
 #### 修改 application.properties
 ```properties
 # 需要定义应用名
-spring.application.name = ${替换为实际基座名}
+spring.application.name = ${替换为实际基座应用名}
 ```
 
 #### 修改主 pom.xml
 ```xml
 <properties>
     <sofa.ark.verion>2.2.4-SNAPSHOT</sofa.ark.verion>
-    <sofa.serverless.runtime.version>0.5.1</sofa.serverless.runtime.version>
+    <sofa.serverless.runtime.version>0.5.2</sofa.serverless.runtime.version>
 </properties>
 ```
 
@@ -39,32 +39,8 @@ spring.application.name = ${替换为实际基座名}
 </dependency>
 ```
 
-#### 修改启动参数
-启动参数增加 `-Dsofa.ark.embed.enable=true`
-
 ### 启动验证
-
-1. 基座正常启动
-2. 发起 curl 命令，查看基座是否已经初始化好
-```shell
-curl --location --request POST 'localhost:1238/queryAllBiz'
-```
-
-3. 返回如下，表示有一个模块，该模块实际就是基座自身，基座改造成功
-```json
-{
-    "code": "SUCCESS",
-    "data": [
-        {
-            "bizName": "base",
-            "bizState": "ACTIVATED",
-            "bizVersion": "1.0.0",
-            "mainClass": "embed main",
-            "webContextPath": "/"
-        }
-    ]
-}
-```
+基座应用能正常启动即表示验证成功！
 
 <br/>
 <br/>

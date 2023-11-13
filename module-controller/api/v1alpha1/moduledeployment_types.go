@@ -83,9 +83,12 @@ type ReleaseStatus struct {
 	// +optional
 	OriginalDeltaReplicas int32 `json:"originalDeltaReplicas,omitempty"`
 
-	// The phase current release reach
+	// The phase current whole release reach
 	// +optional
 	Progress ReleaseProgress `json:"progress,omitempty"`
+
+	// the phase current batch release reach
+	BatchProgress ReleaseProgress `json:"batchProgress,omitempty"`
 
 	// Last time the release transitioned from one status to another.
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
@@ -198,6 +201,7 @@ type ModuleDeploymentStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:shortName=mddeploy
 
 // ModuleDeployment is the Schema for the moduledeployments API
 type ModuleDeployment struct {

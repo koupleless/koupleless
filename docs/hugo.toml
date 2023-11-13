@@ -1,4 +1,4 @@
-baseURL = "home"
+baseURL = ""
 title = "SOFAServerless"
 
 # Language settings
@@ -117,7 +117,7 @@ version = "0.6.0"
 
 # A link to latest version of the docs. Used in the "version-banner" partial to
 # point people to the main doc site.
-url_latest_version = "https://sofaserverless.netlify.app/user-docs"
+url_latest_version = "/docs"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/sofastack/sofa-serverless"
@@ -212,6 +212,8 @@ no = '很抱歉文档对您没帮助。邀请您<a href="https://github.com/sofa
 #  desc = "Discuss development issues around the project"
 
 # hugo module configuration
+
+
 
 [module]
   # uncomment line below for temporary local development of module

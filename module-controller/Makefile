@@ -22,11 +22,6 @@ CONTAINER_TOOL ?= docker
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
 
-MODULE_DEPLOYMENT_YAML_FILE := config/samples/module-deployment-controller.yaml
-MODULE_DEPLOYMENT_IMAGE := $(shell awk '/image:/{print $$2}' $(MODULE_DEPLOYMENT_YAML_FILE))
-DYNAMIC_STOCK_YAML_FILE := config/samples/dynamic-stock-deployment.yaml
-DYNAMIC_STOCK_IMAGE := $(shell awk '/image:/{print $$2}' $(DYNAMIC_STOCK_YAML_FILE))
-
 .PHONY: all
 all: build
 
@@ -132,8 +127,6 @@ undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/confi
 
 .PHONY: dev
 dev: ## create all resource
-	minikube image load $(MODULE_DEPLOYMENT_IMAGE)
-	minikube image load $(DYNAMIC_STOCK_IMAGE)
 	@cat config/dev/dev.txt | xargs -I {} $(KUBECTL) apply -f {}
 	sleep 5
 	minikube service dynamic-stock-service

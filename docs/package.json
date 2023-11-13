@@ -1,6 +1,6 @@
 {
   "name": "SOFAServerless",
-  "version": "0.5.0",
+  "version": "0.7.0",
   "description": "SOFAServerless is a modularization application architecture patterns for company business rapid development, operation, evolution and cooperation with low cost.",
   "repository": "https://github.com/sofastack/sofa-serverless",
   "homepage": "https://sofaserverless.netlify.app/",
@@ -16,6 +16,7 @@
     "_serve": "npm run _hugo-dev -- --minify serve",
     "build:preview": "npm run _hugo-dev -- --minify --baseURL \"${DEPLOY_PRIME_URL:-/}\"",
     "build:production": "npm run _hugo -- --minify",
+    "build:production:github-pages": "npm run _hugo -- --minify --baseURL \"https://www.sofastack.io/sofa-serverless/\"",
     "build": "npm run _build",
     "check:links:all": "HTMLTEST_ARGS= npm run _check:links",
     "check:links": "npm run _check:links",
