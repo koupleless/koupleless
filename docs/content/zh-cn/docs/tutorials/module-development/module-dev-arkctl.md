@@ -1,6 +1,5 @@
 ---
-title: 模式本地开发 
-weight: 400
+title: 模式本地开发 weight: 400
 ---
 
 ## Arkctl 工具安装
@@ -61,3 +60,45 @@ arkctl deploy --pod {namespace}/{podName}
 ```
 
 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
+
+#### 场景 4: 在多模块的 Maven 项目中，在 Root 构建并部署子模块的 jar 包。
+
+准备：
+
+1. 在本地启动一个基座。
+2. 打开一个多模块 Maven 项目仓库。
+
+执行命令：
+
+```shell
+# 需要在仓库的根目录下执行。
+# 比如，如果是 maven 项目，需要在根 pom.xml 所在的目录下执行。
+arkctl deploy --subBundlePath ./path/to/your/sub/module
+```
+
+命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
+
+#### 场景 5: 查询当前基座中已经部署的模块。
+
+准备：
+
+1. 在本地启动一个基座。
+
+执行命令：
+
+```shell
+arkctl status
+```
+
+#### 场景 6: 查询远程 k8s 环境基座中已经部署的模块。
+
+准备：
+
+1. 在远程 k8s 环境启动一个基座。
+2. 确保本地有 kube 证书以及有关权限。
+
+执行命令：
+
+```shell
+arkctl status --pod {namespace}/{name}
+```
