@@ -120,15 +120,14 @@ func (c *command) Exec() error {
 	}
 
 	closed := &atomic.Bool{}
+	closed.Store(false)
 	closeCompleteSignal := func(err error) {
-		if closed.Load() {
-			return
+		if closed.CompareAndSwap(false, true) {
+			if err != nil {
+				c.completeSignal <- err
+			}
+			close(c.completeSignal)
 		}
-		closed.CompareAndSwap(false, true)
-		if err != nil {
-			c.completeSignal <- err
-		}
-		close(c.completeSignal)
 	}
 
 	go func() {

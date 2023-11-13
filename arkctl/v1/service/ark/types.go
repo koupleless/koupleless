@@ -32,6 +32,18 @@ type ArkResponseData struct {
 	BizInfos     []interface{} `json:"bizInfos"`
 }
 
+// GenericArkResponseBase is the base response of ark api.
+type GenericArkResponseBase[T any] struct {
+	// Code is the response code
+	Code string `json:"code"`
+
+	// Data is the response data
+	Data T `json:"data"`
+
+	// Message is the error message
+	Message string `json:"message"`
+}
+
 // ArkResponseBase is the base response of ark api.
 type ArkResponseBase struct {
 	// Code is the response code
@@ -71,13 +83,13 @@ func (info *ArkContainerRuntimeInfo) GetPort() int {
 // Usually this BizModel is generated automatically from bundle like jarfile.
 type BizModel struct {
 	// BizName the biz name
-	BizName string `json:"bizName"`
+	BizName string `json:"bizName,omitempty"`
 
 	// BizVersion is the version of biz module.
-	BizVersion string `json:"bizVersion"`
+	BizVersion string `json:"bizVersion,omitempty"`
 
 	// BizUrl is the location of source code.
-	BizUrl fileutil.FileUrl `json:"bizUrl"`
+	BizUrl fileutil.FileUrl `json:"bizUrl,omitempty"`
 }
 
 // InstallBizRequest is the request for installing biz module to ark container.
@@ -116,4 +128,27 @@ type UnInstallBizRequest struct {
 // UnInstallBizResponse is the response for installing biz module to ark container.
 type UnInstallBizResponse struct {
 	ArkResponseBase
+}
+
+// QueryAllArkBizRequest is the request for querying all biz module in a given ark container.
+type QueryAllArkBizRequest struct {
+	// HostName is where the ark container is running
+	HostName string
+
+	// Port is where the ark container is serving
+	Port int
+}
+
+// ArkBizInfo is the response for querying all biz module in a given ark container.
+type ArkBizInfo struct {
+	BizName        string `json:"bizName"`
+	BizState       string `json:"bizState"`
+	BizVersion     string `json:"bizVersion"`
+	MainClass      string `json:"mainClass"`
+	WebContextPath string `json:"webContextPath"`
+}
+
+// QueryAllArkBizResponse is the response for querying all biz module in a given ark container.
+type QueryAllArkBizResponse struct {
+	GenericArkResponseBase[[]ArkBizInfo]
 }

@@ -248,3 +248,48 @@ func TestUnInstallBiz_NoServer(t *testing.T) {
 	assert.Equal(t, "Post \"http://127.0.0.1:8888/uninstallBiz\": dial tcp 127.0.0.1:8888: connect: connection refused", err.Error())
 
 }
+
+func TestQueryAllBiz_HappyPath(t *testing.T) {
+	ctx := context.Background()
+	client := BuildService(ctx)
+	port, cancel := mockHttpServer("/queryAllBiz", func(w http.ResponseWriter, r *http.Request) {
+		// {"code":"SUCCESS","data":[{"bizName":"biz1","bizState":"ACTIVATED","bizVersion":"0.0.1-SNAPSHOT","mainClass":"com.alipay.sofa.web.biz1.Biz1Application","webContextPath":"biz1"}]}
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
+			"code": "SUCCESS",
+			"data": []map[string]interface{}{
+				{
+					"bizName":        "biz1",
+					"bizState":       "ACTIVATED",
+					"bizVersion":     "0.0.1-SNAPSHOT",
+					"mainClass":      "com.alipay.sofa.web.biz1.Biz1Application",
+					"webContextPath": "biz1",
+				},
+			},
+		})
+	})
+
+	defer func() {
+		cancel()
+	}()
+
+	info, err := client.QueryAllBiz(ctx, QueryAllArkBizRequest{
+		HostName: "127.0.0.1",
+		Port:     port,
+	})
+
+	assert.Nil(t, err)
+	assert.Equal(t, &QueryAllArkBizResponse{
+		GenericArkResponseBase: GenericArkResponseBase[[]ArkBizInfo]{
+			Code: "SUCCESS",
+			Data: []ArkBizInfo{
+				{
+					BizName:        "biz1",
+					BizState:       "ACTIVATED",
+					BizVersion:     "0.0.1-SNAPSHOT",
+					MainClass:      "com.alipay.sofa.web.biz1.Biz1Application",
+					WebContextPath: "biz1",
+				},
+			},
+		},
+	}, info)
+}

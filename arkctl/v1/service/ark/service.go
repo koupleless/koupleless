@@ -38,6 +38,9 @@ type Service interface {
 	// UnInstallBiz call the remote ark container to install biz.
 	// The precondition is that the biz file is already uploaded to the ark container or file hosting service (e.g. oss).
 	UnInstallBiz(ctx context.Context, req UnInstallBizRequest) error
+
+	// QueryAllBiz call the remote ark container to query biz.
+	QueryAllBiz(ctx context.Context, req QueryAllArkBizRequest) (*QueryAllArkBizResponse, error)
 }
 
 // BuildService return a new Service.
@@ -174,4 +177,40 @@ func (h *service) UnInstallBiz(ctx context.Context, req UnInstallBizRequest) (er
 		err = fmt.Errorf("unknown run type: %s", req.TargetContainer.RunType)
 	}
 	return
+}
+
+func (h *service) QueryAllBiz(ctx context.Context, req QueryAllArkBizRequest) (*QueryAllArkBizResponse, error) {
+	logger := contextutil.GetLogger(ctx)
+	logger.WithField("req", string(runtime.Must(json.Marshal(req)))).Info("query all biz started")
+
+	resp, err := h.client.R().
+		SetContext(context.Background()).
+		SetBody(req).
+		Post(fmt.Sprintf("http://%s:%d/queryAllBiz", req.HostName, req.Port))
+
+	if err != nil {
+		logger.Error(err)
+		return nil, err
+	}
+
+	if !resp.IsSuccess() {
+		err = fmt.Errorf("query all biz http failed with code %d", resp.StatusCode())
+		logger.Error(err)
+		return nil, err
+	}
+
+	queryAllBizResponse := &QueryAllArkBizResponse{}
+	if err := json.Unmarshal(resp.Body(), queryAllBizResponse); err != nil {
+		logger.Error(err)
+		return nil, err
+	}
+
+	if queryAllBizResponse.Code != "SUCCESS" {
+		err = fmt.Errorf("query all biz failed: %s", queryAllBizResponse.Message)
+		logger.Error(err)
+		return nil, err
+	}
+
+	logger.Info("query all biz completed")
+	return queryAllBizResponse, nil
 }

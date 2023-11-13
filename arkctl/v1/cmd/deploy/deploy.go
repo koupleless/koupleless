@@ -19,6 +19,7 @@ package deploy
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/pterm/pterm"
@@ -40,6 +41,8 @@ var (
 	buildFlag  string
 	bundleFlag string
 	portFlag   int
+
+	subBundlePath string
 
 	podFlag      string
 	podNamespace string // pre parsed pod namespace
@@ -74,9 +77,11 @@ Scenario 2: Deploy a local pre-built bundle to local running ark container with 
 
 Scenario 3: Build and deploy a bundle at current dir to a remote running ark container in k8s cluster with default port:
 	arkctl deploy --pod ${namespace}/${name}
+
+Scenario 4: Build an maven multi module project and deploy a sub module to a remote running ark container in k8s cluster with default port:
+	arkctl deploy --subBundlePath ${path/to/your/sub/module}
 `,
-	ValidArgs:         nil,
-	ValidArgsFunction: nil,
+	ValidArgs: nil,
 	Args: func(cmd *cobra.Command, args []string) error {
 		// if bundle is provided, then there is no need to build
 		doLocalBuildBundle = !cmd.Flags().Changed("bundle")
@@ -146,6 +151,10 @@ func execParseBizModel(ctx *contextutil.Context) bool {
 		searchdir := buildFlag
 		if searchdir == "" {
 			searchdir, _ = os.Getwd()
+		}
+
+		if subBundlePath != "" {
+			searchdir = filepath.Join(searchdir, subBundlePath)
 		}
 
 		filepath.Walk(searchdir, func(path string, info os.FileInfo, err error) error {
@@ -219,33 +228,99 @@ func execUploadBizBundle(ctx *contextutil.Context) bool {
 }
 
 func execInstallInKubePod(ctx *contextutil.Context) bool {
-	kubearkdeploycmd := cmdutil.BuildCommand(ctx,
+	bizModel := ctx.Value(ctxKeyBizModel).(*ark.BizModel)
+	kubeuninstallcmd := cmdutil.BuildCommand(ctx,
 		"kubectl",
 		"-n", podNamespace,
 		"exec", podName, "--",
-		"arkctl",
-		"deploy",
-		"--bundle",
-		"file://"+ctx.Value(ctxKeyArkBizBundlePathInSidePod).(string),
+		"curl",
+		"-X",
+		"POST",
+		"-H",
+		"'Content-Type: application/json'",
+		"-d",
+		string(runtime.Must(json.Marshal(ark.BizModel{
+			BizName:    bizModel.BizName,
+			BizVersion: bizModel.BizVersion,
+		}))),
+		fmt.Sprintf("http://127.0.0.1:%v/uninstallBiz", portFlag),
 	)
 
 	pterm.Info.Println(pterm.LightBlue("【PHASE】:") + "Start to deploy biz bundle in pod.")
-	pterm.Info.Println(pterm.LightBlue("【COMMAND】:") + kubearkdeploycmd.String())
-	if err := kubearkdeploycmd.Exec(); err != nil {
+	pterm.Info.Println(pterm.LightBlue("【COMMAND】:") + kubeuninstallcmd.String())
+	if err := kubeuninstallcmd.Exec(); err != nil {
 		pterm.Error.PrintOnError(err)
 		return false
 	}
 
 	// somehow kubectl exec would pipe the pod's realtime output to stderror pipeline
 	// so we check command exit state directly, instead of judging by the stderror pipeline output
-	if stderrpipe := <-kubearkdeploycmd.Wait(); stderrpipe != nil {
-		lines := stderrpipe.Error()
-		pterm.Println(lines)
+	if stderrpipe := <-kubeuninstallcmd.Wait(); stderrpipe != nil {
+		realtimeoutputlines := stderrpipe.Error()
+		stdoutlines := &strings.Builder{}
+		for line := range kubeuninstallcmd.Output() {
+			stdoutlines.WriteString(line)
+		}
 
-		if err := kubearkdeploycmd.GetExitError(); err != nil {
+		if err := kubeuninstallcmd.GetExitError(); err != nil {
+			pterm.Println(realtimeoutputlines)
+			pterm.Println(stdoutlines)
 			pterm.Error.PrintOnError(err)
 			return false
 		}
+
+		if strings.Contains(stdoutlines.String(), "\"code\":\"FAILED\"") &&
+			!strings.Contains(stdoutlines.String(), "\"code\":\"NOT_FOUND_BIZ\"") {
+			pterm.Println(realtimeoutputlines)
+			pterm.Println(stdoutlines)
+			pterm.Error.Println("uninstall biz failed!")
+		}
+	}
+
+	kubeinstallcmd := cmdutil.BuildCommand(ctx,
+		"kubectl",
+		"-n", podNamespace,
+		"exec", podName, "--",
+		"curl",
+		"-X",
+		"POST",
+		"-H",
+		"'Content-Type: application/json'",
+		"-d",
+		string(runtime.Must(json.Marshal(ark.BizModel{
+			BizName:    bizModel.BizName,
+			BizVersion: bizModel.BizVersion,
+			BizUrl:     fileutil.FileUrl("file://" + ctx.Value(ctxKeyArkBizBundlePathInSidePod).(string)),
+		}))),
+		fmt.Sprintf("http://127.0.0.1:%v/installBiz", portFlag),
+	)
+	if err := kubeinstallcmd.Exec(); err != nil {
+		pterm.Error.PrintOnError(err)
+		return false
+	}
+
+	// somehow kubectl exec would pipe the pod's realtime output to stderror pipeline
+	// so we check command exit state directly, instead of judging by the stderror pipeline output
+	if stderrpipe := <-kubeinstallcmd.Wait(); stderrpipe != nil {
+		realtimeoutputlines := stderrpipe.Error()
+		stdoutlines := &strings.Builder{}
+		for line := range kubeinstallcmd.Output() {
+			stdoutlines.WriteString(line)
+		}
+
+		if err := kubeinstallcmd.GetExitError(); err != nil {
+			pterm.Println(realtimeoutputlines)
+			pterm.Println(stdoutlines)
+			pterm.Error.PrintOnError(err)
+			return false
+		}
+
+		if strings.Contains(stdoutlines.String(), "\"code\":\"FAILED\"") {
+			pterm.Println(realtimeoutputlines)
+			pterm.Println(stdoutlines)
+			pterm.Error.Println("install biz failed!")
+		}
+		pterm.Println(stdoutlines)
 	}
 
 	return true
@@ -377,6 +452,9 @@ If not provided, arkctl will try to find the pre-built bundle under current dire
 
 	DeployCommand.Flags().StringVar(&podFlag, "pod", "", `
 If Provided, arkctl will try to deploy the bundle to the ark container running in given pod.
+`)
+	DeployCommand.Flags().StringVar(&subBundlePath, "subBundlePath", "", `
+If Provided, arkctl will try to build the project at current dir and deploy the bundle at subBundlePath.
 `)
 
 	DeployCommand.Flags().IntVar(&portFlag, "port", 1238, `
