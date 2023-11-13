@@ -12,25 +12,16 @@
  * limitations under the License.
  */
 
-package contextutil
+package style
 
-import (
-	"context"
-	"github.com/sirupsen/logrus"
-)
+import "github.com/pterm/pterm"
 
-var (
-	enableLogger = true
-)
-
-func DisableLogger() {
-	enableLogger = false
-}
-
-func GetLogger(ctx context.Context) logrus.FieldLogger {
-	logger := logrus.WithContext(ctx)
-	if !enableLogger {
-		logger.Logger.Level = logrus.FatalLevel
+func InfoPrefix(prefix string) *pterm.PrefixPrinter {
+	return &pterm.PrefixPrinter{
+		Prefix: pterm.Prefix{
+			Text:  prefix,
+			Style: pterm.Info.Prefix.Style,
+		},
+		MessageStyle: pterm.Info.MessageStyle,
 	}
-	return logger
 }

@@ -18,6 +18,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/style"
 	"strings"
 
 	"serverless.alipay.com/sofa-serverless/arkctl/common/cmdutil"
@@ -62,7 +63,7 @@ func execStatusLocal(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	pterm.DefaultBasicText.Println(string(runtime.Must(json.Marshal(*biz))))
+	style.InfoPrefix("QueryAllBiz").Println(string(runtime.Must(json.Marshal(*biz))))
 	return nil
 }
 
@@ -96,7 +97,7 @@ func execStatusKubePod(ctx context.Context) error {
 			pterm.Error.Println("query all biz failed")
 			return fmt.Errorf("query all biz failed")
 		}
-		pterm.Println(stdoutlines)
+		style.InfoPrefix("QueryAllBiz").Println(stdoutlines)
 	}
 	return nil
 }

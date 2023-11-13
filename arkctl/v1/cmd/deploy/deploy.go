@@ -21,19 +21,20 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/pterm/pterm"
 	"os"
 	"path/filepath"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/runtime"
 	"strings"
 
 	"serverless.alipay.com/sofa-serverless/arkctl/common/cmdutil"
 	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
 	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/runtime"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/style"
 	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
 	"serverless.alipay.com/sofa-serverless/arkctl/v1/service/ark"
 
+	"github.com/google/uuid"
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 
@@ -103,11 +104,12 @@ Scenario 4: Build an maven multi module project and deploy a sub module to a rem
 }
 
 func execMavenBuild(ctx *contextutil.Context) bool {
-	pterm.DefaultBasicText.Print(
-		pterm.LightBlue("Phase: ") + "deploy biz bundle started.\n",
-	)
+
+	style.InfoPrefix("Stage").Println("BuildBundle")
+	style.InfoPrefix("BuildDirectory").Println(buildFlag)
+
 	if !doLocalBuildBundle {
-		pterm.DefaultBasicText.Print("Skip building bundle.")
+		pterm.Info.Println("skip building bundle.")
 		return true
 	}
 
@@ -116,36 +118,36 @@ func execMavenBuild(ctx *contextutil.Context) bool {
 		buildFlag,
 		"mvn",
 		"clean", "package", "-Dmaven.test.skip=true")
+	style.InfoPrefix("Command").Println(mvn.String())
 
-	pterm.DefaultBasicText.Println(pterm.LightBlue("Dir: ") + buildFlag)
 	if err := mvn.Exec(); err != nil {
-		pterm.DefaultBasicText.PrintOnErrorf("Build bundle failed: %s!", err)
+		pterm.Error.PrintOnErrorf("Build bundle failed: %s!", err)
+		return false
 	}
 
 	go func() {
 		for line := range mvn.Output() {
-			fmt.Println(line)
+			pterm.Println(line)
 		}
 	}()
 
 	if err := <-mvn.Wait(); err != nil {
-		pterm.DefaultBasicText.PrintOnErrorf("Build bundle failed: %s!", err)
+		pterm.Error.PrintOnErrorf("Build bundle failed: %s!", err)
 		return false
 	}
 
 	if err := mvn.GetExitError(); err != nil {
-		pterm.DefaultBasicText.PrintOnErrorf("Build bundle failed: %s!", err)
+		pterm.Error.PrintOnErrorf("Build bundle failed: %s!", err)
 		return false
 	}
 
+	pterm.Info.Printfln(pterm.Green("build bundle success!"))
+	pterm.Println()
 	return true
 }
 
 func execParseBizModel(ctx *contextutil.Context) bool {
-	var (
-		logger = contextutil.GetLogger(ctx)
-	)
-
+	style.InfoPrefix("Stage").Println("ParseBizModel")
 	bundlePath := bundleFlag
 	if doLocalBuildBundle {
 		searchdir := buildFlag
@@ -165,7 +167,7 @@ func execParseBizModel(ctx *contextutil.Context) bool {
 		})
 
 		if !strings.HasSuffix(bundlePath, "-ark-biz.jar") {
-			logger.Error("can not find pre built biz bundle in build dir!")
+			pterm.Error.Println("can not find pre built biz bundle in build dir!")
 			return false
 		}
 		bundlePath = "file://" + bundlePath
@@ -173,11 +175,14 @@ func execParseBizModel(ctx *contextutil.Context) bool {
 
 	bizModel, err := ark.ParseBizModel(ctx, fileutil.FileUrl(bundlePath))
 	if err != nil {
-		logger.WithError(err).Error("parse biz model failed!")
+		pterm.Error.PrintOnError(fmt.Errorf("failed to parse bundle: %s", err))
 		return false
 	}
 
 	ctx.Put(ctxKeyBizModel, bizModel)
+	style.InfoPrefix("BizBundleInfo").Println(string(runtime.Must(json.Marshal(*bizModel))))
+	pterm.Info.Println(pterm.Green("parse biz bundle success!"))
+	pterm.Println()
 
 	return true
 }
@@ -201,8 +206,8 @@ func execUploadBizBundle(ctx *contextutil.Context) bool {
 			string(bizModel.BizUrl)[7:],
 			podName+":"+targetPath,
 		)
-		pterm.Info.Println(pterm.LightBlue("【PHASE】:") + "Start to upload biz bundle to pod.")
-		pterm.Info.Println(pterm.LightBlue("【COMMAND】:") + kubecpcmd.String())
+		style.InfoPrefix("Stage").Println("UploadBizBundle")
+		style.InfoPrefix("Command").Println(kubecpcmd.String())
 
 		if err := kubecpcmd.Exec(); err != nil {
 			pterm.Error.PrintOnError(err)
@@ -220,10 +225,10 @@ func execUploadBizBundle(ctx *contextutil.Context) bool {
 			return false
 		}
 		ctx.Put(ctxKeyArkBizBundlePathInSidePod, targetPath)
-		pterm.Info.Println(pterm.LightGreen("【SUCCESS】:") + "Upload biz bundle to pod success!")
+		pterm.Info.Println(pterm.LightGreen("upload biz bundle to pod success!"))
+		pterm.Println()
 
 	}
-	cmdutil.BuildCommand(ctx, "kubectl")
 	return true
 }
 
@@ -246,8 +251,7 @@ func execInstallInKubePod(ctx *contextutil.Context) bool {
 		fmt.Sprintf("http://127.0.0.1:%v/uninstallBiz", portFlag),
 	)
 
-	pterm.Info.Println(pterm.LightBlue("【PHASE】:") + "Start to deploy biz bundle in pod.")
-	pterm.Info.Println(pterm.LightBlue("【COMMAND】:") + kubeuninstallcmd.String())
+	style.InfoPrefix("Command").Println(kubeuninstallcmd.String())
 	if err := kubeuninstallcmd.Exec(); err != nil {
 		pterm.Error.PrintOnError(err)
 		return false
@@ -274,6 +278,7 @@ func execInstallInKubePod(ctx *contextutil.Context) bool {
 			pterm.Println(realtimeoutputlines)
 			pterm.Println(stdoutlines)
 			pterm.Error.Println("uninstall biz failed!")
+			return false
 		}
 	}
 
@@ -294,6 +299,7 @@ func execInstallInKubePod(ctx *contextutil.Context) bool {
 		}))),
 		fmt.Sprintf("http://127.0.0.1:%v/installBiz", portFlag),
 	)
+	style.InfoPrefix("Command").Println(kubeinstallcmd.String())
 	if err := kubeinstallcmd.Exec(); err != nil {
 		pterm.Error.PrintOnError(err)
 		return false
@@ -322,6 +328,7 @@ func execInstallInKubePod(ctx *contextutil.Context) bool {
 		}
 		pterm.Println(stdoutlines)
 	}
+	pterm.Println()
 
 	return true
 }
@@ -332,13 +339,23 @@ func execInstallInLocal(ctx *contextutil.Context) bool {
 }
 
 // install the given package in target ark container
-func execInstall(ctx *contextutil.Context) bool {
+func execInstall(ctx *contextutil.Context) (result bool) {
+	style.InfoPrefix("Stage").Println("Install")
+
 	switch {
 	case podFlag != "":
-		return execInstallInKubePod(ctx)
+		result = execInstallInKubePod(ctx)
 	default:
-		return execInstallInLocal(ctx)
+		result = execInstallInLocal(ctx)
 	}
+
+	if result {
+		pterm.Info.Println(pterm.Green("install biz success!"))
+		pterm.Println()
+	}
+
+	return
+
 }
 
 // uninstall the given package in target ark container
@@ -347,24 +364,15 @@ func execUnInstallLocal(ctx *contextutil.Context) bool {
 		arkService              = ctx.Value(ctxKeyArkService).(ark.Service)
 		bizModel                = ctx.Value(ctxKeyBizModel).(*ark.BizModel)
 		arkContainerRuntimeInfo = ctx.Value(ctxKeyArkContainerRuntimeInfo).(*ark.ArkContainerRuntimeInfo)
-		logger                  = contextutil.GetLogger(ctx)
 	)
-
-	logger.WithField("port", portFlag).
-		WithField("bizName", bizModel.BizName).
-		WithField("bizVersion", bizModel.BizVersion).
-		WithField("runType", arkContainerRuntimeInfo.RunType).
-		Info("start to uninstall bundle.")
-
 	if err := arkService.UnInstallBiz(ctx, ark.UnInstallBizRequest{
 		BizModel:        *bizModel,
 		TargetContainer: *arkContainerRuntimeInfo,
 	}); err != nil {
-		logger.WithError(err).Error("uninstall biz failed!")
+		pterm.Error.PrintOnError(err)
 		return false
 	}
 
-	logger.Info("uninstall biz success!")
 	return true
 }
 
@@ -374,23 +382,15 @@ func execInstallLocal(ctx *contextutil.Context) bool {
 		arkService              = ctx.Value(ctxKeyArkService).(ark.Service)
 		bizModel                = ctx.Value(ctxKeyBizModel).(*ark.BizModel)
 		arkContainerRuntimeInfo = ctx.Value(ctxKeyArkContainerRuntimeInfo).(*ark.ArkContainerRuntimeInfo)
-		logger                  = contextutil.GetLogger(ctx)
 	)
-
-	logger.WithField("port", portFlag).
-		WithField("bizName", bizModel.BizName).
-		WithField("bizVersion", bizModel.BizVersion).
-		WithField("runType", arkContainerRuntimeInfo.RunType).
-		Info("start to install bundle.")
 
 	if err := arkService.InstallBiz(ctx, ark.InstallBizRequest{
 		BizModel:        *bizModel,
 		TargetContainer: *arkContainerRuntimeInfo,
 	}); err != nil {
-		logger.WithError(err).Error("install biz failed!")
+		pterm.Error.PrintOnError(err)
 		return false
 	}
-	logger.Info("install biz success!")
 	return true
 }
 

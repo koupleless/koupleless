@@ -12,25 +12,4 @@
  * limitations under the License.
  */
 
-package contextutil
-
-import (
-	"context"
-	"github.com/sirupsen/logrus"
-)
-
-var (
-	enableLogger = true
-)
-
-func DisableLogger() {
-	enableLogger = false
-}
-
-func GetLogger(ctx context.Context) logrus.FieldLogger {
-	logger := logrus.WithContext(ctx)
-	if !enableLogger {
-		logger.Logger.Level = logrus.FatalLevel
-	}
-	return logger
-}
+package cmdutil

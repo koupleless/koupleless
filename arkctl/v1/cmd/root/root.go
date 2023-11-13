@@ -20,7 +20,9 @@ package root
 import (
 	"fmt"
 	"os"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
 
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -41,7 +43,10 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	RootCmd.Help()
+	contextutil.DisableLogger()
+	style := pterm.NewStyle(pterm.Italic, pterm.Bold, pterm.FgLightBlue)
+	pterm.DefaultBasicText.
+		Println("Welcome to use " + style.Sprint("ARKCTL") + " to ease your develop experience!")
 }
 
 // initConfig reads in config file and ENV variables if set.
