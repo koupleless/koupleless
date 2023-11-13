@@ -40,6 +40,9 @@ url: "/home/"
 <a href="/docs/quick-start/" style="display: inline-block; width: 176px; margin-right: 12px;">
   <img style="margin: 0;" src="/img/local-quick-start-btn.png" width="176px" />
 </a>
+<a href="/docs/video-training/" style="display: inline-block; width: 176px; margin-right: 12px;">
+  <img style="margin: 0;" src="/img/video-training-btn.png" width="176px" />
+</a>
 <a href="/docs/introduction/intro-and-scenario" style="display: inline-block; width: 176px;">
   <img style="margin: 0;" src="/img/more-details-btn.png" width="176px" />
 </a>

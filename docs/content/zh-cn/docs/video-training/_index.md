@@ -1,6 +1,6 @@
 ---
 title: 视频教程
-weight: 1
+weight: 210
 ---
 
 ## SOFAServerless 平台与研发框架视频培训课程重磅发布
