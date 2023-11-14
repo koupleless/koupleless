@@ -20,7 +20,7 @@ type ModuleReplicaSetReplicasChangedHandler struct {
 }
 
 func (h ModuleReplicaSetReplicasChangedHandler) Async() bool {
-	return false
+	return true
 }
 
 func (h ModuleReplicaSetReplicasChangedHandler) Handle(e event.Event) error {
