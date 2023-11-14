@@ -18,11 +18,18 @@ weight: 100
 spring.application.name = ${替换为实际模块应用名}
 ```
 
-### 步骤 2：添加模块打包插件
+### 步骤 2：添加模块需要的依赖和打包插件
 
 ```xml
 
 <plugins>
+    <dependencies>
+        <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-app-starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
     <!--这里添加ark 打包插件-->
     <plugin>
         <groupId>com.alipay.sofa</groupId>
