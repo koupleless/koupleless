@@ -16,7 +16,9 @@
  */
 package com.alipay.sofa.serverless.common.util;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
+import java.lang.StackWalker;
 
 /**
  * @author: yuanyuan
@@ -24,7 +26,8 @@ import java.lang.reflect.Method;
  */
 public class ReflectionUtils {
 
-    private static Method method;
+    private static final MethodHandles.Lookup lookup = MethodHandles.lookup();
+    private static Method                     method;
 
     static {
         try {
@@ -36,7 +39,8 @@ public class ReflectionUtils {
         }
     }
 
-    public static Class<?> getCallerClass(int realFramesToSkip) {
+    public static Class<?> executeJDK8Logic(int realFramesToSkip) {
+        // 在 JDK 8 下执行的方法逻辑
         if (method == null)
             throw new IllegalStateException("sun.reflect.Reflection initialization failure.");
         try {
@@ -45,6 +49,30 @@ public class ReflectionUtils {
             throw new IllegalStateException(
                 "An error occurs when invoking the sun.reflect.Reflection#getCallerClass", e);
         }
+    }
+
+    public static Class<?> executeJDK17Logic(int depth) {
+        // 在 JDK 17 下执行的方法逻辑
+        try {
+            StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+            return walker.walk(frames -> frames.skip(depth + 1).findFirst().map(StackWalker.StackFrame::getDeclaringClass).orElse(null));
+        } catch (Exception e) {
+            throw new IllegalStateException("sun.reflect.Reflection initialization failure.");
+        }
+    }
+
+    public static Class<?> getCallerClass(int realFramesToSkip) {
+        String javaVersion = System.getProperty("java.version");
+        if (javaVersion.startsWith("1.8")) {
+            // JDK 8 版本的逻辑
+            // 执行 JDK 8 版本下的方法
+            return executeJDK8Logic(realFramesToSkip);
+        } else if (javaVersion.startsWith("17")) {
+            // JDK 17 版本的逻辑
+            // 执行 JDK 17 版本下的方法
+            return executeJDK17Logic(realFramesToSkip);
+        }
+        return null;
     }
 
 }
