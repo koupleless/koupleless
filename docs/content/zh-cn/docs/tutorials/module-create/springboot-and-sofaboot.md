@@ -1,6 +1,6 @@
 ---
-title: 普通应用一键升级为模块
-weight: 200
+title: SpringBoot 或 SOFABoot 一键升级为模块
+weight: 100
 ---
 
 本文讲解了 SpringBoot 或 SOFABoot 一键升级为模块的操作和验证步骤，仅需加一个 ark 打包插件即可实现普通应用一键升级为模块应用，并且能做到同一套代码分支，既能像原来 SpringBoot 一样独立启动，也能作为模块与其它应用合并部署在一起启动。
