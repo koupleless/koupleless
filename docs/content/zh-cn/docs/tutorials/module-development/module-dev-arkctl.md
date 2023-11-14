@@ -4,8 +4,15 @@ title: 模式本地开发 weight: 400
 
 ## Arkctl 工具安装
 
+方法一：
+
 1. 本地安装 go 环境，go 依赖版本在 1.21 以上。
 2. 执行 go install `todo 独立的 arkctl go 仓库` 命令，安装 arkctl 工具。
+
+方法二：
+
+1. 在 [二进制列表](https://github.com/sofastack/sofa-serverless/tree/master/arkctl/bin) 中下载对应的二进制并加入到本地
+   path 中。
 
 ### 本地快速部署
 
@@ -38,7 +45,7 @@ arkctl deploy
 执行命令：
 
 ```shell
-arkctl deploy --bundle file:///path/to/your/pre/built/bundle-biz.jar
+arkctl deploy /path/to/your/pre/built/bundle-biz.jar
 ```
 
 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
@@ -73,7 +80,7 @@ arkctl deploy --pod {namespace}/{podName}
 ```shell
 # 需要在仓库的根目录下执行。
 # 比如，如果是 maven 项目，需要在根 pom.xml 所在的目录下执行。
-arkctl deploy --subBundlePath ./path/to/your/sub/module
+arkctl deploy --sub ./path/to/your/sub/module
 ```
 
 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
