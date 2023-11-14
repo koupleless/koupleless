@@ -52,12 +52,13 @@ public class ReflectionUtils {
 
     public static Class<?> executeJDK17Logic(int depth) {
         // 在 JDK 17 下执行的方法逻辑
-        try {
+/*        try {
             java.lang.StackWalker walker = java.lang.StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
             return walker.walk(frames -> frames.skip(depth + 1).findFirst().map(StackWalker.StackFrame::getDeclaringClass).orElse(null));
         } catch (Exception e) {
             throw new IllegalStateException("sun.reflect.Reflection initialization failure.");
-        }
+        }*/
+        return null;
     }
 
     public static Class<?> getCallerClass(int realFramesToSkip) {
