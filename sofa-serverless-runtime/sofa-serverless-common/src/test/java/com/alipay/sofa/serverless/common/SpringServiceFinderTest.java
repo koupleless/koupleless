@@ -120,17 +120,14 @@ public class SpringServiceFinderTest {
 
         // test to invoke crossing classloader
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-
-        // 获取ClassLoader实例的URL列表
-        URL[] urls = Stream.of(systemClassLoader)
-                .flatMap(c -> {
-                    if (c instanceof java.net.URLClassLoader) {
-                        return Stream.of(((java.net.URLClassLoader) c).getURLs());
-                    } else {
-                        return Stream.empty();
-                    }
-                })
-                .toArray(URL[]::new);
+        URL[] urls =null;
+        if (systemClassLoader instanceof URLClassLoader) {
+            urls = ((URLClassLoader) systemClassLoader).getURLs();
+            // 获取 URL 列表
+            for (URL url : urls) {
+                System.out.println(url);
+            }
+        }
         URLClassLoader loader = new URLClassLoader(urls, null);
         Object newModuleBean = null;
         try {
