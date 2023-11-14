@@ -15,41 +15,38 @@
  * limitations under the License.
  */
 
-package cmd
+package root
 
 import (
 	"fmt"
 	"os"
-)
+	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
 
-import (
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
-
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "arkctl",
-	Short: "",
-	Long:  ``,
+// RootCmd represents the base command when called without any subcommands
+var RootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("hello")
 	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+// This is called by main.main(). It only needs to happen once to the RootCmd.
 func Execute() {
-	cobra.CheckErr(rootCmd.Execute())
+	cobra.CheckErr(RootCmd.Execute())
 }
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.arkctl-v1.yaml)")
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	contextutil.DisableLogger()
+	style := pterm.NewStyle(pterm.Italic, pterm.Bold, pterm.FgLightBlue)
+	pterm.DefaultBasicText.
+		Println("Welcome to use " + style.Sprint("ARKCTL") + " to ease your develop experience!")
 }
 
 // initConfig reads in config file and ENV variables if set.

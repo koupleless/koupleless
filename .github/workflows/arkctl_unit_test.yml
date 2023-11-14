@@ -35,7 +35,7 @@ jobs:
       - name: Set up go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.20.5'
+          go-version: '1.21.1'
           cache-dependency-path: ${{ env.WORK_DIR }}/go.sum
 
       - name: Run go mod

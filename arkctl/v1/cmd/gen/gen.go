@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-package cmd
+package gen
 
 import (
 	"fmt"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
 )
 
 import (
@@ -33,7 +34,7 @@ var newServerlessApp = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(newServerlessApp)
+	root.RootCmd.AddCommand(newServerlessApp)
 }
 
 func createApp(cmd *cobra.Command, args []string) {

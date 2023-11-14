@@ -15,29 +15,30 @@
  * limitations under the License.
  */
 
-package cmd
+package version
 
 import (
 	"fmt"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/constant"
+)
+
+import (
 	"github.com/spf13/cobra"
 )
 
-// showCmd represents the show command
-var showCmd = &cobra.Command{
-	Use:   "show",
-	Short: "show serverless app status",
+// versionCmd represents the version command
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "show version",
 	Long:  ``,
-	Run:   show,
+	Run:   versionFunc,
 }
 
 func init() {
-	rootCmd.AddCommand(showCmd)
-	showCmd.Flags().String("r", "", "")
-	showCmd.Flags().String("mc", "", "Get Metadata in MetadataCenter")
-	showCmd.Flags().String("h", "h", "")
+	root.RootCmd.AddCommand(versionCmd)
 }
 
-func show(cmd *cobra.Command, _ []string) {
-	fmt.Printf("======================\n")
-	fmt.Printf("获取模块状态信息")
+func versionFunc(cmd *cobra.Command, _ []string) {
+	fmt.Printf("arkctl Version: %s\n", constant.Version)
 }
