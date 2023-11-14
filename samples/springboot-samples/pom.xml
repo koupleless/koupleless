@@ -32,12 +32,11 @@
         <module>logging/log4j2/base</module>
         <module>logging/log4j2/biz1</module>
         <module>logging/log4j2/biz2</module>
-        <module>web/tomcat/base</module>
-        <module>web/tomcat/biz1</module>
-        <module>web/tomcat/biz2</module>
+        <module>web/tomcat</module>
         <module>service/sample-service-base</module>
         <module>service/sample-service-biz</module>
         <module>service/sample-service-biz2</module>
+        <module>slimming/log4j2</module>
         <module>msg/kafka/base</module>
         <module>msg/kafka/biz1</module>
         <module>msg/kafka/biz2</module>
@@ -62,6 +61,11 @@
             <dependency>
                 <groupId>com.alipay.sofa.msg.rocketmq</groupId>
                 <artifactId>base-rocketmq-facade</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>base-web-single-host-facade</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 

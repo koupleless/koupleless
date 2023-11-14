@@ -32,10 +32,6 @@ public class Dubbo26BaseApplication implements CommandLineRunner {
         //But you can pass use -Djava.net.preferIPv4Stack=true,then it work well whether in debug mode or not
         System.setProperty("java.net.preferIPv4Stack", "true");
 
-        // 设置内嵌方式启动多模块运行容器, 也可以放在启动参数中
-        System.setProperty("sofa.ark.embed.enable", "true");
-        System.setProperty("sofa.ark.plugin.export.class.enable", "true");
-
         SpringApplication.run(Dubbo26BaseApplication.class, args);
     }
 
