@@ -6,6 +6,20 @@ menu: {main: {weight: 10}}
 url: "/home/"
 ---
 
+<script>
+    // document.addEventListener("DOMContentLoaded", function() {
+    //   var test = document.getElementById("notification");
+    //   test.addEventListener("mousemove", function(e) {
+    //     var halo = document.querySelector('.halo');
+    //       halo.style.left = e.clientX + 'px';
+    //       halo.style.top = e.clientY + 'px';
+    //       halo.style.opacity = '1';
+    //   });
+    // });
+</script>
+
+<div class="halo"></div>
+
 {{< blocks/cover image_anchor="top" height="min" >}}
 
 <div id="home-page">
@@ -49,7 +63,7 @@ url: "/home/"
 
 
 <div style="margin-top: 100px;">
-<svg width="1200px" height="114px" viewBox="0 0 1200 114" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg id="notification" width="1200px" height="114px" viewBox="0 0 1200 114" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
         <linearGradient x1="2.51195109%" y1="45.8796343%" x2="100%" y2="54.476409%" id="linearGradient-j7tnbb2t-6-1">
             <stop stop-color="#FFFFFF" stop-opacity="0.06" offset="0%"></stop>
@@ -92,10 +106,10 @@ url: "/home/"
                 <path d="M16,0 L365,0 C373.836556,-1.623249e-15 381,7.163444 381,16 L381,98 C381,106.836556 373.836556,114 365,114 L16,114 C7.163444,114 1.082166e-15,106.836556 0,98 L0,16 C-1.082166e-15,7.163444 7.163444,1.623249e-15 16,0 Z" id="矩形备份-20" fill="url(#linearGradient-j7tnbb2t-6-1)"></path>
                 <path d="M427,0 L776,0 C784.836556,-1.623249e-15 792,7.163444 792,16 L792,98 C792,106.836556 784.836556,114 776,114 L427,114 C418.163444,114 411,106.836556 411,98 L411,16 C411,7.163444 418.163444,1.623249e-15 427,0 Z" id="矩形备份-21" fill="url(#linearGradient-j7tnbb2t-6-1)"></path>
                 <path d="M835,0 L1184,0 C1192.83656,-1.623249e-15 1200,7.163444 1200,16 L1200,98 C1200,106.836556 1192.83656,114 1184,114 L835,114 C826.163444,114 819,106.836556 819,98 L819,16 C819,7.163444 826.163444,1.623249e-15 835,0 Z" id="矩形备份-19" fill="url(#linearGradient-j7tnbb2t-6-1)"></path>
-                <g id="编组-64" transform="translate(26.000000, 28.000000)">
-                    <a xlink:href="/user-cases/alibaba-aidc/" target="_blank">
-                    <text id="助力阿里国际数字商业三倍提效！" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
-                        <tspan x="32" y="21">助力阿里国际数字商业三倍提效！</tspan>
+                <g id="编组-64" transform="translate(110.000000, 28.000000)">
+                    <a xlink:href="/user-cases/" target="_blank">
+                    <text id="企业案例合集" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="18" font-weight="400" line-spacing="28" fill="#FFFFFF">
+                        <tspan x="32" y="21">企业案例合集</tspan>
                     </text>
                     </a>
                     <g id="编组-14" transform="translate(0.000000, 2.000000)">
@@ -107,14 +121,14 @@ url: "/home/"
                     </g>
                 </g>
                 <a xlink:href="/user-cases/alibaba-aidc/" target="_blank">
-                <text id="全新企业案例：阿里国际数字商业集团研发运" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
-                    <tspan x="15" y="80">全新企业案例：阿里国际数字商业集团研发运维极致提效</tspan>
+                <text id="最新企业案例" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
+                    <tspan x="26" y="80">最新案例：阿里国际数字商业集团研发运维三倍提效！</tspan>
                 </text>
                 </a>
-                <g id="编组-69" transform="translate(433.000000, 28.000000)">
-                    <a xlink:href="/docs/tutorials/module-create/springboot-and-sofaboot/" target="_blank">
-                    <text id="SpringBoot-一键升级为模块上线" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
-                        <tspan x="30.63" y="21">SpringBoot 一键升级为模块上线！</tspan>
+                <g id="编组-69" transform="translate(515.000000, 28.000000)">
+                    <a xlink:href="/docs/video-training/" target="_blank">
+                    <text id="2 分钟上手视频" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="18" font-weight="400" line-spacing="28" fill="#FFFFFF">
+                        <tspan x="34" y="21">2 分钟上手视频</tspan>
                     </text>
                     </a>
                     <g id="编组-29" transform="translate(0.000000, 2.000000)">
@@ -126,13 +140,13 @@ url: "/home/"
                     </g>
                 </g>
                 <a xlink:href="/docs/tutorials/module-create/springboot-and-sofaboot/" target="_blank">
-                <text id="让您实现同一套代码既能独立启动，又能合并" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
-                    <tspan x="444" y="80">让您实现同一套代码既能独立启动，又能合并部署！</tspan>
+                <text id="2 分钟完成基座和模块" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
+                    <tspan x="457" y="80">2 分钟完成基座和模块一键接入，并发布上线！</tspan>
                 </text>
                 </a>
                 <g id="编组-70" transform="translate(893.000000, 28.000000)">
                     <a xlink:href="/docs/contribution-guidelines/communication-channel/#社区双周会" target="_blank">
-                    <text id="社区周会时间调整通知" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="20" font-weight="400" line-spacing="28" fill="#FFFFFF">
+                    <text id="社区周会时间调整通知" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="18" font-weight="400" line-spacing="28" fill="#FFFFFF">
                         <tspan x="32" y="21">社区周会时间调整通知</tspan>
                     </text>
                     </a>
