@@ -56,13 +56,13 @@ import static org.mockito.Mockito.when;
 public class SpringServiceFinderTest {
 
     @Mock
-    private Biz               masterBiz;
+    private Biz masterBiz;
 
     @Mock
-    private Biz               biz1;
+    private Biz biz1;
 
     @Mock
-    private Biz               biz2;
+    private Biz biz2;
 
     @Mock
     private BizManagerService bizManagerService;
@@ -105,13 +105,13 @@ public class SpringServiceFinderTest {
         Assert.assertNotNull(baseBeanMap);
         Assert.assertEquals(1, baseBeanMap.size());
         ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
-            "moduleBean", ModuleBean.class);
+                "moduleBean", ModuleBean.class);
         Assert.assertNotNull(moduleBean);
         ModuleBean moduleBean1 = SpringServiceFinder.getModuleService("biz1", "version1",
-            ModuleBean.class);
+                ModuleBean.class);
         Assert.assertNotNull(moduleBean1);
         Map<String, ModuleBean> moduleBeanMap = SpringServiceFinder.listModuleServices("biz1",
-            "version1", ModuleBean.class);
+                "version1", ModuleBean.class);
         Assert.assertNotNull(moduleBeanMap);
         Assert.assertEquals(1, moduleBeanMap.size());
 
@@ -120,7 +120,7 @@ public class SpringServiceFinderTest {
 
         // test to invoke crossing classloader
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        URL[] urls =null;
+        URL[] urls = null;
         if (systemClassLoader instanceof URLClassLoader) {
             urls = ((URLClassLoader) systemClassLoader).getURLs();
             // 获取 URL 列表
@@ -132,7 +132,7 @@ public class SpringServiceFinderTest {
         Object newModuleBean = null;
         try {
             Class<?> aClass = loader
-                .loadClass("com.alipay.sofa.serverless.common.SpringServiceFinderTest$ModuleBean");
+                    .loadClass("com.alipay.sofa.serverless.common.SpringServiceFinderTest$ModuleBean");
             newModuleBean = aClass.newInstance();
         } catch (Exception e) {
             System.out.println(e);
@@ -147,7 +147,7 @@ public class SpringServiceFinderTest {
         BizRuntimeContext biz2Runtime = new BizRuntimeContext(biz2, biz2Ctx);
         BizRuntimeContextRegistry.registerBizRuntimeManager(biz2Runtime);
         ModuleBean foundModuleBean = SpringServiceFinder.getModuleService("biz2", "version1",
-            "moduleBean", ModuleBean.class);
+                "moduleBean", ModuleBean.class);
         Assert.assertNotNull(foundModuleBean);
         Assert.assertEquals(newModuleBean.toString(), foundModuleBean.toString());
         Assert.assertEquals("module", foundModuleBean.test());
@@ -159,24 +159,24 @@ public class SpringServiceFinderTest {
         ModuleBean moduleBean = new ModuleBean();
         ArkAutowiredBeanPostProcessor arkAutowiredBeanPostProcessor = new ArkAutowiredBeanPostProcessor();
         Object testBean = arkAutowiredBeanPostProcessor.postProcessBeforeInitialization(moduleBean,
-            "moduleBean");
+                "moduleBean");
         Assert.assertNotNull(testBean);
         Assert.assertEquals(moduleBean, testBean);
         Assert.assertNotNull(ReflectionUtils.getField(
-            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBean")),
-            testBean));
+                Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBean")),
+                testBean));
         Assert.assertNotNull(ReflectionUtils.getField(
-            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanList")),
-            testBean));
+                Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanList")),
+                testBean));
         Assert.assertNotNull(ReflectionUtils.getField(
-            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanSet")),
-            testBean));
+                Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanSet")),
+                testBean));
         Assert.assertNotNull(ReflectionUtils.getField(
-            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanMap")),
-            testBean));
+                Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "baseBeanMap")),
+                testBean));
         Assert.assertNotNull(ReflectionUtils.getField(
-            Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "moduleBean")),
-            testBean));
+                Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "moduleBean")),
+                testBean));
     }
 
     public ConfigurableApplicationContext buildApplicationContext(String appName) {
@@ -203,19 +203,19 @@ public class SpringServiceFinderTest {
     public static class ModuleBean {
 
         @AutowiredFromBase
-        private BaseBean              baseBean;
+        private BaseBean baseBean;
 
         @AutowiredFromBase
-        private List<BaseBean>        baseBeanList;
+        private List<BaseBean> baseBeanList;
 
         @AutowiredFromBase
-        private Set<BaseBean>         baseBeanSet;
+        private Set<BaseBean> baseBeanSet;
 
         @AutowiredFromBase
         private Map<String, BaseBean> baseBeanMap;
 
         @AutowiredFromBiz(bizName = "biz1", bizVersion = "version1")
-        private ModuleBean            moduleBean;
+        private ModuleBean moduleBean;
 
         public String test() {
             return "module";
