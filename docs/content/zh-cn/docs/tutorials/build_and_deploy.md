@@ -29,7 +29,7 @@ arkctl deploy ${模块构建出的 jar 包路径}
 ### K8S 集群环境开发验证, 以 minikube 集群为例
 #### 基座发布
 1. 基座构建成镜像，推送到镜像中心
-2. 基座部署到 k8s 集群中，创建基座的 service，暴露端口, 可[参考这里]()
+2. 基座部署到 k8s 集群中，创建基座的 service，暴露端口, 可[参考这里](https://github.com/sofastack/sofa-serverless/blob/master/module-controller/config/samples/dynamic-stock-service.yaml)
 3. 执行 minikube service base-web-single-host-service, 访问基座的服务
 
 #### 模块发布
