@@ -3,17 +3,17 @@ title: 开发验证与部署上线
 weight: 500
 ---
 
-本文主要介绍动态合并部署模式，用于省资源与提高研发效率。如果你只是想节省资源，可以使用[静态合并部署](https://sofaserverless.gitee.io/docs/tutorials/module-development/static-merge-deployment/)。
+本文主要介绍动态合并部署模式，用于省资源与提高研发效率。如果你只是想节省资源，可以使用[静态合并部署](/docs/tutorials/module-development/static-merge-deployment/)。
 
 ![img.png](/img/build_and_deploy.png)
 
-这里也提供视频教程，[点击查看这里](../../../docs/video-training/)
+这里也提供了视频教程，[可点击此处查看](/docs/video-training/)。
 
 ## 基座接入
-参考[这里](../tutorials/base-create/springboot-and-sofaboot.md)
+[可参考此处](/docs/tutorials/base-create/springboot-and-sofaboot.md)
 
 ## 模块接入
-参考[这里](../tutorials/module-create/springboot-and-sofaboot.md)
+[可参考此处](/docs/tutorials/module-create/springboot-and-sofaboot.md)
 
 ## 模块开发验证
 可以有两种开发验证方式：
@@ -40,8 +40,9 @@ arkctl deploy ${模块构建出的 jar 包路径} --pod ${namespace}/${podname}
 
 ## 模块部署上线
 1. 使用 helm 方式部署 ModuleController 到 k8s 集群
-2. 使用 ModuleController 提供的模块部署能力，发布模块到集群机器上，具备可灰度、可追溯，流量无损能力，详细参考 [这里](https://sofaserverless.gitee.io/docs/tutorials/module-operation/module-online-and-offline/)
+2. 使用 ModuleController 提供的模块部署能力，发布模块到集群机器上，具备可灰度、可追溯、流量无损能力，详细可[参见此处](/docs/tutorials/module-operation/module-online-and-offline/)
 
 
 ## 更多实验请查看 samples 用例
+
 [点击此处](https://github.com/sofastack/sofa-serverless/tree/master/samples)

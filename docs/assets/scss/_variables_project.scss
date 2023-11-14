@@ -98,7 +98,7 @@ header > nav.td-navbar {
   height: 63px;
   min-height: 63px;
   max-height: 63px;
-  border-bottom: 1px solid rgba(255,255,255,0.65);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   background: rgb(18, 24, 52) !important;
 
   > .container-fluid {
@@ -845,4 +845,22 @@ aside.td-sidebar-toc {
 
 .td-byline {
   margin-bottom: -8px;
+}
+
+.halo {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 255, 0.5);
+  backdrop-filter: blur(25px);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  opacity: 0;
+}
+
+.all-user-cases-logo {
+  border-radius: 0 !important;
+  margin-top: 0 !important;
 }
