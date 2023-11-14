@@ -27,19 +27,29 @@ a, input {
 
 .td-overlay--dark::after {
   margin: -84px -20px -20px -20px;
-  background-image: linear-gradient(180deg, rgb(18, 27, 57), #06080cf0);
+  background-color: rgb(16, 21, 28) !important;
 }
 
 .td-overlay--dark::before {
   content: '';
   position: absolute;
-  left: 0; top: 520px; right: 0; bottom: 0;
+  left: 0; top: 600px; right: 0; bottom: 0;
   margin-left: -20px;
   margin-right: -20px;
-  height: 628px;
-  background: url("/img/star-sky-background.png") round;
+  height: 484px;
+  background: url("/img/star-sky-background.png") no-repeat right;
   z-index: 1;
-  opacity: 0.5;
+}
+
+#benefits::before {
+  content: '';
+  position: absolute;
+  left: -250px; top: 1750px; right: 0; bottom: 0;
+  margin-left: -20px;
+  margin-right: -20px;
+  height: 484px;
+  background: url("/img/star-sky-background.png") no-repeat left;
+  z-index: -1;
 }
 
 #main_navbar {
@@ -99,7 +109,7 @@ header > nav.td-navbar {
   min-height: 63px;
   max-height: 63px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  background: rgb(18, 24, 52) !important;
+  background: rgb(16, 21, 28) !important;
 
   > .container-fluid {
     padding: 0px;
@@ -244,7 +254,7 @@ footer.td-footer.row.d-print-none {
   margin: 0px;
   padding: 0px;
   border-top: 1px solid rgba(255,255,255,0.25);
-  background: rgb(6, 8, 12) !important;
+  background: rgb(16, 21, 28) !important;
 
   > .container-fluid > .row {
 
@@ -510,7 +520,7 @@ div.td-main main {
 }
 
 main.td-main {
-  background-image: linear-gradient(180deg, rgb(18, 27, 57), #06080cf0);
+  background-color: rgb(16, 21, 28) !important;;
 }
 
 main.td-main, div.td-main main {
