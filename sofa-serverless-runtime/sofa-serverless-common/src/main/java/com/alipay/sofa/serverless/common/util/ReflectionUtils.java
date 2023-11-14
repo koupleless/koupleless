@@ -26,12 +26,12 @@ import java.lang.reflect.Method;
 public class ReflectionUtils {
 
     private static final MethodHandles.Lookup lookup = MethodHandles.lookup();
-    private static Method method;
+    private static Method                     method;
 
     static {
         try {
             Class<?> clazz = Class.forName("sun.reflect.Reflection");
-            method = clazz.getDeclaredMethod("getCallerClass", new Class[]{int.class});
+            method = clazz.getDeclaredMethod("getCallerClass", new Class[] { int.class });
             method.setAccessible(true);
         } catch (Exception e) {
             method = null;
@@ -46,18 +46,18 @@ public class ReflectionUtils {
             return (Class<?>) method.invoke(null, realFramesToSkip);
         } catch (Exception e) {
             throw new IllegalStateException(
-                    "An error occurs when invoking the sun.reflect.Reflection#getCallerClass", e);
+                "An error occurs when invoking the sun.reflect.Reflection#getCallerClass", e);
         }
     }
 
     public static Class<?> executeJDK17Logic(int depth) {
         // 在 JDK 17 下执行的方法逻辑
-/*        try {
+        try {
             java.lang.StackWalker walker = java.lang.StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
-            return walker.walk(frames -> frames.skip(depth + 1).findFirst().map(StackWalker.StackFrame::getDeclaringClass).orElse(null));
+            return walker.walk(frames -> frames.skip(depth + 1).findFirst().map(java.lang.StackWalker.StackFrame::getDeclaringClass).orElse(null));
         } catch (Exception e) {
             throw new IllegalStateException("sun.reflect.Reflection initialization failure.");
-        }*/
+        }
         return null;
     }
 
