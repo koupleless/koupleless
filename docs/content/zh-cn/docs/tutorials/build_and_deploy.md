@@ -1,13 +1,13 @@
 ---
 title: 开发验证与部署上线
-weight: 300
+weight: 500
 ---
 
 本文主要介绍动态合并部署模式，用于省资源与提高研发效率。如果你只是想节省资源，可以使用[静态合并部署](https://sofaserverless.gitee.io/docs/tutorials/module-development/static-merge-deployment/)。
 
-![img.png](img.png)
+![img.png](/img/build_and_deploy.png)
 
-[视频地址]()
+这里也提供视频教程，[点击查看这里](../../../docs/video-training/)
 
 ## 基座接入
 参考[这里](../tutorials/base-create/springboot-and-sofaboot.md)
@@ -27,21 +27,21 @@ weight: 300
 arkctl deploy ${模块构建出的 jar 包路径}
 ```
 ### K8S 集群环境开发验证, 以 minikube 集群为例
-# 基座发布
+#### 基座发布
 1. 基座构建成镜像，推送到镜像中心
 2. 基座部署到 k8s 集群中，创建基座的 service，暴露端口, 可[参考这里]()
 3. 执行 minikube service base-web-single-host-service, 访问基座的服务
 
-# 模块发布
+#### 模块发布
 1. 部署模块到 k8s 集群中
 ```shell
 arkctl deploy ${模块构建出的 jar 包路径} --pod ${namespace}/${podname}
 ```
 
 ## 模块部署上线
-1. 使用 helm 方式部署 moduleController 到 k8s 集群
-2. 使用参考 [这里](https://sofaserverless.gitee.io/docs/tutorials/module-operation/module-online-and-offline/)
+1. 使用 helm 方式部署 ModuleController 到 k8s 集群
+2. 使用 ModuleController 提供的模块部署能力，发布模块到集群机器上，具备可灰度、可追溯，流量无损能力，详细参考 [这里](https://sofaserverless.gitee.io/docs/tutorials/module-operation/module-online-and-offline/)
 
 
-# 更多实验请查看 samples 用例
+## 更多实验请查看 samples 用例
 [点击此处](https://github.com/sofastack/sofa-serverless/tree/master/samples)
