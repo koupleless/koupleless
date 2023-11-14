@@ -26,12 +26,12 @@ import java.lang.reflect.Method;
 public class ReflectionUtils {
 
     private static final MethodHandles.Lookup lookup = MethodHandles.lookup();
-    private static Method                     method;
+    private static Method method;
 
     static {
         try {
             Class<?> clazz = Class.forName("sun.reflect.Reflection");
-            method = clazz.getDeclaredMethod("getCallerClass", new Class[] { int.class });
+            method = clazz.getDeclaredMethod("getCallerClass", new Class[]{int.class});
             method.setAccessible(true);
         } catch (Exception e) {
             method = null;
@@ -46,7 +46,7 @@ public class ReflectionUtils {
             return (Class<?>) method.invoke(null, realFramesToSkip);
         } catch (Exception e) {
             throw new IllegalStateException(
-                "An error occurs when invoking the sun.reflect.Reflection#getCallerClass", e);
+                    "An error occurs when invoking the sun.reflect.Reflection#getCallerClass", e);
         }
     }
 
