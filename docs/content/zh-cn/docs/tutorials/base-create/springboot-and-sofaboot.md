@@ -1,5 +1,5 @@
 ---
-title: 普通应用一键升级为基座
+title: SpringBoot 或 SOFABoot 升级为基座
 weight: 100
 ---
 
