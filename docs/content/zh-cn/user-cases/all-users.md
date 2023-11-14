@@ -98,7 +98,7 @@ https://company.rfidworld.com.cn/Intro-137503.aspx
 
 https://www.1hai.cn/
 
-**使用场景**：多应用合并部署降本增效
+**使用场景**：多应用合并部署降本增效、模块热部署实现秒级构建发布
 
 <br/>
 <br/>

@@ -139,7 +139,7 @@ url: "/home/"
                         </g>
                     </g>
                 </g>
-                <a xlink:href="/docs/tutorials/module-create/springboot-and-sofaboot/" target="_blank">
+                <a xlink:href="/docs/video-training/" target="_blank">
                 <text id="2 分钟完成基座和模块" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
                     <tspan x="457" y="80">2 分钟完成基座和模块一键接入，并发布上线！</tspan>
                 </text>
@@ -160,7 +160,7 @@ url: "/home/"
                 </g>
                 <a xlink:href="/docs/contribution-guidelines/communication-channel/#社区双周会" target="_blank">
                 <text id="双周会时间调整到周二-19:30，下次会" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22" fill="#FFFFFF">
-                    <tspan x="843" y="80">双周会时间调整到周二 19:30，下次会议时间 11.14 晚</tspan>
+                    <tspan x="843" y="80">双周会时间调整到周二 19:30，下次会议时间 11.28 晚</tspan>
                 </text>
                 </a>
             </g>
