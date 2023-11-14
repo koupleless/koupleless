@@ -107,7 +107,7 @@ url: "/home/"
                 <path d="M427,0 L776,0 C784.836556,-1.623249e-15 792,7.163444 792,16 L792,98 C792,106.836556 784.836556,114 776,114 L427,114 C418.163444,114 411,106.836556 411,98 L411,16 C411,7.163444 418.163444,1.623249e-15 427,0 Z" id="矩形备份-21" fill="url(#linearGradient-j7tnbb2t-6-1)"></path>
                 <path d="M835,0 L1184,0 C1192.83656,-1.623249e-15 1200,7.163444 1200,16 L1200,98 C1200,106.836556 1192.83656,114 1184,114 L835,114 C826.163444,114 819,106.836556 819,98 L819,16 C819,7.163444 826.163444,1.623249e-15 835,0 Z" id="矩形备份-19" fill="url(#linearGradient-j7tnbb2t-6-1)"></path>
                 <g id="编组-64" transform="translate(110.000000, 28.000000)">
-                    <a xlink:href="/user-cases/" target="_blank">
+                    <a xlink:href="/user-cases/all-users/" target="_blank">
                     <text id="企业案例合集" opacity="0.95" font-family="PingFangSC-Medium, PingFang SC, Microsoft Yahei" font-size="18" font-weight="400" line-spacing="28" fill="#FFFFFF">
                         <tspan x="32" y="21">企业案例合集</tspan>
                     </text>
