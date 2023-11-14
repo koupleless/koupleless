@@ -490,13 +490,15 @@
         </plugins>
     </build>
 
-    <!--        jdk17 打出来的 snapshot 版本
-                举例：
-                打出来的包为  0.5.2-jdk17-SNAPSHOT
-                使用sofa-ark的包  2.2.4-jdk17-SNAPSHOT
-                使用sofa-ark starter 的包  2.2.4-jdk17-jakarta-SNAPSHOT
-    -->
+
     <profiles>
+    <!--
+        jdk17 打出来的 snapshot 版本
+        举例：
+        打出来的包为  0.5.2-jdk17-SNAPSHOT
+        使用sofa-ark的包  2.2.4-jdk17-SNAPSHOT
+        使用sofa-ark starter 的包  2.2.4-jdk17-jakarta-SNAPSHOT
+    -->
         <profile>
             <id>17-snapshot</id>
             <properties>
@@ -505,12 +507,13 @@
                 <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta-SNAPSHOT</sofa.ark.starter.version>
             </properties>
         </profile>
-        <!--        jdk17 打出来的 release 版本
-                    举例：
-                    打出来的包为  0.5.2-jdk17
-                    使用sofa-ark的包  2.2.4-jdk17
-                    使用sofa-ark starter 的包  2.2.4-jdk17-jakarta
-        -->
+    <!--
+        jdk17 打出来的 release 版本
+        举例：
+        打出来的包为  0.5.2-jdk17
+        使用sofa-ark的包  2.2.4-jdk17
+        使用sofa-ark starter 的包  2.2.4-jdk17-jakarta
+    -->
         <profile>
             <id>17-release</id>
             <properties>
@@ -520,12 +523,13 @@
             </properties>
         </profile>
 
-<!--        jdk8 打出来的 snapshot 版本
-            举例：
-            打出来的包为  0.5.2-SNAPSHOT
-            使用sofa-ark的包  2.2.4-SNAPSHOT
-            使用sofa-ark starter 的包  2.2.4-SNAPSHOT
--->
+    <!--
+        jdk8 打出来的 snapshot 版本
+        举例：
+        打出来的包为  0.5.2-SNAPSHOT
+        使用sofa-ark的包  2.2.4-SNAPSHOT
+        使用sofa-ark starter 的包  2.2.4-SNAPSHOT
+    -->
         <profile>
             <id>8-snapshot</id>
             <properties>
@@ -535,12 +539,13 @@
             </properties>
         </profile>
 
-<!--        jdk8 打出来的 release 版本
-            举例：
-            打出来的包为  0.5.2
-            使用sofa-ark的包  2.2.4
-            使用sofa-ark starter 的包  2.2.4
--->
+    <!--
+        jdk8 打出来的 release 版本
+        举例：
+        打出来的包为  0.5.2
+        使用sofa-ark的包  2.2.4
+        使用sofa-ark starter 的包  2.2.4
+    -->
         <profile>
             <id>8-release</id>
             <properties>
