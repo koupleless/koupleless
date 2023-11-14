@@ -39,17 +39,16 @@ import (
 )
 
 var (
-	buildFlag  string
-	bundleFlag string
-	portFlag   int
+	portFlag int
 
 	subBundlePath string
+
+	defaultArg string
+	doBuild    bool
 
 	podFlag      string
 	podNamespace string // pre parsed pod namespace
 	podName      string // pre parsed pod name
-
-	doLocalBuildBundle = false
 )
 
 const (
@@ -60,7 +59,7 @@ const (
 )
 
 var DeployCommand = &cobra.Command{
-	Use:   "deploy",
+	Use:   "deploy [flags] [path/to/your/project/or/bundle]",
 	Short: "deploy your biz module to running containers",
 	Long: `
 The arkctl deploy subcommand can help you quickly deploy your biz module to running ark container.
@@ -71,26 +70,27 @@ Scenario 0: Build bundle at current workspace and deploy it to a local running a
     arkctl deploy
 
 Scenario 1: Build bundle at given path and deploy it to local running ark container with given port:
-	arkctl deploy --build ${path/to/your/project} --port ${your ark container portFlag} 
+	arkctl deploy --port ${your ark container portFlag} ${path/to/your/project}
 
-Scenario 2: Deploy a local pre-built bundle to local running ark container with given port:
-	arkctl deploy --bundle ${path/to/your/pre/built/bundle'} --port ${your ark container port} 
+Scenario 2: Deploy a local pre-built bundle to local running ark container:
+	arkctl deploy ${path/to/your/pre/built/bundle.jar}
 
 Scenario 3: Build and deploy a bundle at current dir to a remote running ark container in k8s cluster with default port:
 	arkctl deploy --pod ${namespace}/${name}
 
-Scenario 4: Build an maven multi module project and deploy a sub module to a remote running ark container in k8s cluster with default port:
-	arkctl deploy --subBundlePath ${path/to/your/sub/module}
+Scenario 4: Build an maven multi module project and deploy a sub module to a running ark container:
+	arkctl deploy --sub ${path/to/your/sub/module}
 `,
-	ValidArgs: nil,
 	Args: func(cmd *cobra.Command, args []string) error {
-		// if bundle is provided, then there is no need to build
-		doLocalBuildBundle = !cmd.Flags().Changed("bundle")
-
-		// if bundle is not provided and build is not provided as well, set to current directory
-		if doLocalBuildBundle && !cmd.Flags().Changed("build") {
-			buildFlag, _ = os.Getwd()
+		if len(args) == 0 {
+			defaultArg = runtime.Must(os.Getwd())
+		} else {
+			defaultArg = args[len(args)-1]
+			if !filepath.IsAbs(defaultArg) {
+				defaultArg = filepath.Join(runtime.Must(os.Getwd()), defaultArg)
+			}
 		}
+		doBuild = !strings.HasSuffix(defaultArg, ".jar")
 
 		if podFlag != "" && strings.Contains(podFlag, "/") {
 			podNamespace, podName = strings.Split(podFlag, "/")[0], strings.Split(podFlag, "/")[1]
@@ -104,18 +104,16 @@ Scenario 4: Build an maven multi module project and deploy a sub module to a rem
 }
 
 func execMavenBuild(ctx *contextutil.Context) bool {
-
-	style.InfoPrefix("Stage").Println("BuildBundle")
-	style.InfoPrefix("BuildDirectory").Println(buildFlag)
-
-	if !doLocalBuildBundle {
-		pterm.Info.Println("skip building bundle.")
+	if !doBuild {
 		return true
 	}
 
+	style.InfoPrefix("Stage").Println("BuildBundle")
+	style.InfoPrefix("BuildDirectory").Println(defaultArg)
+
 	mvn := cmdutil.BuildCommandWithWorkDir(
 		ctx,
-		buildFlag,
+		defaultArg,
 		"mvn",
 		"clean", "package", "-Dmaven.test.skip=true")
 	style.InfoPrefix("Command").Println(mvn.String())
@@ -148,13 +146,9 @@ func execMavenBuild(ctx *contextutil.Context) bool {
 
 func execParseBizModel(ctx *contextutil.Context) bool {
 	style.InfoPrefix("Stage").Println("ParseBizModel")
-	bundlePath := bundleFlag
-	if doLocalBuildBundle {
-		searchdir := buildFlag
-		if searchdir == "" {
-			searchdir, _ = os.Getwd()
-		}
-
+	bundlePath := "file://" + defaultArg
+	if doBuild {
+		searchdir := defaultArg
 		if subBundlePath != "" {
 			searchdir = filepath.Join(searchdir, subBundlePath)
 		}
@@ -440,20 +434,11 @@ func executeDeploy(cobracmd *cobra.Command, _ []string) {
 
 func init() {
 	root.RootCmd.AddCommand(DeployCommand)
-	DeployCommand.Flags().StringVar(&buildFlag, "build", "", `
-Build the project at given directory and then deploy it to running ark container.
-If not provided, arkctl will try to build the project under current directory.
-`)
-
-	DeployCommand.Flags().StringVar(&bundleFlag, "bundle", "", `
-Provide the pre-built bundle url and then deploy it to running ark container.
-If not provided, arkctl will try to find the pre-built bundle under current directory.
-`)
 
 	DeployCommand.Flags().StringVar(&podFlag, "pod", "", `
 If Provided, arkctl will try to deploy the bundle to the ark container running in given pod.
 `)
-	DeployCommand.Flags().StringVar(&subBundlePath, "subBundlePath", "", `
+	DeployCommand.Flags().StringVar(&subBundlePath, "sub", "", `
 If Provided, arkctl will try to build the project at current dir and deploy the bundle at subBundlePath.
 `)
 
