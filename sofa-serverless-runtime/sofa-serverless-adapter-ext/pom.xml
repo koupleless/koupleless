@@ -13,5 +13,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>sofa-serverless-adapter-log4j2</module>
+        <module>sofa-serverless-adapter-dubbo2.6</module>
     </modules>
 </project>
