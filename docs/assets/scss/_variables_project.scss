@@ -253,8 +253,9 @@ footer.td-footer.row.d-print-none {
   min-height: 63px;
   margin: 0px;
   padding: 0px;
-  border-top: 1px solid rgba(255,255,255,0.25);
+  border-top: 1px solid rgba(255,255,255,0.08);
   background: rgb(16, 21, 28) !important;
+  z-index: 1000;
 
   > .container-fluid > .row {
 
