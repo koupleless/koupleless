@@ -21,7 +21,6 @@
         <dependency>
             <groupId>com.alipay.sofa</groupId>
             <artifactId>sofa-ark-springboot-starter</artifactId>
-            <version>${sofa.ark.starter.version}</version>
         </dependency>
         <!--  sofa-ark end  -->
 

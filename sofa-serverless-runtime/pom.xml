@@ -11,12 +11,9 @@
     <properties>
         <!--    JDK 17   打包如下：
         1. 切换到JDK 17
-        2. 修改 sofa.ark.version.default, sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
-        例如： sofa.ark.version.default 如果是2.2.5-SNAPSHOT，那么sofa.ark.version.base 的取值需要修改成2.2.5
-        例如： sofa.ark.version.default 如果是2.2.5，那么sofa.ark.version.base 的取值也修改成2.2.5
+        2. 修改  sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
         3. 开始打包，将所有打出的包都上传-->
         <sofa.ark.version.base>2.2.4</sofa.ark.version.base>
-        <sofa.ark.version.default>2.2.4-SNAPSHOT</sofa.ark.version.default>
         <revision.default>0.5.2</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -156,8 +153,23 @@
             </dependency>
             <dependency>
                 <groupId>com.alipay.sofa</groupId>
-                <artifactId>sofa-ark-springboot-starter</artifactId>
+                <artifactId>sofa-ark-support-starter</artifactId>
                 <version>${sofa.ark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-compatible-springboot1</artifactId>
+                <version>${sofa.ark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-compatible-springboot2</artifactId>
+                <version>${sofa.ark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-springboot-starter</artifactId>
+                <version>${sofa.ark.starter.version}</version>
             </dependency>
 
             <dependency>
@@ -478,27 +490,68 @@
         </plugins>
     </build>
 
-
+    <!--        jdk17 打出来的 snapshot 版本
+                举例：
+                打出来的包为  0.5.2-jdk17-SNAPSHOT
+                使用sofa-ark的包  2.2.4-jdk17-SNAPSHOT
+                使用sofa-ark starter 的包  2.2.4-jdk17-jakarta-SNAPSHOT
+    -->
     <profiles>
         <profile>
-            <id>jakarta-snapshot</id>
+            <id>17-snapshot</id>
             <properties>
                 <revision>${revision.default}-jdk17-SNAPSHOT</revision>
                 <sofa.ark.version>${sofa.ark.version.base}-jdk17-SNAPSHOT</sofa.ark.version>
                 <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta-SNAPSHOT</sofa.ark.starter.version>
             </properties>
-            <activation>
-                <jdk>17</jdk>
-            </activation>
+        </profile>
+        <!--        jdk17 打出来的 release 版本
+                    举例：
+                    打出来的包为  0.5.2-jdk17
+                    使用sofa-ark的包  2.2.4-jdk17
+                    使用sofa-ark starter 的包  2.2.4-jdk17-jakarta
+        -->
+        <profile>
+            <id>17-release</id>
+            <properties>
+                <revision>${revision.default}-jdk17</revision>
+                <sofa.ark.version>${sofa.ark.version.base}-jdk17</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta</sofa.ark.starter.version>
+            </properties>
+        </profile>
+
+<!--        jdk8 打出来的 snapshot 版本
+            举例：
+            打出来的包为  0.5.2-SNAPSHOT
+            使用sofa-ark的包  2.2.4-SNAPSHOT
+            使用sofa-ark starter 的包  2.2.4-SNAPSHOT
+-->
+        <profile>
+            <id>8-snapshot</id>
+            <properties>
+                <revision>${revision.default}-SNAPSHOT</revision>
+                <sofa.ark.version>${sofa.ark.version.base}-SNAPSHOT</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}-SNAPSHOT</sofa.ark.starter.version>
+            </properties>
+        </profile>
+
+<!--        jdk8 打出来的 release 版本
+            举例：
+            打出来的包为  0.5.2
+            使用sofa-ark的包  2.2.4
+            使用sofa-ark starter 的包  2.2.4
+-->
+        <profile>
+            <id>8-release</id>
+            <properties>
+                <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.base}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}</sofa.ark.starter.version>
+            </properties>
         </profile>
 
         <profile>
             <id>release</id>
-            <properties>
-                <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -564,11 +617,6 @@
 
         <profile>
             <id>snapshot</id>
-            <properties>
-                <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -613,8 +661,8 @@
             </activation>
             <properties>
                 <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
+                <sofa.ark.version>${sofa.ark.version.base}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}</sofa.ark.starter.version>
             </properties>
             <repositories>
                 <repository>
