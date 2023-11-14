@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
 
@@ -118,8 +119,19 @@ public class SpringServiceFinderTest {
         Assert.assertEquals("module", moduleBean.test());
 
         // test to invoke crossing classloader
-        URLClassLoader loader = new URLClassLoader(
-            ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs(), null);
+        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+
+        // 获取ClassLoader实例的URL列表
+        URL[] urls = Stream.of(systemClassLoader)
+                .flatMap(c -> {
+                    if (c instanceof java.net.URLClassLoader) {
+                        return Stream.of(((java.net.URLClassLoader) c).getURLs());
+                    } else {
+                        return Stream.empty();
+                    }
+                })
+                .toArray(URL[]::new);
+        URLClassLoader loader = new URLClassLoader(urls, null);
         Object newModuleBean = null;
         try {
             Class<?> aClass = loader
