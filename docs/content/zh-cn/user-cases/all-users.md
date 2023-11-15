@@ -10,6 +10,8 @@ type: docs
 
 ### 阿里国际数字商业集团
 
+<img src="/img/user-logos/aliguoji.png" width="250px" class="all-user-cases-logo" />
+
 **使用场景**：通用基座实现普通应用秒级构建发布、SDK 无感升级。[详细案例](/docs/user-cases/alibaba-aidc/)
 
 <br/>
@@ -98,7 +100,7 @@ https://company.rfidworld.com.cn/Intro-137503.aspx
 
 https://www.1hai.cn/
 
-**使用场景**：多应用合并部署降本增效
+**使用场景**：多应用合并部署降本增效、模块热部署实现秒级构建发布
 
 <br/>
 <br/>
