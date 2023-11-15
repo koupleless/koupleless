@@ -12,18 +12,9 @@ permissions:
     packages: write
 
 jobs:
-  releases-matrix:
-    name: Release Go Binary
+  prepare:
+    name: Prepare for build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        goos: [linux, windows, darwin]
-        goarch: ["386", amd64, arm64]
-        exclude:
-          - goarch: "386"
-            goos: darwin
-          - goarch: arm64
-            goos: windows
     steps:
     - uses: actions/checkout@v3
     - name: Check if Tag Exists
@@ -35,17 +26,35 @@ jobs:
           else
             echo "exists=True" >> $GITHUB_OUTPUT
           fi
-          cat $GITHUB_OUTPUT
+
+  create-branch:
+    if: ${{ steps.check_tag.outputs.exists == 'False' }}
+    name: Create for branch if empty
+    runs-on: ubuntu-latest
+  steps:
     - name: Output variable 
-      run: echo "The selected color is ${{ steps.check_tag.outputs.exists }}"
+      run: echo "Created Branch ? ${{ steps.check_tag.outputs.exists }}"
     - uses: actions/create-release@v1
-      if: ${{ steps.check_tag.outputs.exists == 'False' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ACTIONS_RUNNER_DEBUG: true
       with:
         tag_name: arkctl-release-${{ github.event.inputs.version }}
         release_name: Release arkctl ${{ github.event.inputs.version }} binary!
+
+  release:
+    name: Release binary
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: ["386", amd64, arm64]
+        exclude:
+          - goarch: "386"
+            goos: darwin
+          - goarch: arm64
+            goos: windows
+    
     - uses: wangyoucao577/go-release-action@v1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
