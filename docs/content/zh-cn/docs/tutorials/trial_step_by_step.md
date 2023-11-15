@@ -91,7 +91,7 @@ public class SampleController {
     }
 }
 ```
-3. 下载 arkctl, 下载地址 https://github.com/sofastack/sofa-serverless/tree/master/arkctl/bin ，放入 `/usr/local/bin` 目录中
+3. 下载 arkctl, 下载地址 https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0 ，放入 `/usr/local/bin` 目录中
 4. 执行 `arkctl deploy` 构建部署，成功后 `curl localhost:8080/${模块1 web context path}/` 验证服务返回
 ```text
 hello to ${模块1名} deploy
