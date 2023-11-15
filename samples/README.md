@@ -10,7 +10,7 @@
 | springboot  | mybatis                | 模块使用独立数据源                  | [samples/springboot-samples/db/mybatis](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/db/mybatis)           |
 | springboot  | mongo                  | 1. 模块独立使用数据源， 2. 模块复用基座数据源 | [samples/springboot-samples/db/mongo](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/db/mongo)               |
 | springboot  | slimming               | 模块瘦身                       | [samples/springboot-samples/slimming/log4j2](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming/log4j2) |
-| springboot  | redis                  | 模块使用 redis                 | [samples/springboot-samples/redis](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/redis)                     |
+| springboot  | redis                  | 模块使用 redis                 | [samples/springboot-samples/cache/redis](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/cache/redis)         |
 | dubbo       | dubbo + grpc           | 模块使用 grpc                  | [samples/dubbo-samples/rpc/grpc](https://github.com/sofastack/sofa-serverless/tree/master/samples/dubbo-samples/rpc/grpc)                         |
 | sofaboot    | sofarpc/tomcat         | 基座调用模块、中台模式                | [samples/sofaboot-samples/dynamic-stock](https://github.com/sofastack/sofa-serverless/tree/master/samples/sofaboot-samples/dynamic-stock)         | 
 | springboot3 | springboot3            | springboot3                | [samples/sofaboot3-samples](https://github.com/sofastack/sofa-serverless/tree/master/samples/sofaboot3-samples)                                   |       |

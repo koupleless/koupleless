@@ -44,8 +44,8 @@
         <module>msg/rocketmq/biz1</module>
         <module>db/mybatis/base</module>
         <module>db/mybatis/biz1</module>
-        <module>redis/sample-redis-base</module>
-        <module>redis/sample-redis-biz</module>
+        <module>cache/redis/sample-redis-base</module>
+        <module>cache/redis/sample-redis-biz</module>
         <module>db/mongo/base</module>
         <module>db/mongo/biz1</module>
         <module>db/mongo/biz2</module>
