@@ -36,7 +36,7 @@ jobs:
     needs: ['prepare']
     steps:
     - name: Output variable 
-      run: echo "Created Branch ? ${{ steps.check_tag.outputs.exists }}"
+      run: echo "Created Branch ? ${{ needs.prepare.outputs }}"
     - uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
