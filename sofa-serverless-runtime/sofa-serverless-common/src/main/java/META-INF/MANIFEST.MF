@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Build-Jdk: 17
+Implementation-Title: com alipay sofa reflection
+Implementation-Version: 0.5.3-SNAPSHOT
+Multi-Release: true
+Specification-Title: com alipay sofa reflection
