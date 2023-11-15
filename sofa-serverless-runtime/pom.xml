@@ -503,8 +503,8 @@
             <id>17-snapshot</id>
             <properties>
                 <revision>${revision.default}-jdk17-SNAPSHOT</revision>
-                <sofa.ark.version>${sofa.ark.version.base}-jdk17-SNAPSHOT</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta-SNAPSHOT</sofa.ark.starter.version>
+                <sofa.ark.version>${sofa.ark.version.base}-jdk17</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta</sofa.ark.starter.version>
             </properties>
         </profile>
     <!--
@@ -534,8 +534,8 @@
             <id>8-snapshot</id>
             <properties>
                 <revision>${revision.default}-SNAPSHOT</revision>
-                <sofa.ark.version>${sofa.ark.version.base}-SNAPSHOT</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.base}-SNAPSHOT</sofa.ark.starter.version>
+                <sofa.ark.version>${sofa.ark.version.base}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}</sofa.ark.starter.version>
             </properties>
         </profile>
 
@@ -618,6 +618,15 @@
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>maven-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
 
         <profile>
@@ -663,6 +672,24 @@
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                 </snapshotRepository>
             </distributionManagement>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>maven-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>maven-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
 
         <profile>
