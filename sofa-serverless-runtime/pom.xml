@@ -503,8 +503,8 @@
             <id>17-snapshot</id>
             <properties>
                 <revision>${revision.default}-jdk17-SNAPSHOT</revision>
-                <sofa.ark.version>${sofa.ark.version.base}-jdk17-SNAPSHOT</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta-SNAPSHOT</sofa.ark.starter.version>
+                <sofa.ark.version>${sofa.ark.version.base}-jdk17</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta</sofa.ark.starter.version>
             </properties>
         </profile>
     <!--
@@ -534,8 +534,8 @@
             <id>8-snapshot</id>
             <properties>
                 <revision>${revision.default}-SNAPSHOT</revision>
-                <sofa.ark.version>${sofa.ark.version.base}-SNAPSHOT</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.base}-SNAPSHOT</sofa.ark.starter.version>
+                <sofa.ark.version>${sofa.ark.version.base}</sofa.ark.version>
+                <sofa.ark.starter.version>${sofa.ark.version.base}</sofa.ark.starter.version>
             </properties>
         </profile>
 
