@@ -28,10 +28,10 @@ jobs:
           fi
 
   create-branch:
-    if: ${{ steps.check_tag.outputs.exists == 'False' }}
     name: Create for branch if empty
+    if: ${{ steps.check_tag.outputs.exists == 'False' }}
     runs-on: ubuntu-latest
-  steps:
+    steps:
     - name: Output variable 
       run: echo "Created Branch ? ${{ steps.check_tag.outputs.exists }}"
     - uses: actions/create-release@v1
@@ -55,6 +55,7 @@ jobs:
           - goarch: arm64
             goos: windows
     
+    steps:
     - uses: wangyoucao577/go-release-action@v1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
