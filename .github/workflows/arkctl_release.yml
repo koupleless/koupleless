@@ -15,6 +15,8 @@ jobs:
   prepare:
     name: Prepare for build
     runs-on: ubuntu-latest
+    outputs:
+      created-tag: ${{ steps.check_tag.outputs.exists }}
     steps:
     - uses: actions/checkout@v3
     - name: Check if Tag Exists
@@ -27,10 +29,11 @@ jobs:
             echo "exists=True" >> $GITHUB_OUTPUT
           fi
 
-  create-branch:
+  create-tag:
     name: Create for branch if empty
-    if: ${{ steps.check_tag.outputs.exists == 'False' }}
+    if: ${{ needs.prepare.outputs.created-tag == 'False' }}
     runs-on: ubuntu-latest
+    needs: ['prepare']
     steps:
     - name: Output variable 
       run: echo "Created Branch ? ${{ steps.check_tag.outputs.exists }}"
@@ -45,6 +48,7 @@ jobs:
   release:
     name: Release binary
     runs-on: ubuntu-latest
+    needs: ['prepare', 'create-tag']
     strategy:
       matrix:
         goos: [linux, windows, darwin]
