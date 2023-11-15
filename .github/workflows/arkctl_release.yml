@@ -28,6 +28,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: Check if Tag Exists
       id: check_tag
+      env:
+        ACTIONS_RUNNER_DEBUG: true
       run: |
           TAG_EXISTS=$(git tag -l "arkctl-release-${{ github.event.inputs.version }}")
           if [ -z "$TAG_EXISTS" ]; then
@@ -39,6 +41,7 @@ jobs:
       if: steps.check_tag.outputs.exists == 'false'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ACTIONS_RUNNER_DEBUG: true
       with:
         tag_name: arkctl-release-${{ github.event.inputs.version }}
         release_name: Release arkctl ${{ github.event.inputs.version }} binary!
