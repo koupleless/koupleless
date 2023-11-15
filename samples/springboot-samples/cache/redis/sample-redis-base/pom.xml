@@ -11,7 +11,7 @@
 		<groupId>com.alipay.sofa</groupId>
 		<artifactId>springboot-samples</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
+		<relativePath>../../../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.alipay.sofa.service</groupId>
 	<artifactId>sample-redis-base</artifactId>

@@ -36,7 +36,7 @@ biz 是普通 springboot 应用，修改打包插件方式为 sofaArk biz 模块
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
-    <version>2.2.4-SNAPSHOT</version>
+    <version>${sofa.ark.version}</version>
     <executions>
         <execution>
             <id>default-cli</id>
