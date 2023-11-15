@@ -11,11 +11,6 @@ permissions:
     contents: write
     packages: write
 
-outputs:
-  is-tag-created:
-    description: "Is current release tag created before?"
-    value: ${{ steps.check_tag.outputs.exists }}
-
 jobs:
   releases-matrix:
     name: Release Go Binary
@@ -31,6 +26,11 @@ jobs:
             goos: windows
     steps:
     - uses: actions/checkout@v3
+    - name: Set color
+      id: random-color-generator
+      run: echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
+    - name: Get color
+      run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
     - name: Check if Tag Exists
       id: check_tag
       run: |
