@@ -21,7 +21,7 @@ weight: 500
 2. K8S 集群环境开发验证
 
 ### 本地环境开发验证
-1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/sofastack/sofa-serverless/tree/master/arkctl/bin) , 并放入 `/usr/local/bin` 目录中
+1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0) , 并放入 `/usr/local/bin` 目录中
 2. 在基座和模块已经改造完成后，启动好基座后，可以使用 arkctl 快速完成构建与部署，将模块部署到基座中
 ```shell
 arkctl deploy ${模块构建出的 jar 包路径}
