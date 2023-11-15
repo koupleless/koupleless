@@ -22,7 +22,7 @@ jobs:
     - name: Check if Tag Exists
       id: check_tag
       run: |
-          TAG_EXISTS=$(git tag -l "arkctl-release-${{ github.event.inputs.version }}")
+          TAG_EXISTS=$(git tag -l arkctl-release-${{ github.event.inputs.version }})
           if [ -z "$TAG_EXISTS" ]; then
             echo "exists=False" >> $GITHUB_OUTPUT
           else
