@@ -26,11 +26,6 @@ jobs:
             goos: windows
     steps:
     - uses: actions/checkout@v3
-    - name: Set color
-      id: random-color-generator
-      run: echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
-    - name: Get color
-      run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
     - name: Check if Tag Exists
       id: check_tag
       run: |
@@ -41,6 +36,8 @@ jobs:
             echo "exists=True" >> $GITHUB_OUTPUT
           fi
           cat $GITHUB_OUTPUT
+    - name: Output variable 
+      run: echo "The selected color is ${{ steps.check_tag.outputs.exists }}"
     - uses: actions/create-release@v1
       if: steps.check_tag.outputs.exists == 'False'
       env:
