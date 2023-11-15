@@ -16,7 +16,7 @@ jobs:
     name: Prepare for build
     runs-on: ubuntu-latest
     outputs:
-      created-tag: ${{ steps.check_tag.outputs.exists }}
+      is-tag-created: ${{ steps.check_tag.outputs.exists }}
     steps:
     - uses: actions/checkout@v3
     - name: Check if Tag Exists
@@ -36,7 +36,7 @@ jobs:
     needs: ['prepare']
     steps:
     - name: Output variable 
-      run: echo "Created Branch ${{ needs.prepare.outputs.created_tag }} ?"
+      run: echo "Created Branch ${{needs.prepare.outputs.is-tag-created}} ?"
     - uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
