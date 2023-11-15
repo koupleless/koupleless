@@ -36,13 +36,13 @@ jobs:
       run: |
           TAG_EXISTS=$(git tag -l "arkctl-release-${{ github.event.inputs.version }}")
           if [ -z "$TAG_EXISTS" ]; then
-            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "exists=False" >> $GITHUB_OUTPUT
           else
-            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "exists=True" >> $GITHUB_OUTPUT
           fi
           cat $GITHUB_OUTPUT
     - uses: actions/create-release@v1
-      if: outputs.exists == 'false'
+      if: steps.check_tag.outputs.exists == 'False'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ACTIONS_RUNNER_DEBUG: true
