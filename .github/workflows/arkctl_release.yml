@@ -1,3 +1,5 @@
+name: Arkctl Release Action
+
 on:
   workflow_dispatch:
     inputs:
@@ -29,7 +31,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
-        goversion: "1.21"
+        goversion: "1.21.3"
         project_path: "./arkctl"
         binary_name: "arkctl"
         asset_name: "arkctl-${{ github.event.inputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}"
