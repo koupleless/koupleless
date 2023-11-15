@@ -26,6 +26,12 @@ jobs:
             goos: windows
     steps:
     - uses: actions/checkout@v3
+    - uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: arkctl-release-${{ github.event.inputs.version }}
+        release_name: Release arkctl ${{ github.event.inputs.version }} binary!
     - uses: wangyoucao577/go-release-action@v1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -35,4 +41,4 @@ jobs:
         project_path: "./arkctl"
         binary_name: "arkctl"
         asset_name: "arkctl-${{ github.event.inputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}"
-        release_tag: "Release arkctl-${{ github.event.inputs.version }} !"
+        release_tag: "arkctl-release-${{ github.event.inputs.version }}"
