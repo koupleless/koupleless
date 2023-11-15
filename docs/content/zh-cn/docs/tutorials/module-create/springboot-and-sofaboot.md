@@ -23,13 +23,6 @@ spring.application.name = ${替换为实际模块应用名}
 ```xml
 
 <plugins>
-    <dependencies>
-        <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
-            <artifactId>sofa-serverless-app-starter</artifactId>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
     <!--这里添加ark 打包插件-->
     <plugin>
         <groupId>com.alipay.sofa</groupId>
