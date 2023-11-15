@@ -48,6 +48,7 @@ jobs:
   release:
     name: Release binary
     runs-on: ubuntu-latest
+    if: always()
     needs: ['prepare', 'create-tag']
     strategy:
       matrix:
