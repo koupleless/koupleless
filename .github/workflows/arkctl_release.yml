@@ -39,7 +39,7 @@ jobs:
     - name: Output variable 
       run: echo "The selected color is ${{ steps.check_tag.outputs.exists }}"
     - uses: actions/create-release@v1
-      if: steps.check_tag.outputs.exists == 'False'
+      if: ${{ steps.check_tag.outputs.exists == 'False' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ACTIONS_RUNNER_DEBUG: true
