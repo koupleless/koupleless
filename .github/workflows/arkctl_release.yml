@@ -26,7 +26,17 @@ jobs:
             goos: windows
     steps:
     - uses: actions/checkout@v3
+    - name: Check if Tag Exists
+      id: check_tag
+      run: |
+          TAG_EXISTS=$(git tag -l "arkctl-release-${{ github.event.inputs.version }}")
+          if [ -z "$TAG_EXISTS" ]; then
+            echo "::set-output name=exists::false"
+          else
+            echo "::set-output name=exists::true"
+          fi
     - uses: actions/create-release@v1
+      if: steps.check_tag.outputs.exists == 'false'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
