@@ -27,31 +27,31 @@ public class ReflectionUtilsTest {
         Assert.assertFalse(ReflectionUtils.isValid(nativeMethodElement));
 
         StackTraceElement sunReflectElement = new StackTraceElement("sun.reflect.ClassName",
-            "methodName", "fileName", 123);
+                "methodName", "fileName", 123);
         Assert.assertFalse(ReflectionUtils.isValid(sunReflectElement));
 
         StackTraceElement javaReflectInvokeElement = new StackTraceElement(
-            "java.lang.reflect.ClassName", "invoke", "fileName", 123);
+                "java.lang.reflect.ClassName", "invoke", "fileName", 123);
         Assert.assertFalse(ReflectionUtils.isValid(javaReflectInvokeElement));
 
         StackTraceElement javaReflectNewInstanceElement = new StackTraceElement(
-            "java.lang.reflect.ClassName", "newInstance", "fileName", 123);
+                "java.lang.reflect.ClassName", "newInstance", "fileName", 123);
         Assert.assertFalse(ReflectionUtils.isValid(javaReflectNewInstanceElement));
 
         StackTraceElement jdkInternalReflectElement = new StackTraceElement(
-            "jdk.internal.reflect.ClassName", "methodName", "fileName", 123);
+                "jdk.internal.reflect.ClassName", "methodName", "fileName", 123);
         Assert.assertFalse(ReflectionUtils.isValid(jdkInternalReflectElement));
 
         StackTraceElement javaLangClassElement = new StackTraceElement("java.lang.Class",
-            "newInstance", "fileName", 123);
+                "newInstance", "fileName", 123);
         Assert.assertFalse(ReflectionUtils.isValid(javaLangClassElement));
 
         StackTraceElement javaLangInvokeMethodHandleElement = new StackTraceElement(
-            "java.lang.invoke.MethodHandle", "invokeMethod", "fileName", 123);
+                "java.lang.invoke.MethodHandle", "invokeMethod", "fileName", 123);
         Assert.assertFalse(ReflectionUtils.isValid(javaLangInvokeMethodHandleElement));
 
         StackTraceElement validElement = new StackTraceElement("ValidClassName", "validMethodName",
-            "fileName", 123);
+                "fileName", 123);
         Assert.assertTrue(ReflectionUtils.isValid(validElement));
     }
 }
