@@ -18,9 +18,12 @@
 package main
 
 import (
-	"serverless.alipay.com/sofa-serverless/v1/arkctl/cmd"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
+	_ "serverless.alipay.com/sofa-serverless/arkctl/v1/cmd"
+	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
 )
 
 func main() {
-	cmd.Execute()
+	contextutil.DisableLogger()
+	root.Execute()
 }

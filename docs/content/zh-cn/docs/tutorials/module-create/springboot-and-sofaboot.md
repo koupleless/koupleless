@@ -6,7 +6,7 @@ weight: 100
 本文讲解了 SpringBoot 或 SOFABoot 一键升级为模块的操作和验证步骤，仅需加一个 ark 打包插件即可实现普通应用一键升级为模块应用，并且能做到同一套代码分支，既能像原来 SpringBoot 一样独立启动，也能作为模块与其它应用合并部署在一起启动。
 
 ## 前提条件
-1. SpringBoot 版本 >= 2.0.0（针对 SpringBoot 用户）
+1. SpringBoot 版本 >= 2.3.0（针对 SpringBoot 用户）
 2. SOFABoot >= 3.9.0 或 SOFABoot >= 4.0.0（针对 SOFABoot 用户）
 
 ## 接入步骤
@@ -18,9 +18,10 @@ weight: 100
 spring.application.name = ${替换为实际模块应用名}
 ```
 
-### 步骤 2：添加模块打包插件
+### 步骤 2：添加模块需要的依赖和打包插件
 
 ```xml
+
 <plugins>
     <!--这里添加ark 打包插件-->
     <plugin>
@@ -43,13 +44,11 @@ spring.application.name = ${替换为实际模块应用名}
             <declaredMode>true</declaredMode>
         </configuration>
     </plugin>
+    <!--  构建出普通 SpringBoot fatjar，支持独立部署时使用，如果不需要可以删除  -->
     <plugin>
         <!--原来 spring-boot 打包插件 -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-            <outputDirectory>./target/boot</outputDirectory>
-        </configuration>
     </plugin>
 </plugins>
 ```
@@ -70,10 +69,6 @@ _扩展阅读_：如果模块不做依赖瘦身[独立引入 SpringBoot 框架�
 
 增加模块打包插件（sofa-ark-maven-plugin）进行打包后，只会新增 ark-biz.jar 构建产物，与原生 spring-boot-maven-plugin 打包的可执行Jar 互相不冲突、不影响。
 当服务器部署时，期望独立启动，就使用原生 spring-boot-maven-plugin 构建出的可执行 Jar 作为构建产物；期望作为 ark 模块部署到基座中时，就使用 sofa-ark-maven-plugin 构建出的 xxx-ark-biz.jar 作为构建产物
-
-### 验证能独立启动
-
-普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。通过自动瘦身改造的模块，也可以在 `target/boot` 目录下直接通过 springboot jar 包启动，[点击此处](https://github.com/sofastack/sofa-serverless/blob/module-slimming/samples/springboot-samples/slimming )查看详情。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
 
 ### 验证能合并部署到基座上
 
@@ -113,3 +108,6 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
     }
 }
 ```
+### 验证能独立启动
+
+普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。通过自动瘦身改造的模块，也可以在 `target/boot` 目录下直接通过 springboot jar 包启动，[点击此处](https://github.com/sofastack/sofa-serverless/blob/module-slimming/samples/springboot-samples/slimming )查看详情。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
