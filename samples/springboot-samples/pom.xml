@@ -20,7 +20,7 @@
     <properties>
         <spring.boot.version>2.7.16</spring.boot.version>
         <java.version>1.8</java.version>
-        <sofa.ark.version>2.2.4-SNAPSHOT</sofa.ark.version>
+        <sofa.ark.version>2.2.4</sofa.ark.version>
         <sofa.serverless.runtime.version>0.5.2</sofa.serverless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
@@ -32,9 +32,7 @@
         <module>logging/log4j2/base</module>
         <module>logging/log4j2/biz1</module>
         <module>logging/log4j2/biz2</module>
-        <module>web/tomcat/base</module>
-        <module>web/tomcat/biz1</module>
-        <module>web/tomcat/biz2</module>
+        <module>web/tomcat</module>
         <module>service/sample-service-base</module>
         <module>service/sample-service-biz</module>
         <module>service/sample-service-biz2</module>
@@ -46,8 +44,8 @@
         <module>msg/rocketmq/biz1</module>
         <module>db/mybatis/base</module>
         <module>db/mybatis/biz1</module>
-        <module>redis/sample-redis-base</module>
-        <module>redis/sample-redis-biz</module>
+        <module>cache/redis/sample-redis-base</module>
+        <module>cache/redis/sample-redis-biz</module>
         <module>db/mongo/base</module>
         <module>db/mongo/biz1</module>
         <module>db/mongo/biz2</module>

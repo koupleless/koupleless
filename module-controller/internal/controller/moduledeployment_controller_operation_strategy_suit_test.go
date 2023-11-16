@@ -105,6 +105,12 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 		})
 	})
 
+	Context("wait moduleDeployment Completed", func() {
+		It("wait moduleDeployment Completed", func() {
+			waitModuleDeploymentCompleted(moduleDeploymentName, namespace)
+		})
+	})
+
 	Context("update replicas for module deployment", func() {
 		It("update module replicas", func() {
 			key := types.NamespacedName{
@@ -123,6 +129,8 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 					return false
 				}
 			}, timeout, interval).Should(BeTrue())
+
+			waitModuleDeploymentCompleted(moduleDeploymentName, namespace)
 
 			Eventually(func() bool {
 				set := map[string]string{
@@ -330,4 +338,19 @@ func checkModuleDeploymentReplicas(nn types.NamespacedName, replicas int32) bool
 	return newRS != nil &&
 		newRS.Status.Replicas == newRS.Spec.Replicas &&
 		newRS.Status.Replicas == replicas
+}
+
+func waitModuleDeploymentCompleted(moduleDeploymentName string, namespace string) {
+	key := types.NamespacedName{
+		Name:      moduleDeploymentName,
+		Namespace: namespace,
+	}
+	newModuleDeployment := &v1alpha1.ModuleDeployment{}
+	Expect(k8sClient.Get(context.TODO(), key, newModuleDeployment)).Should(Succeed())
+	progress := newModuleDeployment.Status.ReleaseStatus.Progress
+	if progress == v1alpha1.ModuleDeploymentReleaseProgressCompleted {
+		return
+	}
+	time.Sleep(5 * time.Second)
+	waitModuleDeploymentCompleted(moduleDeploymentName, namespace)
 }

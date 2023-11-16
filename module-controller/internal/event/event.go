@@ -8,12 +8,13 @@ import (
 type EventType string
 
 const (
-	ModuleDeploymentCreate EventType = "moduledeployment_create"
-	ModuleDeploymentDelete EventType = "moduledeployment_delete"
-	ModuleReplicaSetCreate EventType = "modulereplicaset_create"
-	ModuleReplicaSetDelete EventType = "modulereplicaset_delete"
-	ModuleCreate           EventType = "module_create"
-	ModuleDelete           EventType = "module_delete"
+	ModuleDeploymentCreate          EventType = "moduledeployment_create"
+	ModuleDeploymentDelete          EventType = "moduledeployment_delete"
+	ModuleReplicaSetCreate          EventType = "modulereplicaset_create"
+	ModuleReplicaSetDelete          EventType = "modulereplicaset_delete"
+	ModuleReplicaSetReplicasChanged EventType = "modulereplicaset_replicas_changed"
+	ModuleCreate                    EventType = "module_create"
+	ModuleDelete                    EventType = "module_delete"
 )
 
 type Event interface {
