@@ -13,7 +13,8 @@
         1. 切换到JDK 17
         2. 修改  sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
         3. 开始打包，将所有打出的包都上传-->
-        <sofa.ark.version>3.0.0</sofa.ark.version>
+        <sofa.ark.version.jdk17>3.0.0</sofa.ark.version.jdk17>
+        <sofa.ark.version.jdk8>2.2.4</sofa.ark.version.jdk8>
         <revision.default>0.5.3</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -487,6 +488,7 @@
             <id>17-snapshot</id>
             <properties>
                 <revision>${revision.default}-jdk17-SNAPSHOT</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
             </properties>
         </profile>
     <!--
@@ -499,6 +501,7 @@
             <id>17-release</id>
             <properties>
                 <revision>${revision.default}-jdk17</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
             </properties>
         </profile>
 
@@ -513,6 +516,7 @@
             <id>8-snapshot</id>
             <properties>
                 <revision>${revision.default}-SNAPSHOT</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
             </properties>
         </profile>
 
@@ -527,6 +531,7 @@
             <id>8-release</id>
             <properties>
                 <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
             </properties>
         </profile>
 
