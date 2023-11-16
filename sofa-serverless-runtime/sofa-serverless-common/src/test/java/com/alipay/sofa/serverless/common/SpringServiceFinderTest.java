@@ -120,20 +120,8 @@ public class SpringServiceFinderTest {
 
         // test to invoke crossing classloader
 
-        URLClassLoader loader = null;
-        // test to invoke crossing classloader
-        String javaVersion = System.getProperty("java.version");
-        if (javaVersion.startsWith("1.8")) {
-            // JDK 8 版本的逻辑
-            // 执行 JDK 8 版本下的方法
-            loader = new URLClassLoader(
-                ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs(), null);
-        } else if (javaVersion.startsWith("17")) {
-            // JDK 17 版本的逻辑
-            // 执行 JDK 17 版本下的方法
-            URL url = SpringServiceFinderTest.class.getClassLoader().getResource("");
-            loader = new URLClassLoader(new URL[] { url }, null);
-        }
+        URL url = SpringServiceFinderTest.class.getClassLoader().getResource("");
+        URLClassLoader loader = new URLClassLoader(new URL[] { url }, null);
         Object newModuleBean = null;
         try {
             Class<?> aClass = loader

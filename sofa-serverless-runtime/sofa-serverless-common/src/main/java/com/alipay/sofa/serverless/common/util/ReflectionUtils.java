@@ -87,7 +87,7 @@ public class ReflectionUtils {
         return true;
     }
 
-    public static Class<?> executeJDK8Logic(int realFramesToSkip) {
+    public static Class<?> executeReflectionLogic(int realFramesToSkip) {
         // 在 JDK 8 下执行的方法逻辑
         if (method == null)
             throw new IllegalStateException("sun.reflect.Reflection initialization failure.");
@@ -99,7 +99,7 @@ public class ReflectionUtils {
         }
     }
 
-    public static Class<?> executeJDK17Logic(int depth) {
+    public static Class<?> executeStackTraceLogic(int depth) {
         // 在 JDK 17 下执行的方法逻辑
         // 解除注释，编译成Class 并且放置到 META-INF/versions/17/com/alipay/sofa/serverless/common/util 下面
         // slower fallback method using stack trace
@@ -113,17 +113,11 @@ public class ReflectionUtils {
     }
 
     public static Class<?> getCallerClass(int realFramesToSkip) {
-        String javaVersion = System.getProperty("java.version");
-        if (javaVersion.startsWith("1.8")) {
-            // JDK 8 版本的逻辑
-            // 执行 JDK 8 版本下的方法
-            return executeJDK8Logic(realFramesToSkip);
-        } else if (javaVersion.startsWith("17")) {
-            // JDK 17 版本的逻辑
-            // 执行 JDK 17 版本下的方法
-            return executeJDK17Logic(realFramesToSkip);
+        try {
+            return executeReflectionLogic(realFramesToSkip);
+        } catch (Exception e) {
+            return executeStackTraceLogic(realFramesToSkip);
         }
-        return null;
     }
 
 }
