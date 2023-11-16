@@ -36,7 +36,7 @@ public class ReflectionUtils {
         }
     }
 
-    static StackTraceElement getEquivalentStackTraceElement(final int depth) {
+    public static StackTraceElement getEquivalentStackTraceElement(final int depth) {
         // (MS) I tested the difference between using Throwable.getStackTrace() and Thread.getStackTrace(), and
         // the version using Throwable was surprisingly faster! at least on Java 1.8. See ReflectionBenchmark.
         final StackTraceElement[] elements = new Throwable().getStackTrace();
@@ -52,7 +52,7 @@ public class ReflectionUtils {
         throw new IndexOutOfBoundsException(Integer.toString(depth));
     }
 
-    private static boolean isValid(final StackTraceElement element) {
+    public static boolean isValid(final StackTraceElement element) {
         // ignore native methods (oftentimes are repeated frames)
         if (element.isNativeMethod()) {
             return false;
