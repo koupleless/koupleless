@@ -136,6 +136,12 @@ jobs:
             exit 1
           fi
 
+      - run: sleep 15
+
+      - name: get module controller logs
+        run: |
+          kubectl logs deployment/module-controller
+
       - name: wait module available
         run: |
           # 定义要等待的资源名称和字段值
