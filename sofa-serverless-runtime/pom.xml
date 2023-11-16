@@ -679,6 +679,7 @@
             </activation>
             <properties>
                 <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
             </properties>
             <repositories>
                 <repository>
