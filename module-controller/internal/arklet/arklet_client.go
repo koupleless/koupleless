@@ -95,7 +95,7 @@ func (client *ArkletClient) InstallBiz(ip string, moduleInfo v1alpha1.ModuleInfo
 	} else {
 		url = fmt.Sprintf("http://%s:%s/%s", ip, strconv.Itoa(client.port), client.installPath)
 	}
-	data := []byte(fmt.Sprintf(`{"bizName": "%s", "bizVersion": "%s", "arkBizFilePath": "%s"}`, moduleInfo.Name, moduleInfo.Version, moduleInfo.Url))
+	data := []byte(fmt.Sprintf(`{"bizName": "%s", "bizVersion": "%s", "bizUrl": "%s"}`, moduleInfo.Name, moduleInfo.Version, moduleInfo.Url))
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
 		fmt.Println("Error creating install HTTP request:", err)

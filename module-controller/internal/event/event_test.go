@@ -73,3 +73,9 @@ func TestPublishModuleReplicaSetDeleteEvent(t *testing.T) {
 	moduleReplicaSet := v1alpha1.ModuleReplicaSet{}
 	PublishModuleReplicaSetDeleteEvent(nil, nil, &moduleReplicaSet)
 }
+
+func TestPublishModuleReplicaSetReplicasChangedEvent(t *testing.T) {
+	assert.Equal(t, ModuleReplicaSetReplicasChanged, ModuleReplicaSetReplicasChangedEvent{}.GetEventType())
+	moduleReplicaSet := v1alpha1.ModuleReplicaSet{}
+	PublishModuleReplicaSetReplicasChangedEvent(nil, nil, &moduleReplicaSet)
+}
