@@ -23,6 +23,9 @@ import org.junit.Test;
 public class ReflectionUtilsTest {
     @Test
     public void testIsValid() {
+        StackTraceElement nativeMethodElement = new StackTraceElement("ClassName", "methodName", "fileName", -2);
+        Assert.assertFalse(ReflectionUtils.isValid(nativeMethodElement));
+
         StackTraceElement sunReflectElement = new StackTraceElement("sun.reflect.ClassName",
             "methodName", "fileName", 123);
         Assert.assertFalse(ReflectionUtils.isValid(sunReflectElement));
