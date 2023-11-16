@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: dynamic-stock-deployment
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: dynamic-stock
