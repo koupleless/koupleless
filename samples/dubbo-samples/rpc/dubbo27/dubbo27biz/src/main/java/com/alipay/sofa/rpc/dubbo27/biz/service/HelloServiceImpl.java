@@ -2,11 +2,11 @@
  * Ant Group
  * Copyright (c) 2004-2023 All Rights Reserved.
  */
-package com.alipay.sofa.rpc.dubbo26.biz2.service;
+package com.alipay.sofa.rpc.dubbo27.biz.service;
 
-import com.alipay.sofa.rpc.dubbo26.model.HelloRequest;
-import com.alipay.sofa.rpc.dubbo26.model.HelloResponse;
-import com.alipay.sofa.rpc.dubbo26.model.HelloService;
+import com.alipay.sofa.rpc.dubbo27.model.HelloRequest;
+import com.alipay.sofa.rpc.dubbo27.model.HelloResponse;
+import com.alipay.sofa.rpc.dubbo27.model.HelloService;
 
 /**
  *

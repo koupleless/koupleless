@@ -16,6 +16,7 @@
     <modules>
 		<module>rpc/dubbo3</module>
 		<module>rpc/dubbo26</module>
+		<module>rpc/dubbo27</module>
 	</modules>
     <profiles>
         <profile>
