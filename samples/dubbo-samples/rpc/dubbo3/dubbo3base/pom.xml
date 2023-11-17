@@ -106,7 +106,7 @@
 			<plugin>
 				<groupId>com.alipay.sofa</groupId>
 				<artifactId>sofa-ark-maven-plugin</artifactId>
-				<version>2.2.3-packageBase-SNAPSHOT</version>
+				<version>3.0.1</version>
 				<configuration>
 					<!--要打包暴露给模块的java文件，支持*通配，逗号分割-->
 					<!--生成jar的artifactId（groupId和基座一致）-->
