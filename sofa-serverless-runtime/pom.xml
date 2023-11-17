@@ -683,9 +683,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <revision>${revision.default}-jdk17</revision>
-                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
-                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
+                <revision>${revision.default}</revision>
             </properties>
             <repositories>
                 <repository>
