@@ -17,6 +17,7 @@
         <sofa.ark.version.jdk8>2.2.4</sofa.ark.version.jdk8>
         <spring.boot.version.jdk8>2.7.15</spring.boot.version.jdk8>
         <spring.boot.version.jdk17>3.0.9</spring.boot.version.jdk17>
+        <logback.core.default>1.2.9</logback.core.default>
         <revision.default>0.5.3</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -488,6 +489,7 @@
         <profile>
             <id>17-snapshot</id>
             <properties>
+                <logback.core>1.3.5</logback.core>
                 <revision>${revision.default}-jdk17-SNAPSHOT</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
                 <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
@@ -502,6 +504,7 @@
         <profile>
             <id>17-release</id>
             <properties>
+                <logback.core>1.3.5</logback.core>
                 <revision>${revision.default}-jdk17</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
                 <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
@@ -518,6 +521,7 @@
         <profile>
             <id>8-snapshot</id>
             <properties>
+                <logback.core>1.2.9</logback.core>
                 <revision>${revision.default}-SNAPSHOT</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
                 <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
@@ -534,6 +538,7 @@
         <profile>
             <id>8-release</id>
             <properties>
+                <logback.core>1.2.9</logback.core>
                 <revision>${revision.default}</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
                 <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
@@ -683,6 +688,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <logback.core>1.2.9</logback.core>
                 <revision>${revision.default}</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
                 <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
