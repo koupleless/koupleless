@@ -331,7 +331,6 @@ public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
     private void removeJdkLoggingBridgeHandler() {
         try {
             removeDefaultRootHandler();
-            //SLF4JBridgeHandler.uninstall();
         } catch (Throwable ex) {
             // Ignore and continue
         }
