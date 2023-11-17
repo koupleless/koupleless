@@ -15,6 +15,8 @@
         3. 开始打包，将所有打出的包都上传-->
         <sofa.ark.version.jdk17>3.0.0</sofa.ark.version.jdk17>
         <sofa.ark.version.jdk8>2.2.4</sofa.ark.version.jdk8>
+        <spring.boot.version.jdk8>2.7.15</spring.boot.version.jdk8>
+        <spring.boot.version.jdk17>3.0.9</spring.boot.version.jdk17>
         <revision.default>0.5.3</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,7 +42,6 @@
         <junit.version>4.13.1</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <spring.boot.version>3.0.9</spring.boot.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
         <guava.version>32.1.2-jre</guava.version>
@@ -489,6 +490,7 @@
             <properties>
                 <revision>${revision.default}-jdk17-SNAPSHOT</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
         </profile>
     <!--
@@ -502,6 +504,7 @@
             <properties>
                 <revision>${revision.default}-jdk17</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
         </profile>
 
@@ -517,6 +520,7 @@
             <properties>
                 <revision>${revision.default}-SNAPSHOT</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
             </properties>
         </profile>
 
@@ -532,6 +536,7 @@
             <properties>
                 <revision>${revision.default}</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
             </properties>
         </profile>
 
@@ -680,6 +685,7 @@
             <properties>
                 <revision>${revision.default}-jdk17</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
             <repositories>
                 <repository>
