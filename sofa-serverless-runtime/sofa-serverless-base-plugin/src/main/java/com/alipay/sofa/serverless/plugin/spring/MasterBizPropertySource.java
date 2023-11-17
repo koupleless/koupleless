@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common.spring;
+package com.alipay.sofa.serverless.plugin.spring;
 
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
