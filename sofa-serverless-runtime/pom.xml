@@ -11,10 +11,11 @@
     <properties>
         <!--    JDK 17   打包如下：
         1. 切换到JDK 17
-        2. 修改 sofa.ark.version.default 和 revision.default 中的 "数字" 版本号
+        2. 修改  sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
         3. 开始打包，将所有打出的包都上传-->
-        <sofa.ark.version.default>2.2.4-SNAPSHOT</sofa.ark.version.default>
-        <revision.default>0.5.1</revision.default>
+        <sofa.ark.version.jdk17>3.0.0</sofa.ark.version.jdk17>
+        <sofa.ark.version.jdk8>2.2.4</sofa.ark.version.jdk8>
+        <revision.default>0.5.3</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -23,7 +24,7 @@
         <maven.compiler.plugin>3.1</maven.compiler.plugin>
         <maven.source.plugin>3.0.0</maven.source.plugin>
         <maven.javadoc.plugin>3.2.0</maven.javadoc.plugin>
-        <maven.staging.plugin>1.6.7</maven.staging.plugin>
+        <maven.staging.plugin>1.6.13</maven.staging.plugin>
         <maven.gpg.pluign>1.6</maven.gpg.pluign>
         <jacoco.maven.plugin>0.8.11</jacoco.maven.plugin>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
@@ -32,7 +33,7 @@
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
-        <guice.version>4.0</guice.version>
+        <guice.version>5.1.0</guice.version>
         <netty.version>4.1.42.Final</netty.version>
         <logback.version>1.2.9</logback.version>
         <lombok.version>1.18.22</lombok.version>
@@ -43,7 +44,7 @@
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
         <guava.version>32.1.2-jre</guava.version>
-        <fastjson.version>1.2.69</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <hessian.version>3.5.1</hessian.version>
     </properties>
 
@@ -197,7 +198,7 @@
             <dependency>
                 <groupId>com.google.inject.extensions</groupId>
                 <artifactId>guice-multibindings</artifactId>
-                <version>${guice.version}</version>
+                <version>4.2.3</version>
             </dependency>
 
             <dependency>
@@ -407,6 +408,15 @@
                 <version>${jacoco.maven.plugin}</version>
                 <configuration>
                     <skip>false</skip>
+                    <excludes>
+                        <exclude>**/arklet/core/api/model/**/*</exclude>
+                        <exclude>**/arklet/core/api/tunnel/http/**/*</exclude>
+                        <exclude>**/arklet/core/command/**/*</exclude>
+                        <exclude>**/arklet/core/common/**/*</exclude>
+                        <exclude>**/arklet/springboot/starter/health/endpoint/model/**/*</exclude>
+                        <exclude>**/sofa/serverless/common/environment/**/*</exclude>
+                        <exclude>**/sofa/serverless/common/exception/**/*</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -422,6 +432,28 @@
                             <goal>report-aggregate</goal>
                         </goals>
                     </execution>
+<!--                    如果需要本地验证覆盖率是否通过，可以解注释掉这段，注意这里检测每个bundle的行覆盖率     -->
+<!--                    <execution>-->
+<!--                        <id>jacoco-check</id>-->
+<!--                        <phase>test</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <rules>-->
+<!--                                <rule>-->
+<!--                                    <element>BUNDLE</element>-->
+<!--                                    <limits>-->
+<!--                                        <limit>-->
+<!--                                            <counter>LINE</counter>-->
+<!--                                            <value>COVEREDRATIO</value>-->
+<!--                                            <minimum>0.80</minimum>-->
+<!--                                        </limit>-->
+<!--                                    </limits>-->
+<!--                                </rule>-->
+<!--                            </rules>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -446,16 +478,61 @@
 
 
     <profiles>
+    <!--
+        jdk17 打出来的 snapshot 版本
+        举例：
+        打出来的包为  0.5.2-jdk17-SNAPSHOT
+        使用sofa-ark的包  3.0.0
+    -->
         <profile>
-            <id>jakarta</id>
+            <id>17-snapshot</id>
+            <properties>
+                <revision>${revision.default}-jdk17-SNAPSHOT</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+            </properties>
+        </profile>
+    <!--
+        jdk17 打出来的 release 版本
+        举例：
+        打出来的包为  0.5.2-jdk17
+        使用sofa-ark的包  3.0.0
+    -->
+        <profile>
+            <id>17-release</id>
             <properties>
                 <revision>${revision.default}-jdk17</revision>
-                <sofa.ark.version>${sofa.ark.version.default}-jdk17</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}-jdk17-jakarta</sofa.ark.starter.version>
+                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
             </properties>
-            <activation>
-                <jdk>17</jdk>
-            </activation>
+        </profile>
+
+    <!--
+        jdk8 打出来的 snapshot 版本
+        举例：
+        打出来的包为  0.5.2-SNAPSHOT
+        使用sofa-ark的包  2.2.4
+        使用sofa-ark starter 的包  2.2.4
+    -->
+        <profile>
+            <id>8-snapshot</id>
+            <properties>
+                <revision>${revision.default}-SNAPSHOT</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+            </properties>
+        </profile>
+
+    <!--
+        jdk8 打出来的 release 版本
+        举例：
+        打出来的包为  0.5.2
+        使用sofa-ark的包  2.2.4
+        使用sofa-ark starter 的包  2.2.4
+    -->
+        <profile>
+            <id>8-release</id>
+            <properties>
+                <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+            </properties>
         </profile>
 
         <profile>
@@ -521,6 +598,15 @@
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>maven-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
 
         <profile>
@@ -551,6 +637,12 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -560,6 +652,24 @@
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                 </snapshotRepository>
             </distributionManagement>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>maven-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>maven-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
 
         <profile>
@@ -569,8 +679,7 @@
             </activation>
             <properties>
                 <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
             </properties>
             <repositories>
                 <repository>

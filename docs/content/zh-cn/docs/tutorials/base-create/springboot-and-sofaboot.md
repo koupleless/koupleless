@@ -20,8 +20,8 @@ spring.application.name = ${替换为实际基座应用名}
 #### 修改主 pom.xml
 ```xml
 <properties>
-    <sofa.ark.verion>2.2.4-SNAPSHOT</sofa.ark.verion>
-    <sofa.serverless.runtime.version>0.5.1</sofa.serverless.runtime.version>
+    <sofa.ark.verion>2.2.4</sofa.ark.verion>
+    <sofa.serverless.runtime.version>0.5.2</sofa.serverless.runtime.version>
 </properties>
 ```
 
@@ -38,9 +38,6 @@ spring.application.name = ${替换为实际基座应用名}
     <artifactId>web-ark-plugin</artifactId>
 </dependency>
 ```
-
-#### 修改启动参数
-启动参数增加 `-Dsofa.ark.embed.enable=true`
 
 ### 启动验证
 基座应用能正常启动即表示验证成功！

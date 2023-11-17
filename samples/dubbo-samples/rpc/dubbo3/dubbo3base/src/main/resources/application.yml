@@ -14,8 +14,7 @@ spring:
     name: dubbo3base
 logging:
   file:
-    path: ./rpc/dubbo3/logs/
-  path: ./rpc/dubbo3/logs/
+    path: ./samples/dubbo-samples/rpc/dubbo3/logs/
   level:
     root: info
     com.alipay.sofa.rpc.dubbo3: debug

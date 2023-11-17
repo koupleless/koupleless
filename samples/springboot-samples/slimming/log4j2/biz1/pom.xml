@@ -3,16 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.alipay.sofa</groupId>
-        <artifactId>springboot-samples</artifactId>
+        <groupId>com.alipay.sofa.slimming.log4j2</groupId>
+        <artifactId>slimming-log4j2</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.alipay.sofa.logging.log4j2</groupId>
-    <artifactId>biz1-log4j2</artifactId>
+    <artifactId>biz1-slimming-log4j2</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>biz1-log4j2</name>
-    <description>biz1</description>
 
     <dependencies>
         <dependency>
@@ -49,7 +46,7 @@
             <plugin>
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>sofa-ark-maven-plugin</artifactId>
-                <version>2.2.4-SNAPSHOT</version>
+                <version>${sofa.ark.version}</version>
                 <executions>
                     <execution>
                         <id>default-cli</id>
@@ -73,9 +70,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <finalName>springboot-application</finalName>
-                </configuration>
             </plugin>
         </plugins>
     </build>

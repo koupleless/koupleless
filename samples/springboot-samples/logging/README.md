@@ -1,5 +1,5 @@
 # log4j2 多应用分别打印不同目录
-原理详看[这里]()
+原理详看[这里](https://github.com/sofastack/sofa-serverless/blob/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/logj42.md)
 
 # 实验内容
 ## 实验应用
@@ -58,7 +58,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
-    <version>2.2.4-SNAPSHOT</version>
+    <version>${sofa.ark.version}</version>
     <executions>
         <execution>
             <id>default-cli</id>

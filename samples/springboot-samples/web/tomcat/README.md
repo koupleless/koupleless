@@ -30,7 +30,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
-    <version>2.2.4-SNAPSHOT</version>
+    <version>${sofa.ark.version}</version>
     <executions>
         <execution>
             <id>default-cli</id>
@@ -102,6 +102,21 @@ curl http://localhost:8080/biz2
 返回 `hello to /biz2 deploy`
 
 说明，单host模式应用多次热部署正常。
+
+5. 也可以验证基座调用模块能力
+```shell
+curl http://localhost:8080/order1
+```
+返回模块1里定义的书籍顺序
+![](https://camo.githubusercontent.com/dcf5adbe9a2a5967801d20347d484d113ffad426866f6894cb60a64d5dd44ff2/68747470733a2f2f67772e616c697061796f626a656374732e636f6d2f6d646e2f726d735f6336396531662f616674732f696d672f412a48704b755237576e3434554141414141414141414141426b4152516e4151)
+
+
+```shell
+curl http://localhost:8080/order2
+```
+返回模块2里定义的书籍顺序
+![](https://camo.githubusercontent.com/afc9437351c0c467ebe203db4954629fa149ba8be28b15867386aeaf2260c594/68747470733a2f2f67772e616c697061796f626a656374732e636f6d2f6d646e2f726d735f6336396531662f616674732f696d672f412a7671454a513437373575344141414141414141414141426b4152516e4151)
+
 
 ## 注意事项
 这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。

@@ -13,7 +13,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-base-starter</artifactId>
     <!-- 以上版本支持springboot3 -->
-    <version>0.5.1-jdk17</version>
+    <version>0.5.3-jdk17</version>
 </dependency>
 <!-- end 动态模块相关依赖 -->
 
@@ -52,7 +52,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
-    <version>2.2.4-SNAPSHOT</version>
+    <version>2.2.4</version>
     <executions>
         <execution>
             <id>default-cli</id>
