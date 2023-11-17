@@ -70,7 +70,6 @@ excludeGroupIds=xerces*
 excludeGroupIds=xml-apis*
 excludeGroupIds=xpp3*
 excludeGroupIds=jakarta*
-excludeGroupIds=ch.qos.logback*
 excludeGroupIds=org.latencyutils*
 excludeGroupIds=org.hdrhistogram*
 excludeGroupIds=io.micrometer*
