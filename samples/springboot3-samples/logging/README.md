@@ -29,19 +29,6 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
         </exclusion>
     </exclusions>
 </dependency>
-<dependency>
-<!-- 增加适配 springboot3 的 log-sofa-boot-starter 版本 -->
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>log-sofa-boot-starter</artifactId>
-    <version>999-not-exist</version>
-    <exclusions>
-        <!-- 排除 sofa-boot-alipay-autoconfigure -->
-        <exclusion>
-            <groupId>com.alipay.sofa</groupId>
-            <artifactId>sofa-boot-alipay-autoconfigure</artifactId>
-        </exclusion>
-    </exclusions>
-</dependency>
 <!-- end 单 host 部署的依赖 -->
 
 <!-- log4j2 相关依赖 -->
