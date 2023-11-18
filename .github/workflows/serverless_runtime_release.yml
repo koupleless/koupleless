@@ -22,7 +22,7 @@ jobs:
           cache: maven
       - name: Build with Maven
         working-directory: sofa-serverless-runtime
-        run: mvn clean install -DskipTests -B -U -e && sh ./check_format.sh
+        run: mvn clean install -P8-release -DskipTests -B -U -e && sh ./check_format.sh
   release_for_jdk8:
     needs: build
     runs-on: ubuntu-latest
