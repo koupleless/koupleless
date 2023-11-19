@@ -46,6 +46,7 @@
         <module>db/mybatis/biz1</module>
         <module>cache/redis/sample-redis-base</module>
         <module>cache/redis/sample-redis-biz</module>
+        <module>cache/ehcache</module>
         <module>db/mongo/base</module>
         <module>db/mongo/biz1</module>
         <module>db/mongo/biz2</module>

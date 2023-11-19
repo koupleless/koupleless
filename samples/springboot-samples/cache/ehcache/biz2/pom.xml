@@ -3,39 +3,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.alipay.sofa.web</groupId>
-        <artifactId>web-single-host</artifactId>
+        <groupId>com.alipay.sofa.serverless.cache</groupId>
+        <artifactId>ehcache</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <artifactId>biz1-web-single-host</artifactId>
+    <artifactId>biz2-ehcache</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
+            <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
-        <!-- 这里设置为 provided，使用基座的依赖，详细查看类委托加载机制 https://www.sofastack.tech/projects/sofa-boot/sofa-ark-class-loader-delegation/ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
-            <artifactId>sofa-serverless-app-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alipay.sofa.web</groupId>
-            <artifactId>base-web-single-host-facade</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
         </dependency>
 
         <dependency>
@@ -62,10 +50,10 @@
                 </executions>
                 <configuration>
                     <skipArkExecutable>true</skipArkExecutable>
-                    <outputDirectory>./target</outputDirectory>
-                    <bizName>biz1</bizName>
+                    <outputDirectory>target</outputDirectory>
+                    <bizName>biz2</bizName>
                     <!-- 单host下需更换 web context path -->
-                    <webContextPath>biz1</webContextPath>
+                    <webContextPath>biz2</webContextPath>
                     <declaredMode>true</declaredMode>
                     <packExcludesConfig>rules.txt</packExcludesConfig>
                 </configuration>

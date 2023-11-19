@@ -73,3 +73,7 @@ excludeGroupIds=jakarta*
 excludeGroupIds=org.latencyutils*
 excludeGroupIds=org.hdrhistogram*
 excludeGroupIds=io.micrometer*
+excludeGroupIds=ch.qos.logback*
+excludeGroupIds=com.squareup.okhttp3*
+excludeGroupIds=com.squareup.okhttp*
+excludeGroupIds=net.sf.ehcache*
