@@ -1,6 +1,8 @@
 package com.alipay.sofa.cache.ehcache.rest;
 
 import net.sf.ehcache.management.ManagementService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,6 +20,8 @@ import java.lang.management.ManagementFactory;
 @RestController
 public class UserController {
 
+    private Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -30,6 +34,7 @@ public class UserController {
     @PostConstruct
     public void registerMBean() {
         EhCacheCacheManager ehCacheManager = (EhCacheCacheManager) applicationContext.getBean("baseEhcacheCacheManager");
+        LOGGER.info("got ehCacheManager: {}", ehCacheManager);
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         ManagementService.registerMBeans(ehCacheManager.getCacheManager(), mBeanServer, true, true, true, true);
     }
