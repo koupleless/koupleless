@@ -216,8 +216,6 @@ spec:
                       type: string
                   type: object
                 type: array
-              doTerminating:
-                type: boolean
               observedGeneration:
                 format: int64
                 type: integer

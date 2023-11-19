@@ -197,8 +197,6 @@ type ModuleDeploymentStatus struct {
 
 	ReleaseStatus *ReleaseStatus `json:"releaseStatus,omitempty"`
 
-	DoTerminating bool `json:"doTerminating,omitempty"`
-
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 

@@ -92,13 +92,6 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			return ctrl.Result{}, nil
 		}
 
-		if !moduleDeployment.Status.DoTerminating {
-			moduleDeployment.Status.DoTerminating = true
-			if moduleDeployment.Status.ReleaseStatus.Progress != v1alpha1.ModuleDeploymentReleaseProgressTerminating {
-				moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressTerminating
-			}
-			return ctrl.Result{}, r.Status().Update(ctx, moduleDeployment)
-		}
 	}
 
 	if moduleDeployment.Generation == 1 {
