@@ -1,4 +1,4 @@
-package com.alipay.sofa.cache.ehcache.biz1.rest;
+package com.alipay.sofa.cache.ehcache.rest;
 
 import net.sf.ehcache.management.ManagementService;
 import org.slf4j.Logger;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
-import java.util.HashMap;
-import java.util.Map;
 
 @CacheConfig(cacheNames = "user")
 @RestController
@@ -27,21 +25,13 @@ public class UserController {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private static final Map<String, String> userMap = new HashMap<>();
-
     @Cacheable(key = "#id")
     @PostMapping("/getUserById")
     public String getUserById(@RequestParam String id) {
-        String value = "user_" + id;
-        return store(id, value);
-    }
-
-    private String store(String id, String value) {
-        LOGGER.info("store user: {\"id\": {},\"value\": {}}", id, value);
-        userMap.put(id, value);
+        String value = "user_" + applicationContext.getId() + "_" + id;
+        LOGGER.info("add user into cache: {\"id\": {}, \"value\": {}}", id, value);
         return value;
     }
-
 
     @PostConstruct
     public void registerMBean() {

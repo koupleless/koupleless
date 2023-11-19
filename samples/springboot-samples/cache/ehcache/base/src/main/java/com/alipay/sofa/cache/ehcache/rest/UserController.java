@@ -26,9 +26,11 @@ public class UserController {
     private ApplicationContext applicationContext;
 
     @Cacheable(key = "#id")
-    @PostMapping("/user")
+    @PostMapping("/getUserById")
     public String getUserById(@RequestParam String id) {
-        return "user_" + id;
+        String value = "user_" + applicationContext.getId() + "_" + id;
+        LOGGER.info("add user into cache: {\"id\": {}, \"value\": {}}", id, value);
+        return value;
     }
 
     @PostConstruct

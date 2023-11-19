@@ -1,8 +1,7 @@
-package com.alipay.sofa.cache.ehcache.biz1;
+package com.alipay.sofa.cache.ehcache;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 public class BaseApplication {

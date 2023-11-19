@@ -1,4 +1,4 @@
-package com.alipay.sofa.cache.ehcache.biz1.rest;
+package com.alipay.sofa.cache.ehcache.rest;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
