@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 @CacheConfig(cacheNames = "user")
 @RestController
@@ -25,11 +27,21 @@ public class UserController {
     @Autowired
     private ApplicationContext applicationContext;
 
+    private static final Map<String, String> userMap = new HashMap<>();
+
     @Cacheable(key = "#id")
-    @PostMapping("/user")
+    @PostMapping("/getUserById")
     public String getUserById(@RequestParam String id) {
-        return "user_" + id;
+        String value = "user_" + id;
+        return store(id, value);
     }
+
+    private String store(String id, String value) {
+        LOGGER.info("store user: {\"id\": {},\"value\": {}}", id, value);
+        userMap.put(id, value);
+        return value;
+    }
+
 
     @PostConstruct
     public void registerMBean() {
