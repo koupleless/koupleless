@@ -21,7 +21,7 @@
         <spring.boot.version>2.7.16</spring.boot.version>
         <java.version>1.8</java.version>
         <sofa.ark.version>2.2.4</sofa.ark.version>
-        <sofa.serverless.runtime.version>0.5.2</sofa.serverless.runtime.version>
+        <sofa.serverless.runtime.version>0.5.3</sofa.serverless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
