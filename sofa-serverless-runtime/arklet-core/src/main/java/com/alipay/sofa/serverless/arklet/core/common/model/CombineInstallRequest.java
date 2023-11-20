@@ -5,6 +5,7 @@
 package com.alipay.sofa.serverless.arklet.core.common.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class CombineInstallRequest {
     /**
      * 合并部署类型。

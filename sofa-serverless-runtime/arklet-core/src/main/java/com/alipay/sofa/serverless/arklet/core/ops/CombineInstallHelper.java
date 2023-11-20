@@ -29,7 +29,7 @@ public class CombineInstallHelper {
      * @return 是否是 biz jar 文件。
      */
     public boolean isBizJarFile(Path path) {
-        return path.toAbsolutePath().endsWith("-biz.jar");
+        return path.toString().endsWith("-biz.jar");
     }
 
     @SneakyThrows
@@ -38,9 +38,10 @@ public class CombineInstallHelper {
         Files.walkFileTree(Paths.get(absoluteBizDirPath), new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                if (isBizJarFile(file)) {
-                    LOGGER.info("Found biz jar file: {}", file.toAbsolutePath());
-                    bizUrls.add("file://" + file.toAbsolutePath().toString());
+                Path absolutePath = file.toAbsolutePath();
+                if (isBizJarFile(absolutePath)) {
+                    LOGGER.info("Found biz jar file: {}", absolutePath);
+                    bizUrls.add(absolutePath.toString());
                 }
                 return FileVisitResult.CONTINUE;
             }

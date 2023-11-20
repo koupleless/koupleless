@@ -83,7 +83,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
         List<CompletableFuture<ClientResponse>> futures = new ArrayList<>();
 
         for (String bizUrl : bizUrls) {
-            futures.add(CompletableFuture.supplyAsync(() -> safeInstall(bizUrl), executorService));
+            futures.add(CompletableFuture.supplyAsync(() -> safeInstall("file://" + bizUrl), executorService));
         }
 
         // wait for all install futures done

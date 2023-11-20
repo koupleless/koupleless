@@ -19,12 +19,25 @@ package com.alipay.sofa.serverless.arklet.core.component;
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.spi.model.BizOperation;
+import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
+import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+
+import static org.mockito.ArgumentMatchers.anyByte;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 
 /**
  * @author mingmen
@@ -97,6 +110,52 @@ public class UnifiedOperationServiceImplTests {
             ClientResponse response = unifiedOperationService.switchBiz("bizName", "1.0.0");
             arkClientMockedStatic.verify(() -> ArkClient.switchBiz(Mockito.anyString(), Mockito.anyString()));
             Assert.assertEquals(clientResponse, response);
+        }
+    }
+
+    @Test
+    public void testCombineInstall() {
+        MockedStatic<Files> filesMockedStatic = null;
+        // there are limitations to this unit test
+        // more specifically, static mock cannot go out of current thread.
+        // however, the method would new a thread to do the job.
+        // thus ArkClient.installOperation would not be mocked.
+        try {
+            BasicFileAttributes fileAttr = Mockito.mock(BasicFileAttributes.class);
+            Path path0 = Mockito.mock(Path.class);
+            doReturn("/file/a-biz.jar").when(path0).toString();
+            Path path1 = Mockito.mock(Path.class);
+            doReturn("/file/b-biz.jar").when(path1).toString();
+            Path path_omit = Mockito.mock(Path.class);
+            doReturn("/file/notbiz.jar").when(path_omit).toString();
+
+            Path path = Mockito.mock(Path.class);
+            doReturn(path0, path1, path_omit).when(path).toAbsolutePath();
+
+            filesMockedStatic = Mockito.mockStatic(Files.class);
+            filesMockedStatic.when(() -> Files.walkFileTree(Mockito.any(), Mockito.any())).thenAnswer(new Answer<Void>() {
+                @Override
+                public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
+                    FileVisitor<Path> argument0 = invocationOnMock.getArgument(1, FileVisitor.class);
+                    argument0.visitFile(path, fileAttr);
+                    argument0.visitFile(path, fileAttr);
+                    argument0.visitFile(path, fileAttr);
+                    return null;
+                }
+            });
+
+            CombineInstallResponse response = unifiedOperationService.combineInstall(CombineInstallRequest.builder().
+                    bizDirAbsolutePath("/path/to/biz").
+                    build());
+
+            Assert.assertTrue(response.getBizUrlToResponse().containsKey("/file/a-biz.jar"));
+            Assert.assertTrue(response.getBizUrlToResponse().containsKey("/file/b-biz.jar"));
+        } catch (Throwable t) {
+            Assert.fail(t.getMessage());
+        } finally {
+            if (filesMockedStatic != null) {
+                filesMockedStatic.close();
+            }
         }
     }
 }
