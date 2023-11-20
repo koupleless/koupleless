@@ -47,7 +47,7 @@
 			<groupId>com.alipay.sofa.serverless</groupId>
 			<artifactId>sofa-serverless-base-starter</artifactId>
 			<!-- 以上版本支持springboot3 -->
-			<version>0.5.3-jdk17</version>
+			<version>0.5.3-jdk17-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -62,17 +62,21 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<!-- 增加适配 springboot3 的 log-sofa-boot-starter 版本 -->
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>log-sofa-boot-starter</artifactId>
-			<version>999-not-exist</version>
+			<version>3.9.1</version>
 			<exclusions>
-				<!-- 排除 sofa-boot-alipay-autoconfigure -->
 				<exclusion>
-					<groupId>com.alipay.sofa</groupId>
-					<artifactId>sofa-boot-alipay-autoconfigure</artifactId>
+					<groupId>com.alipay.sofa.common</groupId>
+					<artifactId>sofa-common-tools</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<!-- 增加适配 springboot3 的 sofa-common-tools 版本 -->
+			<groupId>com.alipay.sofa.common</groupId>
+			<artifactId>sofa-common-tools</artifactId>
+			<version>2.0.3</version>
 		</dependency>
 
 		<dependency>

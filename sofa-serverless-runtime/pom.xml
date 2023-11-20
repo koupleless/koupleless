@@ -13,8 +13,11 @@
         1. 切换到JDK 17
         2. 修改  sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
         3. 开始打包，将所有打出的包都上传-->
-        <sofa.ark.version.jdk17>3.0.0</sofa.ark.version.jdk17>
+        <sofa.ark.version.jdk17>3.0.1</sofa.ark.version.jdk17>
         <sofa.ark.version.jdk8>2.2.4</sofa.ark.version.jdk8>
+        <spring.boot.version.jdk8>2.7.15</spring.boot.version.jdk8>
+        <spring.boot.version.jdk17>3.0.9</spring.boot.version.jdk17>
+        <logback.core.default>1.2.9</logback.core.default>
         <revision.default>0.5.3</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,7 +43,6 @@
         <junit.version>4.13.1</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <spring.boot.version>2.7.15</spring.boot.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
         <guava.version>32.1.2-jre</guava.version>
@@ -487,8 +489,10 @@
         <profile>
             <id>17-snapshot</id>
             <properties>
+                <logback.core>1.3.5</logback.core>
                 <revision>${revision.default}-jdk17-SNAPSHOT</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
         </profile>
     <!--
@@ -500,8 +504,10 @@
         <profile>
             <id>17-release</id>
             <properties>
+                <logback.core>1.3.5</logback.core>
                 <revision>${revision.default}-jdk17</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
         </profile>
 
@@ -515,8 +521,10 @@
         <profile>
             <id>8-snapshot</id>
             <properties>
+                <logback.core>1.2.9</logback.core>
                 <revision>${revision.default}-SNAPSHOT</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
             </properties>
         </profile>
 
@@ -530,8 +538,10 @@
         <profile>
             <id>8-release</id>
             <properties>
+                <logback.core>1.2.9</logback.core>
                 <revision>${revision.default}</revision>
                 <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
             </properties>
         </profile>
 
@@ -678,8 +688,10 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <logback.core>1.2.9</logback.core>
                 <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
             <repositories>
                 <repository>
