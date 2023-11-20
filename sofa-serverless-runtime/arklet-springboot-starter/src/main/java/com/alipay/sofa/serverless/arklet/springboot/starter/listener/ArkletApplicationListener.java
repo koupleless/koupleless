@@ -20,11 +20,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
-import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
+import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
+import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
+import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
+import com.google.common.base.Preconditions;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -36,6 +42,25 @@ import org.springframework.context.event.ContextRefreshedEvent;
 @SuppressWarnings("rawtypes")
 public class ArkletApplicationListener implements ApplicationListener<ApplicationContextEvent> {
 
+    private static ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
+
+    @SneakyThrows
+    public void combineDeployFromLocalDir() {
+        String absolutePath = System.getProperty("deploy.combine.biz.dir.absolute.path");
+        if (StringUtils.isBlank(absolutePath)) {
+            return;
+        }
+        LOGGER.info("start to combine deploy from local dir:{}", absolutePath);
+        UnifiedOperationService operationServiceInstance = ArkletComponentRegistry.getOperationServiceInstance();
+        CombineInstallResponse combineInstallResponse = operationServiceInstance.combineInstall(CombineInstallRequest.builder().
+                bizDirAbsolutePath(absolutePath).
+                build());
+        LOGGER.info("combine deploy result:{}", combineInstallResponse);
+        Preconditions.checkState(combineInstallResponse.getCode() == ResponseCode.SUCCESS,
+                "combine deploy failed!"
+        );
+    }
+
     @Override
     public void onApplicationEvent(ApplicationContextEvent event) {
         // 非基座应用直接跳过
@@ -46,7 +71,9 @@ public class ArkletApplicationListener implements ApplicationListener<Applicatio
             List<AbstractCommandHandler> handlers = ArkletComponentRegistry
                     .getCommandServiceInstance().listAllHandlers();
             String commands = handlers.stream().map(s -> s.command().getId()).collect(Collectors.joining(", "));
-            ArkletLoggerFactory.getDefaultLogger().info("total supported commands:{}", commands);
+            LOGGER.info("total supported commands:{}", commands);
+
+            combineDeployFromLocalDir();
         }
     }
 }
