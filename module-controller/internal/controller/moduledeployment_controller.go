@@ -91,7 +91,6 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			}
 			return ctrl.Result{}, nil
 		}
-
 	}
 
 	if moduleDeployment.Generation == 1 {
@@ -278,6 +277,7 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, m
 	})
 	moduleDeployment.SetOwnerReferences(ownerReference)
 	utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
+	utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleExistedFinalizer)
 	err = utils.UpdateResource(r.Client, ctx, moduleDeployment)
 	if err != nil {
 		return utils.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
