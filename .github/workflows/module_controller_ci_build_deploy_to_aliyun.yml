@@ -163,6 +163,7 @@ jobs:
               exit 0
             else
               echo "等待字段值满足条件..."
+              echo "期望状态是: $desired_field_value, 当前状态是: $field_value"
               sleep 5  # 等待一段时间后再次检查
             fi
           done
