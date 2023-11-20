@@ -78,3 +78,4 @@ excludeGroupIds=ch.qos.logback*
 excludeGroupIds=com.squareup.okhttp3*
 excludeGroupIds=com.squareup.okhttp*
 excludeGroupIds=net.sf.ehcache*
+excludeGroupIds=redis.clients*

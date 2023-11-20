@@ -20,7 +20,7 @@ draft: true
 2. pom.xml 里增加必要的依赖
 ```xml
 <properties>
-    <sofa.serverless.runtime.version>0.5.2</sofa.serverless.runtime.version>
+    <sofa.serverless.runtime.version>0.5.3</sofa.serverless.runtime.version>
 </properties>
 <dependencies>
     <dependency>

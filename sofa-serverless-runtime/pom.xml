@@ -483,7 +483,7 @@
     <!--
         jdk17 打出来的 snapshot 版本
         举例：
-        打出来的包为  0.5.2-jdk17-SNAPSHOT
+        打出来的包为  0.5.3-jdk17-SNAPSHOT
         使用sofa-ark的包  3.0.0
     -->
         <profile>
@@ -498,7 +498,7 @@
     <!--
         jdk17 打出来的 release 版本
         举例：
-        打出来的包为  0.5.2-jdk17
+        打出来的包为  0.5.3-jdk17
         使用sofa-ark的包  3.0.0
     -->
         <profile>
@@ -514,7 +514,7 @@
     <!--
         jdk8 打出来的 snapshot 版本
         举例：
-        打出来的包为  0.5.2-SNAPSHOT
+        打出来的包为  0.5.3-SNAPSHOT
         使用sofa-ark的包  2.2.4
         使用sofa-ark starter 的包  2.2.4
     -->
@@ -531,7 +531,7 @@
     <!--
         jdk8 打出来的 release 版本
         举例：
-        打出来的包为  0.5.2
+        打出来的包为  0.5.3
         使用sofa-ark的包  2.2.4
         使用sofa-ark starter 的包  2.2.4
     -->
