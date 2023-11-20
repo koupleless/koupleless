@@ -37,9 +37,9 @@ jobs:
           cache: maven
 
       - name: Test
-        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+        run: mvn clean install -DskipTests -P8-release -Dmaven.javadoc.skip=true -B -U
           && sh ./check_format.sh
-          && mvn test
+          && mvn test -P8-release
 
       - name: upload coverage reports to Codecov with github action
         uses: codecov/codecov-action@v3
@@ -56,9 +56,9 @@ jobs:
           cache: maven
 
       - name: Test
-        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+        run: mvn clean install -DskipTests  -P17-release -Dmaven.javadoc.skip=true -B -U
           && sh ./check_format.sh
-          && mvn test
+          && mvn test -P17-release
 
       - name: upload coverage reports to Codecov with github action
         uses: codecov/codecov-action@v3

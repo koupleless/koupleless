@@ -4,6 +4,9 @@ date: 2023-10-10T20:32:35+08:00
 weight: 1
 ---
 
+## 为什么需要做适配
+原生 log4j2 在多模块下，模块没有独立打印的日志目录，统一打印到基座目录里，导致日志和对应的监控无法隔离。这里做适配的目的就是要让模块能有独立的日志目录。
+
 ## 普通应用 log4j2 的初始化
 在 Spring 启动前，log4j2 会使用默认值初始化一次各种 logContext 和 Configuration，然后在 Spring 启动过程中，监听 Spring 事件进行初始化
 `org.springframework.boot.context.logging.LoggingApplicationListener`，这里会调用到 Log4j2LoggingSystem.initialize 方法

@@ -127,6 +127,17 @@ https://www.dmqwl.com/
 <br/>
 <br/>
 
+### 网商银行
+
+<img src="/img/user-logos/wangshangyinhang.png" width="260px" class="all-user-cases-logo" />
+
+https://www.mybank.cn/
+
+**使用场景**：应用秒级构建发布、秒级弹性、并行迭代、合并部署
+
+<br/>
+<br/>
+
 ### 易宝支付有限公司
 
 <img src="/img/user-logos/yibaozhifu.png" width="260px" class="all-user-cases-logo" />

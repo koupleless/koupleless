@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common.spring;
+package com.alipay.sofa.serverless.plugin.spring;
 
 import com.alipay.sofa.ark.api.ArkClient;
-import org.apache.commons.lang3.StringUtils;
+import com.alipay.sofa.ark.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,27 +68,29 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
     }
 
     @Override
-    public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+    public void postProcessEnvironment(ConfigurableEnvironment environment,
+                                       SpringApplication application) {
         // 基座，先于 ark container 启动
         if (ArkClient.getMasterBiz() == null) {
             initShareEnvKeys(environment);
             return;
         }
         // 模块
-        if (ArkClient.getMasterBiz().getBizClassLoader() != Thread.currentThread().getContextClassLoader()) {
+        if (ArkClient.getMasterBiz().getBizClassLoader() != Thread.currentThread()
+                .getContextClassLoader()) {
             // 禁用模块 spring.config.location 和 spring.config.additional-location
             String configLocation = System.getProperty(SPRING_CONFIG_LOCATION);
             String additionalLocation = System.getProperty(SPRING_ADDITIONAL_LOCATION);
-            if (StringUtils.isNotBlank(configLocation) || StringUtils.isNotBlank(additionalLocation)) {
+            if (!StringUtils.isEmpty(configLocation) || !StringUtils.isEmpty(additionalLocation)) {
                 MutablePropertySources propertySources = environment.getPropertySources();
                 Iterator<PropertySource<?>> iterator = propertySources.iterator();
                 Set<String> toRemove = new HashSet<>();
                 while (iterator.hasNext()) {
                     PropertySource<?> next = iterator.next();
                     String psName = next.getName();
-                    if (StringUtils.contains(psName, getCanonicalPath(configLocation)) || StringUtils.contains(psName,
-                            getCanonicalPath(additionalLocation))) {
-                        toRemove.add(psName);
+                    if (!StringUtils.isEmpty(psName) && (psName.contains(
+                            getCanonicalPath(configLocation)) || psName.contains(
+                            getCanonicalPath(additionalLocation)))) {
                     }
                 }
                 toRemove.forEach(propertySources::remove);
@@ -130,7 +132,7 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
                                 String oldKey, String newKey) {
         String oldValue = environment.getProperty(oldKey);
         String newValue = environment.getProperty(newKey);
-        if (StringUtils.isBlank(oldValue) && StringUtils.isNotBlank(newValue)) {
+        if (StringUtils.isEmpty(oldValue) && !StringUtils.isEmpty(newValue)) {
             //如果没有配置oldKey，用newKey的值代替
             properties.put(oldKey, newValue);
         }
@@ -151,7 +153,7 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
 
     public String getCanonicalPath(String path) {
         try {
-            if (StringUtils.isBlank(path)) {
+            if (StringUtils.isEmpty(path)) {
                 return path;
             }
             File file = new File((path));

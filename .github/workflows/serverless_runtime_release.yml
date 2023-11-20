@@ -22,7 +22,7 @@ jobs:
           cache: maven
       - name: Build with Maven
         working-directory: sofa-serverless-runtime
-        run: mvn clean install -DskipTests -B -U -e && sh ./check_format.sh
+        run: mvn clean install -P8-release -DskipTests -B -U -e && sh ./check_format.sh
   release_for_jdk8:
     needs: build
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
       - name: Build with Maven
-        run: mvn --batch-mode deploy -DskipTests -Prelease
+        run: mvn --batch-mode deploy -DskipTests -Prelease,8-release
         working-directory: sofa-serverless-runtime
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
@@ -63,7 +63,7 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
       - name: Build with Maven
-        run: mvn --batch-mode deploy -DskipTests -Prelease
+        run: mvn --batch-mode deploy -DskipTests -Prelease,17-release
         working-directory: sofa-serverless-runtime
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}

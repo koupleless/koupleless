@@ -11,13 +11,14 @@
     <properties>
         <!--    JDK 17   打包如下：
         1. 切换到JDK 17
-        2. 修改 sofa.ark.version.default, sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
-        例如： sofa.ark.version.default 如果是2.2.5-SNAPSHOT，那么sofa.ark.version.base 的取值需要修改成2.2.5
-        例如： sofa.ark.version.default 如果是2.2.5，那么sofa.ark.version.base 的取值也修改成2.2.5
+        2. 修改  sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
         3. 开始打包，将所有打出的包都上传-->
-        <sofa.ark.version.base>2.2.4</sofa.ark.version.base>
-        <sofa.ark.version.default>2.2.4-SNAPSHOT</sofa.ark.version.default>
-        <revision.default>0.5.3-SNAPSHOT</revision.default>
+        <sofa.ark.version.jdk17>3.0.1</sofa.ark.version.jdk17>
+        <sofa.ark.version.jdk8>2.2.4</sofa.ark.version.jdk8>
+        <spring.boot.version.jdk8>2.7.15</spring.boot.version.jdk8>
+        <spring.boot.version.jdk17>3.0.9</spring.boot.version.jdk17>
+        <logback.core.default>1.2.9</logback.core.default>
+        <revision.default>0.5.3</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -35,18 +36,17 @@
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
-        <guice.version>4.0</guice.version>
+        <guice.version>5.1.0</guice.version>
         <netty.version>4.1.42.Final</netty.version>
         <logback.version>1.2.9</logback.version>
         <lombok.version>1.18.22</lombok.version>
         <junit.version>4.13.1</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <spring.boot.version>2.7.15</spring.boot.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
         <guava.version>32.1.2-jre</guava.version>
-        <fastjson.version>1.2.69</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <hessian.version>3.5.1</hessian.version>
     </properties>
 
@@ -200,7 +200,7 @@
             <dependency>
                 <groupId>com.google.inject.extensions</groupId>
                 <artifactId>guice-multibindings</artifactId>
-                <version>${guice.version}</version>
+                <version>4.2.3</version>
             </dependency>
 
             <dependency>
@@ -480,25 +480,73 @@
 
 
     <profiles>
+    <!--
+        jdk17 打出来的 snapshot 版本
+        举例：
+        打出来的包为  0.5.3-jdk17-SNAPSHOT
+        使用sofa-ark的包  3.0.0
+    -->
         <profile>
-            <id>jakarta-snapshot</id>
+            <id>17-snapshot</id>
             <properties>
+                <logback.core>1.3.5</logback.core>
                 <revision>${revision.default}-jdk17-SNAPSHOT</revision>
-                <sofa.ark.version>${sofa.ark.version.base}-jdk17-SNAPSHOT</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.base}-jdk17-jakarta-SNAPSHOT</sofa.ark.starter.version>
+                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
-            <activation>
-                <jdk>17</jdk>
-            </activation>
+        </profile>
+    <!--
+        jdk17 打出来的 release 版本
+        举例：
+        打出来的包为  0.5.3-jdk17
+        使用sofa-ark的包  3.0.0
+    -->
+        <profile>
+            <id>17-release</id>
+            <properties>
+                <logback.core>1.3.5</logback.core>
+                <revision>${revision.default}-jdk17</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
+            </properties>
+        </profile>
+
+    <!--
+        jdk8 打出来的 snapshot 版本
+        举例：
+        打出来的包为  0.5.3-SNAPSHOT
+        使用sofa-ark的包  2.2.4
+        使用sofa-ark starter 的包  2.2.4
+    -->
+        <profile>
+            <id>8-snapshot</id>
+            <properties>
+                <logback.core>1.2.9</logback.core>
+                <revision>${revision.default}-SNAPSHOT</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
+            </properties>
+        </profile>
+
+    <!--
+        jdk8 打出来的 release 版本
+        举例：
+        打出来的包为  0.5.3
+        使用sofa-ark的包  2.2.4
+        使用sofa-ark starter 的包  2.2.4
+    -->
+        <profile>
+            <id>8-release</id>
+            <properties>
+                <logback.core>1.2.9</logback.core>
+                <revision>${revision.default}</revision>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
+            </properties>
         </profile>
 
         <profile>
             <id>release</id>
-            <properties>
-                <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -560,15 +608,19 @@
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>maven-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
 
         <profile>
             <id>snapshot</id>
-            <properties>
-                <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -609,11 +661,25 @@
                     <id>ossrh</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                 </snapshotRepository>
-                <repository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
             </distributionManagement>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>maven-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>maven-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
 
         <profile>
@@ -622,9 +688,10 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <logback.core>1.2.9</logback.core>
                 <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.default}</sofa.ark.version>
-                <sofa.ark.starter.version>${sofa.ark.version.default}</sofa.ark.starter.version>
+                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
             <repositories>
                 <repository>

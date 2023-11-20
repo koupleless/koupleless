@@ -14,12 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common;
+package com.alipay.sofa.serverless.plugin.spring;
 
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.spi.model.Biz;
-import com.alipay.sofa.serverless.common.spring.MasterBizPropertySource;
-import com.alipay.sofa.serverless.common.spring.ServerlessEnvironmentPostProcessor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.boot.SpringApplication;
@@ -32,7 +30,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
 
-import static com.alipay.sofa.serverless.common.spring.ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -79,11 +76,11 @@ public class ServerlessEnvironmentPostProcessorTest {
         ClassLoader tccl = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
-            System.setProperty(SPRING_CONFIG_LOCATION, "xxxx");
+            System.setProperty(ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION, "xxxx");
             serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
                 springApplication);
         } finally {
-            System.clearProperty(SPRING_CONFIG_LOCATION);
+            System.clearProperty(ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION);
             Thread.currentThread().setContextClassLoader(tccl);
         }
         serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
