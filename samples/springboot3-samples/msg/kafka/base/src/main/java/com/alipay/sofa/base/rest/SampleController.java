@@ -1,6 +1,7 @@
 package com.alipay.sofa.base.rest;
 
 import com.alipay.sofa.base.facade.SampleService;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class SampleController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(SampleController.class);
 
-    @Autowired
+    @Resource
     private KafkaTemplate<Object, Object> template;
 
     @Autowired

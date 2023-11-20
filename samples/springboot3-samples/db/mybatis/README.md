@@ -11,7 +11,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-base-starter</artifactId>
     <!-- 以上版本支持springboot3 -->
-    <version>0.5.3-jdk17</version>
+    <version>0.5.3-jdk17-SNAPSHOT</version>
 </dependency>
 
 <dependency>
@@ -22,19 +22,6 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
         <exclusion>
             <groupId>com.alipay.sofa</groupId>
             <artifactId>log-sofa-boot-starter</artifactId>
-        </exclusion>
-    </exclusions>
-</dependency>
-<dependency>
-<!-- 增加适配 springboot3 的 log-sofa-boot-starter 版本 -->
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>log-sofa-boot-starter</artifactId>
-    <version>999-not-exist</version>
-    <exclusions>
-        <!-- 排除 sofa-boot-alipay-autoconfigure -->
-        <exclusion>
-            <groupId>com.alipay.sofa</groupId>
-            <artifactId>sofa-boot-alipay-autoconfigure</artifactId>
         </exclusion>
     </exclusions>
 </dependency>

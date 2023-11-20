@@ -22,7 +22,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<spring.boot.version>2.7.16</spring.boot.version>
 		<sofa.ark.version>2.2.4</sofa.ark.version>
-		<sofa.serverless.runtime.version>0.5.2</sofa.serverless.runtime.version>
+		<sofa.serverless.runtime.version>0.5.3</sofa.serverless.runtime.version>
 		<disruptor.version>3.4.2</disruptor.version>
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
 		<dubbo.version>3.1.11</dubbo.version>
