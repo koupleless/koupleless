@@ -25,6 +25,7 @@ jobs:
         run: mvn clean install -P8-release -DskipTests -B -U -e && sh ./check_format.sh
 
   ci_test:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker
