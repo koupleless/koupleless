@@ -56,6 +56,12 @@
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-springboot-starter</artifactId>
+                <version>${sofa.ark.version}</version>
+            </dependency>
+
             <!-- 这里添加动态模块相关依赖 -->
             <dependency>
                 <groupId>com.alipay.sofa.serverless</groupId>
