@@ -21,21 +21,27 @@ import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.spi.model.BizOperation;
 import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
 import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
+import com.alipay.sofa.serverless.arklet.core.ops.CombineInstallHelper;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationServiceImpl;
+import com.google.common.base.Preconditions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.anyByte;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 
@@ -44,9 +50,13 @@ import static org.mockito.Mockito.doReturn;
  * @date 2023/10/26
  */
 
+@RunWith(MockitoJUnitRunner.class)
 public class UnifiedOperationServiceImplTests {
-
+    @InjectMocks
     private UnifiedOperationServiceImpl unifiedOperationService;
+
+    @Spy
+    private CombineInstallHelper combineInstallHelper;
 
     @Before
     public void setUp() {
@@ -143,6 +153,8 @@ public class UnifiedOperationServiceImplTests {
                     return null;
                 }
             });
+
+            doReturn(new HashMap<>()).when(combineInstallHelper).getMainAttributes(anyString());
 
             CombineInstallResponse response = unifiedOperationService.combineInstall(CombineInstallRequest.builder().
                     bizDirAbsolutePath("/path/to/biz").

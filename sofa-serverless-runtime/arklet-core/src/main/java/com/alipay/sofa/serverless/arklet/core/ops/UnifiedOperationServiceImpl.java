@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ClientResponse;
@@ -34,7 +32,6 @@ import com.alipay.sofa.ark.spi.model.BizOperation;
 import com.alipay.sofa.serverless.arklet.core.command.executor.ExecutorServiceManager;
 import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
 import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
-import com.google.common.base.Preconditions;
 import com.google.inject.Singleton;
 
 /**
@@ -59,7 +56,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     @Override
     public ClientResponse install(String bizUrl) throws Throwable {
         BizOperation bizOperation = new BizOperation()
-            .setOperationType(BizOperation.OperationType.INSTALL);
+                .setOperationType(BizOperation.OperationType.INSTALL);
         bizOperation.putParameter(Constants.CONFIG_BIZ_URL, bizUrl);
         return ArkClient.installOperation(bizOperation);
     }
@@ -67,21 +64,16 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     public ClientResponse safeCombineInstall(String bizUrl) {
         try {
             BizOperation bizOperation = new BizOperation()
-                .setOperationType(BizOperation.OperationType.INSTALL);
+                    .setOperationType(BizOperation.OperationType.INSTALL);
 
             bizOperation.putParameter(Constants.CONFIG_BIZ_URL, "file://" + bizUrl);
-            try (JarFile jarFile = new JarFile(bizUrl)) {
-                Manifest manifest = jarFile.getManifest();
-                Preconditions.checkState(manifest != null, "Manifest file not found in the JAR.");
-                bizOperation.setBizName(manifest.getMainAttributes().getValue(
-                    Constants.ARK_BIZ_NAME));
-                bizOperation.setBizVersion(manifest.getMainAttributes().getValue(
-                    Constants.ARK_BIZ_VERSION));
-            }
+            Map<Object, Object> mainAttributes = combineInstallHelper.getMainAttributes(bizUrl);
+            bizOperation.setBizName((String) mainAttributes.get(Constants.ARK_BIZ_NAME));
+            bizOperation.setBizVersion((String) mainAttributes.get(Constants.ARK_BIZ_VERSION));
             return ArkClient.installOperation(bizOperation);
         } catch (Throwable throwable) {
             return new ClientResponse().setCode(ResponseCode.FAILED).setMessage(
-                String.format("internal exception: %s", throwable.getMessage()));
+                    String.format("internal exception: %s", throwable.getMessage()));
         }
     }
 

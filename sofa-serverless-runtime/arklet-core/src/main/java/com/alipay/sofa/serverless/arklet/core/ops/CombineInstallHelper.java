@@ -16,14 +16,19 @@
  */
 package com.alipay.sofa.serverless.arklet.core.ops;
 
+import com.alipay.sofa.ark.spi.constant.Constants;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
+import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 /**
  * 合并部署帮助类。
@@ -60,6 +65,20 @@ public class CombineInstallHelper {
         });
 
         return bizUrls;
+    }
+
+    /**
+     * 获取 biz jar 文件的主属性。
+     * @param bizUrl biz jar 文件路径。
+     * @return 主属性。
+     */
+    @SneakyThrows
+    public Map<Object, Object> getMainAttributes(String bizUrl) {
+        try (JarFile jarFile = new JarFile(bizUrl)) {
+            Manifest manifest = jarFile.getManifest();
+            Preconditions.checkState(manifest != null, "Manifest file not found in the JAR.");
+            return manifest.getMainAttributes();
+        }
     }
 
 }

@@ -20,6 +20,7 @@ import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
 import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
+import com.alipay.sofa.serverless.arklet.core.ops.CombineInstallHelper;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
 import lombok.SneakyThrows;
 import org.junit.After;
@@ -29,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ApplicationContextEvent;
@@ -52,9 +54,9 @@ public class ApplicationContextEventListenerTest {
     private ApplicationContextEventListener arkletApplicationListener;
 
     @Mock
-    private UnifiedOperationService         operationService;
+    private UnifiedOperationService operationService;
 
-    MockedStatic<ArkletComponentRegistry>   componentRegistryMockedStatic = null;
+    MockedStatic<ArkletComponentRegistry> componentRegistryMockedStatic = null;
 
     @Before
     public void beforeTest() {
