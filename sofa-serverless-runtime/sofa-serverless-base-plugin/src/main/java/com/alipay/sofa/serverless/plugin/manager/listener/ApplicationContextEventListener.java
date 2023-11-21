@@ -1,6 +1,18 @@
-/**
- * Alipay.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.sofa.serverless.plugin.manager.listener;
 
@@ -26,12 +38,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author gouzhendong.gzd
  * @version $Id: ApplicationContextEventListener, v 0.1 2023-11-21 11:26 gouzhendong.gzd Exp $
  */
-public class ApplicationContextEventListener implements ApplicationListener<ApplicationContextEvent> {
+public class ApplicationContextEventListener implements
+                                            ApplicationListener<ApplicationContextEvent> {
 
-    private static ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
+    private static ArkletLogger LOGGER             = ArkletLoggerFactory.getDefaultLogger();
 
     // 合并部署是否已经完成，防止重复执行。
-    private AtomicBoolean isCombinedDeployed = new AtomicBoolean(false);
+    private AtomicBoolean       isCombinedDeployed = new AtomicBoolean(false);
 
     @SneakyThrows
     public void combineDeployFromLocalDir() {
@@ -41,21 +54,23 @@ public class ApplicationContextEventListener implements ApplicationListener<Appl
         }
         LOGGER.info("start to combine deploy from local dir:{}", absolutePath);
         UnifiedOperationService operationServiceInstance = ArkletComponentRegistry
-                .getOperationServiceInstance();
+            .getOperationServiceInstance();
 
         CombineInstallResponse combineInstallResponse = operationServiceInstance
-                .combineInstall(CombineInstallRequest.builder().bizDirAbsolutePath(absolutePath)
-                        .build());
+            .combineInstall(CombineInstallRequest.builder().bizDirAbsolutePath(absolutePath)
+                .build());
         LOGGER.info("combine deploy result:{}", combineInstallResponse);
         isCombinedDeployed.set(true);
         Preconditions.checkState(combineInstallResponse.getCode() == ResponseCode.SUCCESS,
-                "combine deploy failed!");
+            "combine deploy failed!");
     }
 
     @Override
     public void onApplicationEvent(ApplicationContextEvent event) {
         // 非基座应用直接跳过
-        if (!Objects.equals(this.getClass().getClassLoader(), Thread.currentThread().getContextClassLoader()) || event.getApplicationContext().getParent() != null) {
+        if (!Objects.equals(this.getClass().getClassLoader(), Thread.currentThread()
+            .getContextClassLoader())
+            || event.getApplicationContext().getParent() != null) {
             return;
         }
 
