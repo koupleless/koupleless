@@ -54,11 +54,7 @@ jobs:
           set -e
           bash samples/ccbin/start.sh jdk8
 
-<<<<<<< HEAD
       - name: Set up JDK 17
-=======
-      - name: Set up JDK 8
->>>>>>> 408ae8a161e6d054439565e243071e7fed35b592
         uses: actions/setup-java@v3
         with:
           java-version: '17'
