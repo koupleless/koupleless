@@ -52,7 +52,7 @@ for TEST_DIR in $(find $(pwd) -name "*[^3]-samples");do
     bash $TESTAPP_DIR/../ccbin/healthcheck.sh
 
     echo "Start module biz Test"
-    bash -x $TESTAPP_DIR/../ccbin/moduletest.sh
+    bash $TESTAPP_DIR/../ccbin/moduletest.sh
 
     echo "测试通过 $BaseDir"
 
