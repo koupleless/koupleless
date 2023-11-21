@@ -32,29 +32,29 @@ import java.util.Map;
 /**
  * @author Lunarscave
  */
-@Endpoint(id = "arkHealthz")
-public class ArkHealthzEndpoint {
+@Endpoint(id = "arkHealth")
+public class ArkHealthEndpoint {
 
     private final HealthService healthService = ArkletComponentRegistry.getHealthServiceInstance();
 
     @ReadOperation
     public EndpointResponse<Map<String, Object>> getHealth() {
-        return ArkHealthzEndpoint.ofResponse(new HealthBuilder().init()
+        return ArkHealthEndpoint.ofResponse(new HealthBuilder().init()
             .putAllHealthData(healthService.getHealth())
             .putAllHealthData(healthService.queryModuleInfo()).build());
     }
 
     @ReadOperation
     public EndpointResponse<Map<String, Object>> getModuleInfo1(@Selector String moduleType) {
-        return ArkHealthzEndpoint.ofResponse(healthService.queryModuleInfo(moduleType, null, null));
+        return ArkHealthEndpoint.ofResponse(healthService.queryModuleInfo(moduleType, null, null));
     }
 
     @ReadOperation
     public EndpointResponse<Map<String, Object>> getModuleInfo2(@Selector String moduleType,
                                                                 @Selector String name,
                                                                 @Selector String version) {
-        return ArkHealthzEndpoint.ofResponse(healthService.queryModuleInfo(moduleType, name,
-            version));
+        return ArkHealthEndpoint.ofResponse(healthService
+            .queryModuleInfo(moduleType, name, version));
     }
 
     private static EndpointResponse<Map<String, Object>> ofResponse(Health health) {

@@ -30,14 +30,14 @@ import java.util.Map;
 /**
  * @author Lunarscave
  */
-public class ArkHealthzEndpointTest extends SpringbootBaseTest {
+public class ArkHealthEndpointTest extends SpringbootBaseTest {
 
-    private static ArkHealthzEndpoint arkHealthzEndpoint;
-    private static String             bizName;
-    private static String             bizVersion;
-    private final String[]            indicatorIds = { Constants.CPU, Constants.JVM,
+    private static ArkHealthEndpoint arkHealthEndpoint;
+    private static String            bizName;
+    private static String            bizVersion;
+    private final String[]           indicatorIds = { Constants.CPU, Constants.JVM,
             Constants.MASTER_BIZ_HEALTH, Constants.MASTER_BIZ_INFO, Constants.BIZ_LIST_INFO,
-            Constants.PLUGIN_LIST_INFO            };
+            Constants.PLUGIN_LIST_INFO           };
 
     private void testEndpointHeader(EndpointResponse<Map<String, Object>> response) {
         Assert.assertNotNull(response);
@@ -92,21 +92,21 @@ public class ArkHealthzEndpointTest extends SpringbootBaseTest {
 
     @BeforeClass
     public static void initHealthService() {
-        arkHealthzEndpoint = new ArkHealthzEndpoint();
+        arkHealthEndpoint = new ArkHealthEndpoint();
         bizName = SpringbootUtil.getProperty("spring.application.name");
         bizVersion = "1.0.0";
     }
 
     @Test
     public void testGetHealth() {
-        EndpointResponse<Map<String, Object>> response = arkHealthzEndpoint.getHealth();
+        EndpointResponse<Map<String, Object>> response = arkHealthEndpoint.getHealth();
         testEndpointHeader(response);
         testEndpointData(response, indicatorIds);
     }
 
     @Test
     public void testGetModuleInfo1_BizType() {
-        EndpointResponse<Map<String, Object>> response = arkHealthzEndpoint
+        EndpointResponse<Map<String, Object>> response = arkHealthEndpoint
             .getModuleInfo1(Constants.BIZ);
         testEndpointHeader(response);
         testEndpointData(response, Constants.BIZ_LIST_INFO);
@@ -114,7 +114,7 @@ public class ArkHealthzEndpointTest extends SpringbootBaseTest {
 
     @Test
     public void testGetModuleInfo1_PluginType() {
-        EndpointResponse<Map<String, Object>> response = arkHealthzEndpoint
+        EndpointResponse<Map<String, Object>> response = arkHealthEndpoint
             .getModuleInfo1(Constants.PLUGIN);
         testEndpointHeader(response);
         testEndpointData(response, Constants.PLUGIN_LIST_INFO);
@@ -123,7 +123,7 @@ public class ArkHealthzEndpointTest extends SpringbootBaseTest {
     @Test
     public void testGetModuleInfo1_NonType() {
         final String nonType = "non";
-        EndpointResponse<Map<String, Object>> response = arkHealthzEndpoint.getModuleInfo1(nonType);
+        EndpointResponse<Map<String, Object>> response = arkHealthEndpoint.getModuleInfo1(nonType);
         testEndpointHeader(response, EndpointResponseCode.ENDPOINT_PROCESS_INTERNAL_ERROR);
         testEndpointData(response, Constants.HEALTH_ERROR,
             String.format("illegal type: %s", nonType));
@@ -131,7 +131,7 @@ public class ArkHealthzEndpointTest extends SpringbootBaseTest {
 
     @Test
     public void testGetModuleInfo2_BizSuccess() {
-        EndpointResponse<Map<String, Object>> response = arkHealthzEndpoint.getModuleInfo2(
+        EndpointResponse<Map<String, Object>> response = arkHealthEndpoint.getModuleInfo2(
             Constants.BIZ, bizName, bizVersion);
         testEndpointHeader(response);
         testEndpointData(response, Constants.BIZ_INFO);
@@ -140,7 +140,7 @@ public class ArkHealthzEndpointTest extends SpringbootBaseTest {
     @Test
     public void testGetModuleInfo2_BizFailure() {
         final String nonBizName = "non";
-        EndpointResponse<Map<String, Object>> response = arkHealthzEndpoint.getModuleInfo2(
+        EndpointResponse<Map<String, Object>> response = arkHealthEndpoint.getModuleInfo2(
             Constants.BIZ, nonBizName, bizVersion);
         testEndpointHeader(response, EndpointResponseCode.ENDPOINT_PROCESS_INTERNAL_ERROR);
         testEndpointData(response, Constants.HEALTH_ERROR, "can not find biz");
@@ -150,7 +150,7 @@ public class ArkHealthzEndpointTest extends SpringbootBaseTest {
     public void testGetModuleInfo2_PluginFailure() {
         final String nonPluginName = "non";
         final String nonPluginVersion = "x.x.x";
-        EndpointResponse<Map<String, Object>> response = arkHealthzEndpoint.getModuleInfo2(
+        EndpointResponse<Map<String, Object>> response = arkHealthEndpoint.getModuleInfo2(
             Constants.PLUGIN, nonPluginName, nonPluginVersion);
         testEndpointHeader(response, EndpointResponseCode.ENDPOINT_PROCESS_INTERNAL_ERROR);
         testEndpointData(response, Constants.HEALTH_ERROR, "can not find plugin");
