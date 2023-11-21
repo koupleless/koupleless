@@ -61,11 +61,13 @@ public class ApplicationContextEventListenerTest {
     @Before
     public void beforeTest() {
         componentRegistryMockedStatic = mockStatic(ArkletComponentRegistry.class);
+        System.setProperty("deploy.combine.biz.dir.absolute.path", "/path/to/dir");
     }
 
     @After
     public void afterTest() {
         componentRegistryMockedStatic.close();
+        System.clearProperty("deploy.combine.biz.dir.absolute.path");
     }
 
     @SneakyThrows
@@ -75,7 +77,6 @@ public class ApplicationContextEventListenerTest {
         ContextRefreshedEvent event = null;
         {
             componentRegistryMockedStatic.when(ArkletComponentRegistry::getOperationServiceInstance).thenReturn(operationService);
-            System.setProperty("deploy.combine.biz.dir.absolute.path", "/path/to/dir");
 
             response = CombineInstallResponse.builder().
                     code(ResponseCode.SUCCESS).
