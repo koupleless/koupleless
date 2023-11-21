@@ -58,7 +58,7 @@ public class UnifiedOperationServiceImplTests {
     private UnifiedOperationServiceImpl unifiedOperationService;
 
     @Spy
-    private CombineInstallHelper combineInstallHelper;
+    private CombineInstallHelper        combineInstallHelper;
 
     @Before
     public void setUp() {
@@ -134,22 +134,21 @@ public class UnifiedOperationServiceImplTests {
             paths.add("/file/b-biz.jar");
             paths.add("/file/notbiz.jar");
 
-            doReturn(paths).when(combineInstallHelper).
-                    getBizUrlsFromLocalFileSystem(any());
+            doReturn(paths).when(combineInstallHelper).getBizUrlsFromLocalFileSystem(any());
 
             doReturn(new HashMap<>()).when(combineInstallHelper).getMainAttributes(anyString());
         }
 
-        CombineInstallResponse response = unifiedOperationService.combineInstall(CombineInstallRequest.builder().
-                bizDirAbsolutePath("/path/to/biz").
-                build());
+        CombineInstallResponse response = unifiedOperationService
+            .combineInstall(CombineInstallRequest.builder().bizDirAbsolutePath("/path/to/biz")
+                .build());
 
         Assert.assertTrue(response.getBizUrlToResponse().
 
-                containsKey("/file/a-biz.jar"));
+        containsKey("/file/a-biz.jar"));
         Assert.assertTrue(response.getBizUrlToResponse().
 
-                containsKey("/file/b-biz.jar"));
+        containsKey("/file/b-biz.jar"));
 
     }
 }
