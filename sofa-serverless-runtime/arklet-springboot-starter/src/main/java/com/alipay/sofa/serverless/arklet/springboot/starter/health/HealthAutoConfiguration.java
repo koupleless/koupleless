@@ -54,7 +54,7 @@ public class HealthAutoConfiguration implements ApplicationContextAware {
 
     @Bean
     @ConditionalOnAvailableEndpoint
-    public ArkHealthEndpoint arkHealthzEndpoint() {
+    public ArkHealthEndpoint arkHealthEndpoint() {
         return new ArkHealthEndpoint();
     }
 

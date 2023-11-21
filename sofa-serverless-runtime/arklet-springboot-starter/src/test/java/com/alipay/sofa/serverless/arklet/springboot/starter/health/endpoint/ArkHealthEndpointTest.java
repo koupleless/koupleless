@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * @author Lunarscave
  */
-public class ArkHealthzEndpointTest extends SpringbootBaseTest {
+public class ArkHealthEndpointTest extends SpringbootBaseTest {
 
     private static ArkHealthEndpoint arkHealthEndpoint;
     private static String             bizName;
