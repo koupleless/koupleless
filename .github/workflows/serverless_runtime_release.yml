@@ -32,7 +32,6 @@ jobs:
 
       - name: get sofa-runtime version & update sofa-runtime version for all test sample app
         run: |
-          ls -al
           serverless_runtime_version=`egrep "<revision.default>([^<]+)</revision.default>" sofa-serverless-runtime/pom.xml |awk -F "revision.default>|</revision.default" '{print $2}'`
           echo "升级sofa-runtime version to $serverless_runtime_version"
           for testsample in `find samples -name "*-samples"`;do  sed -i "s/<sofa.serverless.runtime.version>.*<\/sofa.serverless.runtime.version>/<sofa.serverless.runtime.version>$serverless_runtime_version<\/sofa.serverless.runtime.version>/g"  $testsample/pom.xml ;done

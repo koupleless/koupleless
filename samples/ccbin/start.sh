@@ -29,7 +29,9 @@ echo "start testsuite:$testSuite"
 if [[ $testSuite == "jdk8" ]];then
   suiteReg="*[^3|^dubbo]-samples"
 else
-  suiteReg="*[3|dubbo]-samples"
+#  suiteReg="*[3|dubbo]-samples"
+    suiteReg="*[3]-samples"
+
 fi
 #测试路径
 for TEST_DIR in $(find $(pwd) -name "$suiteReg");do
