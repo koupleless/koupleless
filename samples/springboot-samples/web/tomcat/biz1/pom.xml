@@ -67,7 +67,7 @@
                     <!-- 单host下需更换 web context path -->
                     <webContextPath>biz1</webContextPath>
                     <declaredMode>true</declaredMode>
-                    <packExcludesConfig>exclude.txt</packExcludesConfig>
+                    <packExcludesConfig>rules.txt</packExcludesConfig>
                 </configuration>
             </plugin>
         </plugins>

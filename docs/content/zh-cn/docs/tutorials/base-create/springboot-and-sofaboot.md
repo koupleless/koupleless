@@ -21,7 +21,7 @@ spring.application.name = ${替换为实际基座应用名}
 ```xml
 <properties>
     <sofa.ark.verion>2.2.4</sofa.ark.verion>
-    <sofa.serverless.runtime.version>0.5.2</sofa.serverless.runtime.version>
+    <sofa.serverless.runtime.version>0.5.3</sofa.serverless.runtime.version>
 </properties>
 ```
 
