@@ -34,7 +34,7 @@ jobs:
             node:14
 
       - name: get sofa-runtime version & update sofa-runtime version for all test sample app
-        working-directory: ../
+        working-directory: sofa-serverless-runtime
         run: |
           pwd
           ls -al
