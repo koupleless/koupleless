@@ -33,11 +33,11 @@ import java.util.Map;
 public class ArkHealthEndpointTest extends SpringbootBaseTest {
 
     private static ArkHealthEndpoint arkHealthEndpoint;
-    private static String             bizName;
-    private static String             bizVersion;
-    private final String[]            indicatorIds = { Constants.CPU, Constants.JVM,
+    private static String            bizName;
+    private static String            bizVersion;
+    private final String[]           indicatorIds = { Constants.CPU, Constants.JVM,
             Constants.MASTER_BIZ_HEALTH, Constants.MASTER_BIZ_INFO, Constants.BIZ_LIST_INFO,
-            Constants.PLUGIN_LIST_INFO            };
+            Constants.PLUGIN_LIST_INFO           };
 
     private void testEndpointHeader(EndpointResponse<Map<String, Object>> response) {
         Assert.assertNotNull(response);
