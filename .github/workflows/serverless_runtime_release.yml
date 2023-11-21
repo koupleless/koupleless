@@ -73,7 +73,7 @@ jobs:
           bash samples/ccbin/start.sh jdk17
 
 #  release_for_jdk8:
-#    needs: build
+#    needs: ci_test
 #    runs-on: ubuntu-latest
 #    steps:
 #      - uses: actions/checkout@v3
@@ -96,7 +96,7 @@ jobs:
 #          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
 #          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 #  release_for_jdk17:
-#    needs: build
+#    needs: ci_test
 #    runs-on: ubuntu-latest
 #    steps:
 #      - uses: actions/checkout@v3
