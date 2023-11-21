@@ -1,7 +1,8 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.alipay.sofa.serverless.plugin.BaseRuntimeAutoConfiguration
 org.springframework.context.ApplicationListener=\
-  com.alipay.sofa.serverless.plugin.spring.ServerlessApplicationListener
+  com.alipay.sofa.serverless.plugin.spring.ServerlessApplicationListener,\
+  com.alipay.sofa.serverless.plugin.manager.listener.ApplicationContextEventListener
 org.springframework.boot.env.EnvironmentPostProcessor=\
   com.alipay.sofa.serverless.plugin.spring.ServerlessEnvironmentPostProcessor
 
