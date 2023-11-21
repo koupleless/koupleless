@@ -24,6 +24,7 @@ import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRespons
 import com.alipay.sofa.serverless.arklet.core.ops.CombineInstallHelper;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationServiceImpl;
 import com.google.common.base.Preconditions;
+import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,10 +39,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyByte;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 
@@ -56,7 +58,7 @@ public class UnifiedOperationServiceImplTests {
     private UnifiedOperationServiceImpl unifiedOperationService;
 
     @Spy
-    private CombineInstallHelper        combineInstallHelper;
+    private CombineInstallHelper combineInstallHelper;
 
     @Before
     public void setUp() {
@@ -123,51 +125,31 @@ public class UnifiedOperationServiceImplTests {
         }
     }
 
+    @SneakyThrows
     @Test
     public void testCombineInstall() {
-        MockedStatic<Files> filesMockedStatic = null;
-        // there are limitations to this unit test
-        // more specifically, static mock cannot go out of current thread.
-        // however, the method would new a thread to do the job.
-        // thus ArkClient.installOperation would not be mocked.
-        try {
-            BasicFileAttributes fileAttr = Mockito.mock(BasicFileAttributes.class);
-            Path path0 = Mockito.mock(Path.class);
-            doReturn("/file/a-biz.jar").when(path0).toString();
-            Path path1 = Mockito.mock(Path.class);
-            doReturn("/file/b-biz.jar").when(path1).toString();
-            Path path_omit = Mockito.mock(Path.class);
-            doReturn("/file/notbiz.jar").when(path_omit).toString();
+        {
+            List<String> paths = new ArrayList<>();
+            paths.add("/file/a-biz.jar");
+            paths.add("/file/b-biz.jar");
+            paths.add("/file/notbiz.jar");
 
-            Path path = Mockito.mock(Path.class);
-            doReturn(path0, path1, path_omit).when(path).toAbsolutePath();
-
-            filesMockedStatic = Mockito.mockStatic(Files.class);
-            filesMockedStatic.when(() -> Files.walkFileTree(Mockito.any(), Mockito.any())).thenAnswer(new Answer<Void>() {
-                @Override
-                public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-                    FileVisitor<Path> argument0 = invocationOnMock.getArgument(1, FileVisitor.class);
-                    argument0.visitFile(path, fileAttr);
-                    argument0.visitFile(path, fileAttr);
-                    argument0.visitFile(path, fileAttr);
-                    return null;
-                }
-            });
+            doReturn(paths).when(combineInstallHelper).
+                    getBizUrlsFromLocalFileSystem(any());
 
             doReturn(new HashMap<>()).when(combineInstallHelper).getMainAttributes(anyString());
-
-            CombineInstallResponse response = unifiedOperationService.combineInstall(CombineInstallRequest.builder().
-                    bizDirAbsolutePath("/path/to/biz").
-                    build());
-
-            Assert.assertTrue(response.getBizUrlToResponse().containsKey("/file/a-biz.jar"));
-            Assert.assertTrue(response.getBizUrlToResponse().containsKey("/file/b-biz.jar"));
-        } catch (Throwable t) {
-            Assert.fail(t.getMessage());
-        } finally {
-            if (filesMockedStatic != null) {
-                filesMockedStatic.close();
-            }
         }
+
+        CombineInstallResponse response = unifiedOperationService.combineInstall(CombineInstallRequest.builder().
+                bizDirAbsolutePath("/path/to/biz").
+                build());
+
+        Assert.assertTrue(response.getBizUrlToResponse().
+
+                containsKey("/file/a-biz.jar"));
+        Assert.assertTrue(response.getBizUrlToResponse().
+
+                containsKey("/file/b-biz.jar"));
+
     }
 }
