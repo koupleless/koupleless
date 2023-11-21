@@ -24,14 +24,20 @@ function kill_java_process() {
 set -e
 
 #dobbo common-model
-
+testSuite=$1
+echo "start testsuite:$testSuite"
+if [[ $testSuite == "jdk8" ]];then
+  suiteReg="*[^3|^dubbo]-samples"
+else
+  suiteReg="*[3|dubbo]-samples"
+fi
 #测试路径
-for TEST_DIR in $(find $(pwd) -name "*[^3]-samples");do
+for TEST_DIR in $(find $(pwd) -name "$suiteReg");do
   TESTAPP_DIR=$TEST_DIR
   echo "TESTAPP_DIR=$TESTAPP_DIR"
   cd ${TESTAPP_DIR}
   mvn clean install -U -Dmaven.test.skip=true >>/tmp/mvn.out
-  for BaseDir in $( find $(pwd)  -type d -name "*base" |grep -v src|grep -v target|grep -v mybatis|grep -v dubbo|grep -v logs);do
+  for BaseDir in $( find $(pwd)  -type d -name "*base" |grep -v src|grep -v target|grep -v mybatis|grep -v logs);do
     echo "BaseDir $BaseDir"
     export BaseDir=$BaseDir
     cd $BaseDir

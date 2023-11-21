@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  ci_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,48 +25,19 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Set up Go environment
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.16
-
       - name: Set up Docker
         uses: docker/metadata-action@v3
         with:
           images: |
             node:14
 
-      - name: get sofa-runtime version
+      - name: get sofa-runtime version & update sofa-runtime version for all test sample app
         run: |
           serverless_runtime_version=`egrep "<revision.default>([^<]+)</revision.default>" sofa-serverless-runtime/pom.xml |awk -F "revision.default>|</revision.default" '{print $2}'`
-          echo "serverless_runtime_version: ${serverless_runtime_version}"
-          echo "serverless_runtime_version=${serverless_runtime_version}" >> $GITHUB_ENV
+          echo "升级sofa-runtime version to $serverless_runtime_version"
+          for testsample in `find samples -name "*-samples"`;do  sed -i "s/<sofa.serverless.runtime.version>.*<\/sofa.serverless.runtime.version>/<sofa.serverless.runtime.version>$serverless_runtime_version<\/sofa.serverless.runtime.version>/g"  $testsample/pom.xml ;done
 
-      - name: update sofa-runtime version for all test sample app
-        run: |
-          echo "升级sofa-runtime version form to ${{ env.serverless_runtime_version }}"
-          for testsample in `find samples -name "*-samples"`;do  sed -i "s/<sofa.serverless.runtime.version>.*<\/sofa.serverless.runtime.version>/<sofa.serverless.runtime.version>${{ env.serverless_runtime_version }}<\/sofa.serverless.runtime.version>/g"  $testsample/pom.xml ;done
 
-      #      # 1.1 Login to ACR
-#      - name: Login to ACR with the AccessKey pair
-#        uses: aliyun/acr-login@v1
-#        with:
-#          login-server: https://registry.cn-hangzhou.aliyuncs.com
-#          username: "${{ secrets.ALIYUN_USERNAME }}"
-#          password: "${{ secrets.ALIYUN_PAASWORD }}"
-#
-#      # 1.2 Buid and push image to ACR
-#      - name: Build and push image to ACR
-#        run: |
-#          docker build --tag "registry.cn-hangzhou.aliyuncs.com/$NAMESPACE/$IMAGE:$TAG" .
-#          docker push "registry.cn-hangzhou.aliyuncs.com/$NAMESPACE/$IMAGE:$TAG"
-
-#      - name: Start sofaboot test
-#        run: |
-#          docker run --name test-container -d -p 8080:8080 registry.cn-hangzhou.aliyuncs.com/$NAMESPACE/$IMAGE:$TAG
-#
-#      - name: Wait for container to start
-#        run: sleep 60s
       - name: Test Env prepare
         run: |
           sudo apt-get update >>/tmp/envprepare.out
@@ -79,13 +50,20 @@ jobs:
           sudo systemctl start redis-server
           sudo cp samples/ccbin/arkctl /usr/bin/arkctl
 
-      - name: Run serverless runtime test
+      - name: Run jdk8 serverless runtime test
         run: | 
           set -e
-          bash samples/ccbin/start.sh
-      
-          
+          bash samples/ccbin/start.sh jdk8
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
            
-          
-          
+      - name: Run jdk17 serverless runtime test
+        run: |
+          set -e
+          bash samples/ccbin/start.sh jdk17
           
