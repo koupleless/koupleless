@@ -80,7 +80,6 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
             }
             return ArkClient.installOperation(bizOperation);
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
             return new ClientResponse().setCode(ResponseCode.FAILED).setMessage(
                 String.format("internal exception: %s", throwable.getMessage()));
         }
