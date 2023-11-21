@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,10 +24,6 @@ jobs:
         working-directory: sofa-serverless-runtime
         run: mvn clean install -P8-release -DskipTests -B -U -e && sh ./check_format.sh
 
-  ci_test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - name: Set up Docker
         uses: docker/metadata-action@v3
         with:
@@ -71,7 +67,7 @@ jobs:
           bash samples/ccbin/start.sh jdk17
 
 #  release_for_jdk8:
-#    needs: ci_test
+#    needs: build_and_test
 #    runs-on: ubuntu-latest
 #    steps:
 #      - uses: actions/checkout@v3
@@ -94,7 +90,7 @@ jobs:
 #          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
 #          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 #  release_for_jdk17:
-#    needs: ci_test
+#    needs: build_and_test
 #    runs-on: ubuntu-latest
 #    steps:
 #      - uses: actions/checkout@v3
