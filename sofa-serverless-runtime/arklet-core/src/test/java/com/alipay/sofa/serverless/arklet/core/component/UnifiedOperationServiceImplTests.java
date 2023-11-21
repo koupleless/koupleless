@@ -56,7 +56,7 @@ public class UnifiedOperationServiceImplTests {
     private UnifiedOperationServiceImpl unifiedOperationService;
 
     @Spy
-    private CombineInstallHelper combineInstallHelper;
+    private CombineInstallHelper        combineInstallHelper;
 
     @Before
     public void setUp() {

@@ -54,9 +54,9 @@ public class ApplicationContextEventListenerTest {
     private ApplicationContextEventListener arkletApplicationListener;
 
     @Mock
-    private UnifiedOperationService operationService;
+    private UnifiedOperationService         operationService;
 
-    MockedStatic<ArkletComponentRegistry> componentRegistryMockedStatic = null;
+    MockedStatic<ArkletComponentRegistry>   componentRegistryMockedStatic = null;
 
     @Before
     public void beforeTest() {
