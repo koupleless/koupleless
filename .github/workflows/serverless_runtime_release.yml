@@ -41,7 +41,7 @@ jobs:
         run: |
           sudo apt-get update >>/tmp/envprepare.out
           sudo apt-get install -y expect >>/tmp/envprepare.out
-          docker pull mongo:7.0.2-jammy
+          docker pull mongo:7.0.2-jammy 
           docker run --name mongodb -d -p 27017:27017 -v /home/runner/work/data:/data/db mongo:7.0.2-jammy
           docker pull zookeeper:3.9.0
           docker run -p 2181:2181 -it --name zookeeper --restart always -d zookeeper:3.9.0
@@ -54,7 +54,11 @@ jobs:
           set -e
           bash samples/ccbin/start.sh jdk8
 
+<<<<<<< HEAD
       - name: Set up JDK 17
+=======
+      - name: Set up JDK 8
+>>>>>>> 408ae8a161e6d054439565e243071e7fed35b592
         uses: actions/setup-java@v3
         with:
           java-version: '17'
