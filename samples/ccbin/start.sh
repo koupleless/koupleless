@@ -30,7 +30,7 @@ if [[ $testSuite == "jdk8" ]];then
   suiteReg="*[^3|^dubbo]-samples"
 else
 #  suiteReg="*[3|dubbo]-samples"
-    suiteReg="*[3]-samples"
+  suiteReg="*[3]-samples"
 
 fi
 #测试路径
