@@ -42,7 +42,7 @@ jobs:
           sudo apt-get update >>/tmp/envprepare.out
           sudo apt-get install -y expect >>/tmp/envprepare.out
           docker pull mongo:7.0.2-jammy
-          docker run --name mongodb -d -p 27017:27017 -v $(pwd)/data:/data/db mongo:7.0.2-jammy
+          docker run --name mongodb -d -p 27017:27017 -v /home/runner/work/data:/data/db mongo:7.0.2-jammy
           docker pull zookeeper:3.9.0
           docker run -p 2181:2181 -it --name zookeeper --restart always -d zookeeper:3.9.0
           sudo apt-get install redis-server -y
@@ -54,7 +54,7 @@ jobs:
           set -e
           bash samples/ccbin/start.sh jdk8
 
-      - name: Set up JDK 8
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
