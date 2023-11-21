@@ -61,6 +61,21 @@ function module_biz_install_test() {
 EOF
 }
 
+function arkctl_module_biz_install_test() {
+  bizName=$1
+  bizDir=$2
+  arkctl deploy $bizDir
+  arkStatus=$(arkctl status)
+  # 提取数据部分
+  data=$(echo $arkStatus | awk -F "QueryAllBiz " '{print $2}')
+  # 校验状态
+  if echo $data | grep -q "\"bizName\":\"$bizName\",\"bizState\":\"ACTIVATED\""; then
+      echo "biz $bizName install success"
+  else
+      echo "biz $bizName install failed：$arkStatus"
+      exit 1
+  fi
+}
 
 set -e
 #测试路径
@@ -83,14 +98,14 @@ for moduleBootDir in $(find $(pwd) -type d -path "*/biz[1-9]"  -o -path "*/*biz"
     fi
     echo "find one module:$moduleName, jar:$moduleJar"
     echo ''>test_output.txt
-    module_biz_install_test ${moduleName} $moduleJar
-    echo "start check module install result "
-    cat test_output.txt|while read line;do
-      if [[ $line =~ "failed" ]];then
-          echo "module install fail:$line"
-          exit 1
-      fi
-    done
+    arkctl_module_biz_install_test ${moduleName} $moduleJar
+#    echo "start check module install result "
+#    cat test_output.txt|while read line;do
+#      if [[ $line =~ "failed" ]];then
+#          echo "module install fail:$line"
+#          exit 1
+#      fi
+#    done
   done
   echo "$BaseDir 测试完成！"
 done
