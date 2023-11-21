@@ -78,7 +78,8 @@
 
     <scm>
         <connection>scm:git:git://github.com/sofastack/sofa-serverless.git</connection>
-        <developerConnection>scm:git:ssh://github.com/sofastack/sofa-serverless.git</developerConnection>
+        <developerConnection>scm:git:ssh://github.com/sofastack/sofa-serverless.git
+        </developerConnection>
         <url>http://github.com/sofastack/sofa-serverless/tree/master</url>
     </scm>
 
@@ -176,6 +177,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <version>${spring.boot.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -434,28 +436,28 @@
                             <goal>report-aggregate</goal>
                         </goals>
                     </execution>
-<!--                    如果需要本地验证覆盖率是否通过，可以解注释掉这段，注意这里检测每个bundle的行覆盖率     -->
-<!--                    <execution>-->
-<!--                        <id>jacoco-check</id>-->
-<!--                        <phase>test</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>check</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <rules>-->
-<!--                                <rule>-->
-<!--                                    <element>BUNDLE</element>-->
-<!--                                    <limits>-->
-<!--                                        <limit>-->
-<!--                                            <counter>LINE</counter>-->
-<!--                                            <value>COVEREDRATIO</value>-->
-<!--                                            <minimum>0.80</minimum>-->
-<!--                                        </limit>-->
-<!--                                    </limits>-->
-<!--                                </rule>-->
-<!--                            </rules>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
+                    <!--                    如果需要本地验证覆盖率是否通过，可以解注释掉这段，注意这里检测每个bundle的行覆盖率     -->
+                    <!--                    <execution>-->
+                    <!--                        <id>jacoco-check</id>-->
+                    <!--                        <phase>test</phase>-->
+                    <!--                        <goals>-->
+                    <!--                            <goal>check</goal>-->
+                    <!--                        </goals>-->
+                    <!--                        <configuration>-->
+                    <!--                            <rules>-->
+                    <!--                                <rule>-->
+                    <!--                                    <element>BUNDLE</element>-->
+                    <!--                                    <limits>-->
+                    <!--                                        <limit>-->
+                    <!--                                            <counter>LINE</counter>-->
+                    <!--                                            <value>COVEREDRATIO</value>-->
+                    <!--                                            <minimum>0.80</minimum>-->
+                    <!--                                        </limit>-->
+                    <!--                                    </limits>-->
+                    <!--                                </rule>-->
+                    <!--                            </rules>-->
+                    <!--                        </configuration>-->
+                    <!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -480,12 +482,12 @@
 
 
     <profiles>
-    <!--
-        jdk17 打出来的 snapshot 版本
-        举例：
-        打出来的包为  0.5.3-jdk17-SNAPSHOT
-        使用sofa-ark的包  3.0.0
-    -->
+        <!--
+            jdk17 打出来的 snapshot 版本
+            举例：
+            打出来的包为  0.5.3-jdk17-SNAPSHOT
+            使用sofa-ark的包  3.0.0
+        -->
         <profile>
             <id>17-snapshot</id>
             <properties>
@@ -495,12 +497,12 @@
                 <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
         </profile>
-    <!--
-        jdk17 打出来的 release 版本
-        举例：
-        打出来的包为  0.5.3-jdk17
-        使用sofa-ark的包  3.0.0
-    -->
+        <!--
+            jdk17 打出来的 release 版本
+            举例：
+            打出来的包为  0.5.3-jdk17
+            使用sofa-ark的包  3.0.0
+        -->
         <profile>
             <id>17-release</id>
             <properties>
@@ -511,13 +513,13 @@
             </properties>
         </profile>
 
-    <!--
-        jdk8 打出来的 snapshot 版本
-        举例：
-        打出来的包为  0.5.3-SNAPSHOT
-        使用sofa-ark的包  2.2.4
-        使用sofa-ark starter 的包  2.2.4
-    -->
+        <!--
+            jdk8 打出来的 snapshot 版本
+            举例：
+            打出来的包为  0.5.3-SNAPSHOT
+            使用sofa-ark的包  2.2.4
+            使用sofa-ark starter 的包  2.2.4
+        -->
         <profile>
             <id>8-snapshot</id>
             <properties>
@@ -528,13 +530,13 @@
             </properties>
         </profile>
 
-    <!--
-        jdk8 打出来的 release 版本
-        举例：
-        打出来的包为  0.5.3
-        使用sofa-ark的包  2.2.4
-        使用sofa-ark starter 的包  2.2.4
-    -->
+        <!--
+            jdk8 打出来的 release 版本
+            举例：
+            打出来的包为  0.5.3
+            使用sofa-ark的包  2.2.4
+            使用sofa-ark starter 的包  2.2.4
+        -->
         <profile>
             <id>8-release</id>
             <properties>
@@ -690,8 +692,8 @@
             <properties>
                 <logback.core>1.2.9</logback.core>
                 <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
-                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
             </properties>
             <repositories>
                 <repository>

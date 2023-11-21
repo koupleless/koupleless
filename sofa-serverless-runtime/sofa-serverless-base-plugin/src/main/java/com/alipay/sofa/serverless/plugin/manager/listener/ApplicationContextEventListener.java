@@ -16,6 +16,7 @@
  */
 package com.alipay.sofa.serverless.plugin.manager.listener;
 
+import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
@@ -30,6 +31,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -59,7 +61,11 @@ public class ApplicationContextEventListener implements
         CombineInstallResponse combineInstallResponse = operationServiceInstance
             .combineInstall(CombineInstallRequest.builder().bizDirAbsolutePath(absolutePath)
                 .build());
-        LOGGER.info("combine deploy result:{}", combineInstallResponse);
+        for (Map.Entry<String, ClientResponse> entry : combineInstallResponse.getBizUrlToResponse()
+            .entrySet()) {
+            LOGGER.info("{}, {}, {}, CombineDeployResult", entry.getKey(), entry.getValue()
+                .getCode().toString(), entry.getValue().getMessage());
+        }
         isCombinedDeployed.set(true);
         Preconditions.checkState(combineInstallResponse.getCode() == ResponseCode.SUCCESS,
             "combine deploy failed!");

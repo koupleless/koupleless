@@ -12,7 +12,7 @@ public class SampleController {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/foo", method = RequestMethod.GET)
     public String hello() {
         String appName = applicationContext.getApplicationName();
         return String.format("hello to %s deploy", appName);
