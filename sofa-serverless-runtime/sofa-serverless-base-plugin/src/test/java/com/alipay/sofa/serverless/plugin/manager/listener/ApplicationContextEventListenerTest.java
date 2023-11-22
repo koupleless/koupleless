@@ -61,13 +61,13 @@ public class ApplicationContextEventListenerTest {
     @Before
     public void beforeTest() {
         componentRegistryMockedStatic = mockStatic(ArkletComponentRegistry.class);
-        System.setProperty("deploy.combine.biz.dir.absolute.path", "/path/to/dir");
+        System.setProperty("sofa.ark.deploy.combine.biz.dir.absolute", "/path/to/dir");
     }
 
     @After
     public void afterTest() {
         componentRegistryMockedStatic.close();
-        System.clearProperty("deploy.combine.biz.dir.absolute.path");
+        System.clearProperty("sofa.ark.deploy.combine.biz.dir.absolute");
     }
 
     @SneakyThrows

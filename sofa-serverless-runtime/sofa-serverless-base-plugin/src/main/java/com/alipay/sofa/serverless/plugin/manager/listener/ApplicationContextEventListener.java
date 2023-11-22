@@ -50,7 +50,7 @@ public class ApplicationContextEventListener implements
 
     @SneakyThrows
     public void combineDeployFromLocalDir() {
-        String absolutePath = System.getProperty("deploy.combine.biz.dir.absolute.path");
+        String absolutePath = System.getProperty("sofa.ark.deploy.combine.biz.dir.absolute");
         if (StringUtils.isBlank(absolutePath) || isCombinedDeployed.get()) {
             return;
         }
