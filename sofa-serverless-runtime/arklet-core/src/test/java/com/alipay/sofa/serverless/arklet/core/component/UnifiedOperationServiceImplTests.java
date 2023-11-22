@@ -22,29 +22,21 @@ import com.alipay.sofa.ark.spi.model.BizOperation;
 import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
 import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
 import com.alipay.sofa.serverless.arklet.core.ops.CombineInstallHelper;
+import com.alipay.sofa.serverless.arklet.core.ops.CombineInstallHelperTest;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationServiceImpl;
-import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 
 /**
@@ -58,7 +50,7 @@ public class UnifiedOperationServiceImplTests {
     private UnifiedOperationServiceImpl unifiedOperationService;
 
     @Spy
-    private CombineInstallHelper        combineInstallHelper;
+    private CombineInstallHelper combineInstallHelper;
 
     @Before
     public void setUp() {
@@ -140,15 +132,15 @@ public class UnifiedOperationServiceImplTests {
         }
 
         CombineInstallResponse response = unifiedOperationService
-            .combineInstall(CombineInstallRequest.builder().bizDirAbsolutePath("/path/to/biz")
-                .build());
+                .combineInstall(CombineInstallRequest.builder().bizDirAbsolutePath("/path/to/biz")
+                        .build());
 
         Assert.assertTrue(response.getBizUrlToResponse().
 
-        containsKey("/file/a-biz.jar"));
+                containsKey("/file/a-biz.jar"));
         Assert.assertTrue(response.getBizUrlToResponse().
 
-        containsKey("/file/b-biz.jar"));
+                containsKey("/file/b-biz.jar"));
 
     }
 }
