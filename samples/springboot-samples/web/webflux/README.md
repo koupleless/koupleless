@@ -17,7 +17,7 @@
 
 ## 实验应用
 ### base
-base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
+base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖，注意 ⚠️ netty-ark-plugin 版本要求 >= 2.2.5
 ```xml
 
 <!-- begin sofa-serverless相关依赖 -->
@@ -38,6 +38,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 <dependency>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>netty-ark-plugin</artifactId>
+    <!-- netty-ark-plugin 版本要求 >= 2.2.5 -->
     <version>${sofa.ark.version}</version>
 </dependency>
 <!-- end netty 单 host 部署的依赖 -->
