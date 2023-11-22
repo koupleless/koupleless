@@ -64,7 +64,7 @@ biz1 包含两个打包插件，一个常规 springboot 插件, 构建普通 spr
     <plugin>
         <groupId>com.alipay.sofa</groupId>
         <artifactId>sofa-ark-maven-plugin</artifactId>
-        <version>2.2.4-SNAPSHOT</version>
+        <version>${sofa.ark.version}</version>
         <executions>
             <execution>
                 <id>default-cli</id>

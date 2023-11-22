@@ -11,7 +11,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-base-starter</artifactId>
     <!-- 以上版本支持springboot3 -->
-    <version>0.5.2-jdk17-SNAPSHOT</version>
+    <version>0.5.4-jdk17</version>
 </dependency>
 <!-- end 动态模块相关依赖 -->
 
@@ -24,19 +24,6 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
         <exclusion>
             <groupId>com.alipay.sofa</groupId>
             <artifactId>log-sofa-boot-starter</artifactId>
-        </exclusion>
-    </exclusions>
-</dependency>
-<dependency>
-<!-- 增加适配 springboot3 的 log-sofa-boot-starter 版本 -->
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>log-sofa-boot-starter</artifactId>
-    <version>999-not-exist</version>
-    <exclusions>
-        <!-- 排除 sofa-boot-alipay-autoconfigure -->
-        <exclusion>
-            <groupId>com.alipay.sofa</groupId>
-            <artifactId>sofa-boot-alipay-autoconfigure</artifactId>
         </exclusion>
     </exclusions>
 </dependency>
@@ -91,7 +78,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
-    <version>2.2.4-SNAPSHOT</version>
+    <version>2.2.4</version>
     <executions>
         <execution>
             <id>default-cli</id>
