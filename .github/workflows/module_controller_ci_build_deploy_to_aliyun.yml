@@ -109,6 +109,14 @@ jobs:
 
       - run: sleep 10
 
+      - name: get pod
+        run: |
+          kubectl get pod
+
+      - name: describe pod
+        run: |
+          kubectl describe pod
+
       - name: wait base pod available
         run: |
           kubectl wait --for=condition=available deployment/dynamic-stock-deployment --timeout=300s
