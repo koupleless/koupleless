@@ -16,6 +16,7 @@
  */
 package com.alipay.sofa.serverless.plugin.manager.listener;
 
+import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
@@ -80,6 +81,9 @@ public class ApplicationContextEventListenerTest {
                     bizUrlToResponse(new HashMap<>()).
                     build();
 
+            response.getBizUrlToResponse().put("foo", new ClientResponse());
+            response.getBizUrlToResponse().get("foo").setCode(ResponseCode.SUCCESS);
+
             doReturn(response).when(operationService).combineInstall(CombineInstallRequest.builder().
                     bizDirAbsolutePath("/path/to/dir").
                     build());
@@ -92,6 +96,25 @@ public class ApplicationContextEventListenerTest {
 
         {
             verify(operationService, times(1)).combineInstall(any(CombineInstallRequest.class));
+        }
+
+    }
+
+    @SneakyThrows
+    @Test
+    public void testCombineDeployFromLocalDir_Skip() {
+        ContextRefreshedEvent event = null;
+        {
+            event = mock(ContextRefreshedEvent.class);
+            ApplicationContext mockdcontext = mock(ApplicationContext.class);
+            doReturn(mockdcontext).when(event).getApplicationContext();
+            doReturn(mockdcontext).when(mockdcontext).getParent();
+        }
+
+        arkletApplicationListener.onApplicationEvent(event);
+
+        {
+            verify(operationService, never()).combineInstall(any(CombineInstallRequest.class));
         }
 
     }
