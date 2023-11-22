@@ -102,11 +102,17 @@ jobs:
         run: |
           kubectl describe pod
 
+      - name: delete base pod
+        run: |
+          kubectl delete pod deployment/dynamic-stock-deployment
+
+      - run: sleep 10
+
       - name: wait base pod available
         run: |
           kubectl wait --for=condition=available deployment/dynamic-stock-deployment --timeout=300s
 
-      - name: get module controller pod available
+      - name: wait module controller pod available
         run: |
           kubectl wait --for=condition=available deployment/module-controller --timeout=300s
 
