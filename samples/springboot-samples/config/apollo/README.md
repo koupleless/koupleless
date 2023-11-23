@@ -23,7 +23,7 @@ System.setProperty("env", "DEV");
 3. pom 里引入 apollo 依赖
 
 4. 模块代码里添加 apollo 多应用治理类 `com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer`， 注意基座里不要引入
-引入覆盖 apollo 原有逻辑的治理类，与原生的类实现的区别在于如下一行，基座与模块都需要引入 `com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer`
+引入覆盖 apollo 原有逻辑的治理类，与原生的类实现的区别在于如下一行
 ![diff.png](imgs/diff.png)
 5. 模块里添加 apollo 配置文件 `/META-INF/app.properties`
 由于注释了 initializeSystemProperty 方法，导致无法通过 application.properties 对 apollo 进行配置， 初始化 `app.id`。所以模块里需要使用 `/META-INF/app.properties` 进行配置。
