@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author gouzhendong.gzd
  * @version $Id: ApplicationContextEventListener, v 0.1 2023-11-21 11:26 gouzhendong.gzd Exp $
  */
-public class ApplicationContextEventListener implements
+public class StaticBatchInstallEventListener implements
                                             ApplicationListener<ApplicationContextEvent> {
 
     private static ArkletLogger LOGGER             = ArkletLoggerFactory.getDefaultLogger();

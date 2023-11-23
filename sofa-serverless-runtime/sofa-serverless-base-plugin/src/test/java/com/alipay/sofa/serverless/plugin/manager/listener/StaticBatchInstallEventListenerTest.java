@@ -46,10 +46,10 @@ import static org.mockito.Mockito.times;
  * @version $Id: ApplicationContextEventListenerTest, v 0.1 2023-11-21 11:32 gouzhendong.gzd Exp $
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationContextEventListenerTest {
+public class StaticBatchInstallEventListenerTest {
 
     @InjectMocks
-    private ApplicationContextEventListener arkletApplicationListener;
+    private StaticBatchInstallEventListener arkletApplicationListener;
 
     @Mock
     private UnifiedOperationService         operationService;
