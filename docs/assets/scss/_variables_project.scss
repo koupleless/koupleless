@@ -204,6 +204,66 @@ header > nav.td-navbar {
     }
   }
 
+  .pagefind-ui {
+
+    .pagefind-ui__search-input {
+
+      width: 225px;
+      height: 36px;
+      line-height: 36px;
+      padding-left: 32px;
+      margin-right: 20px;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: normal;
+
+      &:focus {
+        opacity: 0.95;
+        background: white;
+        color: black;
+      }
+    }
+
+    .pagefind-ui__form:before {
+      top: 11px;
+      left: 12px;
+    }
+
+    .pagefind-ui__drawer {
+      position: absolute;
+      z-index: 9999;
+      top: 37px;
+      left: -500px;
+      right: 19px;
+      max-height: 650px;
+      background-color: rgb(255, 255, 255);
+      border: 1px solid lightgray;
+      border-radius: 5px;
+      overflow-y: scroll;
+      padding: 0 12px 8px 12px;
+    }
+
+    .pagefind-ui__search-clear {
+      top: 0px;
+      right: 20px;
+      height: 36px;
+      line-height: 36px;
+      background: transparent;
+    }
+
+    .pagefind-ui__results-area {
+      margin-top: 0;
+    }
+
+    .pagefind-ui__button {
+      margin-top: 10px;
+      &:hover, &:focus {
+        border-color: lightgray;
+      }
+    }
+  }
+
   div.d-none.d-lg-block {
 
     &:before {
@@ -218,9 +278,11 @@ header > nav.td-navbar {
     .td-search__icon {
 
       left: 12px;
+      display: none !important;
 
       &:before {
         content: url(/img/search.svg);
+        display: none !important;
       }
     }
 
@@ -233,6 +295,7 @@ header > nav.td-navbar {
       border: 1px solid rgba(255,255,255,0.25);
       border-radius: 8px;
       font-size: 14px;
+      display: none !important;
 
       &:focus {
         opacity: 0.95;
@@ -255,7 +318,7 @@ footer.td-footer.row.d-print-none {
   padding: 0px;
   border-top: 1px solid rgba(255,255,255,0.08);
   background: rgb(16, 21, 28) !important;
-  z-index: 1000;
+  z-index: 1;
 
   > .container-fluid > .row {
 

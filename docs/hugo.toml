@@ -97,6 +97,8 @@ section = ["HTML", "print"]
 
 [params]
 copyright = "SOFAServerless 开源社区"
+customcss = ["/search/pagefind-ui.css"]
+customjs = ["/search/pagefind-ui.js", "/js/init.js"]
 
 # First one is picked as the Twitter card image if not set on page.
 # images = ["images/project-illustration.png"]
@@ -138,7 +140,7 @@ gcs_engine_id = "d72aa9b2712488cc3"
 algolia_docsearch = false
 
 # Enable Lunr.js offline search
-offlineSearch = true
+offlineSearch = false
 
 # Enable syntax highlighting and copy buttons on code blocks with Prism
 prism_syntax_highlighting = true
@@ -211,9 +213,6 @@ no = '很抱歉文档对您没帮助。邀请您<a href="https://github.com/sofa
 #  desc = "Discuss development issues around the project"
 
 # hugo module configuration
-
-
-
 [module]
   # uncomment line below for temporary local development of module
   # replacements = "github.com/google/docsy -> ../../docsy"
