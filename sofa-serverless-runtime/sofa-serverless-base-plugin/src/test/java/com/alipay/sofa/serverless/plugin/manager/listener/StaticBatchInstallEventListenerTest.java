@@ -70,7 +70,7 @@ public class StaticBatchInstallEventListenerTest {
 
     @SneakyThrows
     @Test
-    public void testCombineDeployFromLocalDir() {
+    public void testBatchDeployFromLocalDir() {
         BatchInstallResponse response = null;
         ContextRefreshedEvent event = null;
         {
@@ -102,7 +102,7 @@ public class StaticBatchInstallEventListenerTest {
 
     @SneakyThrows
     @Test
-    public void testCombineDeployFromLocalDir_Skip() {
+    public void testBatchDeployFromLocalDir_Skip() {
         ContextRefreshedEvent event = null;
         {
             event = mock(ContextRefreshedEvent.class);

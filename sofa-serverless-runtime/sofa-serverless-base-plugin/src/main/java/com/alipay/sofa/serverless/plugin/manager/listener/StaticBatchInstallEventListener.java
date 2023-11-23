@@ -46,12 +46,12 @@ public class StaticBatchInstallEventListener implements
     private static ArkletLogger LOGGER             = ArkletLoggerFactory.getDefaultLogger();
 
     // 合并部署是否已经完成，防止重复执行。
-    private AtomicBoolean       isCombinedDeployed = new AtomicBoolean(false);
+    private AtomicBoolean       isBatchdDeployed = new AtomicBoolean(false);
 
     @SneakyThrows
     public void batchDeployFromLocalDir() {
         String absolutePath = System.getProperty("com.alipay.sofa.ark.static.biz.dir");
-        if (StringUtils.isBlank(absolutePath) || isCombinedDeployed.get()) {
+        if (StringUtils.isBlank(absolutePath) || isBatchdDeployed.get()) {
             return;
         }
         LOGGER.info("start to batch deploy from local dir:{}", absolutePath);
@@ -62,10 +62,10 @@ public class StaticBatchInstallEventListener implements
             .batchInstall(BatchInstallRequest.builder().bizDirAbsolutePath(absolutePath).build());
         for (Map.Entry<String, ClientResponse> entry : batchInstallResponse.getBizUrlToResponse()
             .entrySet()) {
-            LOGGER.info("{}, {}, {}, CombineDeployResult", entry.getKey(), entry.getValue()
+            LOGGER.info("{}, {}, {}, BatchDeployResult", entry.getKey(), entry.getValue()
                 .getCode().toString(), entry.getValue().getMessage());
         }
-        isCombinedDeployed.set(true);
+        isBatchdDeployed.set(true);
         Preconditions.checkState(batchInstallResponse.getCode() == ResponseCode.SUCCESS,
             "batch deploy failed!");
     }
