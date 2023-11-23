@@ -1,5 +1,6 @@
 ---
-title: 静态合并部署 weight: 700
+title: 静态合并部署 
+weight: 700
 ---
 
 ## 介绍
