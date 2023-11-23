@@ -173,7 +173,7 @@ jobs:
           kubectl exec -it $podname -- sh -c 'ls -al'
           kubectl exec -it $podname -- sh -c 'ls -al ~/'
           kubectl exec -it $podname -- sh -c 'ls -al ~/logs'
-          kubectl exec -it $podname -- sh -c 'ls -al ~/logs/sofa-ark/sofa-ark'
+          kubectl exec -it $podname -- sh -c 'ls -al ~/logs/sofa-ark'
           kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log'
 
       - name: scaledown module
