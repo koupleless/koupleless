@@ -26,9 +26,9 @@ spec:
   template:
     spec:
       module:
-        name: dynamic-provider
-        version: '1.0.0'
-        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar
+        name: provider
+        version: '1.0.2'
+        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
   replicas: 2
   operationStrategy:  # 此处可自定义发布运维策略
     upgradePolicy: installThenUninstall
