@@ -5,7 +5,7 @@ title: 静态合并部署 weight: 700
 ## 介绍
 
 SOFAArk 提供了静态合并部署能力，在开发阶段，应用可以将其他应用构建成的 **Biz 包（模块应用)**，并被最终的 **Base 包（基座应用）** 加载。
-不需要考虑相互之间依赖冲突问题，Biz 之间则通过 @SofaService 和 @SofaReference 发布/引用 JVM 服务（_SOFABoot，SpringBoot 还在建设中_
+用户可以把 Biz 包统一放置在某个目录中，然后通过启动参数告知基座扫描这个目录，以此完成静态合并部署（详情见下描述）。如此，开发不需要考虑相互之间依赖冲突问题，Biz 之间则通过 @SofaService 和 @SofaReference 发布/引用 JVM 服务（_SOFABoot，SpringBoot 还在建设中_
 ）进行交互。
 
 ## 步骤 1：模块应用打包成 Ark Biz

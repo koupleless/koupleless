@@ -141,7 +141,10 @@ curl http://localhost:8080/order2
 
 1. cd 到 static-deploy-samples 目录下。
 2. 执行 run_static_deploy_on_unix_like.sh 脚本。
-3. 观测日志。
+   1. 构建 web/tomcat 项目。
+   2. 把 biz1 和 biz2 的构建产物移动到 ./biz 目录下。
+   3. 在基座启动时扫描该上述目录，完成静态合并部署。
+3. 观测日志，进行验证。
 
 观测到如下关键日志，代表静态合并部署开始了：
 

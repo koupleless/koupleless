@@ -49,12 +49,12 @@ public class ApplicationContextEventListener implements
     private AtomicBoolean       isCombinedDeployed = new AtomicBoolean(false);
 
     @SneakyThrows
-    public void combineDeployFromLocalDir() {
+    public void batchDeployFromLocalDir() {
         String absolutePath = System.getProperty("com.alipay.sofa.ark.static.biz.dir");
         if (StringUtils.isBlank(absolutePath) || isCombinedDeployed.get()) {
             return;
         }
-        LOGGER.info("start to combine deploy from local dir:{}", absolutePath);
+        LOGGER.info("start to batch deploy from local dir:{}", absolutePath);
         UnifiedOperationService operationServiceInstance = ArkletComponentRegistry
             .getOperationServiceInstance();
 
@@ -67,7 +67,7 @@ public class ApplicationContextEventListener implements
         }
         isCombinedDeployed.set(true);
         Preconditions.checkState(batchInstallResponse.getCode() == ResponseCode.SUCCESS,
-            "combine deploy failed!");
+            "batch deploy failed!");
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ApplicationContextEventListener implements
 
         // 基座应用启动完成后，执行合并部署。
         if (event instanceof ContextRefreshedEvent) {
-            combineDeployFromLocalDir();
+            batchDeployFromLocalDir();
         }
     }
 }
