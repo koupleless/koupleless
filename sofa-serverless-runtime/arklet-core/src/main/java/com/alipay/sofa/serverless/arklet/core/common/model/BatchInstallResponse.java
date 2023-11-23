@@ -28,13 +28,13 @@ import java.util.Map;
 /**
  * 合并部署响应。
  * @author gouzhendong.gzd
- * @version $Id: CombineInstallResponse, v 0.1 2023-11-20 15:19 gouzhendong.gzd Exp $
+ * @version $Id: BatchInstallResponse, v 0.1 2023-11-20 15:19 gouzhendong.gzd Exp $
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class CombineInstallResponse {
+public class BatchInstallResponse {
     /**
      * 响应码。
      */

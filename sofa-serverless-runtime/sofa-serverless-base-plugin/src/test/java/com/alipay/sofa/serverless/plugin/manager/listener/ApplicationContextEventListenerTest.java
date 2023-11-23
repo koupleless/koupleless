@@ -19,8 +19,8 @@ package com.alipay.sofa.serverless.plugin.manager.listener;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallRequest;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallResponse;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
 import lombok.SneakyThrows;
 import org.junit.After;
@@ -59,24 +59,24 @@ public class ApplicationContextEventListenerTest {
     @Before
     public void beforeTest() {
         componentRegistryMockedStatic = mockStatic(ArkletComponentRegistry.class);
-        System.setProperty("sofa.ark.deploy.combine.biz.dir.absolute", "/path/to/dir");
+        System.setProperty("com.alipay.sofa.ark.static.biz.dir", "/path/to/dir");
     }
 
     @After
     public void afterTest() {
         componentRegistryMockedStatic.close();
-        System.clearProperty("sofa.ark.deploy.combine.biz.dir.absolute");
+        System.clearProperty("com.alipay.sofa.ark.static.biz.dir");
     }
 
     @SneakyThrows
     @Test
     public void testCombineDeployFromLocalDir() {
-        CombineInstallResponse response = null;
+        BatchInstallResponse response = null;
         ContextRefreshedEvent event = null;
         {
             componentRegistryMockedStatic.when(ArkletComponentRegistry::getOperationServiceInstance).thenReturn(operationService);
 
-            response = CombineInstallResponse.builder().
+            response = BatchInstallResponse.builder().
                     code(ResponseCode.SUCCESS).
                     bizUrlToResponse(new HashMap<>()).
                     build();
@@ -84,7 +84,7 @@ public class ApplicationContextEventListenerTest {
             response.getBizUrlToResponse().put("foo", new ClientResponse());
             response.getBizUrlToResponse().get("foo").setCode(ResponseCode.SUCCESS);
 
-            doReturn(response).when(operationService).combineInstall(CombineInstallRequest.builder().
+            doReturn(response).when(operationService).batchInstall(BatchInstallRequest.builder().
                     bizDirAbsolutePath("/path/to/dir").
                     build());
 
@@ -95,7 +95,7 @@ public class ApplicationContextEventListenerTest {
         arkletApplicationListener.onApplicationEvent(event);
 
         {
-            verify(operationService, times(1)).combineInstall(any(CombineInstallRequest.class));
+            verify(operationService, times(1)).batchInstall(any(BatchInstallRequest.class));
         }
 
     }
@@ -114,7 +114,7 @@ public class ApplicationContextEventListenerTest {
         arkletApplicationListener.onApplicationEvent(event);
 
         {
-            verify(operationService, never()).combineInstall(any(CombineInstallRequest.class));
+            verify(operationService, never()).batchInstall(any(BatchInstallRequest.class));
         }
 
     }

@@ -16,7 +16,6 @@
  */
 package com.alipay.sofa.serverless.arklet.core.ops;
 
-import com.alipay.sofa.ark.spi.constant.Constants;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
 import com.google.common.base.Preconditions;
@@ -33,9 +32,9 @@ import java.util.jar.Manifest;
 /**
  * 合并部署帮助类。
  * @author gouzhendong.gzd
- * @version $Id: CombineInstallService, v 0.1 2023-11-20 15:35 gouzhendong.gzd Exp $
+ * @version $Id: BatchInstallService, v 0.1 2023-11-20 15:35 gouzhendong.gzd Exp $
  */
-public class CombineInstallHelper {
+public class BatchInstallHelper {
 
     private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
 
@@ -46,7 +45,8 @@ public class CombineInstallHelper {
      * @return 是否是 biz jar 文件。
      */
     public boolean isBizJarFile(Path path) {
-        return path.toString().endsWith("-biz.jar");
+        Map<Object, Object> attributes = getMainAttributes(path.toString());
+        return attributes.containsKey("Ark-Biz-Name");
     }
 
     @SneakyThrows

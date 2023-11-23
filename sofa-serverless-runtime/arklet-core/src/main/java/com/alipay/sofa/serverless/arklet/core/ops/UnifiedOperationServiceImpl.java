@@ -30,8 +30,8 @@ import com.alipay.sofa.ark.spi.constant.Constants;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizOperation;
 import com.alipay.sofa.serverless.arklet.core.command.executor.ExecutorServiceManager;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallRequest;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallResponse;
 import com.google.inject.Singleton;
 
 /**
@@ -41,7 +41,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class UnifiedOperationServiceImpl implements UnifiedOperationService {
 
-    private CombineInstallHelper combineInstallHelper = new CombineInstallHelper();
+    private BatchInstallHelper batchInstallHelper = new BatchInstallHelper();
 
     @Override
     public void init() {
@@ -61,13 +61,13 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
         return ArkClient.installOperation(bizOperation);
     }
 
-    public ClientResponse safeCombineInstall(String bizUrl) {
+    public ClientResponse safeBatchInstall(String bizUrl) {
         try {
             BizOperation bizOperation = new BizOperation()
                 .setOperationType(BizOperation.OperationType.INSTALL);
 
             bizOperation.putParameter(Constants.CONFIG_BIZ_URL, "file://" + bizUrl);
-            Map<Object, Object> mainAttributes = combineInstallHelper.getMainAttributes(bizUrl);
+            Map<Object, Object> mainAttributes = batchInstallHelper.getMainAttributes(bizUrl);
             bizOperation.setBizName((String) mainAttributes.get(Constants.ARK_BIZ_NAME));
             bizOperation.setBizVersion((String) mainAttributes.get(Constants.ARK_BIZ_VERSION));
             return ArkClient.installOperation(bizOperation);
@@ -84,13 +84,13 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     }
 
     @Override
-    public CombineInstallResponse combineInstall(CombineInstallRequest request) throws Throwable {
-        List<String> bizUrls = combineInstallHelper.getBizUrlsFromLocalFileSystem(request.getBizDirAbsolutePath());
+    public BatchInstallResponse batchInstall(BatchInstallRequest request) throws Throwable {
+        List<String> bizUrls = batchInstallHelper.getBizUrlsFromLocalFileSystem(request.getBizDirAbsolutePath());
         ThreadPoolExecutor executorService = ExecutorServiceManager.getArkBizOpsExecutor();
         List<CompletableFuture<ClientResponse>> futures = new ArrayList<>();
 
         for (String bizUrl : bizUrls) {
-            futures.add(CompletableFuture.supplyAsync(() -> safeCombineInstall(bizUrl), executorService));
+            futures.add(CompletableFuture.supplyAsync(() -> safeBatchInstall(bizUrl), executorService));
         }
 
         // wait for all install futures done
@@ -108,7 +108,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
             counter++;
         }
 
-        return CombineInstallResponse.builder().
+        return BatchInstallResponse.builder().
                 code(hasFailed ? ResponseCode.FAILED : ResponseCode.SUCCESS).
                 message(hasFailed ? "combine install failed" : "combine install success").
                 bizUrlToResponse(bizUrlToInstallResult).

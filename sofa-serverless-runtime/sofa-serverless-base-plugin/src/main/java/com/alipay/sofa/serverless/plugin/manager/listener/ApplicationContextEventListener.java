@@ -21,8 +21,8 @@ import com.alipay.sofa.ark.api.ResponseCode;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallRequest;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallResponse;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
@@ -50,7 +50,7 @@ public class ApplicationContextEventListener implements
 
     @SneakyThrows
     public void combineDeployFromLocalDir() {
-        String absolutePath = System.getProperty("sofa.ark.deploy.combine.biz.dir.absolute");
+        String absolutePath = System.getProperty("com.alipay.sofa.ark.static.biz.dir");
         if (StringUtils.isBlank(absolutePath) || isCombinedDeployed.get()) {
             return;
         }
@@ -58,16 +58,16 @@ public class ApplicationContextEventListener implements
         UnifiedOperationService operationServiceInstance = ArkletComponentRegistry
             .getOperationServiceInstance();
 
-        CombineInstallResponse combineInstallResponse = operationServiceInstance
-            .combineInstall(CombineInstallRequest.builder().bizDirAbsolutePath(absolutePath)
+        BatchInstallResponse batchInstallResponse = operationServiceInstance
+            .batchInstall(BatchInstallRequest.builder().bizDirAbsolutePath(absolutePath)
                 .build());
-        for (Map.Entry<String, ClientResponse> entry : combineInstallResponse.getBizUrlToResponse()
+        for (Map.Entry<String, ClientResponse> entry : batchInstallResponse.getBizUrlToResponse()
             .entrySet()) {
             LOGGER.info("{}, {}, {}, CombineDeployResult", entry.getKey(), entry.getValue()
                 .getCode().toString(), entry.getValue().getMessage());
         }
         isCombinedDeployed.set(true);
-        Preconditions.checkState(combineInstallResponse.getCode() == ResponseCode.SUCCESS,
+        Preconditions.checkState(batchInstallResponse.getCode() == ResponseCode.SUCCESS,
             "combine deploy failed!");
     }
 

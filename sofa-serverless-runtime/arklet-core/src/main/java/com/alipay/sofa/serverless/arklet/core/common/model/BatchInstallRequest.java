@@ -24,19 +24,13 @@ import lombok.NoArgsConstructor;
 /**
  * 合并部署请求。
  * @author gouzhendong.gzd
- * @version $Id: CombineInstallRequest, v 0.1 2023-11-20 15:21 gouzhendong.gzd Exp $
+ * @version $Id: BatchInstallRequest, v 0.1 2023-11-20 15:21 gouzhendong.gzd Exp $
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class CombineInstallRequest {
-    /**
-     * 合并部署类型。
-     *    LOCAL_FILE_SYSTEM: 从本地文件系统。
-     */
-    private String type;
-
+public class BatchInstallRequest {
     /**
      * 本地文件系统目录。
      */

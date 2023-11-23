@@ -21,8 +21,8 @@ import java.util.List;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponent;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallRequest;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallResponse;
 
 /**
  * Unified operation service interface, mainly interacts with the sofa-ark container
@@ -49,12 +49,12 @@ public interface UnifiedOperationService extends ArkletComponent {
     ClientResponse uninstall(String bizName, String bizVersion) throws Throwable;
 
     /**
-     * combine install multiple biz.
+     * Batch install multiple biz.
      * @param request 请求。
      * @return response 相应。
      * @throws Throwable error
      */
-    CombineInstallResponse combineInstall(CombineInstallRequest request) throws Throwable;
+    BatchInstallResponse batchInstall(BatchInstallRequest request) throws Throwable;
 
     /**
      * query biz list

@@ -19,10 +19,9 @@ package com.alipay.sofa.serverless.arklet.core.component;
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.spi.model.BizOperation;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallRequest;
-import com.alipay.sofa.serverless.arklet.core.common.model.CombineInstallResponse;
-import com.alipay.sofa.serverless.arklet.core.ops.CombineInstallHelper;
-import com.alipay.sofa.serverless.arklet.core.ops.CombineInstallHelperTest;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallRequest;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallResponse;
+import com.alipay.sofa.serverless.arklet.core.ops.BatchInstallHelper;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationServiceImpl;
 import lombok.SneakyThrows;
 import org.junit.Assert;
@@ -50,7 +49,7 @@ public class UnifiedOperationServiceImplTests {
     private UnifiedOperationServiceImpl unifiedOperationService;
 
     @Spy
-    private CombineInstallHelper        combineInstallHelper;
+    private BatchInstallHelper batchInstallHelper;
 
     @Before
     public void setUp() {
@@ -119,20 +118,20 @@ public class UnifiedOperationServiceImplTests {
 
     @SneakyThrows
     @Test
-    public void testCombineInstall() {
+    public void testBatchInstall() {
         {
             List<String> paths = new ArrayList<>();
             paths.add("/file/a-biz.jar");
             paths.add("/file/b-biz.jar");
             paths.add("/file/notbiz.jar");
 
-            doReturn(paths).when(combineInstallHelper).getBizUrlsFromLocalFileSystem(any());
+            doReturn(paths).when(batchInstallHelper).getBizUrlsFromLocalFileSystem(any());
 
-            doReturn(new HashMap<>()).when(combineInstallHelper).getMainAttributes(anyString());
+            doReturn(new HashMap<>()).when(batchInstallHelper).getMainAttributes(anyString());
         }
 
-        CombineInstallResponse response = unifiedOperationService
-            .combineInstall(CombineInstallRequest.builder().bizDirAbsolutePath("/path/to/biz")
+        BatchInstallResponse response = unifiedOperationService
+            .batchInstall(BatchInstallRequest.builder().bizDirAbsolutePath("/path/to/biz")
                 .build());
 
         Assert.assertTrue(response.getBizUrlToResponse().
