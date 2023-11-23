@@ -67,7 +67,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
                 .setOperationType(BizOperation.OperationType.INSTALL);
 
             bizOperation.putParameter(Constants.CONFIG_BIZ_URL, "file://" + bizUrl);
-            Map<Object, Object> mainAttributes = batchInstallHelper.getMainAttributes(bizUrl);
+            Map<String, Object> mainAttributes = batchInstallHelper.getMainAttributes(bizUrl);
             bizOperation.setBizName((String) mainAttributes.get(Constants.ARK_BIZ_NAME));
             bizOperation.setBizVersion((String) mainAttributes.get(Constants.ARK_BIZ_VERSION));
             return ArkClient.installOperation(bizOperation);

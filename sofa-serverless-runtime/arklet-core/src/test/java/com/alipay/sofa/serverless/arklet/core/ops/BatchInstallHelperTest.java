@@ -33,13 +33,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 /**
  *
@@ -58,7 +58,14 @@ public class BatchInstallHelperTest {
                 // You can check the arguments passed to the constructor
                 if (context.arguments().size() == 1 && context.arguments().get(0).equals("/path/a-biz.jar")) {
                     Attributes mattr = mock(Attributes.class);
-                    doReturn(true).when(mattr).containsKey(any());
+                    doAnswer(new Answer() {
+                        @Override
+                        public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                            BiConsumer biConsumer = invocationOnMock.getArgument(0, BiConsumer.class);
+                            biConsumer.accept("Ark-Biz-Name", "true");
+                            return null;
+                        }
+                    }).when(mattr).forEach(any());
                     Manifest mockedManifest = mock(Manifest.class);
                     doReturn(mattr).when(mockedManifest).getMainAttributes();
                     doReturn(mockedManifest).when(mock).getManifest();
@@ -66,7 +73,14 @@ public class BatchInstallHelperTest {
 
                 if (context.arguments().size() == 1 && context.arguments().get(0).equals("/path/b-biz.jar")) {
                     Attributes mattr = mock(Attributes.class);
-                    doReturn(true).when(mattr).containsKey(any());
+                    doAnswer(new Answer() {
+                        @Override
+                        public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                            BiConsumer biConsumer = invocationOnMock.getArgument(0, BiConsumer.class);
+                            biConsumer.accept("Ark-Biz-Name", "true");
+                            return null;
+                        }
+                    }).when(mattr).forEach(any());
                     Manifest mockedManifest = mock(Manifest.class);
                     doReturn(mattr).when(mockedManifest).getMainAttributes();
                     doReturn(mockedManifest).when(mock).getManifest();
@@ -74,7 +88,6 @@ public class BatchInstallHelperTest {
 
                 if (context.arguments().size() == 1 && context.arguments().get(0).equals("/path/noop.jar")) {
                     Attributes mattr = mock(Attributes.class);
-                    doReturn(false).when(mattr).containsKey(any());
                     Manifest mockedManifest = mock(Manifest.class);
                     doReturn(mattr).when(mockedManifest).getMainAttributes();
                     doReturn(mockedManifest).when(mock).getManifest();
@@ -94,10 +107,15 @@ public class BatchInstallHelperTest {
                         doReturn("/path/noop.jar").when(path2).toString();
                         doReturn(path2).when(path2).toAbsolutePath();
 
+                        Path path3 = mock(Path.class);
+                        doReturn("/path/noopjar").when(path3).toString();
+                        doReturn(path3).when(path3).toAbsolutePath();
+
                         FileVisitor<Path> visitor = invocationOnMock.getArgument(1, FileVisitor.class);
                         visitor.visitFile(path0, null);
                         visitor.visitFile(path1, null);
                         visitor.visitFile(path2, null);
+                        visitor.visitFile(path3, null);
                         return null;
                     }
                 });
@@ -118,7 +136,14 @@ public class BatchInstallHelperTest {
             // You can check the arguments passed to the constructor
             if (context.arguments().size() == 1 && context.arguments().get(0).equals("/path/to/jar/file")) {
                 Attributes mattr = mock(Attributes.class);
-                doReturn("bar").when(mattr).get("foo");
+                doAnswer(new Answer() {
+                    @Override
+                    public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                        BiConsumer biConsumer = invocationOnMock.getArgument(0, BiConsumer.class);
+                        biConsumer.accept("foo", "bar");
+                        return null;
+                    }
+                }).when(mattr).forEach(any());
 
                 Manifest mockedManifest = mock(Manifest.class);
 
@@ -126,7 +151,7 @@ public class BatchInstallHelperTest {
                 doReturn(mockedManifest).when(mock).getManifest();
             }
         })) {
-            Map<Object, Object> mainAttributes = batchInstallHelper.getMainAttributes("/path/to/jar/file");
+            Map<String, Object> mainAttributes = batchInstallHelper.getMainAttributes("/path/to/jar/file");
             Assert.assertEquals("bar", mainAttributes.get("foo"));
         }
     }

@@ -24,6 +24,7 @@ import lombok.SneakyThrows;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
@@ -45,8 +46,12 @@ public class BatchInstallHelper {
      * @return 是否是 biz jar 文件。
      */
     public boolean isBizJarFile(Path path) {
-        Map<Object, Object> attributes = getMainAttributes(path.toString());
-        return attributes.containsKey("Ark-Biz-Name");
+        if (path.toString().endsWith(".jar")) {
+            Map<String, Object> attributes = getMainAttributes(path.toString());
+            return attributes.containsKey("Ark-Biz-Name");
+        } else {
+            return false;
+        }
     }
 
     @SneakyThrows
@@ -73,12 +78,13 @@ public class BatchInstallHelper {
      * @return 主属性。
      */
     @SneakyThrows
-    public Map<Object, Object> getMainAttributes(String bizUrl) {
+    public Map<String, Object> getMainAttributes(String bizUrl) {
         try (JarFile jarFile = new JarFile(bizUrl)) {
             Manifest manifest = jarFile.getManifest();
             Preconditions.checkState(manifest != null, "Manifest file not found in the JAR.");
-            return manifest.getMainAttributes();
+            Map<String, Object> result = new HashMap<>();
+            manifest.getMainAttributes().forEach((k, v) -> result.put(k.toString(), v));
+            return result;
         }
     }
-
 }
