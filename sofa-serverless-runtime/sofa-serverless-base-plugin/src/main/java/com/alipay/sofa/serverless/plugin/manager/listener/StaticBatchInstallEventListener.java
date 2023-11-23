@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class StaticBatchInstallEventListener implements
                                             ApplicationListener<ApplicationContextEvent> {
 
-    private static ArkletLogger LOGGER             = ArkletLoggerFactory.getDefaultLogger();
+    private static ArkletLogger LOGGER           = ArkletLoggerFactory.getDefaultLogger();
 
     // 合并部署是否已经完成，防止重复执行。
     private AtomicBoolean       isBatchdDeployed = new AtomicBoolean(false);
@@ -62,8 +62,8 @@ public class StaticBatchInstallEventListener implements
             .batchInstall(BatchInstallRequest.builder().bizDirAbsolutePath(absolutePath).build());
         for (Map.Entry<String, ClientResponse> entry : batchInstallResponse.getBizUrlToResponse()
             .entrySet()) {
-            LOGGER.info("{}, {}, {}, BatchDeployResult", entry.getKey(), entry.getValue()
-                .getCode().toString(), entry.getValue().getMessage());
+            LOGGER.info("{}, {}, {}, BatchDeployResult", entry.getKey(), entry.getValue().getCode()
+                .toString(), entry.getValue().getMessage());
         }
         isBatchdDeployed.set(true);
         Preconditions.checkState(batchInstallResponse.getCode() == ResponseCode.SUCCESS,
