@@ -110,7 +110,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
 
         return BatchInstallResponse.builder().
                 code(hasFailed ? ResponseCode.FAILED : ResponseCode.SUCCESS).
-                message(hasFailed ? "combine install failed" : "combine install success").
+                message(hasFailed ? "batch install failed" : "batch install success").
                 bizUrlToResponse(bizUrlToInstallResult).
                 build();
     }
