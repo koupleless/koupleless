@@ -35,8 +35,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 @SuppressWarnings("rawtypes")
 public class ArkletApplicationListener implements ApplicationListener<ApplicationContextEvent> {
 
-    private static ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
-
     @Override
     public void onApplicationEvent(ApplicationContextEvent event) {
         // 非基座应用直接跳过
@@ -47,7 +45,7 @@ public class ArkletApplicationListener implements ApplicationListener<Applicatio
             List<AbstractCommandHandler> handlers = ArkletComponentRegistry
                     .getCommandServiceInstance().listAllHandlers();
             String commands = handlers.stream().map(s -> s.command().getId()).collect(Collectors.joining(", "));
-            LOGGER.info("total supported commands:{}", commands);
+            ArkletLoggerFactory.getDefaultLogger().info("total supported commands:{}", commands);
         }
     }
 }
