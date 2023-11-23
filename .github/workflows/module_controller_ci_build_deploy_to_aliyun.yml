@@ -102,20 +102,12 @@ jobs:
         run: |
           kubectl describe pod
 
-      - name: delete base pod
-        run: |
-          podname=$(kubectl get pod -l app=dynamic-stock -o name | cut -d/ -f2)
-          kubectl delete -n default pod $podname
-
       - run: sleep 10
 
-      - name: get pod
+      - name: log base pod
         run: |
-          kubectl get pod
-
-      - name: describe pod
-        run: |
-          kubectl describe pod
+          podname=$(kubectl get pod -l app=dynamic-stock -o name | cut -d/ -f2)
+          minikube logs $podname
 
       - name: wait base pod available
         run: |
