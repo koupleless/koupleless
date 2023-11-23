@@ -59,8 +59,7 @@ public class ApplicationContextEventListener implements
             .getOperationServiceInstance();
 
         BatchInstallResponse batchInstallResponse = operationServiceInstance
-            .batchInstall(BatchInstallRequest.builder().bizDirAbsolutePath(absolutePath)
-                .build());
+            .batchInstall(BatchInstallRequest.builder().bizDirAbsolutePath(absolutePath).build());
         for (Map.Entry<String, ClientResponse> entry : batchInstallResponse.getBizUrlToResponse()
             .entrySet()) {
             LOGGER.info("{}, {}, {}, CombineDeployResult", entry.getKey(), entry.getValue()
