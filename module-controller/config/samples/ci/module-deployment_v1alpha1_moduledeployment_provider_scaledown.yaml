@@ -13,8 +13,8 @@ spec:
   template:
     spec:
       module:
-        name: dynamic-provider
-        version: '1.0.0'
+        name: provider
+        version: '1.0.2'
         url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
   replicas: 0
   operationStrategy:

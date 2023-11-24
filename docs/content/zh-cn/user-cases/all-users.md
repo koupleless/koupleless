@@ -28,6 +28,17 @@ https://www.alihealth.cn/
 <br/>
 <br/>
 
+### 阿里妈妈
+
+<img src="/img/user-logos/alimama.png" width="250px" class="all-user-cases-logo" />
+
+https://www.alihealth.cn/
+
+**使用场景**：合并部署、热部署
+
+<br/>
+<br/>
+
 ### 斑马信息科技有限公司
 
 <img src="/img/user-logos/banmazhixing.png" width="250px" class="all-user-cases-logo" />

@@ -2,7 +2,7 @@
 ---
 title: 基座与模块并行开发验证
 weight: 501
-draft: true
+draft: false
 ---
 
 本文介绍如何使用 SOFAServerless 完成多 SpringBoot 应用合并部署，并动态更新模块，用于省资源与提高研发效率，两种典型场景：
