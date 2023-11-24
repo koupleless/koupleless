@@ -292,6 +292,6 @@ jobs:
       - name: check module
         run: |
           for podname=$(kubectl get pod -l app=dynamic-stock -o name); do
-            kubectl exec -it &podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log'
+            kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log'
           done
           exit 0
