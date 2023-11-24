@@ -344,7 +344,7 @@ jobs:
         run: |
           moduleCount=$(kubectl get module | wc -l)
           echo $moduleCount
-          if [[ $moduleCount -lt 3 ]]; then
+          if [[ $moduleCount -gt 3 ]]; then
             echo "缩容失败"
             exit 1
           fi
@@ -391,7 +391,7 @@ jobs:
         run: |
           moduleCount=$(kubectl get module | wc -l)
           echo $moduleCount
-          if [[ $moduleCount -lt 2 ]]; then
+          if [[ $moduleCount -gt 2 ]]; then
             echo "缩容失败"
             exit 1
           fi
@@ -438,7 +438,7 @@ jobs:
         run: |
           moduleCount=$(kubectl get module | wc -l)
           echo $moduleCount
-          if [[ $moduleCount -lt 1 ]]; then
+          if [[ $moduleCount -ge 1 ]]; then
             echo "缩容失败"
             exit 1
           fi
