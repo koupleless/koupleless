@@ -18,7 +18,7 @@
         <spring.boot.version.jdk8>2.7.15</spring.boot.version.jdk8>
         <spring.boot.version.jdk17>3.0.9</spring.boot.version.jdk17>
         <logback.core.default>1.2.9</logback.core.default>
-        <revision.default>0.5.4</revision.default>
+        <revision.default>0.5.5</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
