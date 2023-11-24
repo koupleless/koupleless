@@ -289,7 +289,7 @@ jobs:
             exit 0
           done
 
-      - name: check module
+      - name: batch release successfully then check module install
         run: |
           label_selector="app=dynamic-stock"
           max_attempts=10
@@ -329,3 +329,21 @@ jobs:
                 echo "已达到最大尝试次数。有些Pod未满足条件。"
               fi
           done
+
+      - name: batch scaledown
+        run: |
+          kubectl apply -f config/samples/ci/module-deployment_v1alpha1_moduledeployment_batch_provider_scaledown.yaml
+
+      - run: sleep 15
+
+      - name: get module
+        run: |
+          kubectl get module -oyaml
+
+      - name: exist module
+        run: |
+          moduleCount=$(kubectl get module | wc -l)
+          if [[ $moduleCount -ge 2 ]]; then
+            echo "缩容失败"
+            exit 1
+          fi
