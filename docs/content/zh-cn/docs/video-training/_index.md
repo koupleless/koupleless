@@ -7,7 +7,7 @@ weight: 210
 小贴士: 仅需两分钟时间
 
 <video width=100% controls autoplay>
-<source src="https://gitee.com/sofaserverless/sofaserverless/raw/master/docs/public/videos/module_dev_and_deploy.mp4" type="video/mp4">
+<source src="https://serverless-opensource.oss-cn-shanghai.aliyuncs.com/outer-materials/module_dev_and_deploy.mp4" type="video/mp4">
 Your browser does not support the video tag.  
 </video>
  
