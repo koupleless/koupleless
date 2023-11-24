@@ -7,16 +7,16 @@ on:
       - master
     paths:
       - 'module-controller/**'
-      
+
   pull_request:
     branches:
       - master
     paths:
       - 'module-controller/**'
-      
+
   # enable manually running the workflow
   workflow_dispatch:
-  
+
 env:
   CGO_ENABLED: 0
   GOOS: linux
@@ -26,7 +26,7 @@ env:
   MODULE_CONTROLLER_IMAGE_PATH: opensource/test/module-controller
   INTEGRATION_TESTS_IMAGE_PATH: opensource/test/module-controller-integration-tests
   POD_NAMESPACE: default
-  
+
 defaults:
   run:
     working-directory: module-controller
@@ -270,12 +270,12 @@ jobs:
               echo "等待超时"
               exit 1
             fi
-        
+          
             # 获取所有的资源对象名，并循环处理
             for modulename in $(kubectl get $moduletype -o name); do
               # 使用 kubectl get 命令获取每个资源对象的详细信息，并提取自定义字段的值
               field_value=$(kubectl get $modulename -o custom-columns=STATUS:.status.status --no-headers)
-              
+          
               # 检查字段值是否满足期望
               if [ "$field_value" != "$desired_field_value" ]; then
                 echo "等待字段值满足条件..."
@@ -299,27 +299,27 @@ jobs:
           for ((i=0; i<$max_attempts; i++)); do
             # 获取满足标签选择器条件的所有Pod
             podnames=($(kubectl get pods -l $label_selector -o jsonpath='{.items[*].metadata.name}'))
-            
+          
             # 初始化一个变量，用于检测是否所有Pod都满足条件
             all_pods_condition_met=true
-            
+          
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
                 log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
-            
+          
                 # 如果没有找到日志条目，则将标志设置为false
                 if [ -z "$log_entry" ]; then
                   all_pods_condition_met=false
                   break
                 fi
               done
-            
+          
               # 如果所有Pod都满足条件，则退出循环
               if $all_pods_condition_met; then
                 echo "所有Pod都满足条件。"
                 break
               fi
-            
+          
               # 如果这不是最后一次尝试，则等待一段时间后继续
               if [ $i -lt $((max_attempts-1)) ]; then
                 echo "有些Pod未满足条件。等待 $interval 秒后进行下一次尝试。"
@@ -335,6 +335,10 @@ jobs:
           kubectl apply -f config/samples/ci/module-deployment_v1alpha1_moduledeployment_batch_provider_scaledown.yaml
 
       - run: sleep 15
+
+      - name: exist module
+        run: |
+          kubectl get module
 
       - name: exist module
         run: |
@@ -377,6 +381,12 @@ jobs:
             fi
           done
 
+      - run: sleep 15
+
+      - name: exist module
+        run: |
+          kubectl get module
+
       - name: exist module less then 2
         run: |
           moduleCount=$(kubectl get module | wc -l)
@@ -416,7 +426,13 @@ jobs:
               echo "等待字段值满足条件..."
               sleep 5  # 等待一段时间后再次检查
             fi
-          done         
+          done  
+
+      - run: sleep 15
+
+      - name: exist module
+        run: |
+          kubectl get module
 
       - name: exist module less then 1
         run: |
@@ -426,35 +442,3 @@ jobs:
             echo "缩容失败"
             exit 1
           fi
-
-      - name: check moduledeployment pause then confirm
-        run: |
-          # 定义要等待的资源名称和字段值
-          moduledeploymentname=$(kubectl get moduledeployment -o name)
-          desired_field_value=true
-
-          # 定义等待的超时时间（以秒为单位）
-          timeout_seconds=300
-
-          start_time=$(date +%s)
-          end_time=$((start_time + timeout_seconds))
-
-          while true; do
-            current_time=$(date +%s)
-            if [ $current_time -gt $end_time ]; then
-              echo "等待超时"
-              exit 1
-            fi
-
-            # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
-            field_value=$(kubectl get $moduledeploymentname -o custom-columns=PAUSE:.spec.pause --no-headers)
-
-            if [ "$field_value" == "$desired_field_value" ]; then
-              echo "字段值已满足条件，执行分组确认"
-              kubectl patch $moduledeploymentname -p '{"spec":{"pause":false}}' --type=merge
-              exit 0
-            else
-              echo "等待字段值满足条件..."
-              sleep 5  # 等待一段时间后再次检查
-            fi
-          done
