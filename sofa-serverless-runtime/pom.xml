@@ -494,6 +494,9 @@
                 <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
                 <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
+            <activation>
+                <jdk>17</jdk>
+            </activation>
         </profile>
     <!--
         jdk17 打出来的 release 版本
@@ -509,6 +512,9 @@
                 <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
                 <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
             </properties>
+            <activation>
+                <jdk>17</jdk>
+            </activation>
         </profile>
 
     <!--
@@ -526,6 +532,9 @@
                 <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
                 <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
             </properties>
+            <activation>
+                <jdk>8</jdk>
+            </activation>
         </profile>
 
     <!--
@@ -543,6 +552,9 @@
                 <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
                 <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
             </properties>
+            <activation>
+                <jdk>8</jdk>
+            </activation>
         </profile>
 
         <profile>
