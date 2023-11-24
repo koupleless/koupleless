@@ -14,6 +14,8 @@ Your browser does not support the video tag.
 <br/>
 <br/>
 
+该视频的详细文字版教程请[点击此处](/docs/tutorials/build_and_deploy.md)查看。
+
 ## SOFAServerless 平台和研发框架完整视频教程
 
 
