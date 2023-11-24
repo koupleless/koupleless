@@ -336,14 +336,125 @@ jobs:
 
       - run: sleep 15
 
-      - name: get module
-        run: |
-          kubectl get module -oyaml
-
       - name: exist module
         run: |
           moduleCount=$(kubectl get module | wc -l)
-          if [[ $moduleCount -ge 2 ]]; then
+          echo $moduleCount
+          if [[ $moduleCount -lt 3 ]]; then
             echo "缩容失败"
             exit 1
           fi
+
+      - name: check moduledeployment pause then confirm
+        run: |
+          # 定义要等待的资源名称和字段值
+          moduledeploymentname=$(kubectl get moduledeployment -o name)
+          desired_field_value=true
+
+          # 定义等待的超时时间（以秒为单位）
+          timeout_seconds=300
+
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+
+          while true; do
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+              exit 1
+            fi
+
+            # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
+            field_value=$(kubectl get $moduledeploymentname -o custom-columns=PAUSE:.spec.pause --no-headers)
+
+            if [ "$field_value" == "$desired_field_value" ]; then
+              echo "字段值已满足条件，执行分组确认"
+              kubectl patch $moduledeploymentname -p '{"spec":{"pause":false}}' --type=merge
+              exit 0
+            else
+              echo "等待字段值满足条件..."
+              sleep 5  # 等待一段时间后再次检查
+            fi
+          done
+
+      - name: exist module less then 2
+        run: |
+          moduleCount=$(kubectl get module | wc -l)
+          echo $moduleCount
+          if [[ $moduleCount -lt 2 ]]; then
+            echo "缩容失败"
+            exit 1
+          fi
+
+      - name: check moduledeployment pause then confirm
+        run: |
+          # 定义要等待的资源名称和字段值
+          moduledeploymentname=$(kubectl get moduledeployment -o name)
+          desired_field_value=true
+
+          # 定义等待的超时时间（以秒为单位）
+          timeout_seconds=300
+
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+
+          while true; do
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+              exit 1
+            fi
+
+            # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
+            field_value=$(kubectl get $moduledeploymentname -o custom-columns=PAUSE:.spec.pause --no-headers)
+
+            if [ "$field_value" == "$desired_field_value" ]; then
+              echo "字段值已满足条件，执行分组确认"
+              kubectl patch $moduledeploymentname -p '{"spec":{"pause":false}}' --type=merge
+              exit 0
+            else
+              echo "等待字段值满足条件..."
+              sleep 5  # 等待一段时间后再次检查
+            fi
+          done         
+
+      - name: exist module less then 1
+        run: |
+          moduleCount=$(kubectl get module | wc -l)
+          echo $moduleCount
+          if [[ $moduleCount -lt 1 ]]; then
+            echo "缩容失败"
+            exit 1
+          fi
+
+      - name: check moduledeployment pause then confirm
+        run: |
+          # 定义要等待的资源名称和字段值
+          moduledeploymentname=$(kubectl get moduledeployment -o name)
+          desired_field_value=true
+
+          # 定义等待的超时时间（以秒为单位）
+          timeout_seconds=300
+
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+
+          while true; do
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+              exit 1
+            fi
+
+            # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
+            field_value=$(kubectl get $moduledeploymentname -o custom-columns=PAUSE:.spec.pause --no-headers)
+
+            if [ "$field_value" == "$desired_field_value" ]; then
+              echo "字段值已满足条件，执行分组确认"
+              kubectl patch $moduledeploymentname -p '{"spec":{"pause":false}}' --type=merge
+              exit 0
+            else
+              echo "等待字段值满足条件..."
+              sleep 5  # 等待一段时间后再次检查
+            fi
+          done
