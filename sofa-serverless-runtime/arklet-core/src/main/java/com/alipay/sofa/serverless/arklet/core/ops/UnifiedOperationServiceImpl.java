@@ -30,6 +30,7 @@ import com.alipay.sofa.ark.spi.constant.Constants;
 import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.ark.spi.model.BizOperation;
 import com.alipay.sofa.serverless.arklet.core.command.executor.ExecutorServiceManager;
+import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
 import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallRequest;
 import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallResponse;
 import com.google.inject.Singleton;
@@ -56,7 +57,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     @Override
     public ClientResponse install(String bizUrl) throws Throwable {
         BizOperation bizOperation = new BizOperation()
-            .setOperationType(BizOperation.OperationType.INSTALL);
+                .setOperationType(BizOperation.OperationType.INSTALL);
         bizOperation.putParameter(Constants.CONFIG_BIZ_URL, bizUrl);
         return ArkClient.installOperation(bizOperation);
     }
@@ -64,7 +65,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     public ClientResponse safeBatchInstall(String bizUrl) {
         try {
             BizOperation bizOperation = new BizOperation()
-                .setOperationType(BizOperation.OperationType.INSTALL);
+                    .setOperationType(BizOperation.OperationType.INSTALL);
 
             bizOperation.putParameter(Constants.CONFIG_BIZ_URL, "file://" + bizUrl);
             Map<String, Object> mainAttributes = batchInstallHelper.getMainAttributes(bizUrl);
@@ -74,7 +75,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
             return new ClientResponse().setCode(ResponseCode.FAILED).setMessage(
-                String.format("internal exception: %s", throwable.getMessage()));
+                    String.format("internal exception: %s", throwable.getMessage()));
         }
     }
 
@@ -89,12 +90,15 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
         ThreadPoolExecutor executorService = ExecutorServiceManager.getArkBizOpsExecutor();
         List<CompletableFuture<ClientResponse>> futures = new ArrayList<>();
 
+        long startTimestamp = System.currentTimeMillis();
         for (String bizUrl : bizUrls) {
             futures.add(CompletableFuture.supplyAsync(() -> safeBatchInstall(bizUrl), executorService));
         }
 
         // wait for all install futures done
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).get();
+        long endTimestamp = System.currentTimeMillis();
+        ArkletLoggerFactory.getDefaultLogger().info("batch install cost {} ms", endTimestamp - startTimestamp);
 
         // analyze install result per bizUrl
         int counter = 0;
