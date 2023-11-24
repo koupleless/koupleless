@@ -208,40 +208,42 @@ header > nav.td-navbar {
 
     .pagefind-ui__search-input {
 
-      width: 225px;
+      width: 280px;
       height: 36px;
       line-height: 36px;
       padding-left: 32px;
       margin-right: 20px;
       border: 1px solid rgba(255,255,255,0.25);
       border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-family: PingFangSC-Regular;
       font-size: 14px;
       font-weight: normal;
 
+      &::placeholder {
+        font-size: 14px;
+        opacity: 1;
+        color: rgba(255,255,255,0.65);
+        letter-spacing: 0;
+        line-height: 22px;
+      }
+
       &:focus {
-        opacity: 0.95;
-        background: white;
-        color: black;
+        font-weight: normal;
+        background: rgba(255,255,255,0.05);
+        color: rgba(255,255,255,0.9);
+        border: 1px solid rgba(255,255,255,0.25);
       }
     }
 
-    .pagefind-ui__form:before {
-      top: 11px;
-      left: 12px;
-    }
-
-    .pagefind-ui__drawer {
-      position: absolute;
-      z-index: 9999;
-      top: 37px;
-      left: -500px;
-      right: 19px;
-      max-height: 650px;
-      background-color: rgb(255, 255, 255);
-      border: 1px solid lightgray;
-      border-radius: 5px;
-      overflow-y: scroll;
-      padding: 0 12px 8px 12px;
+    .pagefind-ui__form {
+      &:before {
+        top: 11px;
+        left: 12px;
+        background: white;
+        opacity: 1;
+      }
     }
 
     .pagefind-ui__search-clear {
@@ -249,17 +251,113 @@ header > nav.td-navbar {
       right: 20px;
       height: 36px;
       line-height: 36px;
+      color: rgba(255,255,255,0.9);
       background: transparent;
     }
 
-    .pagefind-ui__results-area {
-      margin-top: 0;
-    }
+    .pagefind-ui__drawer {
 
-    .pagefind-ui__button {
-      margin-top: 10px;
-      &:hover, &:focus {
-        border-color: lightgray;
+      position: absolute;
+      z-index: 9999;
+      top: 43px;
+      left: -528px;
+      right: 19px;
+      max-height: 650px;
+      overflow-y: scroll;
+      background: #262E40;
+      border: 1px solid rgba(255,255,255,0.20);
+      border-radius: 12px;
+
+      .pagefind-ui__message {
+        padding: 17px 29px;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        font-weight: normal;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        line-height: 22px;
+      }
+
+      .pagefind-ui__result {
+
+        border-top: 1px solid rgba(255,255,255,0.10);
+        padding: 24px 28px;
+
+        &:hover, &:focus {
+          //cursor: pointer;
+          background: rgba(255, 255, 255, 0.05);
+          .pagefind-ui__result-link {
+            //color: #0077FF;
+          }
+        }
+
+        &:last-of-type {
+          border-bottom: none;
+        }
+
+        .pagefind-ui__result-inner {
+          margin-top: 0;
+        }
+
+        .pagefind-ui__result-thumb {
+
+          height: 80px;
+          margin-top: 0;
+          background: #394258;
+          border-radius: 8px;
+
+          .pagefind-ui__result-image {
+            height: 100%;
+          }
+        }
+
+        .pagefind-ui__result-link {
+          font-family: PingFangSC-Regular;
+          font-size: 20px;
+          font-weight: normal;
+          color: #FFFFFF;
+          letter-spacing: 0;
+          line-height: 28px;
+        }
+
+        .pagefind-ui__result-excerpt {
+
+          margin-top: 6px;
+          font-family: PingFangSC-Regular;
+          font-size: 14px;
+          font-weight: normal;
+          color: rgba(255,255,255,0.45);
+          letter-spacing: 0;
+          line-height: 22px;
+
+          mark {
+            color: #0077FF;
+            background: none;
+          }
+        }
+      }
+
+      .pagefind-ui__results-area {
+        margin-top: 0;
+      }
+
+      .pagefind-ui__button {
+
+        margin: 16px 28px 24px 28px;
+        width: 698px;
+        height: 54px;
+        background: rgba(255, 255, 255, 0.05);
+        border: none;
+        border-radius: 8px;
+        font-family: AlibabaPuHuiTiR;
+        font-size: 16px;
+        font-weight: normal;
+        color: #FFFFFF;
+        letter-spacing: 0;
+
+        &:hover, &:focus {
+          background: rgba(255, 255, 255, 0.1);
+        }
       }
     }
   }
@@ -271,7 +369,7 @@ header > nav.td-navbar {
       content: url(/img/before-search.svg);
       position: absolute;
       top: 16px;
-      right: 254px;
+      right: 309px;
       height: 32px;
     }
 
@@ -308,6 +406,8 @@ header > nav.td-navbar {
 
 #main_navbar {
   margin: 0px !important;
+  position: relative;
+  left: 40px;
 }
 
 footer.td-footer.row.d-print-none {
