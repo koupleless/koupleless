@@ -57,7 +57,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     @Override
     public ClientResponse install(String bizUrl) throws Throwable {
         BizOperation bizOperation = new BizOperation()
-                .setOperationType(BizOperation.OperationType.INSTALL);
+            .setOperationType(BizOperation.OperationType.INSTALL);
         bizOperation.putParameter(Constants.CONFIG_BIZ_URL, bizUrl);
         return ArkClient.installOperation(bizOperation);
     }
@@ -65,7 +65,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
     public ClientResponse safeBatchInstall(String bizUrl) {
         try {
             BizOperation bizOperation = new BizOperation()
-                    .setOperationType(BizOperation.OperationType.INSTALL);
+                .setOperationType(BizOperation.OperationType.INSTALL);
 
             bizOperation.putParameter(Constants.CONFIG_BIZ_URL, "file://" + bizUrl);
             Map<String, Object> mainAttributes = batchInstallHelper.getMainAttributes(bizUrl);
@@ -75,7 +75,7 @@ public class UnifiedOperationServiceImpl implements UnifiedOperationService {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
             return new ClientResponse().setCode(ResponseCode.FAILED).setMessage(
-                    String.format("internal exception: %s", throwable.getMessage()));
+                String.format("internal exception: %s", throwable.getMessage()));
         }
     }
 
