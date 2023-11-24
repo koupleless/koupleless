@@ -291,7 +291,41 @@ jobs:
 
       - name: check module
         run: |
-          for podname=$(kubectl get pod -l app=dynamic-stock -o name); do
-            kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log'
+          label_selector="app=dynamic-stock"
+          max_attempts=10
+          timeout=300
+          interval=30
+          
+          for ((i=0; i<$max_attempts; i++)); do
+            # 获取满足标签选择器条件的所有Pod
+            podnames=($(kubectl get pods -l $label_selector -o jsonpath='{.items[*].metadata.name}'))
+            
+            # 初始化一个变量，用于检测是否所有Pod都满足条件
+            all_pods_condition_met=true
+            
+            # 遍历所有Pod进行日志检索
+            for podname in "${podnames[@]}"; do
+                log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
+            
+                # 如果没有找到日志条目，则将标志设置为false
+                if [ -z "$log_entry" ]; then
+                  all_pods_condition_met=false
+                  break
+                fi
+              done
+            
+              # 如果所有Pod都满足条件，则退出循环
+              if $all_pods_condition_met; then
+                echo "所有Pod都满足条件。"
+                break
+              fi
+            
+              # 如果这不是最后一次尝试，则等待一段时间后继续
+              if [ $i -lt $((max_attempts-1)) ]; then
+                echo "有些Pod未满足条件。等待 $interval 秒后进行下一次尝试。"
+              sleep $interval
+              else
+                # 如果是最后一次尝试，则输出超时消息
+                echo "已达到最大尝试次数。有些Pod未满足条件。"
+              fi
           done
-          exit 0

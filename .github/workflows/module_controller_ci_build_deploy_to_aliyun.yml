@@ -381,11 +381,30 @@ jobs:
       - name: delete pod then check module
         run: |
           podname=$(kubectl get pod -l app=dynamic-stock -o name)
-          kubectl exec -it $podname -- sh -c 'ls -al'
-          kubectl exec -it $podname -- sh -c 'ls -al ~/'
-          kubectl exec -it $podname -- sh -c 'ls -al ~/logs'
-          kubectl exec -it $podname -- sh -c 'ls -al ~/logs/sofa-ark'
-          kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log'
+          max_attempts=10
+          timeout=300
+          interval=30
+          
+          for ((i=0; i<$max_attempts; i++)); do
+            # 执行您的日志检索命令
+            log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
+
+            # 如果找到了日志条目，则退出循环
+            if [ -n "$log_entry" ]; then
+              echo "找到日志条目。"
+              break
+            fi
+            
+            # 如果这不是最后一次尝试，则等待一段时间后继续
+            if [ $i -lt $((max_attempts-1)) ]; then
+              echo "未找到日志条目。等待 $interval 秒后进行下一次尝试。"
+              sleep $interval
+            else
+            # 如果是最后一次尝试，则输出超时消息
+              echo "已达到最大尝试次数。未找到日志条目。"
+            fi
+          done
+
 
       - name: scaledown module then delete deployment
         run:
