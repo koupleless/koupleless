@@ -31,7 +31,7 @@
 			<groupId>com.alipay.sofa.serverless</groupId>
 			<artifactId>sofa-serverless-base-starter</artifactId>
 			<!-- 以上版本支持springboot3 -->
-			<version>0.5.4-jdk17</version>
+			<version>0.5.5-jdk17</version>
 		</dependency>
 
 		<dependency>
