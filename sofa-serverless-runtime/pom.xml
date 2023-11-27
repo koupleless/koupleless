@@ -703,8 +703,8 @@
             <properties>
                 <logback.core>1.2.9</logback.core>
                 <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
-                <spring.boot.version>${spring.boot.version.jdk17}</spring.boot.version>
+                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
+                <spring.boot.version>${spring.boot.version.jdk8}</spring.boot.version>
             </properties>
             <repositories>
                 <repository>
