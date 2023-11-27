@@ -113,7 +113,7 @@ cd $BaseDir/..
 BIZ_INSTALL_URL="http://localhost:8080/module/install"
 BIZ_LIST_URL="http://localhost:8080/module/list"
 
-for moduleBootDir in $(find $(pwd) -type d -path "*/biz[1-9]"  -o -path "*/*biz" |grep -v src|grep -v target|grep -v log);do
+for moduleBootDir in $(find $(pwd) -type d -path "*/biz[1-9]"  -o -path "*/*biz" |grep -v src|grep -v target|grep -v logs);do
   echo "start deploy $moduleBootDir"
   cd $moduleBootDir
 

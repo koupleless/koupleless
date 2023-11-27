@@ -50,10 +50,10 @@ jobs:
           sudo systemctl start redis-server
           sudo cp .github/workflows/ccbin/arkctl /usr/bin/arkctl
 
-#      - name: Run jdk8 serverless runtime test
-#        run: |
-#          set -e
-#          bash .github/workflows/ccbin/start.sh jdk8
+      - name: Run jdk8 serverless runtime test
+        run: |
+          set -e
+          bash .github/workflows/ccbin/start.sh jdk8
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
