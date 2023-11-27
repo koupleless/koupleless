@@ -58,6 +58,17 @@
             <artifactId>guice</artifactId>
             <version>5.1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.alipay.sofa.serverless</groupId>-->
+<!--            <artifactId>sofa-serverless-adapter-apollo</artifactId>-->
+<!--            <version>${sofa.serverless.runtime.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
