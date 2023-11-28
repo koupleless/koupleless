@@ -102,7 +102,7 @@ public class ServiceProxyFactory {
      */
     private static <T> T doCreateServiceProxy(Biz biz, Object service, Class<T> serviceType, ClassLoader clientClassLoader) {
         if (clientClassLoader == null) {
-            Class<?> callerClass = ReflectionUtils.getCallerClass(5);
+            Class<?> callerClass = ReflectionUtils.getCallerClass(6);
             clientClassLoader = callerClass.getClassLoader();
         }
 
