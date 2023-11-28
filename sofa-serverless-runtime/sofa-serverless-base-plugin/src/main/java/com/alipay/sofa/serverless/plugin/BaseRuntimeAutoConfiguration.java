@@ -16,8 +16,6 @@
  */
 package com.alipay.sofa.serverless.plugin;
 
-import com.alipay.sofa.ark.api.ArkClient;
-import com.alipay.sofa.ark.spi.model.Biz;
 import com.alipay.sofa.serverless.common.BizRuntimeContext;
 import com.alipay.sofa.serverless.common.environment.ConditionalOnNotMasterBiz;
 import com.alipay.sofa.serverless.common.service.ArkAutowiredBeanPostProcessor;

@@ -28,6 +28,17 @@ https://www.alihealth.cn/
 <br/>
 <br/>
 
+### 阿里妈妈
+
+<img src="/img/user-logos/alimama.png" width="250px" class="all-user-cases-logo" />
+
+https://www.alihealth.cn/
+
+**使用场景**：合并部署、热部署
+
+<br/>
+<br/>
+
 ### 斑马信息科技有限公司
 
 <img src="/img/user-logos/banmazhixing.png" width="250px" class="all-user-cases-logo" />
@@ -123,6 +134,17 @@ https://www.gridnt.cn/
 https://www.dmqwl.com/
 
 **使用场景**：动态热部署、热卸载、模块隔离
+
+<br/>
+<br/>
+
+### 网商银行
+
+<img src="/img/user-logos/wangshangyinhang.png" width="260px" class="all-user-cases-logo" />
+
+https://www.mybank.cn/
+
+**使用场景**：应用秒级构建发布、秒级弹性、并行迭代、合并部署
 
 <br/>
 <br/>

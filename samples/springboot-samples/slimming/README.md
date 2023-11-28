@@ -46,6 +46,8 @@ base 为普通 springboot 改造成的基座，改造内容为在主 pom 里增�
 
 ### biz1
 biz1 包含两个打包插件，一个常规 springboot 插件, 构建普通 springboot 包; 另一个插件为 sofaArk biz 模块插件，构建 ark biz jar 包，打包插件配置如下：
+
+**特别注意**： sofa ark 插件定义顺序必须在 springboot 打包插件前;
 ```xml
 <!-- 模块需要引入专门的 log4j2 adapter 做日志适配 -->
 <dependency>

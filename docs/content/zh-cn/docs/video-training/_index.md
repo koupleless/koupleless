@@ -7,12 +7,14 @@ weight: 210
 小贴士: 仅需两分钟时间
 
 <video width=100% controls autoplay>
-<source src="/videos/module_dev_and_deploy.mp4" type="video/mp4">
+<source src="https://serverless-opensource.oss-cn-shanghai.aliyuncs.com/outer-materials/docs/videos/module_dev_and_deploy.mp4" type="video/mp4">
 Your browser does not support the video tag.  
 </video>
+ 
+<br/>
+<br/>
 
-<br/>
-<br/>
+该视频的详细文字版教程请[点击此处](/docs/tutorials/trial_step_by_step)查看。
 
 ## SOFAServerless 平台和研发框架完整视频教程
 

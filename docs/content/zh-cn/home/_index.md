@@ -574,7 +574,7 @@ url: "/home/"
 </div>
 
 
-<div style="margin: 120px -20px 0 -20px; background: url('/img/communication-channel-background.png') round;">
+<div style="margin: 120px -20px 0 -20px; background: url('https://serverless-opensource.oss-cn-shanghai.aliyuncs.com/outer-materials/docs/img/communication-channel-background.png') round;">
     <div style="height: 120px;"></div>
     <div style="display: inline-block; width: 360px; vertical-align: top;" >
         <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 20px; font-weight: 600; color: #FFFFFF; 

@@ -1,0 +1,11 @@
+<link href="/img/logo.svg" rel="icon" type="image/svg">
+<link href="/search/pagefind-ui.css" rel="stylesheet">
+<script src="/search/pagefind-ui.js" type="text/javascript"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: ".td-search" });
+    });
+</script>
+
+{{ template "_internal/google_analytics_async.html" . }}
