@@ -72,7 +72,7 @@
                 <configuration>
                     <skipArkExecutable>true</skipArkExecutable>
                     <outputDirectory>target</outputDirectory>
-                    <bizName>biz</bizName>
+                    <bizName>biz-bootstrap</bizName>
                     <!-- 单host下需更换 web context path -->
                     <webContextPath>biz</webContextPath>
                     <declaredMode>true</declaredMode>

@@ -31,7 +31,6 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.apache.logging.log4j.core.util.NameUtil;
 import org.apache.logging.log4j.message.Message;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -137,10 +136,7 @@ public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
 
     private void configureJdkLoggingBridgeHandler() {
         try {
-            if (this.isBridgeJulIntoSlf4j()) {
-                this.removeJdkLoggingBridgeHandler();
-                SLF4JBridgeHandler.install();
-            }
+            this.removeJdkLoggingBridgeHandler();
         } catch (Throwable var2) {
         }
 
@@ -205,7 +201,6 @@ public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
         return overrides.orElse(Collections.emptyList());
     }
 
-    @Override
     protected void loadConfiguration(String location, LogFile logFile) {
         Assert.notNull(location, "Location must not be null");
         try {
@@ -324,9 +319,7 @@ public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
     @Override
     public void cleanUp() {
         try {
-            if (isBridgeHandlerAvailable()) {
-                removeJdkLoggingBridgeHandler();
-            }
+            removeJdkLoggingBridgeHandler();
         } catch (Exception e) {
             // Ignore and continue
         }
@@ -338,7 +331,6 @@ public class SOFAServerlessLog4j2LoggingSystem extends Log4J2LoggingSystem {
     private void removeJdkLoggingBridgeHandler() {
         try {
             removeDefaultRootHandler();
-            SLF4JBridgeHandler.uninstall();
         } catch (Throwable ex) {
             // Ignore and continue
         }
