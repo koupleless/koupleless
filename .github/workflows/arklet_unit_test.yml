@@ -25,25 +25,6 @@ defaults:
     working-directory: sofa-serverless-runtime
 
 jobs:
-  unit-test-for-jdk8:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Java JDK
-        uses: actions/setup-java@v3
-        with: 
-          distribution: adopt
-          java-version: 8
-          cache: maven
-
-      - name: Test
-        run: mvn clean install -DskipTests -P8-release -Dmaven.javadoc.skip=true -B -U
-          && sh ./check_format.sh
-          && mvn test -P8-release
-
-      - name: upload coverage reports to Codecov with github action
-        uses: codecov/codecov-action@v3
-
   unit-test-for-jdk17:
     runs-on: ubuntu-latest
     steps:
@@ -56,9 +37,9 @@ jobs:
           cache: maven
 
       - name: Test
-        run: mvn clean install -DskipTests  -P17-release -Dmaven.javadoc.skip=true -B -U
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
           && sh ./check_format.sh
-          && mvn test -P17-release
+          && mvn test
 
       - name: upload coverage reports to Codecov with github action
         uses: codecov/codecov-action@v3

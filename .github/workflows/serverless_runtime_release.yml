@@ -42,7 +42,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: sofa-serverless-runtime
-        run: mvn clean install -P17-release -DskipTests -B -U -e
+        run: mvn clean install -DskipTests -B -U -e
 
       - name: get sofa-runtime version & update sofa-runtime version for all test sample app
         run: |
