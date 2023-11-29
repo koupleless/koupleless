@@ -696,3 +696,7 @@ jobs:
                 echo "已达到最大尝试次数。有些Pod未满足条件。"
               fi
           done
+
+      - name: delete deployment
+        run: |
+          kubectl delete -n default deployment dynamic-stock-deployment
