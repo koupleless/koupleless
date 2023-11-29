@@ -21,14 +21,6 @@ jobs:
           images: |
             node:14
 
-      - name: get sofa-runtime version & update sofa-runtime version for all test sample app
-        run: |
-          serverless_runtime_version=`egrep "<revision.default>([^<]+)</revision.default>" sofa-serverless-runtime/pom.xml |awk -F "revision.default>|</revision.default" '{print $2}'`
-          echo "升级sofa-runtime version to $serverless_runtime_version"
-          for testsample in `find samples -name "*[^3|^dubbo]-samples"`;do  sed -i "s/<sofa.serverless.runtime.version>.*<\/sofa.serverless.runtime.version>/<sofa.serverless.runtime.version>$serverless_runtime_version<\/sofa.serverless.runtime.version>/g"  $testsample/pom.xml ;done
-          for testsample in `find samples -name "*[3]-samples"`;do  sed -i "s/<sofa.serverless.runtime.version>.*<\/sofa.serverless.runtime.version>/<sofa.serverless.runtime.version>$serverless_runtime_version-jdk17<\/sofa.serverless.runtime.version>/g"  $testsample/pom.xml ;done
-          for testsample in `find samples -name "*[^dubbo]-samples"`;do if cat $testsample/pom.xml |grep "<sofa.serverless.runtime.version>"|grep $serverless_runtime_version;then echo "版本校验通过";else echo "版本校验失败";exit 1;fi;done
-
       - name: Test Env prepare
         run: |
           sudo apt-get update >>/tmp/envprepare.out
@@ -51,6 +43,13 @@ jobs:
       - name: Build with Maven
         working-directory: sofa-serverless-runtime
         run: mvn clean install -P17-snapshot -DskipTests -B -U -e
+
+      - name: get sofa-runtime version & update sofa-runtime version for all test sample app
+        run: |
+          serverless_runtime_version=$(find sofa-serverless-runtime/sofa-serverless-common -name "*.jar" |grep -v source |sed "s/.*sofa-serverless-common-\(.*\).jar/\1/")
+          echo "升级sofa-runtime version to $serverless_runtime_version"
+          for testsample in `find samples -name "*[3]-samples"`;do  sed -i "s/<sofa.serverless.runtime.version>.*<\/sofa.serverless.runtime.version>/<sofa.serverless.runtime.version>$serverless_runtime_version<\/sofa.serverless.runtime.version>/g"  $testsample/pom.xml ;done
+          for testsample in `find samples -name "*[3]-samples"`;do if cat $testsample/pom.xml |grep "<sofa.serverless.runtime.version>"|grep $serverless_runtime_version;then echo "版本校验通过";else echo "版本校验失败";exit 1;fi;done
 
       - name: Run jdk17 serverless runtime test
         run: |
