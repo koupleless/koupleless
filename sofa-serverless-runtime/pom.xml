@@ -11,7 +11,7 @@
     <properties>
         <sofa.ark.version>3.0.1</sofa.ark.version>
         <spring.boot.version>3.0.9</spring.boot.version>
-        <logback.core.default>1.2.9</logback.core.default>
+        <logback.core>1.3.5</logback.core>
         <revision.default>0.5.5</revision.default>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
