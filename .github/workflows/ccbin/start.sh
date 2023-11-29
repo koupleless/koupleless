@@ -24,6 +24,7 @@ function kill_java_process() {
 set -e
 
 #dobbo common-model
+ROOTDir=$(pwd)
 testSuite=$1
 echo "start testsuite:$testSuite"
 if [[ $testSuite == "jdk8" ]];then
@@ -38,7 +39,7 @@ for TEST_DIR in $(find $(pwd) -name "$suiteReg");do
   TESTAPP_DIR=$TEST_DIR
   echo "TESTAPP_DIR=$TESTAPP_DIR"
   cd ${TESTAPP_DIR}
-  mvn clean install -U -Dmaven.test.skip=true >>/tmp/mvn.out
+  mvn clean install -U -Dmaven.test.skip=true
   for BaseDir in $( find $(pwd)  -type d -name "*base" |grep -v src|grep -v target|grep -v mybatis|grep -v logs);do
     echo "BaseDir $BaseDir"
     export BaseDir=$BaseDir
@@ -57,10 +58,10 @@ for TEST_DIR in $(find $(pwd) -name "$suiteReg");do
     sleep 5
 
     echo "Start health check"
-    bash $TESTAPP_DIR/../ccbin/healthcheck.sh
+    bash $ROOTDir/.github/workflows/ccbin/healthcheck.sh
 
     echo "Start module biz Test"
-    bash $TESTAPP_DIR/../ccbin/moduletest.sh
+    bash $ROOTDir/.github/workflows/ccbin/moduletest.sh
 
     echo "测试通过 $BaseDir"
 

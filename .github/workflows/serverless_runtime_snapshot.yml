@@ -34,7 +34,8 @@ jobs:
         run: |
           serverless_runtime_version=`egrep "<revision.default>([^<]+)</revision.default>" sofa-serverless-runtime/pom.xml |awk -F "revision.default>|</revision.default" '{print $2}'`
           echo "升级sofa-runtime version to $serverless_runtime_version"
-          for testsample in `find samples -name "*-samples"`;do  sed -i "s/<sofa.serverless.runtime.version>.*<\/sofa.serverless.runtime.version>/<sofa.serverless.runtime.version>$serverless_runtime_version<\/sofa.serverless.runtime.version>/g"  $testsample/pom.xml ;done
+          for testsample in `find samples -name "*[^3|^dubbo]-samples"`;do  sed -i "s/<sofa.serverless.runtime.version>.*<\/sofa.serverless.runtime.version>/<sofa.serverless.runtime.version>$serverless_runtime_version<\/sofa.serverless.runtime.version>/g"  $testsample/pom.xml ;done
+          for testsample in `find samples -name "*[3]-samples"`;do  sed -i "s/<sofa.serverless.runtime.version>.*<\/sofa.serverless.runtime.version>/<sofa.serverless.runtime.version>$serverless_runtime_version-jdk17<\/sofa.serverless.runtime.version>/g"  $testsample/pom.xml ;done
           for testsample in `find samples -name "*[^dubbo]-samples"`;do if cat $testsample/pom.xml |grep "<sofa.serverless.runtime.version>"|grep $serverless_runtime_version;then echo "版本校验通过";else echo "版本校验失败";exit 1;fi;done
 
       - name: Test Env prepare
@@ -47,12 +48,12 @@ jobs:
           docker run -p 2181:2181 -it --name zookeeper --restart always -d zookeeper:3.9.0
           sudo apt-get install redis-server -y
           sudo systemctl start redis-server
-          sudo cp samples/ccbin/arkctl /usr/bin/arkctl
+          sudo cp .github/workflows/ccbin/arkctl /usr/bin/arkctl
 
       - name: Run jdk8 serverless runtime test
         run: |
           set -e
-          bash samples/ccbin/start.sh jdk8
+          bash .github/workflows/ccbin/start.sh jdk8
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -61,10 +62,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Build with Maven
+        working-directory: sofa-serverless-runtime
+        run: mvn clean install -P17-release -DskipTests -B -U -e
+
       - name: Run jdk17 serverless runtime test
         run: |
           set -e
-          bash samples/ccbin/start.sh jdk17
+          bash .github/workflows/ccbin/start.sh jdk17
 
   release_for_jdk8:
     needs: build_and_test
