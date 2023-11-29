@@ -18,26 +18,28 @@ package com.alipay.sofa.serverless.logback;
 
 import ch.qos.logback.classic.LoggerContext;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
- * 按上下文生成 logback context.
+ * 按ClassLoader生成 logback context.
  *
  * @author : chenlei3641
  */
 public class SOFAServerlessLogbackLogManagerAdapter {
-    private static final ThreadLocal<LoggerContext> THREAD_CONTEXT = new ThreadLocal();
+    private static final Map<ClassLoader, LoggerContext> CLASS_LOADER_LOGGER_CONTEXT = new HashMap<>();
 
     public static LoggerContext getContext(ClassLoader cls) {
-        LoggerContext loggerContext = THREAD_CONTEXT.get();
-        if (loggerContext == null) {
+        LoggerContext loggerContext = CLASS_LOADER_LOGGER_CONTEXT.get(cls);
+        if (null == loggerContext) {
             synchronized (SOFAServerlessLogbackLogManagerAdapter.class) {
-                if (THREAD_CONTEXT.get() == null) {
+                loggerContext = CLASS_LOADER_LOGGER_CONTEXT.get(cls);
+                if (null == loggerContext) {
                     loggerContext = new LoggerContext();
-                    THREAD_CONTEXT.set(loggerContext);
-                } else {
-                    loggerContext = THREAD_CONTEXT.get();
+                    loggerContext.setName(cls.toString());
+                    CLASS_LOADER_LOGGER_CONTEXT.put(cls, loggerContext);
                 }
             }
         }
@@ -45,6 +47,10 @@ public class SOFAServerlessLogbackLogManagerAdapter {
     }
 
     public static void clearContext(ClassLoader cls) {
-        THREAD_CONTEXT.remove();
+        CLASS_LOADER_LOGGER_CONTEXT.remove(cls);
+    }
+
+    public static List<String> getContextNames(){
+        return CLASS_LOADER_LOGGER_CONTEXT.values().stream().map(LoggerContext::getName).collect(Collectors.toList());
     }
 }

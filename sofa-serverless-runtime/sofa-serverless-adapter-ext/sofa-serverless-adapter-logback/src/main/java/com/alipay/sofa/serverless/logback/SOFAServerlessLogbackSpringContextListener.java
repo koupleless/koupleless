@@ -19,7 +19,6 @@ package com.alipay.sofa.serverless.logback;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
-import org.springframework.boot.logging.LoggingSystem;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.ContextClosedEvent;
@@ -70,8 +69,6 @@ public class SOFAServerlessLogbackSpringContextListener implements GenericApplic
     }
 
     private void onApplicationStartingEvent() {
-        System.setProperty(LoggingSystem.class.getName(),
-            SOFAServerlessLogbackLoggingSystem.class.getName());
     }
 
     @Override
