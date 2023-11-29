@@ -33,6 +33,9 @@
         <module>logging/log4j2/base</module>
         <module>logging/log4j2/biz1</module>
         <module>logging/log4j2/biz2</module>
+        <module>logging/logback/base</module>
+        <module>logging/logback/biz1</module>
+        <module>logging/logback/biz2</module>
         <module>web/tomcat</module>
         <module>service/sample-service-base</module>
         <module>service/sample-service-biz</module>
