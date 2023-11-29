@@ -82,9 +82,15 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	}
 
 	if moduleDeployment.DeletionTimestamp != nil {
-		// delete moduleDeployment
 		event.PublishModuleDeploymentDeleteEvent(r.Client, ctx, moduleDeployment)
-		return r.handleDeletingModuleDeployment(ctx, moduleDeployment)
+		if !utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer) &&
+			!utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleExistedFinalizer) {
+			if moduleDeployment.Status.ReleaseStatus.Progress != v1alpha1.ModuleDeploymentReleaseProgressTerminated {
+				moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressTerminated
+				return ctrl.Result{}, r.Status().Update(ctx, moduleDeployment)
+			}
+			return ctrl.Result{}, nil
+		}
 	}
 
 	if moduleDeployment.Generation == 1 {
@@ -129,6 +135,10 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 	case v1alpha1.ModuleDeploymentReleaseProgressExecuting:
 		return r.updateModuleReplicaSet(ctx, moduleDeployment, newRS)
 	case v1alpha1.ModuleDeploymentReleaseProgressCompleted:
+		if moduleDeployment.DeletionTimestamp != nil {
+			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressTerminating
+			return ctrl.Result{}, r.Status().Update(ctx, moduleDeployment)
+		}
 		if moduleDeployment.Spec.Replicas != newRS.Spec.Replicas {
 			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressInit
 			log.Log.Info("update release status progress to init when complete moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
@@ -161,6 +171,27 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 				return ctrl.Result{}, utils.Error(err, "update moduleDeployment progress from paused to executing failed")
 			}
 		}
+	case v1alpha1.ModuleDeploymentReleaseProgressTerminating:
+		// delete modules
+		if utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleExistedFinalizer) {
+			if moduleDeployment.Spec.Replicas != 0 {
+				moduleDeployment.Spec.Replicas = 0
+				return ctrl.Result{}, r.Update(ctx, moduleDeployment)
+			}
+			if newRS.Status.Replicas != 0 {
+				handleInitModuleDeployment(moduleDeployment, newRS)
+				return ctrl.Result{}, r.Status().Update(ctx, moduleDeployment)
+			}
+			utils.RemoveFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleExistedFinalizer)
+			return ctrl.Result{}, r.Update(ctx, moduleDeployment)
+		}
+
+		// delete module replicaset
+		if utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer) {
+			return r.handleDeletingModuleDeployment(ctx, moduleDeployment)
+		}
+	case v1alpha1.ModuleDeploymentReleaseProgressTerminated:
+		return ctrl.Result{}, nil
 	}
 	return ctrl.Result{}, nil
 }
@@ -190,10 +221,6 @@ func handleInitModuleDeployment(moduleDeployment *v1alpha1.ModuleDeployment, new
 
 // handle deleting module deployment
 func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.Context, moduleDeployment *v1alpha1.ModuleDeployment) (ctrl.Result, error) {
-	if !utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer) {
-		return ctrl.Result{}, nil
-	}
-
 	existReplicaset := true
 	set := map[string]string{
 		label.ModuleDeploymentLabel: moduleDeployment.Name,
@@ -218,6 +245,7 @@ func (r *ModuleDeploymentReconciler) handleDeletingModuleDeployment(ctx context.
 				return ctrl.Result{}, utils.Error(err, "Failed to delete moduleReplicaSet", "moduleReplicaSetName", replicaSetList.Items[i].Name)
 			}
 		}
+
 		requeueAfter := utils.GetNextReconcileTime(moduleDeployment.DeletionTimestamp.Time)
 		return ctrl.Result{RequeueAfter: requeueAfter}, nil
 	} else {
@@ -249,6 +277,7 @@ func (r *ModuleDeploymentReconciler) updateOwnerReference(ctx context.Context, m
 	})
 	moduleDeployment.SetOwnerReferences(ownerReference)
 	utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer)
+	utils.AddFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleExistedFinalizer)
 	err = utils.UpdateResource(r.Client, ctx, moduleDeployment)
 	if err != nil {
 		return utils.Error(err, "Failed to update moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
@@ -304,6 +333,9 @@ func (r *ModuleDeploymentReconciler) createOrGetModuleReplicas(ctx context.Conte
 			log.Log.Info("module has changed, need create a new replicaset")
 		}
 
+		if moduleDeployment.DeletionTimestamp != nil {
+			return nil, nil, false, nil
+		}
 		// create a new moduleReplicaset
 		moduleReplicaSet, err := r.createNewReplicaSet(ctx, moduleDeployment, maxVersion+1)
 		if err != nil {
@@ -381,6 +413,7 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 	}
 
 	err := r.updateModuleReplicas(ctx, replicas, moduleDeployment, newRS)
+
 	if err != nil {
 		return ctrl.Result{}, err
 	}

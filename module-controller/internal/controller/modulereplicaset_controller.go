@@ -19,9 +19,10 @@ package controller
 import (
 	"context"
 	"fmt"
-	"github.com/sofastack/sofa-serverless/internal/event"
 	"sort"
 	"strconv"
+
+	"github.com/sofastack/sofa-serverless/internal/event"
 
 	"k8s.io/apimachinery/pkg/selection"
 
