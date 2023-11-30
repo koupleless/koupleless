@@ -265,17 +265,16 @@ jobs:
             totalcount=0
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
-              log=$(kubectl exec -it $podname -- sh -c 'grep -c "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log')
-              count=$(kubectl exec -it $podname -- sh -c 'grep -c "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' | wc -l)
-              echo "Log: $log"
-              totalcount=$((totalcount + count))
-              echo "Pod: $podname, Log count: $count, totalcount: $totalcount"
+              log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
+              # 如果找到日志条目，则将totalcount递增
+              if [ -n "$log_entry" ]; then
+                ((totalcount++))
+              fi
             done
-          
-            # 如果所有Pod都满足条件，则退出循环
-            if [ $totalcount -eq 3 ]; then
+            
+            if [ $totalcount -eq 2 ]; then
               echo "所有Pod都满足条件。"
-              break
+              exit 0
             fi
             
             # 如果这不是最后一次尝试，则等待一段时间后继续
@@ -287,5 +286,4 @@ jobs:
               echo "已达到最大尝试次数。有些Pod未满足条件。"
               exit 1
             fi
-          
           done
