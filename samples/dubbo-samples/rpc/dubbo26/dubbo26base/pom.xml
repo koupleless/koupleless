@@ -23,6 +23,11 @@
 			<version>0.5.3</version>
 		</dependency>
 		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-base-starter</artifactId>
+			<version>${sofa.serverless.runtime.version}</version>
+		</dependency>>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -47,11 +52,6 @@
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-base-starter</artifactId>
-			<version>${sofa.serverless.runtime.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>com.lmax</groupId>
 			<artifactId>disruptor</artifactId>

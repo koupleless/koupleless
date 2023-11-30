@@ -9,12 +9,8 @@ import javax.annotation.Resource;
 import com.alipay.sofa.rpc.dubbo26.model.DemoRequest;
 import com.alipay.sofa.rpc.dubbo26.model.DemoResponse;
 import com.alipay.sofa.rpc.dubbo26.model.DemoService;
-import com.alipay.sofa.rpc.dubbo26.model.HelloRequest;
-import com.alipay.sofa.rpc.dubbo26.model.HelloResponse;
-import com.alipay.sofa.rpc.dubbo26.model.HelloService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,39 +26,54 @@ import org.springframework.web.bind.annotation.RestController;
 public class BizController {
 
     @Resource
-    private DemoService demoServiceRef;
-
+    private DemoService selfDemoServiceRef;
     @Resource
-    private DemoService secondDemoServiceRef;
-
-    @Resource
-    private HelloService helloServiceRef;
+    private DemoService biz2demoServiceRef;
     @Resource
     private DemoService baseDemoServiceRef;
 
     @Autowired
     private ApplicationContext applicationContext;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    /**
+     * 远程调用自己：biz1/com.alipay.sofa.rpc.dubbo26.model.DemoService
+     * @return
+     */
+    @RequestMapping(value = "/selfRemote", method = RequestMethod.GET)
     @ResponseBody
-    public DemoResponse handle(String ref) {
+    public DemoResponse selfRemote() {
+        String appName = applicationContext.getId();
+        DemoRequest helloRequest = new DemoRequest();
+        helloRequest.setBiz(appName);
+        return selfDemoServiceRef.handle(helloRequest);
+    }
+
+    /**
+     * 本地jvm调用基座
+     * @return
+     */
+    @RequestMapping(value = "/baseInJvm", method = RequestMethod.GET)
+    @ResponseBody
+    public DemoResponse baseInJvm() {
+        String appName = applicationContext.getId();
+        DemoRequest helloRequest = new DemoRequest();
+        helloRequest.setBiz(appName);
+        return baseDemoServiceRef.handle(helloRequest);
+    }
+
+    /**
+     * 远程调用模块2：biz2/com.alipay.sofa.rpc.dubbo26.model.DemoService
+     * @return
+     */
+    @RequestMapping(value = "/biz2remote", method = RequestMethod.GET)
+    @ResponseBody
+    public DemoResponse biz2Remote() {
         String appName = applicationContext.getId();
         DemoRequest demoRequest = new DemoRequest();
         demoRequest.setBiz(appName);
-        if("second".equals(ref)){
-            return secondDemoServiceRef.handle(demoRequest);
-        }
-        return demoServiceRef.handle(demoRequest);
+        return biz2demoServiceRef.handle(demoRequest);
     }
 
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    @ResponseBody
-    public HelloResponse hello(String name) {
-        String appName = applicationContext.getId();
-        HelloRequest helloRequest = new HelloRequest();
-        helloRequest.setName(name);
-        return helloServiceRef.sayHello(helloRequest);
-    }
 
     @RequestMapping(value = "/base", method = RequestMethod.GET)
     @ResponseBody
@@ -71,17 +82,5 @@ public class BizController {
         DemoRequest demoRequest = new DemoRequest();
         demoRequest.setBiz(appName);
         return baseDemoServiceRef.handle(demoRequest);
-    }
-
-    public void setDemoServiceRef(DemoService demoServiceRef) {
-        this.demoServiceRef = demoServiceRef;
-    }
-
-    public void setSecondDemoServiceRef(DemoService secondDemoServiceRef) {
-        this.secondDemoServiceRef = secondDemoServiceRef;
-    }
-
-    public void setHelloServiceRef(HelloService helloServiceRef) {
-        this.helloServiceRef = helloServiceRef;
     }
 }
