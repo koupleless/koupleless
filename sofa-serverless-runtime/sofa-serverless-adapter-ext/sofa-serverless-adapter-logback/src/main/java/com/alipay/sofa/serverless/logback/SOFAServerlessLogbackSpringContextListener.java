@@ -25,6 +25,10 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.GenericApplicationListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.MutablePropertySources;
+
+import java.util.HashMap;
 
 /**
  * 设置日志系统.
@@ -32,12 +36,15 @@ import org.springframework.core.ResolvableType;
  * @author : chenlei3641
  */
 public class SOFAServerlessLogbackSpringContextListener implements GenericApplicationListener,
-                                                       Ordered {
+        Ordered {
+    private static final String BIZ_CLASSLOADER = "biz-classloader";
+    private static final String ADAPTER_NAME = "sofa-serverless-logback-adapter";
 
-    private static Class<?>[] EVENT_TYPES  = { ApplicationStartingEvent.class,
-            ApplicationEnvironmentPreparedEvent.class, ContextClosedEvent.class };
 
-    private static Class<?>[] SOURCE_TYPES = { SpringApplication.class, ApplicationContext.class };
+    private static Class<?>[] EVENT_TYPES = {ApplicationStartingEvent.class,
+            ApplicationEnvironmentPreparedEvent.class, ContextClosedEvent.class};
+
+    private static Class<?>[] SOURCE_TYPES = {SpringApplication.class, ApplicationContext.class};
 
     @Override
     public boolean supportsEventType(ResolvableType eventType) {
@@ -61,11 +68,19 @@ public class SOFAServerlessLogbackSpringContextListener implements GenericApplic
     }
 
     private void onContextClosedEvent(ContextClosedEvent event) {
-        SOFAServerlessLogbackLogManagerAdapter.clearContext(Thread.currentThread()
-            .getContextClassLoader());
+        ClassLoader classLoader = event.getApplicationContext().getEnvironment()
+                .getProperty(BIZ_CLASSLOADER, ClassLoader.class);
+        if (classLoader == null) {
+            classLoader = Thread.currentThread().getContextClassLoader();
+        }
+        SOFAServerlessLogbackLogContextSelector.removeContext(classLoader);
     }
 
     private void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPreparedEvent event) {
+        MutablePropertySources propertySources = event.getEnvironment().getPropertySources();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(BIZ_CLASSLOADER, Thread.currentThread().getContextClassLoader());
+        propertySources.addFirst(new MapPropertySource(ADAPTER_NAME, map));
     }
 
     private void onApplicationStartingEvent() {

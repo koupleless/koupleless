@@ -18,8 +18,12 @@ package com.alipay.sofa.serverless.logback;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.selector.ContextSelector;
+import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 支持将配置转换为 logback context.
@@ -27,23 +31,83 @@ import java.util.List;
  * @author : chenlei3641
  */
 public class SOFAServerlessLogbackLogContextSelector implements ContextSelector {
+    private static final Map<ClassLoader, LoggerContext> CLASS_LOADER_LOGGER_CONTEXT = new HashMap<>();
 
-    private LoggerContext defaultLoggerContext;
+    private static final String                          BIZ_CLASS_LOADER            = "com.alipay.sofa.ark.container.service.classloader.BizClassLoader";
+
+    private LoggerContext                                defaultLoggerContext;
 
     public SOFAServerlessLogbackLogContextSelector(LoggerContext loggerContext) {
         this.defaultLoggerContext = loggerContext;
     }
 
-    @Override
-    public LoggerContext getLoggerContext() {
-        return SOFAServerlessLogbackLogManagerAdapter.getContext(Thread.currentThread()
-            .getContextClassLoader());
+    private static LoggerContext getContext(ClassLoader cls) {
+        LoggerContext loggerContext = CLASS_LOADER_LOGGER_CONTEXT.get(cls);
+        if (null == loggerContext) {
+            synchronized (SOFAServerlessLogbackLogContextSelector.class) {
+                loggerContext = CLASS_LOADER_LOGGER_CONTEXT.get(cls);
+                if (null == loggerContext) {
+                    loggerContext = new LoggerContext();
+                    loggerContext.setName(Integer.toHexString(System.identityHashCode(cls)));
+                    CLASS_LOADER_LOGGER_CONTEXT.put(cls, loggerContext);
+                }
+            }
+        }
+        return loggerContext;
+    }
+
+    public static LoggerContext removeContext(ClassLoader cls) {
+        if(cls == null){
+            return null;
+        }
+        return CLASS_LOADER_LOGGER_CONTEXT.remove(cls);
     }
 
     @Override
-    public LoggerContext getLoggerContext(String s) {
-        return SOFAServerlessLogbackLogManagerAdapter.getContext(Thread.currentThread()
-            .getContextClassLoader());
+    public LoggerContext getLoggerContext() {
+        ClassLoader classLoader = this.findClassLoader();
+        if (classLoader == null) {
+            return defaultLoggerContext;
+        }
+        return getContext(classLoader);
+    }
+
+    private ClassLoader findClassLoader() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (BIZ_CLASS_LOADER.equals(classLoader.getClass().getName())) {
+            return classLoader;
+        }
+        Class<?>[] context = new SecurityManager() {
+            @Override
+            public Class<?>[] getClassContext() {
+                return super.getClassContext();
+            }
+        }.getClassContext();
+        if (context == null || context.length == 0) {
+            return null;
+        }
+        for (Class<?> cls : context) {
+            if (cls.getClassLoader() != null
+                && BIZ_CLASS_LOADER.equals(cls.getClassLoader().getClass().getName())) {
+                return cls.getClassLoader();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public LoggerContext getLoggerContext(String name) {
+        if (!StringUtils.hasText(name)) {
+            return defaultLoggerContext;
+        }
+        for (ClassLoader classLoader : CLASS_LOADER_LOGGER_CONTEXT.keySet()) {
+            LoggerContext loggerContext = CLASS_LOADER_LOGGER_CONTEXT.get(classLoader);
+            if (name.equals(loggerContext.getName())) {
+                return loggerContext;
+            }
+        }
+        return defaultLoggerContext;
     }
 
     @Override
@@ -52,13 +116,21 @@ public class SOFAServerlessLogbackLogContextSelector implements ContextSelector 
     }
 
     @Override
-    public LoggerContext detachLoggerContext(String s) {
-        return SOFAServerlessLogbackLogManagerAdapter.getContext(Thread.currentThread()
-            .getContextClassLoader());
+    public LoggerContext detachLoggerContext(String loggerContextName) {
+        if (!StringUtils.hasText(loggerContextName)) {
+            return null;
+        }
+        for (ClassLoader classLoader : CLASS_LOADER_LOGGER_CONTEXT.keySet()) {
+            LoggerContext loggerContext = CLASS_LOADER_LOGGER_CONTEXT.get(classLoader);
+            if (loggerContextName.equals(loggerContext.getName())) {
+                return removeContext(classLoader);
+            }
+        }
+        return null;
     }
 
     @Override
     public List<String> getContextNames() {
-        return SOFAServerlessLogbackLogManagerAdapter.getContextNames();
+        return CLASS_LOADER_LOGGER_CONTEXT.values().stream().map(LoggerContext::getName).collect(Collectors.toList());
     }
 }
