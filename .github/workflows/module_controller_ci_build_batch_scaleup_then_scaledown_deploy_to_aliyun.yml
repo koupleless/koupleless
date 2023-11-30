@@ -268,9 +268,12 @@ jobs:
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
               log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
+              echo $log_entry
               # 如果找到日志条目，则将totalcount递增
-              if [ -n "$log_entry" ]; then
-                ((totalcount++))
+              if [ -z "$log_entry" ]; then
+                echo pod不存在日志
+              else
+                ((totalcount++)
               fi
             done
             echo "总计数：$totalcount"
