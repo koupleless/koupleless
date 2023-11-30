@@ -74,7 +74,7 @@ public class SOFAServerlessLogbackLogContextSelector implements ContextSelector 
 
     private ClassLoader findClassLoader() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (BIZ_CLASS_LOADER.equals(classLoader.getClass().getName())) {
+        if (classLoader != null && BIZ_CLASS_LOADER.equals(classLoader.getClass().getName())) {
             return classLoader;
         }
         Class<?>[] context = new SecurityManager() {
