@@ -265,9 +265,11 @@ jobs:
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
               count=$(kubectl exec -it $podname -- sh -c 'grep -c "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' | wc -l)
+              echo $count
               totalcount=$((totalcount + count))
             done
-            
+            echo $totalcount
+          
             # 如果所有Pod都满足条件，则退出循环
             if [ $totalcount -eq 2 ]; then
               echo "所有Pod都满足条件。"
@@ -281,7 +283,7 @@ jobs:
             else
               # 如果是最后一次尝试，则输出超时消息
               echo "已达到最大尝试次数。有些Pod未满足条件。"
+              exit 1
             fi
-            
-            echo $totalcount
+          
           done
