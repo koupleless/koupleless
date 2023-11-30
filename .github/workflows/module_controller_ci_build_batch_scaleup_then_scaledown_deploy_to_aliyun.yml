@@ -204,6 +204,7 @@ jobs:
       - name: exist module more then 1
         run: |
           moduleCount=$(kubectl get module | wc -l)
+          echo $moduleCount
           if [[ $moduleCount -lt 1 ]]; then
             echo "ERROR: 未达到指定module数量"
             exit 1
@@ -264,14 +265,15 @@ jobs:
             totalcount=0
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
+              log=$(kubectl exec -it $podname -- sh -c 'grep -c "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log')
               count=$(kubectl exec -it $podname -- sh -c 'grep -c "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' | wc -l)
-              echo $count
+              echo "Log: $log"
               totalcount=$((totalcount + count))
+              echo "Pod: $podname, Log count: $count, totalcount: $totalcount"
             done
-            echo $totalcount
           
             # 如果所有Pod都满足条件，则退出循环
-            if [ $totalcount -eq 2 ]; then
+            if [ $totalcount -eq 3 ]; then
               echo "所有Pod都满足条件。"
               break
             fi
