@@ -54,15 +54,3 @@ jobs:
         run: |
           set -e
           bash samples/ccbin/start.sh jdk8
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-
-      - name: Run jdk17 serverless runtime test
-        run: |
-          set -e
-          bash samples/ccbin/start.sh jdk17

@@ -21,7 +21,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
-import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
