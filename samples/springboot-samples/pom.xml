@@ -35,6 +35,8 @@
         <module>logging/log4j2/biz1</module>
         <module>logging/log4j2/biz2</module>
         <module>web/tomcat</module>
+        <module>web/webflux/base</module>
+        <module>web/webflux/biz</module>
         <module>service/sample-service-base</module>
         <module>service/sample-service-biz</module>
         <module>service/sample-service-biz2</module>
@@ -83,6 +85,11 @@
                         <artifactId>spring-boot-starter-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>${spring.boot.version}</version>
             </dependency>
 
             <!-- 这里添加动态模块相关依赖 -->

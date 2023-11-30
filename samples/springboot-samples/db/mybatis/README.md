@@ -1,5 +1,5 @@
 
-# 实验内容
+# 实验内容：基座、模块使用 mybatis、mysql、druid
 ## 实验应用
 ### base
 base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
