@@ -205,7 +205,7 @@ jobs:
         run: |
           moduleCount=$(kubectl get module | wc -l)
           echo $moduleCount
-          if [[ $moduleCount -lt 1 ]]; then
+          if [[ $moduleCount -lt 2 ]]; then
             echo "ERROR: 未达到指定module数量"
             exit 1
           fi
@@ -259,9 +259,11 @@ jobs:
           interval=30
           
           for ((i=0; i<$max_attempts; i++)); do
+            echo "尝试 $((i+1))"
             # 获取满足标签选择器条件的所有Pod
             podnames=($(kubectl get pods -l $label_selector -o jsonpath='{.items[*].metadata.name}'))
-            
+            echo "Pod名称：${podnames[@]}"
+          
             totalcount=0
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
@@ -271,6 +273,7 @@ jobs:
                 ((totalcount++))
               fi
             done
+            echo "总计数：$totalcount"
             
             if [ $totalcount -eq 2 ]; then
               echo "所有Pod都满足条件。"
