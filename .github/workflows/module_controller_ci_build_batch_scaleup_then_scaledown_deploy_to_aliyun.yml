@@ -266,7 +266,7 @@ jobs:
             totalcount=0
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
-              echo "check log Pod: $podname
+              echo "check log Pod: $podname"
               log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
               echo $log_entry
               if [ -z "$log_entry" ]; then
