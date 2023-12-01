@@ -26,7 +26,7 @@
 			<groupId>com.alipay.sofa.serverless</groupId>
 			<artifactId>sofa-serverless-base-starter</artifactId>
 			<version>${sofa.serverless.runtime.version}</version>
-		</dependency>>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
