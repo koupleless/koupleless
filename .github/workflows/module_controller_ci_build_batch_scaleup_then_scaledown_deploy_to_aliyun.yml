@@ -270,7 +270,7 @@ jobs:
               log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
               echo $log_entry
               if [ -z "$log_entry" ]; then
-                echo "Pod: $podname
+                echo "Pod: $podname"
               else
                 totalcount=$((totalcount + 1))
               fi
