@@ -271,7 +271,7 @@ jobs:
               kubectl exec -it $podname -- sh -c 'ls -al ~/'
               kubectl exec -it $podname -- sh -c 'ls -al ~/logs'
               kubectl exec -it $podname -- sh -c 'ls -al ~/logs/sofa-ark'
-              log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
+              log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log || true' 2>/dev/null)
               echo "totalcount：$totalcount"
               if [ -n "$log_entry" ]; then
                 totalcount=$((totalcount + 1))
