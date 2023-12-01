@@ -305,7 +305,7 @@ jobs:
           
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
-                log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
+                log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log || true' 2>/dev/null)
           
                 # 如果没有找到日志条目，则将标志设置为false
                 if [ -z "$log_entry" ]; then
