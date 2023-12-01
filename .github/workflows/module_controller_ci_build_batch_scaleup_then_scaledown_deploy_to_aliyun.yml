@@ -274,8 +274,8 @@ jobs:
               else
                 totalcount=$((totalcount + 1))
               fi
+              echo "totalcount：$totalcount"
             done
-            echo "总计数：$totalcount"
             
             if [ $totalcount -eq 2 ]; then
               echo "所有Pod都满足条件。"
