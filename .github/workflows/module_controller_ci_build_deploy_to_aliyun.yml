@@ -388,7 +388,7 @@ jobs:
           
           for ((i=0; i<$max_attempts; i++)); do
             # 执行您的日志检索命令
-            log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
+            log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log || true' 2>/dev/null)
 
             # 如果找到了日志条目，则退出循环
             if [ -n "$log_entry" ]; then
