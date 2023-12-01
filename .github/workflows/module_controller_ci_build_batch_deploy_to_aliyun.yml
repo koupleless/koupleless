@@ -1,4 +1,4 @@
-name: Module Controller Integration Test
+name: Module Controller Integration Test batch deploy
 run-name: ${{ github.actor }} pushed module-controller code
 
 on:
