@@ -37,7 +37,7 @@ public class Dubbo26BaseApplication implements CommandLineRunner {
     }
 
     /**
-     * Install biz when base started
+     * 方便本地测试用，启动基座时，默认也启动模块
      * @param args
      * @throws Exception
      */
@@ -45,7 +45,7 @@ public class Dubbo26BaseApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         try {
             installBiz("dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar");
-            installBiz("dubbo26biz2/target/dubbo26biz2-0.0.1-SNAPSHOT-ark-biz.jar");
+            //installBiz("dubbo26biz2/target/dubbo26biz2-0.0.1-SNAPSHOT-ark-biz.jar");
         } catch (Throwable e) {
             LOGGER.error("Install biz failed", e);
         }

@@ -23,7 +23,7 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
         <!-- end 单 host 部署的依赖 -->
 ```
 
-这里基座发布了 RPC 服务
+这里基座发布了 RPC 服务（包括一个injvm服务）
 ```shell
 base/com.alipay.sofa.rpc.dubbo26.model.DemoService
 ```
@@ -47,8 +47,8 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
     <configuration>
         <skipArkExecutable>true</skipArkExecutable>
         <outputDirectory>./target</outputDirectory>
-        <bizName>triplebiz</bizName>
-        <webContextPath>/triplebiz</webContextPath>
+        <bizName>biz</bizName>
+        <webContextPath>/biz</webContextPath>
         <declaredMode>true</declaredMode>
         <!--					打包、安装和发布 ark biz-->
         <!--					静态合并部署需要配置-->
@@ -57,49 +57,33 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
 </plugin>
 ```
 ### 复用基座依赖
-另外模块还额外将基座里有的依赖，设置为了 provided，这样可以尽可能的服用基座的model、dubbo 等。
+另外模块还额外将基座里有的依赖，设置为了 provided，这样可以尽可能的复用基座的model、dubbo 等。
 ```xml
-<!--和基座通信-->
 <dependency>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>common-model</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <scope>provided</scope>
-</dependency>
-
-<dependency>
-    <groupId>com.google.protobuf</groupId>
-    <artifactId>protobuf-java</artifactId>
-    <version>${protobuf.version}</version>
-    <scope>provided</scope>
-</dependency>
-<dependency>
-    <groupId>org.apache.dubbo</groupId>
-    <artifactId>dubbo-dependencies-zookeeper</artifactId>
-    <scope>provided</scope>
-    <type>pom</type>
-    <exclusions>
-        <exclusion>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-reload4j</artifactId>
-        </exclusion>
-    </exclusions>
-</dependency>
-<dependency>
-    <groupId>org.apache.dubbo</groupId>
-    <artifactId>dubbo-spring-boot-starter</artifactId>
-    <scope>provided</scope>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-    <scope>provided</scope>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-web</artifactId>
+	<scope>provided</scope>
 </dependency>
 
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-log4j2</artifactId>
+    <scope>provided</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <scope>provided</scope>
+</dependency>
+```
+如果需要基座和模块间通信，用于通信的模块需要委托给基座去加载（基座compile引入，模块provided引入），否则会报ClassCastException
+```xml
+<!-- 模块和基座通信，需要共享一个类-->
+<dependency>
+    <groupId>com.alipay.sofa</groupId>
+    <artifactId>dubbo26model</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -116,88 +100,92 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
 ```
 
 ### 测试调用代码
-这里模块在 RPCController 里引用了模块/基座里定义的 RPC/JVM 服务。
-```java
- /**
-     * tri协议，远程调用，默认走hessian序列化
-     */
-    @DubboReference(group = "triplebiz", scope = "remote")
-    private DemoService demoService;
-
-    /**
-     * tri协议，injvm调用，scope默认走injvm
-     */
-    @DubboReference(group = "base")
-    private CommonService commonServiceInJvm;
+发布一个服务
+``` xml
+<!-- 和本地bean一样实现服务 -->
+<bean id="demoService" class="com.alipay.sofa.rpc.dubbo26.biz.service.BizDemoServiceImpl"/>
+<!-- 声明需要暴露的服务接口 -->
+<dubbo:service interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" ref="demoService" group="biz"/>    <!-- 和本地bean一样实现服务 -->
 ```
 
-### 运行代码
-1. 进入目录 `sofa-serverless/samples/dubbo-samples/rpc/dubbo3/`
-2. 执行 `mvn clean install -DskipTests`
-3. 启动 zookeeper（用于Dubbo服务注册）
-```shell
-docker run -p 2181:2181 -it --name zookeeper --restart always -d zookeeper:3.9.0
+在 BizController 里引用了模块自己发布的RPC，基座发布的injvm服务。
+``` xml
+<!-- 生成服务代理，调用基座的injvm服务-->
+<dubbo:reference id="baseDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="local" group="base" check="false"/>
+<!-- 生成远程服务代理，调用服务biz1/com.alipay.sofa.rpc.dubbo26.model.DemoService-->
+<dubbo:reference id="selfDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="remote" group="biz" check="false"/>
 ```
-4. 启动基座应用Dubbo3BaseApplication.java，确保基座启动成功
-5. 执行 curl 命令安装 triplebiz
-本地 path 以 file://开始, 也支持远程url下载
+### 基座启动时默认安装模块（仅本地测试）
+为了方便本地测试用，启动基座时，默认也启动模块
+```java 
+/**
+     * 方便本地测试用，启动基座时，默认也启动模块
+     * @param args
+     * @throws Exception
+     */
+    @Override
+    public void run(String... args) throws Exception {
+        try {
+            installBiz("dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar");
+            installBiz("dubbo26biz2/target/dubbo26biz2-0.0.1-SNAPSHOT-ark-biz.jar");
+        } catch (Throwable e) {
+            LOGGER.error("Install biz failed", e);
+        }
+    }
+```
+也可以用curl命令安装，本地 path 以 file://开始, 也支持远程url下载
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
 --data '{
-    "bizName": "triplebiz",
+    "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
-    "bizUrl": "file:////path/to/project/sofa-serverless/samples/dubbo-samples/rpc/dubbo3/triplebiz/target/triplebiz-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:////path/to/project/sofa-serverless/samples/dubbo-samples/rpc/dubbo3/dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 
-如果要验证热部署的能力，也可以通过卸载命令卸载模块，然后重新安装模块，发起多次模块安装
-```shell
-curl --location --request POST 'localhost:1238/uninstallBiz' \
---header 'Content-Type: application/json' \
---data '{
-    "bizName": "triplebiz",
-    "bizVersion": "0.0.1-SNAPSHOT"
-}'
-```
-
-5. 查看模块安装是否成功
+### 运行代码
+1. 进入目录 `sofa-serverless/samples/dubbo-samples/rpc/dubbo26/`
+2. 执行 `mvn clean install -DskipTests`
+3. 启动基座应用Dubbo26BaseApplication.java，确保基座和模块启动成功
+4. 查看模块安装是否成功
 ```shell
 curl --location --request POST 'localhost:1238/queryAllBiz'
 ```
 可以查看到所有安装好的模块列表
 
-6. 验证模块的 RPC/JVM调用
-模块远程调用自己发布的tri服务
+5. 验证模块的 RPC/JVM调用
+模块远程调用自己发布的dubbo服务
 ```shell
-curl localhost:8080/triplebiz/remote
+curl localhost:8080/biz/selfRemote
 ```
 返回
 ```shell
-com.alipay.sofa.rpc.dubbo3.triplebiz.service.DemoServiceImpl: Hello,trpilebiz
+{
+  "result": "biz->com.alipay.sofa.rpc.dubbo26.biz.service.BizDemoServiceImpl"
+}
 ```
 模块injvm调用基座发布的服务
 ```shell
-curl localhost:8080/triplebiz/local
+curl localhost:8080/biz/baseInJvm
+```
+返回
+```json
+{
+  "result": "biz->com.alipay.sofa.rpc.dubbo26.base.service.BaseDemoService"
+}
+```
+6. 验证基座的 RPC/JVM调用
+基座调用biz模块发布的injvm服务
+```shell
+curl http://localhost:8080/bizInJvm
 ```
 返回
 ```shell
-com.alipay.sofa.rpc.dubbo3.base.service.BaseCommonService: Hello,triplebiz
+{
+  "result": "base->com.alipay.sofa.rpc.dubbo26.biz.service.BizDemoServiceImpl"
+}
 ```
-7. 验证基座的 RPC/JVM调用
-基座调用triplebiz模块发布的injvm服务
-```shell
-curl http://localhost:8080/base/triplebiz/injvm
-```
-返回
-```shell
-com.alipay.sofa.rpc.dubbo3.triplebiz.service.TripleBizCommonService: Hello,base
-```
-基座调用triplebiz模块发布的rpc服务
-```shell
-curl http://localhost:8080/base/triplebiz/remote
-```
-返回
-```shell
-com.alipay.sofa.rpc.dubbo3.triplebiz.service.TripleBizCommonService: Hello,base
-```
+
+### 支持情况
+dubbo2.6 暂时只支持java序列化，不支持热部署能力，如有需要请提一个issue告诉我们

@@ -60,6 +60,7 @@
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>dubbo26model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- Dubbo Spring Boot Starter -->
 		<dependency>
@@ -75,6 +76,7 @@
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
+			<version>4.1.25.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

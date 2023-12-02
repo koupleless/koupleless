@@ -2,7 +2,7 @@
  * Ant Group
  * Copyright (c) 2004-2023 All Rights Reserved.
  */
-package com.alipay.sofa.rpc.dubbo26.biz.controller;
+package com.alipay.sofa.rpc.dubbo26.base.controller;
 
 import javax.annotation.Resource;
 
@@ -20,22 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *
  * @author syd
- * @version BizController.java, v 0.1 2023年10月31日 19:52 syd
+ * @version BaseController.java, v 0.1 2023年12月02日 12:40 syd
  */
 @RestController
-public class BizController {
+public class BaseController {
 
     @Resource
     private DemoService selfDemoServiceRef;
 
     @Resource
-    private DemoService baseDemoServiceRef;
+    private DemoService bizInJvmDemoServiceRef;
 
     @Autowired
     private ApplicationContext applicationContext;
 
     /**
-     * 远程调用自己：biz1/com.alipay.sofa.rpc.dubbo26.model.DemoService
+     * 远程调用自己：base/com.alipay.sofa.rpc.dubbo26.model.DemoService
      * @return
      */
     @RequestMapping(value = "/selfRemote", method = RequestMethod.GET)
@@ -48,15 +48,15 @@ public class BizController {
     }
 
     /**
-     * 本地jvm调用基座，通信的模型，需要模块provided引入，基座compile引入
+     * 调用模块：biz/com.alipay.sofa.rpc.dubbo26.model.DemoService
      * @return
      */
-    @RequestMapping(value = "/baseInJvm", method = RequestMethod.GET)
+    @RequestMapping(value = "/bizInJvm", method = RequestMethod.GET)
     @ResponseBody
-    public DemoResponse baseInJvm() {
+    public DemoResponse bizInJvm() {
         String appName = applicationContext.getId();
         DemoRequest helloRequest = new DemoRequest();
         helloRequest.setBiz(appName);
-        return baseDemoServiceRef.handle(helloRequest);
+        return bizInJvmDemoServiceRef.handle(helloRequest);
     }
 }
