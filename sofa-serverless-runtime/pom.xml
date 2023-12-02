@@ -14,7 +14,7 @@
         2. 修改  sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
         3. 开始打包，将所有打出的包都上传-->
         <sofa.ark.version.jdk17>3.0.1</sofa.ark.version.jdk17>
-        <sofa.ark.version.jdk8>2.2.4</sofa.ark.version.jdk8>
+        <sofa.ark.version.jdk8>2.2.5</sofa.ark.version.jdk8>
         <spring.boot.version.jdk8>2.7.15</spring.boot.version.jdk8>
         <spring.boot.version.jdk17>3.0.9</spring.boot.version.jdk17>
         <logback.core.default>1.2.9</logback.core.default>

@@ -147,6 +147,15 @@ public class ApolloApplicationContextInitializer
         }
     }
 
+    /**
+     * To reset system properties from environment config
+     */
+    void resetSystemProperty() {
+        for (String propertyName : APOLLO_SYSTEM_PROPERTIES) {
+            System.clearProperty(propertyName);
+        }
+    }
+
     private void fillSystemPropertyFromEnvironment(ConfigurableEnvironment environment,
                                                    String propertyName) {
         if (System.getProperty(propertyName) != null) {
@@ -180,6 +189,7 @@ public class ApolloApplicationContextInitializer
 
         // should always initialize system properties like app.id in the first place
         //        initializeSystemProperty(configurableEnvironment);
+        resetSystemProperty();
 
         Boolean eagerLoadEnabled = configurableEnvironment.getProperty(
             PropertySourcesConstants.APOLLO_BOOTSTRAP_EAGER_LOAD_ENABLED, Boolean.class, false);
