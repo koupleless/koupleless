@@ -145,8 +145,17 @@ curl --location --request POST 'localhost:1238/installBiz' \
 ```
 
 ### 运行代码
-1. 进入目录 `sofa-serverless/samples/dubbo-samples/rpc/dubbo26/`
-2. 执行 `mvn clean install -DskipTests`
+1. 【重要】首次运行，先编译安装下用于基座模块间通信的包
+```shell
+cd samples/dubbo-samples/rpc/dubbo26/dubbo26model
+mvn clean install
+```
+
+2. 进入目录`samples/dubbo-samples/rpc/dubbo26/` 编译打包模块的代码
+```shell
+cd ../
+mvn clean package
+```
 3. 启动基座应用Dubbo26BaseApplication.java，确保基座和模块启动成功
 4. 查看模块安装是否成功
 ```shell
@@ -155,7 +164,7 @@ curl --location --request POST 'localhost:1238/queryAllBiz'
 可以查看到所有安装好的模块列表
 
 5. 验证模块的 RPC/JVM调用
-模块远程调用自己发布的dubbo服务
+模块远程调用自己发布的dubbo服务（因为有dubbo网络调用，执行前请关闭vpn，否则可能出现调用超时）
 ```shell
 curl localhost:8080/biz/selfRemote
 ```
@@ -187,5 +196,8 @@ curl http://localhost:8080/bizInJvm
 }
 ```
 
-### 支持情况
-dubbo2.6 暂时只支持java序列化，不支持热部署能力，如有需要请提一个issue告诉我们
+### 说明
+因为有dubbo网络调用，执行前请关闭vpn，否则可能出现调用超时。
+
+dubbo2.6 暂时只支持java序列化，不支持热部署能力，如有需要请提一个issue告诉我们。
+

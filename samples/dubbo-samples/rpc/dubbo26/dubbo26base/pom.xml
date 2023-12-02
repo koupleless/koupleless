@@ -6,6 +6,7 @@
 		<artifactId>dubbo26</artifactId>
 		<groupId>com.alipay.sofa</groupId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -60,7 +61,6 @@
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>dubbo26model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>provided</scope>
 		</dependency>
 		<!-- Dubbo Spring Boot Starter -->
 		<dependency>
