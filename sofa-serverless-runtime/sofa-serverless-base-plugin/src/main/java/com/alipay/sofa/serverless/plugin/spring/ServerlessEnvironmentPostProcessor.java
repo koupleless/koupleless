@@ -91,6 +91,7 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
                     if (!StringUtils.isEmpty(psName) && (psName.contains(
                             getCanonicalPath(configLocation)) || psName.contains(
                             getCanonicalPath(additionalLocation)))) {
+                        toRemove.add(psName);
                     }
                 }
                 toRemove.forEach(propertySources::remove);
