@@ -58,7 +58,7 @@
                 <configuration>
                     <skipArkExecutable>true</skipArkExecutable>
                     <outputDirectory>./target</outputDirectory>
-                    <bizName>biz1</bizName>
+                    <bizName>biz1-slimming-log4j2</bizName>
                     <packExcludesConfig>rules.txt</packExcludesConfig>
                     <webContextPath>biz1</webContextPath>
                     <declaredMode>true</declaredMode>

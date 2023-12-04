@@ -26,10 +26,10 @@ spec:
   template:
     spec:
       module:
-        name: dynamic-provider
-        version: '2.0.0'  # 注意：这里将 version 字段从 1.0.0 修改为了 2.0.0 即可实现模块新版本分组发布
+        name: provider
+        version: '2.0.0'  # 注意：这里将 version 字段从 1.0.2 修改为了 2.0.0 即可实现模块新版本分组发布
         # 注意：url 字段可以修改为新的 jar 包地址，也可以不用修改
-        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar
+        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
   replicas: 2
   operationStrategy:
     upgradePolicy: install_then_uninstall

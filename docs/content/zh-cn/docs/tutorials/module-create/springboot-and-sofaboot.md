@@ -20,6 +20,7 @@ spring.application.name = ${替换为实际模块应用名}
 
 ### 步骤 2：添加模块需要的依赖和打包插件
 
+**特别注意**： sofa ark 插件定义顺序必须在 springboot 打包插件前;
 ```xml
 
 <plugins>

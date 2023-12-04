@@ -27,6 +27,9 @@
             </activation>
             <repositories>
                 <repository>
+<!--                    <releases>-->
+<!--                        <updatePolicy>always</updatePolicy>-->
+<!--                    </releases>-->
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>

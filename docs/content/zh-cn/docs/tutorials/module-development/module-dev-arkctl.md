@@ -12,7 +12,7 @@ weight: 400
 
 方法二：
 
-1. 在 [二进制列表](https://github.com/sofastack/sofa-serverless/tree/master/arkctl/bin) 中下载对应的二进制并加入到本地
+1. 在 [二进制列表]([https://github.com/sofastack/sofa-serverless/tree/master/arkctl/bin](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0)) 中下载对应的二进制并加入到本地
    path 中。
 
 ### 本地快速部署

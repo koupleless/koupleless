@@ -9,13 +9,10 @@
     <packaging>pom</packaging>
 
     <properties>
-        <!--    JDK 17   打包如下：
-        1. 切换到JDK 17
-        2. 修改  sofa.ark.version.base  和 revision.default 中的 "数字" 版本号
-        3. 开始打包，将所有打出的包都上传-->
-        <sofa.ark.version.jdk17>3.0.0</sofa.ark.version.jdk17>
-        <sofa.ark.version.jdk8>2.2.4</sofa.ark.version.jdk8>
-        <revision.default>0.5.3</revision.default>
+        <sofa.ark.version>2.2.4</sofa.ark.version>
+        <spring.boot.version>2.7.15</spring.boot.version>
+        <logback.core>1.2.9</logback.core>
+        <revision>0.5.5-SNAPSHOT</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -40,7 +37,6 @@
         <junit.version>4.13.1</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <spring.boot.version>2.7.15</spring.boot.version>
         <oshi.version>6.4.5</oshi.version>
         <commons.lang3.version>3.12.0</commons.lang3.version>
         <guava.version>32.1.2-jre</guava.version>
@@ -174,6 +170,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <version>${spring.boot.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -478,63 +475,6 @@
 
 
     <profiles>
-    <!--
-        jdk17 打出来的 snapshot 版本
-        举例：
-        打出来的包为  0.5.2-jdk17-SNAPSHOT
-        使用sofa-ark的包  3.0.0
-    -->
-        <profile>
-            <id>17-snapshot</id>
-            <properties>
-                <revision>${revision.default}-jdk17-SNAPSHOT</revision>
-                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
-            </properties>
-        </profile>
-    <!--
-        jdk17 打出来的 release 版本
-        举例：
-        打出来的包为  0.5.2-jdk17
-        使用sofa-ark的包  3.0.0
-    -->
-        <profile>
-            <id>17-release</id>
-            <properties>
-                <revision>${revision.default}-jdk17</revision>
-                <sofa.ark.version>${sofa.ark.version.jdk17}</sofa.ark.version>
-            </properties>
-        </profile>
-
-    <!--
-        jdk8 打出来的 snapshot 版本
-        举例：
-        打出来的包为  0.5.2-SNAPSHOT
-        使用sofa-ark的包  2.2.4
-        使用sofa-ark starter 的包  2.2.4
-    -->
-        <profile>
-            <id>8-snapshot</id>
-            <properties>
-                <revision>${revision.default}-SNAPSHOT</revision>
-                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
-            </properties>
-        </profile>
-
-    <!--
-        jdk8 打出来的 release 版本
-        举例：
-        打出来的包为  0.5.2
-        使用sofa-ark的包  2.2.4
-        使用sofa-ark starter 的包  2.2.4
-    -->
-        <profile>
-            <id>8-release</id>
-            <properties>
-                <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
-            </properties>
-        </profile>
-
         <profile>
             <id>release</id>
             <build>
@@ -677,10 +617,6 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties>
-                <revision>${revision.default}</revision>
-                <sofa.ark.version>${sofa.ark.version.jdk8}</sofa.ark.version>
-            </properties>
             <repositories>
                 <repository>
                     <snapshots>
