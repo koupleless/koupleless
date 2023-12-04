@@ -288,3 +288,10 @@ jobs:
               exit 1
             fi
           done
+
+      - name: random delete module
+        run: |
+          resource_name=$(kubectl get $moduletype -o name | sort -R | head -n 1)
+          base_instance_name=$(kubectl get $resource_name -o jsonpath='{.metadata.labels.serverless\.alipay\.com/base-instance-name}')
+          echo "要删除的资源名称: $resource_name"
+          echo "base-instance-name 的值: $base_instance_name"
