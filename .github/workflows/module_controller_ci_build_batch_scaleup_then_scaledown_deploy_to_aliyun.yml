@@ -651,7 +651,7 @@ jobs:
             podnames=($(kubectl get pods -l $label_selector -o jsonpath='{.items[*].metadata.name}'))
             
             for podname in "${podnames[@]}"; do
-              kubectl delete -n default $podname
+              kubectl delete pod -n default $podname
             done
           
             timeout_seconds=300
