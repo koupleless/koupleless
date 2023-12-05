@@ -391,6 +391,10 @@ jobs:
             exit 0
           done
 
+      - name: get pod
+        run: |
+          kubectl get pod
+
       - name: delete module then check module install
         run: |
           label_selector="app=dynamic-stock"
@@ -407,10 +411,11 @@ jobs:
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
               log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log || true' 2>/dev/null)
-              echo "totalcount：$totalcount"
+              
               if [ -n "$log_entry" ]; then
                 totalcount=$((totalcount + 1))
               fi
+              echo "totalcount：$totalcount"
             done
           
             if [ $totalcount -eq 2 ]; then
