@@ -393,7 +393,11 @@ jobs:
 
       - name: get pod
         run: |
-          kubectl get pod
+          kubectl get pod -o yaml
+
+      - name: get module controller logs
+        run: |
+          kubectl logs deployment/module-controller
 
       - name: delete module then check module install
         run: |
