@@ -79,6 +79,11 @@ public class CustomPlugin implements Plugin {
     }
 
     @Override
+    public String getExportMode() {
+        return null;
+    }
+
+    @Override
     public Set<String> getExportPackages() {
         return null;
     }
