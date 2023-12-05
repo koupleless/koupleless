@@ -116,7 +116,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
 
 
-## 实验步骤
+## 基座、模块各自定义数据源
 
 ### 本地部署 mysql 并启动
 
@@ -190,6 +190,77 @@ curl http://localhost:8080/biz1mybatis/hi
 curl http://localhost:8080/biz1mybatis/testmybatis
 ```
 返回 student 表中的内容，且可以发现使用的数据源已经变为 DruidDataSource
+
+## 模块复用基座数据源
+
+### 修改模块配置
+
+在上一节「基座、模块各自定义数据源」的基础上
+
+1. 移除模块数据源配置，在biz的application.properties文件中注释掉数据源datasource相关配置项
+```properties
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#spring.datasource.username=root
+#spring.datasource.password=Zfj1995!
+#spring.datasource.url=jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+#
+#mybatis.mapper-locations=classpath:mappers/*.xml
+#
+#spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+#spring.datasource.druid.initial-size=5
+#spring.datasource.druid.min-idle=5
+#spring.datasource.druid.max-active=200
+#spring.datasource.druid.max-wait=60000
+#spring.datasource.druid.time-between-eviction-runs-millis=60000
+#spring.datasource.druid.min-evictable-idle-time-millis=300000
+#spring.datasource.druid.test-while-idle=true
+#spring.datasource.druid.test-on-borrow=false
+#spring.datasource.druid.test-on-return=false
+#spring.datasource.druid.pool-prepared-statements=false
+#spring.datasource.druid.filters=stat,wall,slf4j
+```
+   
+2. 添加模块MybatisConfig
+```java
+@Configuration
+@MapperScan(basePackages = "com.alipay.sofa.biz1.mapper", sqlSessionFactoryRef = "mysqlSqlFactory")
+@EnableTransactionManagement
+public class MybatisConfig {
+
+    //tips:不要初始化一个基座的DataSource，当模块被卸载的是，基座数据源会被销毁，transactionManager，transactionTemplate，mysqlSqlFactory被销毁没有问题
+
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager platformTransactionManager() {
+        return (PlatformTransactionManager) getBaseBean("transactionManager");
+    }
+
+    @Bean(name = "transactionTemplate")
+    public TransactionTemplate transactionTemplate() {
+        return (TransactionTemplate) getBaseBean("transactionTemplate");
+    }
+
+    @Bean(name = "mysqlSqlFactory")
+    public SqlSessionFactoryBean mysqlSqlFactory() throws IOException {
+        //数据源不能申明成模块spring上下文中的bean，因为模块卸载时会触发close方法
+
+        DataSource dataSource = (DataSource) getBaseBean("dataSource");
+        SqlSessionFactoryBean mysqlSqlFactory = new SqlSessionFactoryBean();
+        mysqlSqlFactory.setDataSource(dataSource);
+        mysqlSqlFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
+                .getResources("classpath:mappers/*.xml"));
+        return mysqlSqlFactory;
+    }
+
+    private Object getBaseBean(String name) {
+        Biz masterBiz = ArkClient.getMasterBiz();
+        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(masterBiz);
+        return bizRuntimeContext.getRootApplicationContext().getBean(name);
+    }
+}
+```
+
+同上一节「基座、模块各自定义数据源」启动基座、部署模块、发起验证即可。
+
 
 ## 注意事项
 这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
