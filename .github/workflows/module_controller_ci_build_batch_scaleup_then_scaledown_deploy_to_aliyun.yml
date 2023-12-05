@@ -544,6 +544,9 @@ jobs:
             fi
           done
 
+      - name: get module
+        run: |
+          kubectl get module
 
       - name: batch scaledown
         run: |
