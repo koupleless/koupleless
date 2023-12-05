@@ -448,6 +448,27 @@ jobs:
           end_time=$((start_time + timeout_seconds))
           
           while true; do
+            moduleCount=$(kubectl get $resource_name | wc -l)
+            current_time=$(date +%s)
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+            exit 1
+            fi
+          
+            if [[ $moduleCount -lt 1 ]]; then
+              echo "module已缩容"
+              break
+            else
+              echo "等待module删除"
+              sleep 5
+            fi
+          done
+          
+          timeout_seconds=300
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+          
+          while true; do
             podcount=$(kubectl get pod $base_instance_name | wc -l)
             current_time=$(date +%s)
             if [ $current_time -gt $end_time ]; then
