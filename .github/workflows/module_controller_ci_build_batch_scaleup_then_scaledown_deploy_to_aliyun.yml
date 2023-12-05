@@ -548,6 +548,10 @@ jobs:
         run: |
           kubectl get module
 
+      - name: get pod
+        run: |
+          kubectl get pod -o yaml
+
       - name: batch scaledown
         run: |
           kubectl apply -f config/samples/ci/module-deployment_v1alpha1_moduledeployment_batch_scaledown_scaleup_then_scaledown_provider.yaml
