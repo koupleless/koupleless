@@ -652,27 +652,27 @@ jobs:
             
             for podname in "${podnames[@]}"; do
               kubectl delete pod -n default $podname
-            done
-          
-            timeout_seconds=300
-            start_time=$(date +%s)
-            end_time=$((start_time + timeout_seconds))
-          
-            while true; do
-              podcount=$(kubectl get pods -l app=dynamic-stock -o name | wc -l)
-              current_time=$(date +%s)
-              if [ $current_time -gt $end_time ]; then
-                echo "等待超时"
-                exit 1
-              fi
-          
-              if [ $podcount -lt 1 ]; then
-                echo "所有pod已清理"
-                exit 0
-              else
-                echo "等待pod删除"
-                sleep $interval
-              fi
+              timeout_seconds=300
+              start_time=$(date +%s)
+              end_time=$((start_time + timeout_seconds))
+            
+              while true; do
+                podcount=$(kubectl get pod $podname | wc -l)
+                echo "podcount：$podcount"
+                current_time=$(date +%s)
+                if [ $current_time -gt $end_time ]; then
+                  echo "等待超时"
+                  exit 1
+                fi
+            
+                if [ $podcount -lt 1 ]; then
+                  echo "所有pod已清理"
+                  break
+                else
+                  echo "等待pod删除"
+                  sleep $interval
+                fi
+              done
             done
           done
 
