@@ -565,14 +565,6 @@ jobs:
             fi
           done
 
-      - name: get module
-        run: |
-          kubectl get module
-
-      - name: get pod
-        run: |
-          kubectl get pod -o yaml
-
       - name: batch scaledown
         run: |
           kubectl apply -f config/samples/ci/module-deployment_v1alpha1_moduledeployment_batch_scaledown_scaleup_then_scaledown_provider.yaml
@@ -617,22 +609,6 @@ jobs:
 
       - run: sleep 15
 
-      - name: get module
-        run: |
-          kubectl get module -oyaml
-
-      - name: get moduledeployment
-        run: |
-          kubectl get moduledeployment -oyaml
-
-      - name: get modulereplicaset
-        run: |
-          kubectl get modulereplicaset -oyaml
-
-      - name: get module controller logs
-        run: |
-          kubectl logs deployment/module-controller
-
       - name: exist module less then 1
         run: |
           
@@ -665,14 +641,18 @@ jobs:
 
       - name: delete pod clean log
         run: |
-          podname=$(kubectl get pod -l app=dynamic-stock -o name)
+          label_selector="app=dynamic-stock"
           max_attempts=10
           timeout=300
           interval=30
           
           for ((i=0; i<$max_attempts; i++)); do
-            # 执行您的日志检索命令
-            kubectl delete -n default $podname
+            
+            podnames=($(kubectl get pods -l $label_selector -o jsonpath='{.items[*].metadata.name}'))
+            
+            for podname in "${podnames[@]}"; do
+              kubectl delete -n default $podname
+            done
           
             timeout_seconds=300
             start_time=$(date +%s)
@@ -685,7 +665,7 @@ jobs:
                 echo "等待超时"
                 exit 1
               fi
-              
+          
               if [ $podcount -lt 1 ]; then
                 echo "所有pod已清理"
                 exit 0
@@ -745,10 +725,6 @@ jobs:
       - name: get module
         run: |
           kubectl get module
-
-      - name: get moduledeployment
-        run: |
-          kubectl get moduledeployment -oyaml
 
       - name: exist module more then 1
         run: |
