@@ -4,8 +4,8 @@
 ## 返回值 2 : 链接超时导致
 ##
 ## Usage  :    sh bin/healthcheck.sh
-
-HEALTH_URL="http://localhost:8080/health"
+server_port=$1
+HEALTH_URL="http://localhost:${server_port}/health"
 HEALTH_CHECK_COMMOND="curl -s --connect-timeout 3 --max-time 5 ${HEALTH_URL}"
 
 echo "        -- SOFA Boot CheckService"

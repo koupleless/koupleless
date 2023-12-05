@@ -1,4 +1,4 @@
-name: Module Controller Integration Test
+name: Module Controller Integration Test batch deploy
 run-name: ${{ github.actor }} pushed module-controller code
 
 on:
@@ -305,7 +305,7 @@ jobs:
           
             # 遍历所有Pod进行日志检索
             for podname in "${podnames[@]}"; do
-                log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log' 2>/dev/null)
+                log_entry=$(kubectl exec -it $podname -- sh -c 'grep "Install Biz: provider:1.0.2 success" ~/logs/sofa-ark/*.log || true' 2>/dev/null)
           
                 # 如果没有找到日志条目，则将标志设置为false
                 if [ -z "$log_entry" ]; then
@@ -696,3 +696,7 @@ jobs:
                 echo "已达到最大尝试次数。有些Pod未满足条件。"
               fi
           done
+
+      - name: delete deployment
+        run: |
+          kubectl delete -n default deployment dynamic-stock-deployment
