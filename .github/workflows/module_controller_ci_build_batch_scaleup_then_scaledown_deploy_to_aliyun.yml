@@ -591,11 +591,15 @@ jobs:
 
       - name: get module
         run: |
-          kubectl get module
+          kubectl get module -oyaml
 
       - name: get moduledeployment
         run: |
           kubectl get moduledeployment -oyaml
+
+      - name: get modulereplicaset
+        run: |
+          kubectl get modulereplicaset -oyaml
 
       - name: get module controller logs
         run: |
@@ -616,6 +620,7 @@ jobs:
           
             kubectl get module
             echo "moduleCount：$moduleCount"
+          
             if [ $current_time -gt $end_time ]; then
               echo "等待超时"
               exit 1
