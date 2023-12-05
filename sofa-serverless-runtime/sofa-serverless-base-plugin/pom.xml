@@ -82,6 +82,11 @@
                                     <package>com.alipay.sofa.serverless.plugin.*</package>
                                 </packages>
                             </exported>
+                            <!-- 打包插件时，排除指定的包依赖；格式为: ${groupId:artifactId} 或者 ${groupId:artifactId:classifier} -->
+                            <excludes>
+                                <exclude>*:*:*</exclude>
+                                <exclude>com.alipay.sofa.serverless:sofa-serverless-base-plugin</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
