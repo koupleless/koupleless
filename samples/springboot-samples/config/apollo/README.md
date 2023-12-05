@@ -22,10 +22,10 @@ System.setProperty("env", "DEV");
 ```
 3. pom 里引入 apollo 依赖
 
-4. 模块代码里添加 apollo 多应用治理类 `com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer`， 注意基座里不要引入
+4. 基座和模块代码里都添加 apollo 多应用治理类 `com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer`
 引入覆盖 apollo 原有逻辑的治理类，与原生的类实现的区别在于如下一行
 ![diff.png](imgs/diff.png)
-5. 模块里添加 apollo 配置文件 `/META-INF/app.properties`
+5. 基座和模块里都添加 apollo 配置文件 `/META-INF/app.properties`
 由于注释了 initializeSystemProperty 方法，导致无法通过 application.properties 对 apollo 进行配置， 初始化 `app.id`。所以模块里需要使用 `/META-INF/app.properties` 进行配置。
 ![init.png](imgs/init.png)
 
@@ -34,7 +34,7 @@ System.setProperty("env", "DEV");
 ```shell
 docker-compose up
 ```
-2. 登录 apollo 管理后台，创建 app id 为 `biz` 的项目和 key=data.name 的配置，创建 app id 为 `biz2` 的项目和 key=data.name 的配置，具体查看 https://www.apolloconfig.com/#/zh/deployment/quick-start
+2. 登录 apollo 管理后台 `localhost:8080`，创建 app id 为 `biz` 的项目和 key=data.name 的配置，创建 app id 为 `biz2` 的项目和 key=data.name 的配置，具体查看 https://www.apolloconfig.com/#/zh/deployment/quick-start
 3. 执行 `mvn clean package -DskipTests`，然后启动基座
 4. 进入 apollo 目录，执行 `arkctl deploy biz1/target/biz1-apollo-0.0.1-SNAPSHOT-ark-biz.jar`, 安装 biz1 模块
 5. 进入 apollo 目录，执行 `arkctl deploy biz2/target/biz2-apollo-0.0.1-SNAPSHOT-ark-biz.jar`, 安装 biz2 模块

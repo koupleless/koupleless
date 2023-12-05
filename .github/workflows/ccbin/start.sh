@@ -58,8 +58,11 @@ for TEST_DIR in $(find $(pwd) -name "$suiteReg");do
     sleep 5
 
     echo "Start health check"
-    bash $ROOTDir/.github/workflows/ccbin/healthcheck.sh
-
+    if echo $BaseDir | grep "apollo"; then
+      bash $ROOTDir/.github/workflows/ccbin/healthcheck.sh 8081
+    else
+      bash $ROOTDir/.github/workflows/ccbin/healthcheck.sh 8080
+    fi
     echo "Start module biz Test"
     bash $ROOTDir/.github/workflows/ccbin/moduletest.sh
 

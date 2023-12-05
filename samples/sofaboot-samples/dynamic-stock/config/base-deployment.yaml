@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/dynamic-stock-mng:0.0.1-samples
+          image: serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/test/dynamic-stock:v0.1
           ports:
             - containerPort: 8080
             - containerPort: 1238
