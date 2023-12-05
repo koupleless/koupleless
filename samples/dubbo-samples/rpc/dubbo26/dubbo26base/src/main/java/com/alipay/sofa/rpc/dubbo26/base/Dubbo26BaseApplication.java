@@ -7,6 +7,7 @@ package com.alipay.sofa.rpc.dubbo26.base;
 import java.io.File;
 
 import com.alipay.sofa.ark.api.ArkClient;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,27 +37,32 @@ public class Dubbo26BaseApplication implements CommandLineRunner {
     }
 
     /**
-     * Install biz when base started
+     * 方便本地测试用，启动基座时，默认也启动模块
      * @param args
      * @throws Exception
      */
     @Override
     public void run(String... args) throws Exception {
-        File biz1 = new File("./rpc/dubbo26/dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar");
-        File biz2 = new File("./rpc/dubbo26/dubbo26biz2/target/dubbo26biz2-0.0.1-SNAPSHOT-ark-biz.jar");
         try {
-            if (biz1.exists()) {
-                ArkClient.installBiz(biz1);
-            } else {
-                LOGGER.warn(biz1.getAbsolutePath() + " do not exist");
-            }
-            if (biz2.exists()) {
-                ArkClient.installBiz(biz2);
-            } else {
-                LOGGER.warn(biz2.getAbsolutePath() + " do not exist");
-            }
+            installBiz("dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar");
+            installBiz("dubbo26biz2/target/dubbo26biz2-0.0.1-SNAPSHOT-ark-biz.jar");
         } catch (Throwable e) {
             LOGGER.error("Install biz failed", e);
+        }
+    }
+
+    protected void installBiz(String bizDir) throws Throwable {
+        String pathRoot = "rpc/dubbo26/";
+        File bizFile = new File(pathRoot + bizDir);
+        if (bizFile.exists()) {
+            File tmpFile = new File(pathRoot + "target/" + bizFile.getName());
+            if(tmpFile.exists()){
+                tmpFile.delete();
+            }
+            FileUtils.copyFile(bizFile, tmpFile);
+            ArkClient.installBiz(tmpFile);
+        } else {
+            LOGGER.warn(bizFile.getAbsolutePath() + " do not exist");
         }
     }
 }

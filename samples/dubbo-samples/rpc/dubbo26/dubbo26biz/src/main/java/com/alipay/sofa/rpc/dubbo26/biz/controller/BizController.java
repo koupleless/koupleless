@@ -9,12 +9,8 @@ import javax.annotation.Resource;
 import com.alipay.sofa.rpc.dubbo26.model.DemoRequest;
 import com.alipay.sofa.rpc.dubbo26.model.DemoResponse;
 import com.alipay.sofa.rpc.dubbo26.model.DemoService;
-import com.alipay.sofa.rpc.dubbo26.model.HelloRequest;
-import com.alipay.sofa.rpc.dubbo26.model.HelloResponse;
-import com.alipay.sofa.rpc.dubbo26.model.HelloService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,58 +26,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class BizController {
 
     @Resource
-    private DemoService demoServiceRef;
+    private DemoService selfDemoServiceRef;
 
-    @Resource
-    private DemoService secondDemoServiceRef;
-
-    @Resource
-    private HelloService helloServiceRef;
     @Resource
     private DemoService baseDemoServiceRef;
 
     @Autowired
     private ApplicationContext applicationContext;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    /**
+     * 远程调用自己：biz1/com.alipay.sofa.rpc.dubbo26.model.DemoService
+     * @return
+     */
+    @RequestMapping(value = "/selfRemote", method = RequestMethod.GET)
     @ResponseBody
-    public DemoResponse handle(String ref) {
+    public DemoResponse selfRemote() {
         String appName = applicationContext.getId();
-        DemoRequest demoRequest = new DemoRequest();
-        demoRequest.setBiz(appName);
-        if("second".equals(ref)){
-            return secondDemoServiceRef.handle(demoRequest);
-        }
-        return demoServiceRef.handle(demoRequest);
+        DemoRequest helloRequest = new DemoRequest();
+        helloRequest.setBiz(appName);
+        return selfDemoServiceRef.handle(helloRequest);
     }
 
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    /**
+     * 本地jvm调用基座，通信的模型，需要模块provided引入，基座compile引入
+     * @return
+     */
+    @RequestMapping(value = "/baseInJvm", method = RequestMethod.GET)
     @ResponseBody
-    public HelloResponse hello(String name) {
+    public DemoResponse baseInJvm() {
         String appName = applicationContext.getId();
-        HelloRequest helloRequest = new HelloRequest();
-        helloRequest.setName(name);
-        return helloServiceRef.sayHello(helloRequest);
-    }
-
-    @RequestMapping(value = "/base", method = RequestMethod.GET)
-    @ResponseBody
-    public DemoResponse base(String ref) {
-        String appName = applicationContext.getId();
-        DemoRequest demoRequest = new DemoRequest();
-        demoRequest.setBiz(appName);
-        return baseDemoServiceRef.handle(demoRequest);
-    }
-
-    public void setDemoServiceRef(DemoService demoServiceRef) {
-        this.demoServiceRef = demoServiceRef;
-    }
-
-    public void setSecondDemoServiceRef(DemoService secondDemoServiceRef) {
-        this.secondDemoServiceRef = secondDemoServiceRef;
-    }
-
-    public void setHelloServiceRef(HelloService helloServiceRef) {
-        this.helloServiceRef = helloServiceRef;
+        DemoRequest helloRequest = new DemoRequest();
+        helloRequest.setBiz(appName);
+        return baseDemoServiceRef.handle(helloRequest);
     }
 }

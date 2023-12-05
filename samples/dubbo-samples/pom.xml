@@ -16,6 +16,8 @@
     <modules>
 		<module>rpc/dubbo3</module>
 		<module>rpc/dubbo26</module>
+		<!--dubbo 2.7暂不支持-->
+<!--		<module>rpc/dubbo27</module>-->
 	</modules>
     <profiles>
         <profile>
