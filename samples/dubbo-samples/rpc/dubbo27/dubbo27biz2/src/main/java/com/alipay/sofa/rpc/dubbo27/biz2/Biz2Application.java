@@ -29,5 +29,4 @@ public class Biz2Application {
         LOGGER.info("Spring Boot Version: " + SpringApplication.class.getPackage().getImplementationVersion());
         LOGGER.info("Biz2Application classLoader: " + Biz2Application.class.getClassLoader());
     }
-
 }

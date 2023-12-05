@@ -115,8 +115,8 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
 <!-- 生成远程服务代理，调用服务biz1/com.alipay.sofa.rpc.dubbo26.model.DemoService-->
 <dubbo:reference id="selfDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="remote" group="biz" check="false"/>
 ```
-### 基座启动时默认安装模块（仅本地测试）
-为了方便本地测试用，启动基座时，默认也启动模块
+### 基座启动时默认安装模块（仅本地测试），以下两种方式可以二选一
+为了方便本地测试用，启动基座时，默认也启动模块(静态合并部署)
 ```java 
 /**
      * 方便本地测试用，启动基座时，默认也启动模块
