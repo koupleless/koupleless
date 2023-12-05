@@ -593,6 +593,14 @@ jobs:
         run: |
           kubectl get module
 
+      - name: get moduledeployment
+        run: |
+          kubectl get moduledeployment -oyaml
+
+      - name: get module controller logs
+        run: |
+          kubectl logs deployment/module-controller
+
       - name: exist module less then 1
         run: |
           
@@ -606,6 +614,8 @@ jobs:
             moduleCount=$(kubectl get module | wc -l)
             current_time=$(date +%s)
           
+            kubectl get module
+            echo "moduleCount：$moduleCount"
             if [ $current_time -gt $end_time ]; then
               echo "等待超时"
               exit 1
