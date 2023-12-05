@@ -589,14 +589,36 @@ jobs:
 
       - run: sleep 15
 
+      - name: get module
+        run: |
+          kubectl get module
+
       - name: exist module less then 1
         run: |
-          moduleCount=$(kubectl get module | wc -l)
-          echo $moduleCount
-          if [[ $moduleCount -ge 1 ]]; then
-            echo "缩容失败"
-            exit 1
-          fi
+          
+          # 定义等待的超时时间（以秒为单位）
+          timeout_seconds=300
+
+          start_time=$(date +%s)
+          end_time=$((start_time + timeout_seconds))
+
+          while true; do
+            moduleCount=$(kubectl get module | wc -l)
+            current_time=$(date +%s)
+          
+            if [ $current_time -gt $end_time ]; then
+              echo "等待超时"
+              exit 1
+            fi
+            
+            if [[ $moduleCount -lt 1 ]]; then
+              echo "缩容完成"
+              exit 0
+            else
+              echo "等待字段值满足条件..."
+              sleep 5  # 等待一段时间后再次检查
+            fi
+          done
 
       - name: delete pod clean log
         run: |
