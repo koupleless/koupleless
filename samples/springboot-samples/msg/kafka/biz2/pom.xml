@@ -69,7 +69,7 @@
                 <configuration>
                     <skipArkExecutable>true</skipArkExecutable>
                     <outputDirectory>./target</outputDirectory>
-                    <bizName>biz2</bizName>
+                    <bizName>biz2-kafka</bizName>
                     <webContextPath>biz2</webContextPath>
                     <declaredMode>true</declaredMode>
                     <!--					打包、安装和发布 ark biz-->

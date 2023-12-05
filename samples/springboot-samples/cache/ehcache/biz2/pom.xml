@@ -51,7 +51,7 @@
                 <configuration>
                     <skipArkExecutable>true</skipArkExecutable>
                     <outputDirectory>target</outputDirectory>
-                    <bizName>biz2</bizName>
+                    <bizName>biz2-ehcache</bizName>
                     <!-- 单host下需更换 web context path -->
                     <webContextPath>biz2</webContextPath>
                     <declaredMode>true</declaredMode>

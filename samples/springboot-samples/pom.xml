@@ -20,12 +20,14 @@
     <properties>
         <spring.boot.version>2.7.16</spring.boot.version>
         <java.version>1.8</java.version>
-        <sofa.ark.version>2.2.4</sofa.ark.version>
-        <sofa.serverless.runtime.version>0.5.4</sofa.serverless.runtime.version>
+
+        <sofa.ark.version>2.2.5-SNAPSHOT</sofa.ark.version>
+        <sofa.serverless.runtime.version>0.5.3</sofa.serverless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
         <protobuf.version>3.17.3</protobuf.version>
+<!--        <spring-cloud.version>2.2.10.RELEASE</spring-cloud.version>-->
     </properties>
 
     <modules>
@@ -33,6 +35,8 @@
         <module>logging/log4j2/biz1</module>
         <module>logging/log4j2/biz2</module>
         <module>web/tomcat</module>
+        <module>web/webflux/base</module>
+        <module>web/webflux/biz</module>
         <module>service/sample-service-base</module>
         <module>service/sample-service-biz</module>
         <module>service/sample-service-biz2</module>
@@ -50,6 +54,7 @@
         <module>db/mongo/base</module>
         <module>db/mongo/biz1</module>
         <module>db/mongo/biz2</module>
+        <module>config/apollo</module>
     </modules>
 
     <dependencyManagement>
@@ -80,6 +85,11 @@
                         <artifactId>spring-boot-starter-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>${spring.boot.version}</version>
             </dependency>
 
             <!-- 这里添加动态模块相关依赖 -->

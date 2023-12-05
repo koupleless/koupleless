@@ -18,7 +18,7 @@ import org.springframework.context.annotation.ImportResource;
  */
 
 @SpringBootApplication
-@ImportResource("classpath:provider.xml")
+@ImportResource("classpath:dubbo.xml")
 public class BizApplication {
     private static Logger LOGGER = LoggerFactory.getLogger(BizApplication.class);
 
