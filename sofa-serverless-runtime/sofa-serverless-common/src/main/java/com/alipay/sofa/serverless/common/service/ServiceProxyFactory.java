@@ -64,8 +64,9 @@ public class ServiceProxyFactory {
         Map<String, ?> serviceMap = listService(biz, serviceClass);
         Map<String, T> proxyMap = new HashMap<>();
         for (String beanName : serviceMap.keySet()) {
-            proxyMap.put(
-                beanName,
+            proxyMap
+                .put(
+                    beanName,
                     doCreateServiceProxy(biz, serviceMap.get(beanName), serviceType,
                         clientClassLoader));
         }
@@ -151,7 +152,7 @@ public class ServiceProxyFactory {
             return biz.getBizClassLoader().loadClass(sourceClass.getName());
         } catch (ClassNotFoundException e) {
             throw new BizRuntimeException(E100005, "Cannot find class " + sourceClass.getName()
-                    + " from the biz " + biz.getIdentity());
+                                                   + " from the biz " + biz.getIdentity());
         }
     }
 
