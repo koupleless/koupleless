@@ -41,7 +41,6 @@
 			<artifactId>netty-ark-plugin</artifactId>
 			<version>${sofa.ark.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
