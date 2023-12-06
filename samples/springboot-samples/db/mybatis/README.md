@@ -120,7 +120,14 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 
 ### 本地部署 mysql 并启动
 
-请提前创建代码所需要的 库，表等
+请提前创建代码所需要的库、表等
+
+```shell
+# 1. cd 进入 config 目录
+cd config
+# 2. 执行 init_mysql.sh
+./init_mysql.sh
+```
 
 ### 启动基座应用 base
 
