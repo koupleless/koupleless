@@ -122,7 +122,6 @@
 				<version>${spring.boot.version}</version>
 				<configuration>
 					<mainClass>com.alipay.sofa.rpc.dubbo26.base.Dubbo26BaseApplication</mainClass>
-					<skip>true</skip>
 				</configuration>
 				<executions>
 					<execution>
