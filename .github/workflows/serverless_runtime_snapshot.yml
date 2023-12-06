@@ -52,7 +52,7 @@ jobs:
       - name: Run jdk8 serverless runtime test
         run: |
           set -e
-          bash .github/workflows/ccbin/start.sh jdk8
+          bash -x .github/workflows/ccbin/start.sh jdk8
 
   release_for_jdk8:
     needs: build_and_test
