@@ -2,19 +2,18 @@
  * Ant Group
  * Copyright (c) 2004-2023 All Rights Reserved.
  */
-package com.alipay.sofa.rpc.dubbo26.biz2.controller;
+package com.alipay.sofa.rpc.dubbo27.biz.controller;
 
 import javax.annotation.Resource;
 
-import com.alipay.sofa.rpc.dubbo26.model.DemoRequest;
-import com.alipay.sofa.rpc.dubbo26.model.DemoResponse;
-import com.alipay.sofa.rpc.dubbo26.model.DemoService;
-import com.alipay.sofa.rpc.dubbo26.model.HelloRequest;
-import com.alipay.sofa.rpc.dubbo26.model.HelloResponse;
-import com.alipay.sofa.rpc.dubbo26.model.HelloService;
+import com.alipay.sofa.rpc.dubbo27.model.DemoRequest;
+import com.alipay.sofa.rpc.dubbo27.model.DemoResponse;
+import com.alipay.sofa.rpc.dubbo27.model.DemoService;
+import com.alipay.sofa.rpc.dubbo27.model.HelloRequest;
+import com.alipay.sofa.rpc.dubbo27.model.HelloResponse;
+import com.alipay.sofa.rpc.dubbo27.model.HelloService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,5 +59,17 @@ public class BizController {
         HelloRequest helloRequest = new HelloRequest();
         helloRequest.setName(name);
         return helloServiceRef.sayHello(helloRequest);
+    }
+
+    public void setDemoServiceRef(DemoService demoServiceRef) {
+        this.demoServiceRef = demoServiceRef;
+    }
+
+    public void setSecondDemoServiceRef(DemoService secondDemoServiceRef) {
+        this.secondDemoServiceRef = secondDemoServiceRef;
+    }
+
+    public void setHelloServiceRef(HelloService helloServiceRef) {
+        this.helloServiceRef = helloServiceRef;
     }
 }

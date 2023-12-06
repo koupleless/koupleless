@@ -6,6 +6,7 @@
 		<artifactId>dubbo26</artifactId>
 		<groupId>com.alipay.sofa</groupId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +17,17 @@
 		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 	<dependencies>
+		<!--覆盖dubbo 2.6同名类-->
+		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-adapter-dubbo2.6</artifactId>
+			<version>0.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-base-starter</artifactId>
+			<version>${sofa.serverless.runtime.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -42,11 +54,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-base-starter</artifactId>
-			<version>${sofa.serverless.runtime.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.lmax</groupId>
 			<artifactId>disruptor</artifactId>
 		</dependency>
@@ -69,6 +76,7 @@
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
+			<version>4.1.25.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

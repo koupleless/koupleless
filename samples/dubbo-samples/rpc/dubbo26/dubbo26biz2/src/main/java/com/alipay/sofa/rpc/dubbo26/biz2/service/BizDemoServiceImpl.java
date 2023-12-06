@@ -23,7 +23,7 @@ public class BizDemoServiceImpl implements DemoService {
     @Override
     public DemoResponse handle(DemoRequest demoRequest) {
         DemoResponse response = new DemoResponse();
-        response.setResult(demoRequest.getBiz() + getClass().getName());
+        response.setResult(demoRequest.getBiz() + "->" + getClass().getName());
         return response;
     }
 }
