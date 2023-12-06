@@ -45,7 +45,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>demowebflux-base</finalName>
+		<finalName>base-demowebflux</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
