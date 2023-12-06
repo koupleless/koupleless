@@ -21,7 +21,7 @@ function kill_java_process() {
     done
 }
 
-set -e
+
 
 #dobbo common-model
 ROOTDir=$(pwd)
@@ -71,5 +71,4 @@ for TEST_DIR in $(find $(pwd) -name "$suiteReg");do
   done
 done
 
-set +e
 
