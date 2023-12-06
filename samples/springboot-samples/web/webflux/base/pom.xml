@@ -41,10 +41,10 @@
 			<artifactId>netty-ark-plugin</artifactId>
 			<version>${sofa.ark.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
+		<finalName>base-demowebflux</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
