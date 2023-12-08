@@ -47,5 +47,4 @@ public class MybatisConfig {
                 .getResources("classpath:mappers/*.xml"));
         return mysqlSqlFactory;
     }
-
 }
