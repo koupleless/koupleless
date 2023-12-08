@@ -18,6 +18,7 @@ package com.alipay.sofa.serverless.plugin.manager.listener;
 
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
+import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
@@ -26,7 +27,6 @@ import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallResponse;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationService;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -51,7 +51,7 @@ public class StaticBatchInstallEventListener implements
     @SneakyThrows
     public void batchDeployFromLocalDir() {
         String absolutePath = System.getProperty("com.alipay.sofa.ark.static.biz.dir");
-        if (StringUtils.isBlank(absolutePath) || isBatchdDeployed.get()) {
+        if (StringUtils.isEmpty(absolutePath) || isBatchdDeployed.get()) {
             return;
         }
         LOGGER.info("start to batch deploy from local dir:{}", absolutePath);
