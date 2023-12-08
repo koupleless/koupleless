@@ -259,12 +259,6 @@ public class MybatisConfig {
                 .getResources("classpath:mappers/*.xml"));
         return mysqlSqlFactory;
     }
-
-    private Object getBaseBean(String name) {
-        Biz masterBiz = ArkClient.getMasterBiz();
-        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(masterBiz);
-        return bizRuntimeContext.getRootApplicationContext().getBean(name);
-    }
 }
 ```
 
