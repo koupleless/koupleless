@@ -1,9 +1,5 @@
 package com.alipay.sofa.biz1;
 
-import com.alipay.sofa.ark.api.ArkClient;
-import com.alipay.sofa.ark.spi.model.Biz;
-import com.alipay.sofa.serverless.common.BizRuntimeContext;
-import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +11,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+
+import static com.alipay.sofa.serverless.common.api.SpringBeanFinder.getBaseBean;
 
 /**
  * @author: yuanyuan
@@ -50,9 +48,4 @@ public class MybatisConfig {
         return mysqlSqlFactory;
     }
 
-    private Object getBaseBean(String name) {
-        Biz masterBiz = ArkClient.getMasterBiz();
-        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(masterBiz);
-        return bizRuntimeContext.getRootApplicationContext().getBean(name);
-    }
 }
