@@ -12,6 +12,7 @@ docker run --name $MYSQL_CONTAINER_NAME -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSW
 
 # 等待 MySQL 服务启动
 echo "Waiting for MySQL to start..."
+sleep 5
 
 # 在这里，我们可以编写一个循环来检测 MySQL 是否真的已经准备好了
 for i in {1..12}; do
