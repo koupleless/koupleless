@@ -24,6 +24,8 @@ import com.alipay.sofa.serverless.common.BizRuntimeContextRegistry;
 /**
  * @author: yuanyuan
  * @date: 2023/12/8 5:26 下午
+ *
+ * SpringBeanFinder 查找基座bean工具类，无跨classloader支持
  */
 public class SpringBeanFinder {
 
