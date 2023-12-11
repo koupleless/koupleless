@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.alipay.sofa</groupId>
+		<artifactId>springboot-samples</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../../../pom.xml</relativePath> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.alipay.sofa.logging.logback</groupId>
+	<artifactId>base-logback</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>base-logback</name>
+	<description>logging base for logback</description>
+	<properties>
+		<sofa.serverless.runtime.version>0.5.5</sofa.serverless.runtime.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- 一定要排除logback，因为基座cp中的ark-all包含了该jar，
+		会导致该jar中的类被app cl和container cl都能加载到，会出现class not find-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- 这里添加动态模块相关依赖 -->
+		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-base-starter</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.alipay.sofa</groupId>
+			<artifactId>web-ark-plugin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>${disruptor.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-adapter-logback</artifactId>
+			<version>${sofa.serverless.runtime.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
