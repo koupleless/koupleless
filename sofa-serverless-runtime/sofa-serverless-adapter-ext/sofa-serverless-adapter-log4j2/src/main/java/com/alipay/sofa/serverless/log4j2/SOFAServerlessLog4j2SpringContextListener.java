@@ -37,6 +37,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 支持将配置转换为 log4j2 context.
+ * 1. 设置LoggingSystem=SOFAServerlessLog4j2LoggingSystem
+ * 2. 添加属性到log4j2 ThreadContext
  *
  * @author ruoshan
  * @version $Id: AlipayLog4j2SpringContextListener.java, v 0.1 2018年08月23日 10:32 PM ruoshan Exp $

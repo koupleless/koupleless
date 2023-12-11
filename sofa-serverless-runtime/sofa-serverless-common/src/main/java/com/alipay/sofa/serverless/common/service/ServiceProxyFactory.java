@@ -48,38 +48,27 @@ public class ServiceProxyFactory {
     public static <T> T createServiceProxy(Biz biz, String name, Class<T> serviceType,
                                            ClassLoader clientClassLoader) {
         T service = getService(biz, name);
-        return (T) doCreateServiceProxy(biz, service, serviceType, clientClassLoader);
+        return doCreateServiceProxy(biz, service, serviceType, clientClassLoader);
     }
 
     public static <T> T createServiceProxy(Biz biz, Class<T> serviceType,
                                            ClassLoader clientClassLoader) {
-        Class<?> serviceClass;
-        try {
-            serviceClass = biz.getBizClassLoader().loadClass(serviceType.getName());
-        } catch (ClassNotFoundException e) {
-            throw new BizRuntimeException(E100005, "Cannot find class " + serviceType.getName()
-                                                   + " from the biz " + biz.getIdentity());
-        }
+        Class<?> serviceClass = checkBizStateAndGetTargetClass(biz, serviceType);
         T service = (T) getService(biz, serviceClass);
-        return (T) doCreateServiceProxy(biz, service, serviceType, clientClassLoader);
+        return doCreateServiceProxy(biz, service, serviceType, clientClassLoader);
     }
 
     public static <T> Map<String, T> batchCreateServiceProxy(Biz biz, Class<T> serviceType,
                                                              ClassLoader clientClassLoader) {
-        Class<?> serviceClass;
-        try {
-            serviceClass = biz.getBizClassLoader().loadClass(serviceType.getName());
-        } catch (ClassNotFoundException e) {
-            throw new BizRuntimeException(E100005, "Cannot find class " + serviceType.getName()
-                                                   + " from the biz " + biz.getIdentity());
-        }
+        Class<?> serviceClass = checkBizStateAndGetTargetClass(biz, serviceType);
         Map<String, ?> serviceMap = listService(biz, serviceClass);
         Map<String, T> proxyMap = new HashMap<>();
         for (String beanName : serviceMap.keySet()) {
-            proxyMap.put(
-                beanName,
-                (T) doCreateServiceProxy(biz, serviceMap.get(beanName), serviceType,
-                    clientClassLoader));
+            proxyMap
+                .put(
+                    beanName,
+                    doCreateServiceProxy(biz, serviceMap.get(beanName), serviceType,
+                        clientClassLoader));
         }
         return proxyMap;
     }
@@ -105,23 +94,6 @@ public class ServiceProxyFactory {
         return new HashMap<>();
     }
 
-    private static BizRuntimeContext checkBizStateAndGetBizRuntimeContext(Biz biz) {
-        if (biz == null) {
-            throw new BizRuntimeException(E100003, "biz is null");
-        }
-        if (biz.getBizState() != BizState.ACTIVATED && biz.getBizState() != BizState.DEACTIVATED) {
-            throw new BizRuntimeException(E100004, "biz state is not valid");
-        }
-        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
-        if (bizRuntimeContext == null) {
-            throw new BizRuntimeException(E100002, "biz runtime context is null");
-        }
-        if (bizRuntimeContext.getRootApplicationContext() == null) {
-            throw new BizRuntimeException(E100002, "biz spring context is null");
-        }
-        return bizRuntimeContext;
-    }
-
     /**
      * @param biz 目标biz
      * @param service  目标biz中符合条件的bean
@@ -131,7 +103,7 @@ public class ServiceProxyFactory {
      */
     private static <T> T doCreateServiceProxy(Biz biz, Object service, Class<T> serviceType, ClassLoader clientClassLoader) {
         if (clientClassLoader == null) {
-            Class<?> callerClass = ReflectionUtils.getCallerClass(5);
+            Class<?> callerClass = ReflectionUtils.getCallerClass(6);
             clientClassLoader = callerClass.getClassLoader();
         }
 
@@ -172,5 +144,36 @@ public class ServiceProxyFactory {
             biz = ArkClient.getBizManagerService().getBiz(moduleName, moduleVersion);
         }
         return biz;
+    }
+
+    private static Class<?> checkBizStateAndGetTargetClass(Biz biz, Class<?> sourceClass) {
+        checkBizState(biz);
+        try {
+            return biz.getBizClassLoader().loadClass(sourceClass.getName());
+        } catch (ClassNotFoundException e) {
+            throw new BizRuntimeException(E100005, "Cannot find class " + sourceClass.getName()
+                                                   + " from the biz " + biz.getIdentity());
+        }
+    }
+
+    private static BizRuntimeContext checkBizStateAndGetBizRuntimeContext(Biz biz) {
+        checkBizState(biz);
+        BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
+        if (bizRuntimeContext == null) {
+            throw new BizRuntimeException(E100002, "biz runtime context is null");
+        }
+        if (bizRuntimeContext.getRootApplicationContext() == null) {
+            throw new BizRuntimeException(E100002, "biz spring context is null");
+        }
+        return bizRuntimeContext;
+    }
+
+    private static void checkBizState(Biz biz) {
+        if (biz == null) {
+            throw new BizRuntimeException(E100003, "biz does not exist");
+        }
+        if (biz.getBizState() != BizState.ACTIVATED && biz.getBizState() != BizState.DEACTIVATED) {
+            throw new BizRuntimeException(E100004, "biz state is not valid");
+        }
     }
 }
