@@ -60,7 +60,7 @@ public class SOFAServerlessLogbackLogContextSelector implements ContextSelector 
         return loggerContext;
     }
 
-    public static LoggerContext removeContext(ClassLoader cls) {
+    public LoggerContext removeContext(ClassLoader cls) {
         if (cls == null) {
             return null;
         }
