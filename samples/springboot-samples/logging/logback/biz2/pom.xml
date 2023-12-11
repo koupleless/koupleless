@@ -14,10 +14,6 @@
     <name>biz2-logback</name>
     <description>biz2</description>
 
-    <properties>
-        <sofa.serverless.runtime.version>0.5.5</sofa.serverless.runtime.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

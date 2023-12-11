@@ -16,8 +16,11 @@
  */
 package com.alipay.sofa.serverless.logback;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.selector.ContextSelector;
+import ch.qos.logback.classic.spi.LoggerContextListener;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
@@ -41,7 +44,7 @@ public class SOFAServerlessLogbackLogContextSelector implements ContextSelector 
         this.defaultLoggerContext = loggerContext;
     }
 
-    private static LoggerContext getContext(ClassLoader cls) {
+    private LoggerContext getContext(ClassLoader cls) {
         LoggerContext loggerContext = CLASS_LOADER_LOGGER_CONTEXT.get(cls);
         if (null == loggerContext) {
             synchronized (SOFAServerlessLogbackLogContextSelector.class) {
@@ -49,6 +52,7 @@ public class SOFAServerlessLogbackLogContextSelector implements ContextSelector 
                 if (null == loggerContext) {
                     loggerContext = new LoggerContext();
                     loggerContext.setName(Integer.toHexString(System.identityHashCode(cls)));
+                    loggerContext.addListener(new ServerlessLoggerContextListener(this));
                     CLASS_LOADER_LOGGER_CONTEXT.put(cls, loggerContext);
                 }
             }
@@ -57,7 +61,7 @@ public class SOFAServerlessLogbackLogContextSelector implements ContextSelector 
     }
 
     public static LoggerContext removeContext(ClassLoader cls) {
-        if(cls == null){
+        if (cls == null) {
             return null;
         }
         return CLASS_LOADER_LOGGER_CONTEXT.remove(cls);
@@ -133,4 +137,39 @@ public class SOFAServerlessLogbackLogContextSelector implements ContextSelector 
     public List<String> getContextNames() {
         return CLASS_LOADER_LOGGER_CONTEXT.values().stream().map(LoggerContext::getName).collect(Collectors.toList());
     }
+
+    public static class ServerlessLoggerContextListener implements LoggerContextListener {
+
+        private SOFAServerlessLogbackLogContextSelector contextSelector;
+
+        public ServerlessLoggerContextListener(SOFAServerlessLogbackLogContextSelector contextSelector) {
+            this.contextSelector = contextSelector;
+        }
+
+        @Override
+        public boolean isResetResistant() {
+            return true;
+        }
+
+        @Override
+        public void onStart(LoggerContext context) {
+
+        }
+
+        @Override
+        public void onReset(LoggerContext context) {
+
+        }
+
+        @Override
+        public void onStop(LoggerContext context) {
+            contextSelector.detachLoggerContext(context.getName());
+        }
+
+        @Override
+        public void onLevelChange(Logger logger, Level level) {
+
+        }
+    }
+
 }

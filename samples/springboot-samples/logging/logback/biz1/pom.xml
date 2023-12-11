@@ -13,9 +13,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>biz1-logback</name>
     <description>biz1</description>
-    <properties>
-        <sofa.serverless.runtime.version>0.5.5</sofa.serverless.runtime.version>
-    </properties>
 
     <dependencies>
         <dependency>
