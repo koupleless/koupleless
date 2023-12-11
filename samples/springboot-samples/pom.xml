@@ -58,6 +58,7 @@
         <module>db/mongo/biz1</module>
         <module>db/mongo/biz2</module>
         <module>config/apollo</module>
+        <module>config/nacos</module>
     </modules>
 
     <dependencyManagement>
