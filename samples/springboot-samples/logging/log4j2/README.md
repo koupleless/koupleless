@@ -132,11 +132,11 @@ curl http://localhost:8080/biz2
 
 ### 查看日志打印是否正常
 1. 检查内容1, 控制台里能看到模块启动时的日志
-![img.png](imgs/biz1-log.png)
-![img_1.png](imgs/biz2-log.png)
+![img.png](../imgs/biz1-log.png)
+![img_1.png](../imgs/biz2-log.png)
 
 2. 检查内容2, `./samples/logging/log4j2/logs/` 目录里的日志分布在符合如下情况
-![img_2.png](imgs/logs-structure.png)
+![img_2.png](../imgs/logs-structure.png)
 
 - biz1 的应用日志在 `./samples/logging/log4j2/logs/biz1/` 目录下
 - biz2 的应用日志在 `./samples/logging/log4j2/logs/biz2/` 目录下
