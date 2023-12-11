@@ -22,6 +22,7 @@ import com.alipay.sofa.ark.spi.model.BizState;
 import com.alipay.sofa.ark.spi.service.biz.BizManagerService;
 import com.alipay.sofa.serverless.common.api.AutowiredFromBase;
 import com.alipay.sofa.serverless.common.api.AutowiredFromBiz;
+import com.alipay.sofa.serverless.common.api.SpringBeanFinder;
 import com.alipay.sofa.serverless.common.api.SpringServiceFinder;
 import com.alipay.sofa.serverless.common.service.ArkAutowiredBeanPostProcessor;
 import org.junit.Assert;
@@ -52,7 +53,7 @@ import static org.mockito.Mockito.when;
  * @date: 2023/9/26 9:40 下午
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SpringServiceFinderTest {
+public class SpringServiceAndBeanFinderTest {
 
     @Mock
     private Biz               masterBiz;
@@ -119,12 +120,12 @@ public class SpringServiceFinderTest {
 
         // test to invoke crossing classloader
 
-        URL url = SpringServiceFinderTest.class.getClassLoader().getResource("");
+        URL url = SpringServiceAndBeanFinderTest.class.getClassLoader().getResource("");
         URLClassLoader loader = new URLClassLoader(new URL[] { url }, null);
         Object newModuleBean = null;
         try {
             Class<?> aClass = loader
-                .loadClass("com.alipay.sofa.serverless.common.SpringServiceFinderTest$ModuleBean");
+                .loadClass("com.alipay.sofa.serverless.common.SpringServiceAndBeanFinderTest$ModuleBean");
             newModuleBean = aClass.newInstance();
         } catch (Exception e) {
             System.out.println(e);
@@ -169,6 +170,14 @@ public class SpringServiceFinderTest {
         Assert.assertNotNull(ReflectionUtils.getField(
             Objects.requireNonNull(ReflectionUtils.findField(ModuleBean.class, "moduleBean")),
             testBean));
+    }
+
+    @Test
+    public void testGetBaseBean() {
+        Object baseBean = SpringBeanFinder.getBaseBean("baseBean");
+        BaseBean baseBean1 = SpringBeanFinder.getBaseBean(BaseBean.class);
+        Assert.assertNotNull(baseBean);
+        Assert.assertNotNull(baseBean1);
     }
 
     public ConfigurableApplicationContext buildApplicationContext(String appName) {
