@@ -1,7 +1,6 @@
 package com.alipay.sofa.web.base;
 
 import ch.qos.logback.classic.ClassicConstants;
-import com.alipay.sofa.serverless.logback.SOFAServerlessLogbackLogContextSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +17,7 @@ public class BaseApplication {
 		// 建议加到jvm 参数中
 		// 需要保证在 slf4j static bind 之前，（如，首次 getLogger、类加载 SpringApplication 之前）
 		System.setProperty(ClassicConstants.LOGBACK_CONTEXT_SELECTOR,
-				SOFAServerlessLogbackLogContextSelector.class.getName());
+				"com.alipay.sofa.ark.common.adapter.ArkLogbackContextSelector");
 	}
 
 	private static Logger LOGGER = LoggerFactory.getLogger(BaseApplication.class);
