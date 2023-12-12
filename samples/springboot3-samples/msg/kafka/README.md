@@ -78,7 +78,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
-    <version>2.2.5-SNAPSHOT</version>
+    <version>2.2.5</version>
     <executions>
         <execution>
             <id>default-cli</id>
