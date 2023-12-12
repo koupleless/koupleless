@@ -13,13 +13,17 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource({ "classpath*:META-INF/spring/service.xml"})
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class})
 public class BaseApplication {
-	private static Logger LOGGER ;
 
-	public static void main(String[] args) {
-		//建议加到jvm 参数中
+	static {
+		// 建议加到jvm 参数中
+		// 需要保证在 slf4j static bind 之前，（如，首次 getLogger、类加载 SpringApplication 之前）
 		System.setProperty(ClassicConstants.LOGBACK_CONTEXT_SELECTOR,
 				SOFAServerlessLogbackLogContextSelector.class.getName());
-		LOGGER = LoggerFactory.getLogger(BaseApplication.class);
+	}
+
+	private static Logger LOGGER = LoggerFactory.getLogger(BaseApplication.class);
+
+	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(
 				BaseApplication.class, args);
 		context.getBean("sampleService");
