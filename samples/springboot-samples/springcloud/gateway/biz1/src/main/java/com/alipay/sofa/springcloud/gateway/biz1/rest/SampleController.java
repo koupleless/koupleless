@@ -1,4 +1,4 @@
-package com.alipay.sofa.web.biz1.rest;
+package com.alipay.sofa.springcloud.gateway.biz1.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -16,5 +16,10 @@ public class SampleController {
     public String hello() {
         String appName = applicationContext.getApplicationName();
         return String.format("hello to %s deploy", appName);
+    }
+
+    @RequestMapping("/circuitbreakerfallback")
+    public String circuitbreakerfallback() {
+        return "This is a fallback";
     }
 }
