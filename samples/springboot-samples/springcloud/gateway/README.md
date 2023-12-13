@@ -1,148 +1,87 @@
-# Spring Cloud Gateway Sample
+# 实验内容
+## 实验应用
+### base
+base 为普通 springboot cloud改造成的基座，改造内容为在 pom 里增加如下依赖
+```xml
+	<dependency>
+        <groupId>com.alipay.sofa.serverless</groupId>
+        <artifactId>sofa-serverless-base-starter</artifactId>
+    </dependency>
 
-Sample that shows a few different ways to route and showcases some filters.
-
-Run `DemogatewayApplication`
-
-## Samples
-
-```
-$ http :8080/get
-HTTP/1.1 200 OK
-Access-Control-Allow-Credentials: true
-Access-Control-Allow-Origin: *
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Connection: keep-alive
-Content-Length: 257
-Content-Type: application/json
-Date: Fri, 13 Oct 2017 15:36:12 GMT
-Expires: 0
-Pragma: no-cache
-Server: meinheld/0.6.1
-Via: 1.1 vegur
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-Powered-By: Flask
-X-Processed-Time: 0.00123405456543
-X-XSS-Protection: 1 ; mode=block
-
-{
-    "args": {}, 
-    "headers": {
-        "Accept": "*/*", 
-        "Accept-Encoding": "gzip, deflate", 
-        "Connection": "close", 
-        "Host": "httpbin.org", 
-        "User-Agent": "HTTPie/0.9.8"
-    }, 
-    "origin": "207.107.158.66", 
-    "url": "http://httpbin.org/get"
-}
-
-
-$ http :8080/headers Host:www.myhost.org
-HTTP/1.1 200 OK
-Access-Control-Allow-Credentials: true
-Access-Control-Allow-Origin: *
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Connection: keep-alive
-Content-Length: 175
-Content-Type: application/json
-Date: Fri, 13 Oct 2017 15:36:35 GMT
-Expires: 0
-Pragma: no-cache
-Server: meinheld/0.6.1
-Via: 1.1 vegur
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-Powered-By: Flask
-X-Processed-Time: 0.0012538433075
-X-XSS-Protection: 1 ; mode=block
-
-{
-    "headers": {
-        "Accept": "*/*", 
-        "Accept-Encoding": "gzip, deflate", 
-        "Connection": "close", 
-        "Host": "httpbin.org", 
-        "User-Agent": "HTTPie/0.9.8"
-    }
-}
-
-$ http :8080/foo/get Host:www.rewrite.org
-HTTP/1.1 200 OK
-Access-Control-Allow-Credentials: true
-Access-Control-Allow-Origin: *
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Connection: keep-alive
-Content-Length: 257
-Content-Type: application/json
-Date: Fri, 13 Oct 2017 15:36:51 GMT
-Expires: 0
-Pragma: no-cache
-Server: meinheld/0.6.1
-Via: 1.1 vegur
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-Powered-By: Flask
-X-Processed-Time: 0.000664949417114
-X-XSS-Protection: 1 ; mode=block
-
-{
-    "args": {}, 
-    "headers": {
-        "Accept": "*/*", 
-        "Accept-Encoding": "gzip, deflate", 
-        "Connection": "close", 
-        "Host": "httpbin.org", 
-        "User-Agent": "HTTPie/0.9.8"
-    }, 
-    "origin": "207.107.158.66", 
-    "url": "http://httpbin.org/get"
-}
-
-$ http :8080/delay/2 Host:www.circuitbreaker.org
-HTTP/1.1 504 Gateway Timeout
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Expires: 0
-Pragma: no-cache
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-XSS-Protection: 1 ; mode=block
-content-length: 0
-
-
+    <dependency>
+        <groupId>com.alipay.sofa</groupId>
+        <artifactId>netty-ark-plugin</artifactId>
+    </dependency>
 ```
 
-## Websocket Sample
+### biz
+biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot cloud，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
 
-[install wscat](https://www.npmjs.com/package/wscat)
-
-In one terminal, run websocket server:
+```xml
+<!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
+<plugin>
+    <groupId>com.alipay.sofa</groupId>
+    <artifactId>sofa-ark-maven-plugin</artifactId>
+    <version>${sofa.ark.version}</version>
+    <executions>
+        <execution>
+            <id>default-cli</id>
+            <goals>
+                <goal>repackage</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>
+        <skipArkExecutable>true</skipArkExecutable>
+        <outputDirectory>./target</outputDirectory>
+        <bizName>${bizName}</bizName>
+        <!-- 单host下需更换 web context path -->
+        <webContextPath>${bizName}</webContextPath>
+        <declaredMode>true</declaredMode>
+        <packExcludesConfig>rules.txt</packExcludesConfig>
+    </configuration>
+</plugin>
 ```
-wscat --listen 9000
-``` 
+注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 netty host 里安装多个 web 应用。
 
-In another, run a client, connecting through gateway:
+## 实验步骤
+
+### 基座启动与模块部署
+#### 执行 mvn clean package -DskipTests
+可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
+
+#### 启动基座应用 base，确保基座启动成功
+#### 执行 curl 命令安装 biz1 和 biz2
+到 gateway 目录
+```shell
+cd samples/springboot-samples/springcloud/gateway
 ```
+通过 arkctl 部署模块 1 和模块 2
+```shell
+arkctl deploy biz1/target/biz1-cloud-gateway-0.0.1-SNAPSHOT-ark-biz.jar
+arkctl deploy biz2/target/biz2-cloud-gateway-0.0.1-SNAPSHOT-ark-biz.jar
+```
+
+#### WebSocket 测试
+1. 启动 3个不同端口的 webSocket 服务端
+```shell
+npm install -g wscat
+wscat --listen 9000 # 基座 websocket 端口
+wscat --listen 9001 # biz1 websocket 端口
+wscat --listen 9002 # biz2 websocket 端口
+```
+2. 启动 webSocket 客户端链接测试
+```shell
 wscat --connect ws://localhost:8080/echo
 ```
+输入任意字符， 只有属于基座的 webSocket 服务终端能 echo 出相同字符
 
-type away in either server and client, messages will be passed appropriately.
-
-## Running Redis Rate Limiter Test
-
-1. 
 ```shell
-docker pull redis:7.2.3
-docker run --name redis-7.2.3 -d -p 6379:6379 redis:7.2.3
+wscat --connect ws://localhost:8080/biz1/echo
 ```
+输入任意字符，只有属于 biz1 9001 端口的 webSocket 服务终端能 echo 出相同字符
 
-route 信息通过 reactor 的缓存能力会缓存住。
-![img.png](img.png)
-
-模块接口
-
-Make sure redis is running on localhost:6379 (using brew or apt or docker).
-
-Then run `DemogatewayApplicationTests`. It should pass which means one of the calls received a 429 TO_MANY_REQUESTS HTTP status.
+```shell
+wscat --connect ws://localhost:8080/biz2/echo
+```
+输入任意字符，只有属于 biz2 9002 端口的 webSocket 服务终端能 echo 出相同字符

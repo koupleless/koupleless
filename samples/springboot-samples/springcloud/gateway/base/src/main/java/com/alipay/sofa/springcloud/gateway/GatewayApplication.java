@@ -27,17 +27,6 @@ public class GatewayApplication {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         //@formatter:off
 		RouteLocator locator = builder.routes()
-				.route("path_route", r -> r.path("/get")
-                        .filters(f -> f.addRequestHeader("Hello", "World"))
-						.uri("http://httpbin.org"))
-				.route("host_route", r -> r.host("*.myhost.org")
-						.uri("http://httpbin.org"))
-				.route("circuitbreaker_route", r -> r.host("*.circuitbreaker.org")
-						.filters(f -> f.circuitBreaker(c -> c.setName("slowcmd")))
-								.uri("http://httpbin.org"))
-				.route("circuitbreaker_fallback_route", r -> r.host("*.circuitbreakerfallback.org")
-						.filters(f -> f.circuitBreaker(c -> c.setName("slowcmd").setFallbackUri("forward:/circuitbreakerfallback")))
-								.uri("http://httpbin.org"))
 				.route("websocket_route", r -> r.path("/echo")
 					.uri("ws://localhost:9000"))
 				.build();
