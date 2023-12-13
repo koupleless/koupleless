@@ -78,3 +78,4 @@ excludeGroupIds=com.squareup.okhttp3*
 excludeGroupIds=com.squareup.okhttp*
 excludeGroupIds=net.sf.ehcache*
 excludeGroupIds=redis.clients*
+excludeGroupIds=io.github.resilience4j*

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.alipay.sofa.springcloud.gateway</groupId>
-        <artifactId>web-single-host</artifactId>
+        <artifactId>spring-cloud-gateway</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
@@ -28,12 +28,6 @@
         <dependency>
             <groupId>com.alipay.sofa.serverless</groupId>
             <artifactId>sofa-serverless-app-starter</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alipay.sofa.web</groupId>
-            <artifactId>base-web-single-host-facade</artifactId>
             <scope>provided</scope>
         </dependency>
 
