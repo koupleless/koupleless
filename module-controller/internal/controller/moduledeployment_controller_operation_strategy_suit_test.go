@@ -225,12 +225,6 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 
 		It("3 prepare moduleDeployment", func() {
 			Eventually(func() error {
-				nn := types.NamespacedName{Namespace: namespace, Name: deployment.ObjectMeta.Name}
-				err2 := k8sClient.Get(context.TODO(), nn, &deployment)
-				if err2 != nil {
-					return err2
-				}
-
 				mderr := k8sClient.Create(context.TODO(), &moduleDeployment)
 				if mderr != nil {
 					return mderr
@@ -338,7 +332,46 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 			}, timeout, interval).Should(Succeed())
 		})
 
-		It("11 delete moduleDeployment", func() {
+	})
+
+	Context("test symmetric deployment err", func() {
+		namespace := "module-symmetric-deployment-namespace"
+		moduleDeploymentName := "module-symmetric-deployment-test-2"
+		moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
+		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
+
+		It("0 prepare moduleDeployment", func() {
+			Eventually(func() error {
+				mderr := k8sClient.Create(context.TODO(), &moduleDeployment)
+				if mderr != nil {
+					return mderr
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+
+		})
+
+		It("1 test symmetric deployment err", func() {
+			Eventually(func() error {
+				if err := k8sClient.Get(context.TODO(), nn, &moduleDeployment); err != nil {
+					return err
+				}
+
+				moduleDeployment.Spec.BaseDeploymentName = "test-err"
+				// personal params
+				moduleDeployment.Spec.Replicas = -1
+				moduleDeployment.Spec.OperationStrategy.NeedConfirm = false
+				moduleDeployment.Spec.OperationStrategy.BatchCount = 1
+				if err := k8sClient.Update(context.TODO(), &moduleDeployment); err != nil {
+					return err
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("2 delete moduleDeployment", func() {
 			Expect(k8sClient.Delete(context.TODO(), &moduleDeployment)).Should(Succeed())
 		})
 
