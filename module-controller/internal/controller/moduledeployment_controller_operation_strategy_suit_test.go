@@ -174,6 +174,176 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 		})
 	})
 
+	Context("test symmetric deployment", func() {
+		namespace := "module-symmetric-deployment-namespace"
+		namespaceObj := prepareNamespace(namespace)
+		deployment := prepareDeployment(namespace)
+		moduleDeploymentName := "module-symmetric-deployment-test"
+		moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
+		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
+		// personal params
+		moduleDeployment.Spec.Replicas = -1
+		moduleDeployment.Spec.OperationStrategy.NeedConfirm = false
+		moduleDeployment.Spec.OperationStrategy.BatchCount = 1
+		It("1 prepare  namespace", func() {
+			Eventually(func() error {
+				err := k8sClient.Create(context.TODO(), &namespaceObj)
+				if err != nil {
+					return err
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("2 prepare deployment", func() {
+			Eventually(func() error {
+				derr := k8sClient.Create(context.TODO(), &deployment)
+				if derr != nil {
+					return derr
+				}
+
+				// mock
+				i := int32(3)
+				deployment.Spec.Replicas = &i
+				umderr2 := k8sClient.Update(context.TODO(), &deployment)
+				if umderr2 != nil {
+					return umderr2
+				}
+
+				deployment.Status.Replicas = 3
+				deployment.Status.ReadyReplicas = 3
+				deployment.Status.AvailableReplicas = 3
+				umderr := k8sClient.Status().Update(context.TODO(), &deployment)
+				if umderr != nil {
+					return umderr
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("3 prepare moduleDeployment", func() {
+			Eventually(func() error {
+				nn := types.NamespacedName{Namespace: namespace, Name: deployment.ObjectMeta.Name}
+				err2 := k8sClient.Get(context.TODO(), nn, &deployment)
+				if err2 != nil {
+					return err2
+				}
+
+				mderr := k8sClient.Create(context.TODO(), &moduleDeployment)
+				if mderr != nil {
+					return mderr
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+
+		})
+
+		It("4 prepare pod 1", func() {
+			Eventually(func() error {
+				pod1 := preparePod(namespace, "fake-pod-sym-1")
+				if err := k8sClient.Create(context.TODO(), &pod1); err != nil {
+					return err
+				}
+
+				// when install module, the podIP is necessary
+				pod1.Status.PodIP = "127.0.0.1"
+				if perr := k8sClient.Status().Update(context.TODO(), &pod1); perr != nil {
+					return perr
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+		})
+		It("5 prepare pod 2", func() {
+			Eventually(func() error {
+				pod2 := preparePod(namespace, "fake-pod-sym-2")
+				if err := k8sClient.Create(context.TODO(), &pod2); err != nil {
+					return err
+				}
+
+				// when install module, the podIP is necessary
+				pod2.Status.PodIP = "127.0.0.1"
+				if perr := k8sClient.Status().Update(context.TODO(), &pod2); perr != nil {
+					return perr
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+		})
+		It("6 prepare pod 3", func() {
+			Eventually(func() error {
+				pod3 := preparePod(namespace, "fake-pod-sym-3")
+				if err := k8sClient.Create(context.TODO(), &pod3); err != nil {
+					return err
+				}
+
+				// when install module, the podIP is necessary
+				pod3.Status.PodIP = "127.0.0.1"
+				if perr := k8sClient.Status().Update(context.TODO(), &pod3); perr != nil {
+					return perr
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("7 wait replicaset created", func() {
+			Eventually(func() bool {
+				set := map[string]string{label.ModuleDeploymentLabel: moduleDeployment.Name}
+				replicaSetList := &v1alpha1.ModuleReplicaSetList{}
+				err := k8sClient.List(context.TODO(), replicaSetList, &client.ListOptions{LabelSelector: labels.SelectorFromSet(set)}, client.InNamespace(moduleDeployment.Namespace))
+				if err != nil {
+					return false
+				}
+
+				return len(replicaSetList.Items) == 1
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("8 wait the moduleDeployment is completed", func() {
+			Eventually(func() bool {
+				if k8sClient.Get(context.TODO(), nn, &moduleDeployment) != nil {
+					return false
+				}
+
+				status := moduleDeployment.Status.ReleaseStatus
+				if status == nil {
+					return false
+				}
+
+				return status.Progress == v1alpha1.ModuleDeploymentReleaseProgressCompleted
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("9 check the moduleDeployment replicas", func() {
+			Eventually(func() bool {
+				if err := k8sClient.Get(context.TODO(), nn, &moduleDeployment); err != nil {
+					return false
+				}
+
+				return moduleDeployment.Spec.Replicas == 3
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("10 check replicaSet replicas", func() {
+			Eventually(func() error {
+				if err := k8sClient.Get(context.TODO(), nn, &moduleDeployment); err != nil {
+					return err
+				}
+
+				return checkModuleDeploymentReplicas(types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeploymentName}, 3)
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("11 delete moduleDeployment", func() {
+			Expect(k8sClient.Delete(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+
+	})
+
 	Context("test batchConfirm strategy", func() {
 		moduleDeploymentName := "module-deployment-test-for-batch-confirm"
 		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
