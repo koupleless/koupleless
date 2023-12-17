@@ -7,6 +7,10 @@ weight: 100
 
 ## 技术会议
 
+### KCD 开发者交流会 深圳站
+举办时间：20231216 <br/>
+会议 PPT: [点击此处下载](https://serverless-opensource.oss-cn-shanghai.aliyuncs.com/outer-materials/SOFAServerless%20%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%96%B0%E6%9E%B6%E6%9E%84%E7%9A%84%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E8%B7%B5_20231217_v0.9.1.pdf)
+
 ### QCon 大会 - SOFAServerless 微服务新架构的探索与实践
 举办时间：2023.09<br />
 会议 PPT：[点击此处](https://serverless-opensource.oss-cn-shanghai.aliyuncs.com/outer-materials/%E8%9A%82%E8%9A%81%20SOFAServerless%20%E6%9E%81%E8%87%B4%E9%99%8D%E6%9C%AC%E5%A2%9E%E6%95%88%E6%96%B9%E6%A1%88%20-%20%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%96%B0%E6%9E%B6%E6%9E%84%E7%9A%84%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E8%B7%B5.pdf)
