@@ -3,22 +3,27 @@
 由于目前将Dubbo放入基座 而基座的class目前无法直接增强
 针对当前2.6版本支持需要覆盖对应的dubbo class
 因此需要将对应的class复制到classpath中 一般都是按照原封不动的包名放入base模块 确保类加载器优先加载到我们的class从而增强dubbo2.6支持多classLoader
+
 # 背景
 目前我们将Dubbo放入到base基座之后 我们与此同时将biz中的dubbo组件去除
 但是我们发现Dubbo的ExtensionLoader目前是静态类
 其初次加载就已经稳定 这样无法根据classloader不同去不同的biz模块进行加载
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698218715966-4e510ce8-4031-4b0e-b5c6-293c4dcfe140.png#averageHue=%230f0f0f&clientId=u8bee2931-a7cd-4&from=paste&height=684&id=uc16f2576&originHeight=684&originWidth=1495&originalType=binary&ratio=1&rotation=0&showTitle=false&size=218206&status=done&style=none&taskId=u0b300a31-daab-4212-8ea9-85f4e5d34f0&title=&width=1495)
 
 从而导致启动新biz的时候出现报错
+
 # 思路
 考虑扩充ExtensionLoader当前版本支持不同classloader
 这样可以根据ExtensionClassLoader使用不同的BizClassLoader而去重新加载对应资源
 # 改造
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698218819626-c5a93c93-3b11-4e7f-a311-87655e085757.png#averageHue=%23646438&clientId=u8bee2931-a7cd-4&from=paste&height=506&id=uf0cd09e8&originHeight=506&originWidth=1422&originalType=binary&ratio=1&rotation=0&showTitle=false&size=171265&status=done&style=none&taskId=u935dc20e-8e5a-4de6-9c8e-dd6aec82457&title=&width=1422)
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698218841564-f45a7168-ad17-4f19-b765-7b1b67cf93ee.png#averageHue=%2373633d&clientId=u8bee2931-a7cd-4&from=paste&height=551&id=u9b971db3&originHeight=551&originWidth=1651&originalType=binary&ratio=1&rotation=0&showTitle=false&size=226591&status=done&style=none&taskId=u3dfd5b70-fe18-4dfd-bed8-0f1115c2937&title=&width=1651)
 
 此时由于biz加载的时候会设置对应的Thread的ContextClassLoader
 继而可以触发对应的SPI加载
+
 ```
 package com.alibaba.dubbo.common.extension;
 
@@ -963,11 +968,13 @@ public class ExtensionLoader<T> {
     }
 
 }
+
 ```
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698218917861-37b9d42d-b9f8-47df-9046-7edb34c62bc8.png#averageHue=%233b3f42&clientId=u8bee2931-a7cd-4&from=paste&height=425&id=ud6a171c1&originHeight=425&originWidth=508&originalType=binary&ratio=1&rotation=0&showTitle=false&size=42315&status=done&style=none&taskId=u3a538066-041e-4225-b8f3-c4f9002f3b3&title=&width=508)
 
 dubbo版本2.6.4
 dubbo多biz加载后启动出现一些classloader导致的ClassNotFoundException
+
 ```
 2023-10-24 13:38:34,627 [WARN] [NettyServerWorker-9-9] c.a.d.r.p.d.DecodeableRpcInvocation:? []  [DUBBO] Decode argument failed: com.f6car.merchant.so.org.TgOrgGroupMemberSo, dubbo version: 2.6.12, current host: 172.27.121.46
 java.lang.ClassNotFoundException: com.f6car.merchant.so.org.TgOrgGroupMemberSo
@@ -997,12 +1004,15 @@ java.lang.ClassNotFoundException: com.f6car.merchant.so.org.TgOrgGroupMemberSo
 	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:529)
 	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:468)
 ```
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698398961430-bb632e4e-d008-4cc4-a4dc-95a634a8ab9b.png#averageHue=%23e6e6e6&clientId=u9afc399f-ea80-4&from=paste&height=417&id=u6286cb3e&originHeight=417&originWidth=866&originalType=binary&ratio=1&rotation=0&showTitle=false&size=118101&status=done&style=none&taskId=u07169dd2-776b-43fb-b490-8098407824c&title=&width=866)
+
 可以看到这个明显是base的classLoader
 那么为何dubbo暴露了端口之后进行正反序列化的时候直接使用当前的classLoader呢？
 针对正常非biz隔离的场景是OK的
 针对biz存在隔离的case 除非反序列化场景时使用了独立的bizClassLoader
 但是问题是我如何知道当前场景下是应该调用哪一个biz呢？？？
+
 ```java
 @Override
 public Object decode(Channel channel, InputStream input) throws IOException {
@@ -1072,16 +1082,20 @@ public Object decode(Channel channel, InputStream input) throws IOException {
     return this;
 }
 ```
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698399359953-e9745f87-c4cb-4e46-aa79-8ba355aec69f.png#averageHue=%232f2f2e&clientId=u9afc399f-ea80-4&from=paste&height=324&id=uc443f7ac&originHeight=324&originWidth=1226&originalType=binary&ratio=1&rotation=0&showTitle=false&size=64184&status=done&style=none&taskId=u958d86b2-04e1-4409-a75c-9b2158d31e6&title=&width=1226)
+
 也就是在这块需要根据相关的Path自动要解析出对应的Biz 然后根据不同的biz的classLoader进行解析【因此最好在注册rpc的时候记录相关bizClassLoader的关系 后续可以反向使用】
 为了规避此问题目前将dubbo放入biz来进行规避
 不同dubbo的biz会出现端口冲突问题 指定dubbo端口为-1即可
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698399510036-576be94b-6931-4abb-bfcc-f366931b458e.png#averageHue=%23302f2f&clientId=ua7a818cb-964d-4&from=paste&height=373&id=u6ec02f46&originHeight=373&originWidth=1304&originalType=binary&ratio=1&rotation=0&showTitle=false&size=98371&status=done&style=none&taskId=uce2b5b3e-742a-4538-8d96-fbb20342baa&title=&width=1304)
 
 
 
 多biz支持后 由于Spring的上下文会绑定到支持Dubbo的SPI的注入
 因此不同biz的容器务必隔离 避免出现bean泄露
+
 ```java
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -1189,8 +1203,11 @@ public class SpringExtensionFactory implements ExtensionFactory {
 dubbo放入base之后dubbo 由于一部分代码是static执行的 导致部分场景下不同biz的初始化的生命周期不一致
 导致我们部分场景下出现异常
 举例如下 我们的ReferenceConfig在初次加载时会触发
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699266065661-2f31de12-b218-44da-97d9-d6477eaf1f87.png#averageHue=%231f2022&clientId=u898e26e6-1421-4&from=paste&height=498&id=u09ba332b&originHeight=498&originWidth=1359&originalType=binary&ratio=1&rotation=0&showTitle=false&size=115077&status=done&style=none&taskId=u7438f359-df95-43d0-aeb1-4b6064d16d6&title=&width=1359)
+
 这样在不同的biz时由于已经加载完毕后因此无法自动触发导致缺少部分初始化场景 需要补齐
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699266024533-6613a574-3a17-48c1-8009-065ae4520587.png#averageHue=%23232427&clientId=u898e26e6-1421-4&from=paste&height=575&id=udffabb6f&originHeight=575&originWidth=1476&originalType=binary&ratio=1&rotation=0&showTitle=false&size=182369&status=done&style=none&taskId=udd60c607-7e0a-4119-a116-ef52159ab3d&title=&width=1476)
 
 
@@ -1198,6 +1215,8 @@ dubbo放入base之后dubbo 由于一部分代码是static执行的 导致部分�
 已知我们使用的是原生的java序列化方式
 这样自然需要想办法来找到对应的模块 从而取到对应的classLoader
 经过sofa社区的尚之同学的建议 给到了如下方案
+
+
 ```java
 /*
  * Ant Group
@@ -1334,17 +1353,23 @@ public class ClassLoaderJavaSerialization extends JavaSerialization {
     }
 }
 ```
+
 我们发现为了使该方案生效 我们必须修改Java序列化
 同时其他不支持多模块的dubbo仍然保持Java的名称 而不是新建新的SPI扩展
 经过研究验证确认我们发现
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699262773133-6db151d9-abc0-4c61-b4fb-7d1b48a70722.png#averageHue=%23636a61&clientId=u9cade2e4-accb-4&from=paste&height=674&id=u0859502a&originHeight=674&originWidth=1120&originalType=binary&ratio=1&rotation=0&showTitle=false&size=320040&status=done&style=none&taskId=u7354dcef-1b23-4559-83f6-ce08a2c6330&title=&width=1120)
+
 原来url中携带的信息和具体的invocation可能是不匹配的
 究其原因是dubbo会作成dubbo的链接有2类，第一类是共享连接。consumer&每一个provider实例有一个多服务共享的连接。第二类是独享连接，consumer&每一个provider实例的每一个暴露的服务有独立的链接。
 因此我们需要的是要在invocation中获取到对应的path
 
 因此我们需要复写DecodeableRpcInvocation
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699263362261-24276699-018e-4fe8-8dae-473064b1ef8c.png#averageHue=%2326272a&clientId=u9cade2e4-accb-4&from=paste&height=597&id=ueea820e0&originHeight=597&originWidth=1315&originalType=binary&ratio=1&rotation=0&showTitle=false&size=191220&status=done&style=none&taskId=u9e8da21b-5ced-4187-9dde-5e2ab6113eb&title=&width=1315)
+
 这里有个额外需要注意的点是
+
 ```java
 package com.alibaba.dubbo.common.serialize.java;
 
@@ -1415,5 +1440,7 @@ public class ClassLoaderJavaObjectInput extends NativeJavaObjectInput {
 }
 
 ```
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699263409159-4bc365de-877f-429c-8a81-123d23328a36.png#averageHue=%23202124&clientId=u9cade2e4-accb-4&from=paste&height=161&id=u2ddc141f&originHeight=161&originWidth=1051&originalType=binary&ratio=1&rotation=0&showTitle=false&size=30124&status=done&style=none&taskId=ud5663a6e-def8-4ac0-9d9d-0e3bc8d2f63&title=&width=1051)![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699263420045-b82eded9-7d1a-4757-a6f3-ffb48ed282e9.png#averageHue=%231f2124&clientId=u9cade2e4-accb-4&from=paste&height=296&id=ud1663c18&originHeight=296&originWidth=817&originalType=binary&ratio=1&rotation=0&showTitle=false&size=53230&status=done&style=none&taskId=u6b26ebe9-3404-491f-b7b8-8d2b93e8845&title=&width=817)
-注意基类同时支持inputSTream和ObjectInPutSTream 如果不强行转换会走到错误的构造函数 从而导致流被破坏
+
+注意基类同时支持inputStream和ObjectInPutStream 如果不强行转换会走到错误的构造函数 从而导致流被破坏
