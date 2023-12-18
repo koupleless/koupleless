@@ -171,6 +171,9 @@ type ModuleDeploymentSpec struct {
 	OperationStrategy ModuleOperationStrategy `json:"operationStrategy,omitempty"`
 
 	SchedulingStrategy ModuleSchedulingStrategy `json:"schedulingStrategy,omitempty"`
+
+	// +kubebuilder:validation:Minimum=0
+	CurrentGroupConfirmation int32 `json:"currentGroupConfirmation,omitempty"`
 }
 
 // ModuleDeploymentStatus defines the observed state of ModuleDeployment

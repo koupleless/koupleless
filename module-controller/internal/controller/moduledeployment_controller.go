@@ -152,6 +152,14 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 				return ctrl.Result{}, err
 			}
 		}
+
+		if moduleDeployment.Spec.CurrentGroupConfirmation > 0 {
+			moduleDeployment.Spec.CurrentGroupConfirmation = 0
+			if err := utils.UpdateResource(r.Client, ctx, moduleDeployment); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+
 	case v1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation:
 		moduleDeployment.Spec.Pause = true
 		if err := r.Update(ctx, moduleDeployment); err != nil {
@@ -164,7 +172,9 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			return ctrl.Result{}, utils.Error(err, "update moduleDeployment releaseStatus progress to paused failed")
 		}
 	case v1alpha1.ModuleDeploymentReleaseProgressPaused:
-		if !moduleDeployment.Spec.Pause && time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 {
+		if !moduleDeployment.Spec.Pause && time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 &&
+			moduleDeployment.Spec.CurrentGroupConfirmation == moduleDeployment.Status.ReleaseStatus.CurrentBatch-1 {
+
 			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 			log.Log.Info("update moduleDeployment progress from paused to executing", "moduleDeploymentName", moduleDeployment.Name)
 			if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
