@@ -97,7 +97,10 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		event.PublishModuleDeploymentCreateEvent(r.Client, ctx, moduleDeployment)
 	}
 
-	if moduleDeployment.Spec.Pause {
+	if moduleDeployment.Status.ReleaseStatus != nil &&
+		moduleDeployment.Spec.ConfirmBatchNum < moduleDeployment.Status.ReleaseStatus.CurrentBatch &&
+		moduleDeployment.Status.ReleaseStatus.Progress == v1alpha1.ModuleDeploymentReleaseProgressPaused {
+
 		return ctrl.Result{}, nil
 	}
 
@@ -153,18 +156,14 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			}
 		}
 
-		if moduleDeployment.Spec.CurrentGroupConfirmation > 0 {
-			moduleDeployment.Spec.CurrentGroupConfirmation = 0
+		if moduleDeployment.Spec.ConfirmBatchNum > 0 {
+			moduleDeployment.Spec.ConfirmBatchNum = 0
 			if err := utils.UpdateResource(r.Client, ctx, moduleDeployment); err != nil {
 				return ctrl.Result{}, err
 			}
 		}
 
 	case v1alpha1.ModuleDeploymentReleaseProgressWaitingForConfirmation:
-		moduleDeployment.Spec.Pause = true
-		if err := r.Update(ctx, moduleDeployment); err != nil {
-			return ctrl.Result{}, err
-		}
 
 		moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressPaused
 		log.Log.Info("update moduleDeployment releaseStatus progress to paused", "moduleDeploymentName", moduleDeployment.Name)
@@ -172,9 +171,10 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 			return ctrl.Result{}, utils.Error(err, "update moduleDeployment releaseStatus progress to paused failed")
 		}
 	case v1alpha1.ModuleDeploymentReleaseProgressPaused:
-		if !moduleDeployment.Spec.Pause && time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 &&
-			moduleDeployment.Spec.CurrentGroupConfirmation == moduleDeployment.Status.ReleaseStatus.CurrentBatch-1 {
+		if time.Since(moduleDeployment.Status.ReleaseStatus.NextReconcileTime.Time) >= 0 &&
+			moduleDeployment.Spec.ConfirmBatchNum == moduleDeployment.Status.ReleaseStatus.CurrentBatch {
 
+			moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
 			moduleDeployment.Status.ReleaseStatus.Progress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 			log.Log.Info("update moduleDeployment progress from paused to executing", "moduleDeploymentName", moduleDeployment.Name)
 			if err := utils.UpdateStatus(r.Client, ctx, moduleDeployment); err != nil {
@@ -462,7 +462,6 @@ func (r *ModuleDeploymentReconciler) updateModuleReplicaSet(ctx context.Context,
 		}
 	}
 	// TODO update current batch
-	moduleDeployment.Status.ReleaseStatus.CurrentBatch += 1
 	moduleDeployment.Status.ReleaseStatus.BatchProgress = v1alpha1.ModuleDeploymentReleaseProgressExecuting
 	log.Log.Info("update moduleDeployment batch progress to executing", "moduleDeploymentName", moduleDeployment.Name)
 	err = utils.UpdateStatus(r.Client, ctx, moduleDeployment)
