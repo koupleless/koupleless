@@ -12,7 +12,7 @@
         <sofa.ark.version>2.2.5</sofa.ark.version>
         <spring.boot.version>2.7.15</spring.boot.version>
         <logback.core>1.2.9</logback.core>
-        <revision>0.5.5-SNAPSHOT</revision>
+        <revision>0.5.5</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
