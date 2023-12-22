@@ -19,56 +19,52 @@
 <link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
 
 <title>模块本地开发 | SOFAServerless</title>
-<meta name="description" content="Arkctl 工具安装 方法一：
+<meta name="description" content="Arkctl 工具安装 Arkctl 模块安装主要提供自动打包和部署能力，自动打包调用 mvn 命令构建模块 jar包，自动部署调用 arklet 提供的 api 接口进行部署。如果不想使用命令行工具，也可以直接使用 arklet 提供的 api 接口发起部署操作。
+方法一：
 本地安装 go 环境，go 依赖版本在 1.21 以上。 执行 go install todo 独立的 arkctl go 仓库 命令，安装 arkctl 工具。 方法二：
 在 [二进制列表](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0 中下载对应的二进制并加入到本地 path 中。 本地快速部署 你可以使用 arkctl 工具快速地进行模块的构建和部署，提高本地调试和研发效率。
 场景 1：模块 jar 包构建 &#43; 部署到本地运行的基座中。 准备：
 在本地启动一个基座。 打开一个模块项目仓库。 执行命令：
 # 需要在仓库的根目录下执行。 # 比如，如果是 maven 项目，需要在根 pom.xml 所在的目录下执行。 arkctl deploy 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
 场景 2：部署一个本地构建好的 jar 包到本地运行的基座中。 准备：
-在本地启动一个基座。 准备一个构建好的 jar 包。 执行命令：
-arkctl deploy /path/to/your/pre/built/bundle-biz.jar 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
-场景 3: 模块 jar 包构建 &#43; 部署到远程运行的 k8s 基座中。 准备:">
+在本地启动一个基座。 准备一个构建好的 jar 包。 执行命令：">
 <meta property="og:title" content="模块本地开发" />
-<meta property="og:description" content="Arkctl 工具安装 方法一：
+<meta property="og:description" content="Arkctl 工具安装 Arkctl 模块安装主要提供自动打包和部署能力，自动打包调用 mvn 命令构建模块 jar包，自动部署调用 arklet 提供的 api 接口进行部署。如果不想使用命令行工具，也可以直接使用 arklet 提供的 api 接口发起部署操作。
+方法一：
 本地安装 go 环境，go 依赖版本在 1.21 以上。 执行 go install todo 独立的 arkctl go 仓库 命令，安装 arkctl 工具。 方法二：
 在 [二进制列表](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0 中下载对应的二进制并加入到本地 path 中。 本地快速部署 你可以使用 arkctl 工具快速地进行模块的构建和部署，提高本地调试和研发效率。
 场景 1：模块 jar 包构建 &#43; 部署到本地运行的基座中。 准备：
 在本地启动一个基座。 打开一个模块项目仓库。 执行命令：
 # 需要在仓库的根目录下执行。 # 比如，如果是 maven 项目，需要在根 pom.xml 所在的目录下执行。 arkctl deploy 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
 场景 2：部署一个本地构建好的 jar 包到本地运行的基座中。 准备：
-在本地启动一个基座。 准备一个构建好的 jar 包。 执行命令：
-arkctl deploy /path/to/your/pre/built/bundle-biz.jar 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
-场景 3: 模块 jar 包构建 &#43; 部署到远程运行的 k8s 基座中。 准备:" />
+在本地启动一个基座。 准备一个构建好的 jar 包。 执行命令：" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/tutorials/module-development/module-dev-arkctl/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2023-12-22T12:27:20+08:00" />
+<meta property="article:modified_time" content="2023-12-22T14:19:54+08:00" />
 
 <meta itemprop="name" content="模块本地开发">
-<meta itemprop="description" content="Arkctl 工具安装 方法一：
+<meta itemprop="description" content="Arkctl 工具安装 Arkctl 模块安装主要提供自动打包和部署能力，自动打包调用 mvn 命令构建模块 jar包，自动部署调用 arklet 提供的 api 接口进行部署。如果不想使用命令行工具，也可以直接使用 arklet 提供的 api 接口发起部署操作。
+方法一：
 本地安装 go 环境，go 依赖版本在 1.21 以上。 执行 go install todo 独立的 arkctl go 仓库 命令，安装 arkctl 工具。 方法二：
 在 [二进制列表](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0 中下载对应的二进制并加入到本地 path 中。 本地快速部署 你可以使用 arkctl 工具快速地进行模块的构建和部署，提高本地调试和研发效率。
 场景 1：模块 jar 包构建 &#43; 部署到本地运行的基座中。 准备：
 在本地启动一个基座。 打开一个模块项目仓库。 执行命令：
 # 需要在仓库的根目录下执行。 # 比如，如果是 maven 项目，需要在根 pom.xml 所在的目录下执行。 arkctl deploy 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
 场景 2：部署一个本地构建好的 jar 包到本地运行的基座中。 准备：
-在本地启动一个基座。 准备一个构建好的 jar 包。 执行命令：
-arkctl deploy /path/to/your/pre/built/bundle-biz.jar 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
-场景 3: 模块 jar 包构建 &#43; 部署到远程运行的 k8s 基座中。 准备:">
-<meta itemprop="dateModified" content="2023-12-22T12:27:20+08:00" />
-<meta itemprop="wordCount" content="152">
+在本地启动一个基座。 准备一个构建好的 jar 包。 执行命令：">
+<meta itemprop="dateModified" content="2023-12-22T14:19:54+08:00" />
+<meta itemprop="wordCount" content="165">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="模块本地开发"/>
-<meta name="twitter:description" content="Arkctl 工具安装 方法一：
+<meta name="twitter:description" content="Arkctl 工具安装 Arkctl 模块安装主要提供自动打包和部署能力，自动打包调用 mvn 命令构建模块 jar包，自动部署调用 arklet 提供的 api 接口进行部署。如果不想使用命令行工具，也可以直接使用 arklet 提供的 api 接口发起部署操作。
+方法一：
 本地安装 go 环境，go 依赖版本在 1.21 以上。 执行 go install todo 独立的 arkctl go 仓库 命令，安装 arkctl 工具。 方法二：
 在 [二进制列表](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0 中下载对应的二进制并加入到本地 path 中。 本地快速部署 你可以使用 arkctl 工具快速地进行模块的构建和部署，提高本地调试和研发效率。
 场景 1：模块 jar 包构建 &#43; 部署到本地运行的基座中。 准备：
 在本地启动一个基座。 打开一个模块项目仓库。 执行命令：
 # 需要在仓库的根目录下执行。 # 比如，如果是 maven 项目，需要在根 pom.xml 所在的目录下执行。 arkctl deploy 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
 场景 2：部署一个本地构建好的 jar 包到本地运行的基座中。 准备：
-在本地启动一个基座。 准备一个构建好的 jar 包。 执行命令：
-arkctl deploy /path/to/your/pre/built/bundle-biz.jar 命令执行完成后即部署成功，用户可以进行相关的模块功能调试验证。
-场景 3: 模块 jar 包构建 &#43; 部署到远程运行的 k8s 基座中。 准备:"/>
+在本地启动一个基座。 准备一个构建好的 jar 包。 执行命令："/>
 
 
 
@@ -248,8 +244,6 @@ if (!doNotTrack) {
   <a href="/docs/tutorials/module-development/runtime-compatibility-list/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docstutorialsmodule-developmentruntime-compatibility-list"><span class="">模块中官方支持的中间件客户端</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docstutorialsmodule-developmentsofa-ark-li">
   <a href="/docs/tutorials/module-development/sofa-ark/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docstutorialsmodule-developmentsofa-ark"><span class="">SOFAArk 关键用户文档</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docstutorialsmodule-developmentruntime-service-route-li">
-  <a href="/docs/tutorials/module-development/runtime-service-route/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docstutorialsmodule-developmentruntime-service-route"><span class=""></span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docstutorialsmodule-operation-li">
@@ -399,6 +393,7 @@ if (!doNotTrack) {
 		
 </header>
 	<h2 id="arkctl-工具安装">Arkctl 工具安装</h2>
+<p>Arkctl 模块安装主要提供自动打包和部署能力，自动打包调用 mvn 命令构建模块 jar包，自动部署调用 <a href="/docs/contribution-guidelines/arklet/architecture/">arklet</a> 提供的 api 接口进行部署。如果不想使用命令行工具，也可以直接使用 arklet 提供的 api 接口发起部署操作。</p>
 <p>方法一：</p>
 <ol>
 <li>本地安装 go 环境，go 依赖版本在 1.21 以上。</li>
@@ -532,7 +527,7 @@ path 中。</li>
 
 		<br />
 	<div class="text-muted mt-5 pt-3 border-top">
-  最后修改 December 22, 2023: <a href="https://github.com/sofastack/sofa-serverless/commit/a042f2199922945d8a30c8d137a06bb1239e6b3e">update docs (a042f219)</a>
+  最后修改 December 22, 2023: <a href="https://github.com/sofastack/sofa-serverless/commit/bf6ec2ad9373829b80acaf647806733bd9248d19">update docs (bf6ec2ad)</a>
 </div>
 
 </div>
