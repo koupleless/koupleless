@@ -14,7 +14,7 @@ Arkctl 模块安装主要提供自动打包和部署能力，自动打包调用 
 
 方法二：
 
-1. 在 [二进制列表]([https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0) 中下载对应的二进制并加入到本地
+1. 在 [二进制列表](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0) 中下载对应的二进制并加入到本地
    path 中。
 
 ### 本地快速部署
