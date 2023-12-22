@@ -129,7 +129,7 @@
     <lastmod>2023-09-22T20:16:30+08:00</lastmod>
   </url><url>
     <loc>/docs/tutorials/module-development/module-dev-arkctl/</loc>
-    <lastmod>2023-12-22T12:27:20+08:00</lastmod>
+    <lastmod>2023-12-22T14:19:54+08:00</lastmod>
   </url><url>
     <loc>/docs/tutorials/module-development/module-debug/</loc>
     <lastmod>2023-12-19T11:12:43+08:00</lastmod>
@@ -233,9 +233,6 @@
   </url><url>
     <loc>/blog/</loc>
     <lastmod>2023-09-22T20:16:30+08:00</lastmod>
-  </url><url>
-    <loc>/docs/tutorials/module-development/runtime-service-route/</loc>
-    <lastmod>2023-11-30T16:37:06+08:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
     <xhtml:link
