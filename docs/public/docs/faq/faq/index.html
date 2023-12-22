@@ -37,7 +37,7 @@ go: serverless.alipay.com/sofa-serverless/v1/arkctl@latest: module serverless.al
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/faq/faq/" /><meta property="article:section" content="docs" />
 
-
+<meta property="article:modified_time" content="2023-12-22T12:27:20+08:00" />
 
 <meta itemprop="name" content="常见问题列表">
 <meta itemprop="description" content="问题 1-1：模块 compile 引入 springboot 依赖，模块安装时报错 java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 模块需要做好瘦身，参考这里：模块瘦身
@@ -47,7 +47,7 @@ com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SN
 问题 1-3: 通过 go install 无法安装 arkctl 执行如下命令，报错
 go install serverless.alipay.com/sofa-serverless/v1/arkctl@latest 报错信息如下：
 go: serverless.alipay.com/sofa-serverless/v1/arkctl@latest: module serverless.alipay.com/sofa-serverless/v1/arkctl: Get &#34;https://proxy.golang.org/serverless.alipay.com/sofa-serverless/v1/arkctl/@v/list&#34;: dial tcp 142.251.42.241:443: i/o timeout 解决方式 arkctl 是作为 sofa-serverless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考安装 arkctl">
-
+<meta itemprop="dateModified" content="2023-12-22T12:27:20+08:00" />
 <meta itemprop="wordCount" content="96">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="常见问题列表"/>
 <meta name="twitter:description" content="问题 1-1：模块 compile 引入 springboot 依赖，模块安装时报错 java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 模块需要做好瘦身，参考这里：模块瘦身
@@ -327,8 +327,6 @@ if (!doNotTrack) {
   <a href="/docs/contribution-guidelines/runtime/logj42/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimelogj42"><span class="">log4j2 的多模块化适配</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimeehcache-li">
   <a href="/docs/contribution-guidelines/runtime/ehcache/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimeehcache"><span class="">ehcache 的多模块化最佳实践</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogback-li">
-  <a href="/docs/contribution-guidelines/runtime/logback/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimelogback"><span class=""></span></a>
 </li>
   </ul>
 </li>
@@ -486,7 +484,10 @@ if (!doNotTrack) {
 </script>
 
 		<br />
-	
+	<div class="text-muted mt-5 pt-3 border-top">
+  最后修改 December 22, 2023: <a href="https://github.com/sofastack/sofa-serverless/commit/a042f2199922945d8a30c8d137a06bb1239e6b3e">update docs (a042f219)</a>
+</div>
+
 </div>
 
 
