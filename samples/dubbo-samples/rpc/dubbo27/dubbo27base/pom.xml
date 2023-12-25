@@ -58,6 +58,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.alipay.sofa.koupleless</groupId>
+			<artifactId>koupleless-adapter-dubbo2.7</artifactId>
+			<version>${koupleless.runtime.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.lmax</groupId>
 			<artifactId>disruptor</artifactId>
 		</dependency>

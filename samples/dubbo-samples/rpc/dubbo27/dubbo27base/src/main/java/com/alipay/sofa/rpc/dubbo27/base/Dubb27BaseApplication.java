@@ -7,13 +7,18 @@ package com.alipay.sofa.rpc.dubbo27.base;
 import java.io.File;
 
 import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.rpc.dubbo27.base.controller.MasterController;
+import com.alipay.sofa.rpc.dubbo27.model.DemoResponse;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  *
@@ -22,8 +27,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
+@ImportResource("classpath:provider.xml")
 public class Dubb27BaseApplication implements CommandLineRunner {
     private static Logger LOGGER = LoggerFactory.getLogger(Dubb27BaseApplication.class);
+
+//    @Autowired
+//    private MasterController masterController;
 
     public static void main(String[] args) {
 
@@ -35,7 +44,10 @@ public class Dubb27BaseApplication implements CommandLineRunner {
         System.setProperty("sofa.ark.embed.enable", "true");
         System.setProperty("sofa.ark.plugin.export.class.enable", "true");
 
-        SpringApplication.run(Dubb27BaseApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(Dubb27BaseApplication.class, args);
+//        MasterController controller = context.getBean(MasterController.class);
+//        DemoResponse xxx = controller.handle("xxx");
+//        System.out.println(xxx);
     }
 
     /**
