@@ -28,7 +28,7 @@ import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @ImportResource("classpath:provider.xml")
-public class Dubb27BaseApplication implements CommandLineRunner {
+public class Dubb27BaseApplication {
     private static Logger LOGGER = LoggerFactory.getLogger(Dubb27BaseApplication.class);
 
 //    @Autowired
@@ -45,9 +45,16 @@ public class Dubb27BaseApplication implements CommandLineRunner {
         System.setProperty("sofa.ark.plugin.export.class.enable", "true");
 
         ConfigurableApplicationContext context = SpringApplication.run(Dubb27BaseApplication.class, args);
-//        MasterController controller = context.getBean(MasterController.class);
-//        DemoResponse xxx = controller.handle("xxx");
-//        System.out.println(xxx);
+        MasterController controller = context.getBean(MasterController.class);
+        DemoResponse xxx = controller.handle("xxx");
+        System.out.println(xxx.getResult());
+
+        System.out.println("start to deploy biz");
+        try {
+            run(args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -55,8 +62,8 @@ public class Dubb27BaseApplication implements CommandLineRunner {
      * @param args
      * @throws Exception
      */
-    @Override
-    public void run(String... args) throws Exception {
+//    @Override
+    public static void run(String... args) throws Exception {
         try {
             installBiz("dubbo27biz/target/dubbo27biz-0.0.1-SNAPSHOT-ark-biz.jar");
             installBiz("dubbo27biz2/target/dubbo27biz2-0.0.1-SNAPSHOT-ark-biz.jar");
@@ -65,7 +72,7 @@ public class Dubb27BaseApplication implements CommandLineRunner {
         }
     }
 
-    protected void installBiz(String bizDir) throws Throwable {
+    protected static void installBiz(String bizDir) throws Throwable {
         String pathRoot = "samples/dubbo-samples/rpc/dubbo27/";
         File bizFile = new File(pathRoot + bizDir);
         if (bizFile.exists()) {

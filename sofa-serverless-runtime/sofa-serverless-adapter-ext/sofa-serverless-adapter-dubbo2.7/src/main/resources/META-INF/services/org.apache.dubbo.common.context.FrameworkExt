@@ -1,1 +1,2 @@
 com.alipay.sofa.serverless.support.dubbo.ServerlessConfigManager
+com.alipay.sofa.serverless.support.dubbo.ServerlessServiceRepository
