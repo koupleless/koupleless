@@ -29,7 +29,6 @@
         <maven.compiler.target>8</maven.compiler.target>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <oshi.version>6.4.5</oshi.version>
-        <guice.version>5.1.0</guice.version>
         <netty.version>4.1.42.Final</netty.version>
         <logback.version>1.2.9</logback.version>
         <lombok.version>1.18.22</lombok.version>
@@ -87,6 +86,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-bom</artifactId>
+                <version>${sofa.ark.version}</version>
+                <scope>import</scope>
+            </dependency>
+
             <dependency>
                 <groupId>com.alipay.sofa.serverless</groupId>
                 <artifactId>arklet-core</artifactId>
@@ -184,25 +190,6 @@
                 <version>${spring.boot.version}</version>
             </dependency>
             <!--  springboot end  -->
-
-            <dependency>
-                <groupId>com.google.inject</groupId>
-                <artifactId>guice</artifactId>
-                <version>${guice.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.inject.extensions</groupId>
-                <artifactId>guice-multibindings</artifactId>
-                <version>4.2.3</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
@@ -213,24 +200,6 @@
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>hessian</artifactId>
                 <version>${hessian.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-all</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
             </dependency>
 
             <dependency>
