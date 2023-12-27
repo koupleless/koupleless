@@ -25,10 +25,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.sofa.serverless.arklet.core.api.model.Response;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
-import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletException;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
-import com.alipay.sofa.serverless.arklet.core.util.StackTraceElementWrapper;
+import com.alipay.sofa.serverless.arklet.core.util.ExceptionUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -147,7 +146,7 @@ public class NettyHttpServer {
                 }
             } catch (Throwable e) {
                 returnResponse(ctx, Response.internalError("Internal Error: " + e.getMessage(),
-                    new StackTraceElementWrapper(e).getStackTrace()));
+                    ExceptionUtils.getStackTraceAsString(e)));
                 LOGGER.error("arklet process exception, cmd: {}", validation.getCmd(), e);
             }
         }

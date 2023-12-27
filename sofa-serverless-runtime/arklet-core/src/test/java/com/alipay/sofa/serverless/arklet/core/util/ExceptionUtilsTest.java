@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class StackTraceElementWrapperTest {
+public class ExceptionUtilsTest {
 
     @Test
     public void testGetStackTrace() throws Exception {
@@ -32,7 +32,7 @@ public class StackTraceElementWrapperTest {
         PrintWriter pw = new PrintWriter(sw);
         throwable.printStackTrace(pw);
         String expectedStackTrace = sw.toString();
-        StackTraceElementWrapper target = new StackTraceElementWrapper(throwable);
-        assertEquals(expectedStackTrace, target.getStackTrace());
+        String target = ExceptionUtils.getStackTraceAsString(throwable);
+        assertEquals(expectedStackTrace, target);
     }
 }
