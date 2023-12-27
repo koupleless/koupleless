@@ -39,7 +39,8 @@ go: serverless.alipay.com/sofa-serverless/v1/arkctl@latest: module serverless.al
 arkctl 是作为 sofa-serverless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考[安装 arkctl](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0)
 
 #### 问题 1-4：模块安装报 `Master biz environment is null`
-解决方式，升级 sofa-serverless 版本到最新版本
+
+##### 解决方式，升级 sofa-serverless 版本到最新版本
 ```xml
 <dependency>
     <groupId>com.alipay.sofa.serverless</igroupId>
@@ -49,11 +50,26 @@ arkctl 是作为 sofa-serverless 子目录的方式存在的，所以没法直�
 ```
 
 #### 问题 1-5：模块静态合并部署无法从制定的目录里找到模块包
-解决方式，升级 sofa-serverless 版本到最新版本
+##### 解决方式：升级 sofa-serverless 版本到最新版本
 ```xml
 <dependency>
     <groupId>com.alipay.sofa.serverless</igroupId>
     <artifactId>sofa-serverless-app-starter</artifactId>
     <version>${最新版本号}</version>
+</dependency>
+```
+#### 问题 1-6：用户工程与 SOFAServerless 里 guice 版本不一致，且版本较老
+报错信息：
+```text
+Caused by: java.Lang.ClassNotFoundException: com.google.inject.multibindings.Multibinder
+```
+![guice_version_incompatibility.png](imgs/guice_version_incompatibility.png)
+
+##### 解决方式：升级 guice 版本到较新版本，如
+```xml
+<dependency>
+    <groupId>com.google.inject</groupId>
+    <artifactId>guice</artifactId>
+    <version>6.0.0</version>
 </dependency>
 ```

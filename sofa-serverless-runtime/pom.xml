@@ -9,10 +9,10 @@
     <packaging>pom</packaging>
 
     <properties>
+        <revision>0.5.5</revision>
         <sofa.ark.version>2.2.5</sofa.ark.version>
         <spring.boot.version>2.7.15</spring.boot.version>
         <logback.core>1.2.9</logback.core>
-        <revision>0.5.5</revision>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -29,18 +29,18 @@
         <maven.compiler.target>8</maven.compiler.target>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <oshi.version>6.4.5</oshi.version>
-        <guice.version>5.1.0</guice.version>
-        <netty.version>4.1.42.Final</netty.version>
+        <guice.version>6.0.0</guice.version>
+        <guice-multibindings.version>4.2.3</guice-multibindings.version>
+        <netty.version>4.1.94.Final</netty.version>
         <logback.version>1.2.9</logback.version>
         <lombok.version>1.18.22</lombok.version>
         <junit.version>4.13.1</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <oshi.version>6.4.5</oshi.version>
-        <commons.lang3.version>3.12.0</commons.lang3.version>
-        <guava.version>32.1.2-jre</guava.version>
+        <guava.version>32.1.3-jre</guava.version>
         <fastjson.version>1.2.83</fastjson.version>
-        <hessian.version>3.5.1</hessian.version>
+        <hessian.version>4.0.66</hessian.version>
     </properties>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -167,6 +167,12 @@
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <version>${spring.boot.version}</version>
                 <scope>test</scope>
@@ -194,7 +200,7 @@
             <dependency>
                 <groupId>com.google.inject.extensions</groupId>
                 <artifactId>guice-multibindings</artifactId>
-                <version>4.2.3</version>
+                <version>${guice-multibindings.version}</version>
             </dependency>
 
             <dependency>
@@ -210,7 +216,7 @@
             </dependency>
 
             <dependency>
-                <groupId>com.alipay.sofa</groupId>
+                <groupId>com.caucho</groupId>
                 <artifactId>hessian</artifactId>
                 <version>${hessian.version}</version>
             </dependency>
