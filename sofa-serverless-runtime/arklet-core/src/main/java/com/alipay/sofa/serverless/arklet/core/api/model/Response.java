@@ -39,6 +39,11 @@ public class Response {
      */
     private Object       data;
 
+    /**
+     * error stack trace
+     */
+    private String       errorStackTrace;
+
     public static Response fromCommandOutput(Output output) {
         Response response = new Response();
         response.code = output.getCode();
@@ -68,10 +73,11 @@ public class Response {
         return response;
     }
 
-    public static Response internalError(String message) {
+    public static Response internalError(String message, String errorStackTrace) {
         Response response = new Response();
         response.code = ResponseCode.CMD_PROCESS_INTERNAL_ERROR;
         response.message = message;
+        response.errorStackTrace = errorStackTrace;
         return response;
     }
 
@@ -97,5 +103,13 @@ public class Response {
 
     public void setCode(ResponseCode code) {
         this.code = code;
+    }
+
+    public String getErrorStackTrace() {
+        return errorStackTrace;
+    }
+
+    public void setErrorStackTrace(String errorStackTrace) {
+        this.errorStackTrace = errorStackTrace;
     }
 }
