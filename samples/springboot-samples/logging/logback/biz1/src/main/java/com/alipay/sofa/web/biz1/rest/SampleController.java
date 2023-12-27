@@ -1,4 +1,4 @@
-package com.alipay.sofa.springcloud.gateway.biz1.rest;
+package com.alipay.sofa.web.biz1.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
