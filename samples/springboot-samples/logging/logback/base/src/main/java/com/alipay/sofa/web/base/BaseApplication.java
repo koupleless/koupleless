@@ -1,7 +1,6 @@
 package com.alipay.sofa.web.base;
 
 import ch.qos.logback.classic.ClassicConstants;
-import com.alipay.sofa.ark.api.ArkConfigs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
