@@ -73,11 +73,11 @@
             <AppenderRef ref="STDOUT-APPENDER"/>
         </AsyncLogger>
 
-        <AsyncLogger name="STDERR" additivity="false" level="${ctx:logging.level.com.alipay.sofa.web}">
+        <AsyncLogger name="STDERR" additivity="false" level="${ctx:logging.level.com.alipay.sofa}">
             <AppenderRef ref="STDERR-APPENDER"/>
         </AsyncLogger>
 
-        <AsyncLogger name="com.alipay.sofa.web" additivity="false" level="${ctx:logging.level.com.alipay.sofa.web}">
+        <AsyncLogger name="com.alipay.sofa" additivity="false" level="${ctx:logging.level.com.alipay.sofa}">
             <AppenderRef ref="APP-DEFAULT-APPENDER"/>
             <AppenderRef ref="WARN-APPENDER"/>
             <AppenderRef ref="ERROR-APPENDER"/>
@@ -85,14 +85,14 @@
         </AsyncLogger>
 
         <AsyncLogger name="org.springframework" additivity="false"
-                     level="${ctx:logging.level.com.alipay.sofa.web}">
+                     level="${ctx:logging.level.com.alipay.sofa}">
             <AppenderRef ref="ERROR-APPENDER"/>
             <AppenderRef ref="WARN-APPENDER"/>
             <AppenderRef ref="SPRING-APPENDER"/>
             <AppenderRef ref="STDOUT-APPENDER"/>
         </AsyncLogger>
 
-        <AsyncRoot level="${ctx:logging.level.com.alipay.sofa.web}">
+        <AsyncRoot level="${ctx:logging.level.com.alipay.sofa}">
             <AppenderRef ref="APP-DEFAULT-APPENDER"/>
             <AppenderRef ref="WARN-APPENDER"/>
             <AppenderRef ref="ERROR-APPENDER"/>
