@@ -34,5 +34,41 @@
             <artifactId>sofa-serverless-base-plugin</artifactId>
         </dependency>
         <!--  arklet end  -->
+
+<!--        <dependency>-->
+<!--            <groupId>com.alipay.sofa</groupId>-->
+<!--            <artifactId>web-ark-plugin</artifactId>-->
+<!--            <version>${sofa.ark.version}</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.alipay.sofa</groupId>-->
+<!--            <artifactId>netty-ark-plugin</artifactId>-->
+<!--            <version>${sofa.ark.version}</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-app-starter</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-adapter-apollo</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-adapter-log4j2</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-adapter-dubbo2.6</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 </project>

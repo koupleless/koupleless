@@ -1,2 +1,0 @@
-org.springframework.context.ApplicationListener=\
-  com.alipay.sofa.serverless.log4j2.SOFAServerlessLog4j2SpringContextListener
