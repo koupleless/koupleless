@@ -1,6 +1,7 @@
 package com.alipay.sofa.web.base;
 
 import ch.qos.logback.classic.ClassicConstants;
+import com.alipay.sofa.ark.api.ArkConfigs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.ImportResource;
 public class BaseApplication {
 
 	static {
+		ArkConfigs.setEmbedEnable(true);
 		// 建议加到jvm 参数中
 		// 需要保证在 slf4j static bind 之前，（如，首次 getLogger、类加载 SpringApplication 之前）
 		System.setProperty(ClassicConstants.LOGBACK_CONTEXT_SELECTOR,
