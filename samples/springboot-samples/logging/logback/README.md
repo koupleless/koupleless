@@ -15,7 +15,6 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <groupId>com.alipay.sofa</groupId>
     <artifactId>web-ark-plugin</artifactId>
 </dependency>
-
 <!-- spring boot 相关依赖 -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -30,17 +29,32 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 
 注意⚠️：需要基座、模块采用独立日志配置特性，要求，sofa-ark-common 包版本不低于 2.2.6
 
-基座自定义日志配置参考 logback-spring.xml，其中为控制台输出自定义pattern，日志前方添加 ${appname} 000
+基座自定义日志配置参考 logback-spring.xml，其中为控制台输出自定义pattern，日志前方添加 ${appname} 000，并且定义appender将日志输出到基座名目录下 ${logging.file.path}/${appname}/app-default.log
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
     <springProperty scope="context" name="appname" source="spring.application.name"/>
+    <springProperty scope="context" name="logging.file.path"  source="logging.file.path"/>
     <property name="level" value="${logLevel:-info}"/>
-    <!--    <property name="appid" value="${appname}"/>-->
     <property name="the3rdLevel" value="${the3rdLevel:-WARN}"/>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${appname} 000 %date %5level %6relative --- [%15thread] [%-40logger{40}] [%C:%L] : [%X{traceId:-0}] %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="APP-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${level}</level>
+        </filter>
+        <file>${logging.file.path}/${appname}/app-default.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logging.file.path}/${appname}/app-default.log.%d{yyyy-MM-dd}</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
     </appender>
     <logger name="org.hibernate" level="${the3rdLevel}"/>
@@ -49,6 +63,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <logger name="org.apache" level="${the3rdLevel}"/>
     <root level="${level}">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="APP-APPENDER"/>
     </root>
 </configuration>
 ```
@@ -106,12 +121,13 @@ biz 原来是普通 springboot，修改打包插件方式为 sofaArk biz 模块�
 ```
 注意这里将不同 biz 的 web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
 
-模块自定义日志配置见模块项目资源目录中的 logback-spring.xml，其中为控制台输出自定义pattern，日志前方添加 ${appname} 111
+模块自定义日志配置见模块项目资源目录中的 logback-spring.xml，其中为控制台输出自定义pattern，日志前方添加 ${appname} 111，并且定义appender将日志输出到模块名目录下 ${logging.file.path}/${appname}/app-default.log
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
     <springProperty scope="context" name="appname" source="spring.application.name"/>
+    <springProperty scope="context" name="logging.file.path"  source="logging.file.path"/>
     <property name="level" value="${logLevel:-info}"/>
     <!--    <property name="appid" value="${appname}"/>-->
     <property name="the3rdLevel" value="${the3rdLevel:-WARN}"/>
@@ -120,12 +136,28 @@ biz 原来是普通 springboot，修改打包插件方式为 sofaArk biz 模块�
             <pattern>${appname} 111 %date %5level %6relative --- [%15thread] [%-40logger{40}] [%C:%L] : [%X{traceId:-0}] %msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="APP-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${level}</level>
+        </filter>
+        <file>${logging.file.path}/${appname}/app-default.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logging.file.path}/${appname}/app-default.log.%d{yyyy-MM-dd}</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
     <logger name="org.hibernate" level="${the3rdLevel}"/>
     <logger name="org.springframework" level="${the3rdLevel}"/>
     <logger name="com.alibaba" level="${the3rdLevel}"/>
     <logger name="org.apache" level="${the3rdLevel}"/>
     <root level="${level}">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="APP-APPENDER"/>
     </root>
 </configuration>
 ```
@@ -148,19 +180,19 @@ curl --location --request POST 'localhost:1238/installBiz' \
 
 ### 验证
 
-1. 先查看基座启动日志，可以见到日志中有"base 000" 字样，满足我们日志配置中的pattern
-2. 再启动模块后，查看模块启动日志，可以见到日志中有"biz1 111" 字样，满足我们日志配置中的pattern
-3. 发起请求验证模块web服务，
+1. 先查看基座启动日志，可以见到日志中有"base 000" 字样，满足我们日志配置中的pattern，同时在 logging.file.path=./logging/logback/logs/ 目录下存在基座日志文件
+   ![img.png](img.png)
+2. 再启动模块后，查看模块启动日志，可以见到日志中有"biz1 111" 字样，满足我们日志配置中的pattern，同时在 logging.file.path=./logging/logback/logs/ 目录下存在模块日志文件
+   ![img_1.png](img_1.png)
+3. 发起请求验证模块web服务
 
 ```shell
 curl http://localhost:8080/biz2
 ```
-返回 `hello to /biz1 deploy`，同时查看控制台日志输出
+返回 `hello to /biz1 deploy`，同时查看控制台日志输出，满足我们日志配置中的pattern
 ```log
 biz1 111 2023-12-27 20:05:55,543  INFO  25790 --- [http-nio-8080-exec-1] [c.a.sofa.web.biz1.rest.SampleController ] [com.alipay.sofa.web.biz1.rest.SampleController:21] : [0] /biz1 web test: into sample controller
 ```
-
-
 
 ## 注意事项
 这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
