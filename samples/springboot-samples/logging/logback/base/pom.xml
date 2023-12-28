@@ -19,8 +19,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!-- 一定要排除logback，因为基座cp中的ark-all包含了该jar，
-		会导致该jar中的类被app cl和container cl都能加载到，会出现class not find-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-logging</artifactId>
@@ -36,16 +34,9 @@
 			<groupId>com.alipay.sofa.serverless</groupId>
 			<artifactId>sofa-serverless-base-starter</artifactId>
 		</dependency>
-
-
 		<dependency>
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>web-ark-plugin</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.lmax</groupId>
-			<artifactId>disruptor</artifactId>
-			<version>${disruptor.version}</version>
 		</dependency>
 	</dependencies>
 
