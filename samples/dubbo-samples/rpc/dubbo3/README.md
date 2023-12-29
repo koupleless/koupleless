@@ -58,7 +58,7 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
-    <version>2.2.3</version>
+    <version>${sofa.ark.version}</version>
     <executions>
         <execution>
             <id>default-cli</id>
