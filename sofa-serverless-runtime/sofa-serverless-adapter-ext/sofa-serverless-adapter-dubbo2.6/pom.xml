@@ -44,7 +44,7 @@
                                 com.alipay.sofa.serverless.adapter.Dubbo26AdapterActivator
                             </activator>
                             <exported>
-                                <mode>override</mode>
+<!--                                <mode>override</mode>-->
                                 <packages>
                                     <package>com.alibaba.dubbo.common</package>
                                     <package>com.alibaba.dubbo.config.spring.extension</package>

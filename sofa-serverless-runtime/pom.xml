@@ -10,7 +10,7 @@
 
     <properties>
         <revision>0.5.6-SNAPSHOT</revision>
-        <sofa.ark.version>2.2.5</sofa.ark.version>
+        <sofa.ark.version>2.2.6-SNAPSHOT</sofa.ark.version>
         <spring.boot.version>2.7.15</spring.boot.version>
         <logback.core>1.2.9</logback.core>
         <project.encoding>UTF-8</project.encoding>
@@ -195,12 +195,6 @@
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>
                 <version>${guice.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.inject.extensions</groupId>
-                <artifactId>guice-multibindings</artifactId>
-                <version>${guice-multibindings.version}</version>
             </dependency>
 
             <dependency>

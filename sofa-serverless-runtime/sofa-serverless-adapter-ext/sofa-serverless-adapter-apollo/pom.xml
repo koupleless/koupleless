@@ -56,7 +56,7 @@
                                 com.alipay.sofa.serverless.adapter.ApolloAdapterActivator
                             </activator>
                             <exported>
-                                <mode>override</mode>
+<!--                                <mode>override</mode>-->
                                 <classes>
                                     <class>com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer</class>
                                 </classes>
