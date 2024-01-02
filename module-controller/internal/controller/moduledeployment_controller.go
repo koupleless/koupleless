@@ -81,6 +81,16 @@ func (r *ModuleDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Req
 		return ctrl.Result{}, utils.Error(err, "Failed to get moduleDeployment", "moduleDeploymentName", moduleDeployment.Name)
 	}
 
+	// update symmetric moduleDeployment replicas
+	if moduleDeployment.Spec.Replicas == -1 {
+		deployment := &v1.Deployment{}
+		err := r.Client.Get(ctx, types.NamespacedName{Namespace: moduleDeployment.Namespace, Name: moduleDeployment.Spec.BaseDeploymentName}, deployment)
+		if err != nil {
+			return ctrl.Result{}, utils.Error(err, "Failed to get deployment", "deploymentName", deployment.Name)
+		}
+		moduleDeployment.Spec.Replicas = deployment.Status.AvailableReplicas
+	}
+
 	if moduleDeployment.DeletionTimestamp != nil {
 		event.PublishModuleDeploymentDeleteEvent(r.Client, ctx, moduleDeployment)
 		if !utils.HasFinalizer(&moduleDeployment.ObjectMeta, finalizer.ModuleReplicaSetExistedFinalizer) &&
