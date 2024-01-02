@@ -23,9 +23,11 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONObject;
 
 import com.alipay.sofa.serverless.arklet.core.api.model.Response;
-import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.command.CommandService;
-import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletException;
+import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
+import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
+import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
+import com.alipay.sofa.serverless.arklet.core.util.ExceptionUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -64,12 +66,13 @@ import io.netty.util.CharsetUtil;
 @SuppressWarnings("unchecked")
 public class NettyHttpServer {
 
-    private final int            port;
-    private final EventLoopGroup bossGroup;
-    private final EventLoopGroup workerGroup;
-    private Channel              channel;
+    private final int                 port;
+    private final EventLoopGroup      bossGroup;
+    private final EventLoopGroup      workerGroup;
+    private Channel                   channel;
 
-    private final CommandService commandService;
+    private final CommandService      commandService;
+    private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
 
     public NettyHttpServer(int port, CommandService commandService) {
         this.port = port;
@@ -128,8 +131,8 @@ public class NettyHttpServer {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request)
                                                                                        throws Exception {
+            RequestValidation validation = validate(request);
             try {
-                RequestValidation validation = validate(request);
                 if (!validation.isPass()) {
                     ret500(ctx, validation.getMessage());
                 } else {
@@ -141,10 +144,10 @@ public class NettyHttpServer {
                     Response response = Response.fromCommandOutput(output);
                     returnResponse(ctx, response);
                 }
-            } catch (ArkletException ex) {
-                returnResponse(ctx, Response.internalError("Internal Error: " + ex.getMessage()));
-            } catch (Exception ex) {
-                returnResponse(ctx, Response.internalError("Internal Error"));
+            } catch (Throwable e) {
+                returnResponse(ctx, Response.internalError("Internal Error: " + e.getMessage(),
+                    ExceptionUtils.getStackTraceAsString(e)));
+                LOGGER.error("arklet process exception, cmd: {}", validation.getCmd(), e);
             }
         }
 
