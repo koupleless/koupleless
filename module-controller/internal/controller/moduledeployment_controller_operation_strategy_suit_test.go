@@ -517,6 +517,155 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 		})
 	})
 
+	Context("test symmetric batchConfirm strategy", func() {
+		moduleDeploymentName := "module-deployment-test-for-symmetric-batch-confirm"
+		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
+		moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
+		moduleDeployment.Spec.Replicas = -1
+		moduleDeployment.Spec.OperationStrategy.NeedConfirm = true
+		moduleDeployment.Spec.OperationStrategy.BatchCount = 2
+
+		It("0 prepare deployment", func() {
+			Eventually(func() error {
+				deployment.Status.Replicas = 2
+				deployment.Status.ReadyReplicas = 2
+				deployment.Status.AvailableReplicas = 2
+				umderr := k8sClient.Status().Update(context.TODO(), &deployment)
+				if umderr != nil {
+					return umderr
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("0. prepare 2 pods", func() {
+			Eventually(func() bool {
+				pod := preparePod(namespace, "fake-pod-5")
+				if err := k8sClient.Create(context.TODO(), &pod); err != nil {
+					return false
+				}
+				pod.Status.PodIP = "127.0.0.1"
+				if k8sClient.Status().Update(context.TODO(), &pod) != nil {
+					return false
+				}
+
+				pod2 := preparePod(namespace, "fake-pod-6")
+				if err := k8sClient.Create(context.TODO(), &pod2); err != nil {
+					return false
+				}
+				pod2.Status.PodIP = "127.0.0.1"
+				return k8sClient.Status().Update(context.TODO(), &pod2) == nil
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("1. create a new moduleDeployment", func() {
+			Expect(k8sClient.Create(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+
+		It("2. check if the replicas is 1", func() {
+			Eventually(func() error {
+				if err := k8sClient.Get(context.TODO(), nn, &moduleDeployment); err != nil {
+					return err
+				}
+
+				if !moduleDeployment.Spec.Pause {
+					return fmt.Errorf("the deployment is not paused")
+				}
+
+				return checkModuleDeploymentReplicas(
+					types.NamespacedName{
+						Name:      moduleDeploymentName,
+						Namespace: moduleDeployment.Namespace}, 1)
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("3. resume", func() {
+			Eventually(func() bool {
+				Expect(k8sClient.Get(context.TODO(), nn, &moduleDeployment)).Should(Succeed())
+
+				moduleDeployment.Spec.Pause = false
+				return Expect(k8sClient.Update(context.TODO(), &moduleDeployment)).Should(Succeed())
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("4. check if the moduleDeployment status is completed", func() {
+			Eventually(func() bool {
+				if k8sClient.Get(context.TODO(), nn, &moduleDeployment) != nil {
+					return false
+				}
+
+				if moduleDeployment.Spec.Pause != false {
+					return false
+				}
+
+				return moduleDeployment.Status.ReleaseStatus.Progress == v1alpha1.ModuleDeploymentReleaseProgressCompleted
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("5. add another finalizer to prevent module-deployment from being deleted ", func() {
+			utils.AddFinalizer(&moduleDeployment.ObjectMeta, "test")
+			Expect(k8sClient.Update(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+
+		It("6. delete moduleDeployment", func() {
+			Expect(k8sClient.Delete(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+
+		It("7. check if the replicas is 1", func() {
+			Eventually(func() error {
+				if err := k8sClient.Get(context.TODO(), nn, &moduleDeployment); err != nil {
+					return err
+				}
+
+				if !moduleDeployment.Spec.Pause {
+					return fmt.Errorf("the deployment is not paused")
+				}
+
+				return checkModuleDeploymentReplicas(
+					types.NamespacedName{
+						Name:      moduleDeploymentName,
+						Namespace: moduleDeployment.Namespace}, 1)
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("8. resume", func() {
+			Eventually(func() bool {
+				Expect(k8sClient.Get(context.TODO(), nn, &moduleDeployment)).Should(Succeed())
+
+				moduleDeployment.Spec.Pause = false
+				return Expect(k8sClient.Update(context.TODO(), &moduleDeployment)).Should(Succeed())
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("9. check if the moduleDeployment status is Terminated", func() {
+			Eventually(func() error {
+				if err := k8sClient.Get(context.TODO(), nn, &moduleDeployment); err != nil {
+					return err
+				}
+
+				if moduleDeployment.Spec.Pause != false {
+					return fmt.Errorf("the module-deployment is paused")
+				}
+
+				if moduleDeployment.Status.ReleaseStatus == nil {
+					return fmt.Errorf("release status is nil")
+				}
+
+				if moduleDeployment.Status.ReleaseStatus.Progress != v1alpha1.ModuleDeploymentReleaseProgressTerminated {
+					return fmt.Errorf("expect status %v, but got %v",
+						v1alpha1.ModuleDeploymentReleaseProgressTerminated, moduleDeployment.Status.ReleaseStatus.Progress)
+				}
+				return nil
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("10. clean module-deployment", func() {
+			utils.RemoveFinalizer(&moduleDeployment.ObjectMeta, "test")
+			Expect(k8sClient.Update(context.TODO(), &moduleDeployment))
+		})
+	})
+
 	Context("test useBeta strategy", func() {
 		moduleDeploymentName := "module-deployment-test-for-use-beta"
 		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
@@ -534,6 +683,56 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 					return false
 				}
 				// when install module, the podIP is necessary
+				pod.Status.PodIP = "127.0.0.1"
+				return k8sClient.Status().Update(context.TODO(), &pod) == nil
+			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("1. create a new moduleDeployment", func() {
+			Expect(k8sClient.Create(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+
+		It("2. check if use Beta strategy", func() {
+			Eventually(func() error {
+				return checkModuleDeploymentReplicas(nn, 1)
+			})
+		})
+
+		It("3. clean environment", func() {
+			Expect(k8sClient.Delete(context.TODO(), &moduleDeployment)).Should(Succeed())
+		})
+	})
+
+	Context("test symmetric useBeta strategy", func() {
+		moduleDeploymentName := "module-deployment-test-for-symmetric-use-beta"
+		nn := types.NamespacedName{Namespace: namespace, Name: moduleDeploymentName}
+		moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
+		moduleDeployment.Spec.Replicas = -1
+		moduleDeployment.Spec.OperationStrategy.UseBeta = true
+		moduleDeployment.Spec.OperationStrategy.NeedConfirm = true
+		moduleDeployment.Spec.OperationStrategy.BatchCount = 2
+
+		It("0 prepare deployment", func() {
+			Eventually(func() error {
+				deployment.Status.Replicas = 4
+				deployment.Status.ReadyReplicas = 4
+				deployment.Status.AvailableReplicas = 4
+				umderr := k8sClient.Status().Update(context.TODO(), &deployment)
+				if umderr != nil {
+					return umderr
+				}
+
+				return nil
+			}, timeout, interval).Should(Succeed())
+		})
+
+		It("0. prepare pods", func() {
+			Eventually(func() bool {
+				pod := preparePod(namespace, "fake-pod-symmetric-use-beta")
+				pod.Labels[label.ModuleLabelPrefix+"dynamic-provider"] = "true"
+				if err := k8sClient.Create(context.TODO(), &pod); err != nil {
+					return false
+				}
 				pod.Status.PodIP = "127.0.0.1"
 				return k8sClient.Status().Update(context.TODO(), &pod) == nil
 			}, timeout, interval).Should(BeTrue())
