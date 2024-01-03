@@ -175,36 +175,37 @@ curl --location --request POST 'localhost:1238/queryAllBiz'
 可以查看到所有安装好的模块列表
 
 5. 验证模块的RPC调用
+
 模块biz远程调用biz2发布的dubbo服务（因为有dubbo网络调用，执行前请关闭vpn，否则可能出现调用超时）
 ```shell
-curl localhost:8080/biz
+curl localhost:8080/biz/
+{"result":"bizcom.alipay.sofa.rpc.dubbo27.biz2.service.BizDemoServiceImpl"}
+
+curl "localhost:8080/biz/?ref=second"
+{"result":"biz->com.alipay.sofa.rpc.dubbo27.biz2.service.SecondDemoServiceImpl"}
+
+curl localhost:8080/biz/hello
+{"data":"null->com.alipay.sofa.rpc.dubbo27.biz2.service.HelloServiceImpl"}
 ```
-返回
+
+模块biz2远程调用biz发布的dubbo服务
 ```shell
-{
-  "result": "biz->com.alipay.sofa.rpc.dubbo26.biz.service.BizDemoServiceImpl"
-}
+curl localhost:8080/biz2/
+{"result":"biz2->com.alipay.sofa.rpc.dubbo27.biz.service.BizDemoServiceImpl"}
+
+curl "localhost:8080/biz2/?ref=second"
+{"result":"biz2->com.alipay.sofa.rpc.dubbo27.biz.service.SecondDemoServiceImpl"}
+
+curl localhost:8080/biz2/hello
+{"data":"null->com.alipay.sofa.rpc.dubbo27.biz.service.HelloServiceImpl"}
 ```
-模块injvm调用基座发布的服务
+
+6. 验证基座的 RPC 调用自己
+
+基座rpc调用自己发布的dubbo服务
 ```shell
-curl localhost:8080/biz/baseInJvm
-```
-返回
-```json
-{
-  "result": "biz->com.alipay.sofa.rpc.dubbo26.base.service.BaseDemoService"
-}
-```
-6. 验证基座的 RPC/JVM调用
-基座调用biz模块发布的injvm服务
-```shell
-curl http://localhost:8080/bizInJvm
-```
-返回
-```shell
-{
-  "result": "base->com.alipay.sofa.rpc.dubbo26.biz.service.BizDemoServiceImpl"
-}
+curl localhost:8080
+{"result":"base->com.alipay.sofa.rpc.dubbo27.base.service.MasterDemoServiceImpl"}
 ```
 
 ### 说明
