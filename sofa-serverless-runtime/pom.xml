@@ -405,7 +405,6 @@
                         <exclude>**/arklet/springboot/starter/health/endpoint/model/**/*</exclude>
                         <exclude>**/sofa/serverless/common/environment/**/*</exclude>
                         <exclude>**/sofa/serverless/common/exception/**/*</exclude>
-                        <exclude>**/sofa-serverless-adapter-*/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
