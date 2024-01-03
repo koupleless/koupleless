@@ -87,12 +87,16 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
 ### 3. 声明dubbo服务和引用
 biz1声明了三个rpc服务:
 > biz1/com.alipay.sofa.rpc.dubbo27.model.DemoService
+> 
 > biz1Second/com.alipay.sofa.rpc.dubbo27.model.DemoService
+> 
 > biz1/com.alipay.sofa.rpc.dubbo27.model.HelloService
 
 三个rpc引用，remote调用biz2发布的rpc服务
 > biz2/com.alipay.sofa.rpc.dubbo27.model.DemoService
+> 
 > biz2Second/com.alipay.sofa.rpc.dubbo27.model.DemoService
+> 
 > biz2/com.alipay.sofa.rpc.dubbo27.model.HelloService
 
 服务发布与引用配置如下：
@@ -113,35 +117,17 @@ biz1声明了三个rpc服务:
 
 类似的，biz2声明了三个rpc服务：
 > biz2/com.alipay.sofa.rpc.dubbo27.model.DemoService
+> 
 > biz2Second/com.alipay.sofa.rpc.dubbo27.model.DemoService
+> 
 > biz2/com.alipay.sofa.rpc.dubbo27.model.HelloService
 
 三个rpc引用，remote调用biz1发布的rpc服务
 > biz1/com.alipay.sofa.rpc.dubbo27.model.DemoService
+> 
 > biz1Second/com.alipay.sofa.rpc.dubbo27.model.DemoService
+> 
 > biz1/com.alipay.sofa.rpc.dubbo27.model.HelloService
-
-
-
-
-
-
-### 测试调用代码
-发布一个服务
-``` xml
-<!-- 和本地bean一样实现服务 -->
-<bean id="demoService" class="com.alipay.sofa.rpc.dubbo26.biz.service.BizDemoServiceImpl"/>
-<!-- 声明需要暴露的服务接口 -->
-<dubbo:service interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" ref="demoService" group="biz"/>    <!-- 和本地bean一样实现服务 -->
-```
-
-在 BizController 里引用了模块自己发布的RPC，基座发布的injvm服务。
-``` xml
-<!-- 生成服务代理，调用基座的injvm服务-->
-<dubbo:reference id="baseDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="local" group="base" check="false"/>
-<!-- 生成远程服务代理，调用服务biz1/com.alipay.sofa.rpc.dubbo26.model.DemoService-->
-<dubbo:reference id="selfDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="remote" group="biz" check="false"/>
-```
 
 
 ### 运行代码
