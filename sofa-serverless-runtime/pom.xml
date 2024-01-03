@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>0.5.5</revision>
-        <sofa.ark.version>2.2.5</sofa.ark.version>
+        <revision>0.5.6-SNAPSHOT</revision>
+        <sofa.ark.version>2.2.6-SNAPSHOT</sofa.ark.version>
         <spring.boot.version>2.7.15</spring.boot.version>
         <logback.core>1.2.9</logback.core>
         <project.encoding>UTF-8</project.encoding>
@@ -30,7 +30,6 @@
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <oshi.version>6.4.5</oshi.version>
         <guice.version>6.0.0</guice.version>
-        <guice-multibindings.version>4.2.3</guice-multibindings.version>
         <netty.version>4.1.94.Final</netty.version>
         <logback.version>1.2.9</logback.version>
         <lombok.version>1.18.22</lombok.version>
@@ -195,12 +194,6 @@
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>
                 <version>${guice.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.inject.extensions</groupId>
-                <artifactId>guice-multibindings</artifactId>
-                <version>${guice-multibindings.version}</version>
             </dependency>
 
             <dependency>
@@ -412,6 +405,9 @@
                         <exclude>**/arklet/springboot/starter/health/endpoint/model/**/*</exclude>
                         <exclude>**/sofa/serverless/common/environment/**/*</exclude>
                         <exclude>**/sofa/serverless/common/exception/**/*</exclude>
+                        <exclude>**/com/alibaba/dubbo/**/*</exclude>
+                        <exclude>**/org/springframework/boot/**/*</exclude>
+                        <exclude>**/com/ctrip/framework/apollo/spring/boot/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

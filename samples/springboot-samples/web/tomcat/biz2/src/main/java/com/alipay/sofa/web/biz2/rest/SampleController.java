@@ -1,4 +1,4 @@
-package com.alipay.sofa.springcloud.gateway.biz2.rest;
+package com.alipay.sofa.web.biz2.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
