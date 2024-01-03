@@ -405,6 +405,9 @@
                         <exclude>**/arklet/springboot/starter/health/endpoint/model/**/*</exclude>
                         <exclude>**/sofa/serverless/common/environment/**/*</exclude>
                         <exclude>**/sofa/serverless/common/exception/**/*</exclude>
+                        <exclude>**/com/alibaba/dubbo/**/*</exclude>
+                        <exclude>**/org/springframework/boot/**/*</exclude>
+                        <exclude>**/com/ctrip/framework/apollo/spring/boot/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

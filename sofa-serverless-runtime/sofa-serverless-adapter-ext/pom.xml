@@ -18,16 +18,16 @@
         <module>sofa-serverless-adapter-dubbo2.6</module>
     </modules>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.maven.plugin}</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.jacoco</groupId>-->
+<!--                <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--                <version>${jacoco.maven.plugin}</version>-->
+<!--                <configuration>-->
+<!--                    <skip>true</skip>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 </project>
