@@ -145,8 +145,10 @@ public class NettyHttpServer {
                     returnResponse(ctx, response);
                 }
             } catch (Throwable e) {
-                returnResponse(ctx, Response.internalError("Internal Error: " + e.getMessage(),
-                    ExceptionUtils.getStackTraceAsString(e)));
+                returnResponse(
+                    ctx,
+                    Response.internalError("Internal Error: " + e.getMessage(),
+                        ExceptionUtils.getStackTraceAsString(e)));
                 LOGGER.error("arklet process exception, cmd: {}", validation.getCmd(), e);
             }
         }
