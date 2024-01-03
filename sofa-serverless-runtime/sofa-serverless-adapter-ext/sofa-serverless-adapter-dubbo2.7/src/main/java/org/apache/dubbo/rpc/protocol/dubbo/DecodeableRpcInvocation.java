@@ -16,12 +16,13 @@
  */
 package org.apache.dubbo.rpc.protocol.dubbo;
 
-
 import org.apache.dubbo.common.config.ConfigurationUtils;
 import org.apache.dubbo.common.logger.Logger;
 import org.apache.dubbo.common.logger.LoggerFactory;
 import org.apache.dubbo.common.serialize.Cleanable;
 import org.apache.dubbo.common.serialize.ObjectInput;
+import org.apache.dubbo.common.serialize.java.ClassLoaderJavaObjectInput;
+import org.apache.dubbo.common.serialize.java.ClassLoaderObjectInputStream;
 import org.apache.dubbo.common.utils.Assert;
 import org.apache.dubbo.common.utils.ReflectUtils;
 import org.apache.dubbo.common.utils.StringUtils;
@@ -56,15 +57,15 @@ public class DecodeableRpcInvocation extends RpcInvocation implements Codec, Dec
 
     private static final Logger log = LoggerFactory.getLogger(DecodeableRpcInvocation.class);
 
-    private Channel channel;
+    private Channel             channel;
 
-    private byte serializationType;
+    private byte                serializationType;
 
-    private InputStream inputStream;
+    private InputStream         inputStream;
 
-    private Request request;
+    private Request             request;
 
-    private volatile boolean hasDecoded;
+    private volatile boolean    hasDecoded;
 
     public DecodeableRpcInvocation(Channel channel, Request request, InputStream is, byte id) {
         Assert.notNull(channel, "channel == null");
@@ -105,7 +106,7 @@ public class DecodeableRpcInvocation extends RpcInvocation implements Codec, Dec
     @Override
     public Object decode(Channel channel, InputStream input) throws IOException {
         ObjectInput in = CodecSupport.getSerialization(channel.getUrl(), serializationType)
-                .deserialize(channel.getUrl(), input);
+            .deserialize(channel.getUrl(), input);
         this.put(SERIALIZATION_ID_KEY, serializationType);
 
         String dubboVersion = in.readUTF();
@@ -123,31 +124,46 @@ public class DecodeableRpcInvocation extends RpcInvocation implements Codec, Dec
         setParameterTypesDesc(desc);
 
         try {
-            if (ConfigurationUtils.getSystemConfiguration().getBoolean(SERIALIZATION_SECURITY_CHECK_KEY, false)) {
+            if (ConfigurationUtils.getSystemConfiguration().getBoolean(
+                SERIALIZATION_SECURITY_CHECK_KEY, false)) {
                 CodecSupport.checkSerialization(path, version, serializationType);
             }
             Object[] args = DubboCodec.EMPTY_OBJECT_ARRAY;
             Class<?>[] pts = DubboCodec.EMPTY_CLASS_ARRAY;
             if (desc.length() > 0) {
-//                if (RpcUtils.isGenericCall(path, getMethodName()) || RpcUtils.isEcho(path, getMethodName())) {
-//                    pts = ReflectUtils.desc2classArray(desc);
-//                } else {
+                //                if (RpcUtils.isGenericCall(path, getMethodName()) || RpcUtils.isEcho(path, getMethodName())) {
+                //                    pts = ReflectUtils.desc2classArray(desc);
+                //                } else {
                 ServiceRepository repository = ApplicationModel.getServiceRepository();
                 ServiceDescriptor serviceDescriptor = repository.lookupService(path);
                 if (serviceDescriptor != null) {
-                    MethodDescriptor methodDescriptor = serviceDescriptor.getMethod(getMethodName(), desc);
+                    MethodDescriptor methodDescriptor = serviceDescriptor.getMethod(
+                        getMethodName(), desc);
                     if (methodDescriptor != null) {
                         pts = methodDescriptor.getParameterClasses();
                         this.setReturnTypes(methodDescriptor.getReturnTypes());
                     }
                 }
                 if (pts == DubboCodec.EMPTY_CLASS_ARRAY) {
-                    if (!RpcUtils.isGenericCall(desc, getMethodName()) && !RpcUtils.isEcho(desc, getMethodName())) {
-                        throw new IllegalArgumentException("Service not found:" + path + ", " + getMethodName());
+                    if (!RpcUtils.isGenericCall(desc, getMethodName())
+                        && !RpcUtils.isEcho(desc, getMethodName())) {
+                        throw new IllegalArgumentException("Service not found:" + path + ", "
+                                                           + getMethodName());
                     }
                     pts = ReflectUtils.desc2classArray(desc);
                 }
-//                }
+                //                }
+
+                // patch begin
+                if (in instanceof ClassLoaderJavaObjectInput) {
+                    InputStream is = ((ClassLoaderJavaObjectInput) in).getInputStream();
+                    if (is instanceof ClassLoaderObjectInputStream) {
+                        ClassLoader cl = serviceDescriptor.getServiceInterfaceClass()
+                            .getClassLoader();
+                        ((ClassLoaderObjectInputStream) is).setClassLoader(cl);
+                    }
+                }
+                // patch end
 
                 args = new Object[pts.length];
                 for (int i = 0; i < args.length; i++) {
@@ -178,9 +194,8 @@ public class DecodeableRpcInvocation extends RpcInvocation implements Codec, Dec
             }
 
             setArguments(args);
-            String targetServiceName = buildKey(getAttachment(PATH_KEY),
-                    getAttachment(GROUP_KEY),
-                    getAttachment(VERSION_KEY));
+            String targetServiceName = buildKey(getAttachment(PATH_KEY), getAttachment(GROUP_KEY),
+                getAttachment(VERSION_KEY));
             setTargetServiceUniqueName(targetServiceName);
         } catch (ClassNotFoundException e) {
             throw new IOException(StringUtils.toString("Read invocation data failed.", e));

@@ -21,8 +21,6 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import java.lang.reflect.Method;
-
 /**
  * @author: yuanyuan
  * @date: 2023/12/25 4:14 下午
@@ -51,7 +49,6 @@ public class BizDubboBootstrapListener implements ApplicationListener {
     }
 
     private void onContextRefreshedEvent(ContextRefreshedEvent event) {
-        Method exportServices = ReflectionUtils.getMethod(DubboBootstrap.class, "exportServices");
         try {
             ReflectionUtils.getMethod(DubboBootstrap.class, "exportServices")
                 .invoke(dubboBootstrap);
