@@ -48,17 +48,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
-            <artifactId>sofa-serverless-base-starter</artifactId>
-        </dependency>
-        <!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
-        <dependency>
-            <groupId>com.alipay.sofa</groupId>
-            <artifactId>web-ark-plugin</artifactId>
-        </dependency>
-        <!-- end 单 host 部署的依赖 -->
     </dependencies>
 
     <build>

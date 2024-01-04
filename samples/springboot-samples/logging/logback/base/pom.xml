@@ -16,6 +16,17 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-base-starter</artifactId>
+			<version>${sofa.serverless.runtime.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa</groupId>
+			<artifactId>web-ark-plugin</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
@@ -27,16 +38,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-
-		<!-- 这里添加动态模块相关依赖 -->
-		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-base-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>web-ark-plugin</artifactId>
 		</dependency>
 	</dependencies>
 
