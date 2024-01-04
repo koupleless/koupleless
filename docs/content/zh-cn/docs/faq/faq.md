@@ -21,7 +21,7 @@ com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SN
 <dependency>
     <groupId>com.alipay.sofa.serverless</igroupId>
     <artifactId>sofa-serverless-app-starter</artifactId>
-    <version>0.5.6-SNAPSHOT</version>
+    <version>0.5.6</version>
 </dependency>
 ```
 或者升级 sofa-serverless 版本到最新版本
