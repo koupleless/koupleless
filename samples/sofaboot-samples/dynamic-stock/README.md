@@ -42,7 +42,7 @@ biz 也是普通 SOFABoot，修改打包插件方式为 sofaArk biz 模块打包
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
-    <version>2.2.5</version>
+    <version>${sofa.ark.version}</version>
     <executions>
         <execution>
             <id>default-cli</id>
