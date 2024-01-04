@@ -14,7 +14,7 @@ weight: 300
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-app-starter</artifactId>
-    <version>0.5.6-SNAPSHOT</version>
+    <version>0.5.6</version>
     <scope>provided</scope>
 </dependency>
 ```
