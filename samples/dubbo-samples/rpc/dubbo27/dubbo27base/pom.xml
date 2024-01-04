@@ -55,7 +55,7 @@
 		<dependency>
 			<groupId>com.alipay.sofa.serverless</groupId>
 			<artifactId>sofa-serverless-adapter-dubbo27</artifactId>
-			<version>0.5.5</version>
+			<version>${sofa.serverless.runtime.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.dubbo</groupId>
