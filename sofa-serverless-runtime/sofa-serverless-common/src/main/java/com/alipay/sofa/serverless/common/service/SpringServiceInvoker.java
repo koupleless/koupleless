@@ -145,7 +145,10 @@ public class SpringServiceInvoker implements MethodInterceptor {
 
     private Object invokeService(MethodInvocation invocation) throws InvocationTargetException,
                                                              IllegalAccessException {
-        return invocation.getMethod().invoke(target, invocation.getArguments());
+        Method method = invocation.getMethod();
+        //the method may be not public
+        method.setAccessible(true);
+        return method.invoke(target, invocation.getArguments());
     }
 
     private Method getTargetMethod(Method method, Class<?>[] argumentTypes) {
