@@ -54,6 +54,7 @@ public class InstallBizHandler
                                                                                                                          implements
                                                                                                                          ArkBizOps {
     private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
+
     @Override
     public Output<InstallBizClientResponse> handle(Input input) {
         MemoryPoolMXBean metaSpaceMXBean = getMetaSpaceMXBean();
@@ -102,7 +103,8 @@ public class InstallBizHandler
         notBlank(input.getBizUrl(), "bizUrl should not be blank");
 
         if (StringUtils.isEmpty(input.getBizName()) || StringUtils.isEmpty(input.getBizVersion())) {
-            LOGGER.warn("biz name and version should not be empty, or it will reduce the performance.");
+            LOGGER
+                .warn("biz name and version should not be empty, or it will reduce the performance.");
         }
 
         if (StringUtils.isEmpty(input.getBizName()) && StringUtils.isEmpty(input.getBizVersion())) {
