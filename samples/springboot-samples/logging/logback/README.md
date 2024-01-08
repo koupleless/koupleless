@@ -7,9 +7,13 @@
 base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
 ```xml
 <!-- sofa-serverless 相关依赖 -->
+<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
+    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-base-starter</artifactId>
+   <groupId>com.alipay.sofa.serverless</groupId>
+   <artifactId>sofa-serverless-base-starter</artifactId>
+   <version>${sofa.serverless.runtime.version}</version>
+   <type>pom</type>
 </dependency>
 <dependency>
     <groupId>com.alipay.sofa</groupId>
