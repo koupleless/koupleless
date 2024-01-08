@@ -1,21 +1,55 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.serverless.common.util;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+/**
+ * Support multi-business Properties<br/>
+ * Isolating configuration separation between different business modules<br/>
+ * The default value of the configuration of the base application is used<br/>
+ * <p>
+ * If you want to use, you need to write the code in you base application
+ * </p>
+ * <code>
+ * MultiBizProperties.initSystem();
+ * </code>
+ */
 public class MultiBizProperties extends Properties {
-    private final ClassLoader baseClassLoader;
 
+    private static final String BIZ_CLASS_LOADER = "com.alipay.sofa.ark.container.service.classloader.BizClassLoader";
+
+    private final Properties baseProperties;
+    private ClassLoader baseClassLoader;
     private Map<ClassLoader, Properties> bizPropertiesMap;
 
-    public MultiBizProperties(ClassLoader baseClassLoader) {
-        this.baseClassLoader = baseClassLoader;
-        bizPropertiesMap = new ConcurrentHashMap<>();
+    public MultiBizProperties(Properties baseProperties) {
+        this.bizPropertiesMap = new HashMap<>();
+        this.baseProperties = baseProperties;
     }
+
+    public MultiBizProperties() {
+        this(new Properties());
+    }
+
 
     public synchronized Object setProperty(String key, String value) {
         return getBizProperties().setProperty(key, value);
@@ -83,12 +117,12 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public Enumeration<?> propertyNames() {
-        return getCombineProperties().propertyNames();
+        return getBizProperties().propertyNames();
     }
 
     @Override
     public Set<String> stringPropertyNames() {
-        return getCombineProperties().stringPropertyNames();
+        return getBizProperties().stringPropertyNames();
     }
 
     @Override
@@ -98,7 +132,7 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public synchronized Object get(Object key) {
-        return getCombineProperties().get(key);
+        return getBizProperties().get(key);
     }
 
     @Override
@@ -113,22 +147,22 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public synchronized boolean equals(Object o) {
-        return getCombineProperties().equals(o);
+        return getBizProperties().equals(o);
     }
 
     @Override
     public synchronized String toString() {
-        return getCombineProperties().toString();
+        return getBizProperties().toString();
     }
 
     @Override
     public Collection<Object> values() {
-        return getCombineProperties().values();
+        return getBizProperties().values();
     }
 
     @Override
     public synchronized int hashCode() {
-        return getCombineProperties().hashCode();
+        return getBizProperties().hashCode();
     }
 
     @Override
@@ -138,10 +172,12 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public synchronized Object clone() {
-        MultiBizProperties p = new MultiBizProperties(baseClassLoader);
-        p.bizPropertiesMap = new HashMap<>();
-        p.bizPropertiesMap.putAll(bizPropertiesMap);
-        return p;
+        MultiBizProperties mbp = new MultiBizProperties(baseProperties);
+        mbp.bizPropertiesMap = new HashMap<>();
+        bizPropertiesMap.forEach((k, p) -> mbp.put(k, p.clone()));
+        mbp.bizPropertiesMap.putAll(bizPropertiesMap);
+        mbp.baseClassLoader = baseClassLoader;
+        return mbp;
     }
 
     @Override
@@ -151,7 +187,7 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public synchronized boolean isEmpty() {
-        return getCombineProperties().isEmpty();
+        return getBizProperties().isEmpty();
     }
 
     @Override
@@ -161,12 +197,12 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public synchronized boolean containsKey(Object key) {
-        return getCombineProperties().containsKey(key);
+        return getBizProperties().containsKey(key);
     }
 
     @Override
     public synchronized boolean contains(Object value) {
-        return getCombineProperties().contains(value);
+        return getBizProperties().contains(value);
     }
 
     @Override
@@ -176,12 +212,12 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public synchronized int size() {
-        return getCombineProperties().size();
+        return getBizProperties().size();
     }
 
     @Override
     public Set<Map.Entry<Object, Object>> entrySet() {
-        return getCombineProperties().entrySet();
+        return getBizProperties().entrySet();
     }
 
     @Override
@@ -190,18 +226,19 @@ public class MultiBizProperties extends Properties {
     }
 
     @Override
-    public synchronized Object computeIfAbsent(Object key, Function<? super Object, ?> mappingFunction) {
+    public synchronized Object computeIfAbsent(Object key,
+                                               Function<? super Object, ?> mappingFunction) {
         return getBizProperties().computeIfAbsent(key, mappingFunction);
     }
 
     @Override
     public synchronized Enumeration<Object> elements() {
-        return getCombineProperties().elements();
+        return getBizProperties().elements();
     }
 
     @Override
     public synchronized void forEach(BiConsumer<? super Object, ? super Object> action) {
-        getCombineProperties().forEach(action);
+        getBizProperties().forEach(action);
     }
 
     @Override
@@ -211,60 +248,66 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public synchronized Enumeration<Object> keys() {
-        return getCombineProperties().keys();
+        return getBizProperties().keys();
     }
 
     @Override
     public Set<Object> keySet() {
-        return getCombineProperties().keySet();
+        return getBizProperties().keySet();
     }
 
     @Override
     public boolean containsValue(Object value) {
-        return getCombineProperties().containsValue(value);
+        return getBizProperties().containsValue(value);
     }
 
     @Override
     public synchronized Object getOrDefault(Object key, Object defaultValue) {
-        return getCombineProperties().getOrDefault(key, defaultValue);
+        return getBizProperties().getOrDefault(key, defaultValue);
     }
 
     @Override
-    public synchronized Object computeIfPresent(Object key, BiFunction<? super Object, ? super Object, ?> remappingFunction) {
+    public synchronized Object computeIfPresent(Object key,
+                                                BiFunction<? super Object, ? super Object, ?> remappingFunction) {
         return getBizProperties().computeIfPresent(key, remappingFunction);
     }
 
     @Override
-    public synchronized Object compute(Object key, BiFunction<? super Object, ? super Object, ?> remappingFunction) {
+    public synchronized Object compute(Object key,
+                                       BiFunction<? super Object, ? super Object, ?> remappingFunction) {
         return getBizProperties().compute(key, remappingFunction);
     }
 
     @Override
-    public synchronized Object merge(Object key, Object value, BiFunction<? super Object, ? super Object, ?> remappingFunction) {
+    public synchronized Object merge(Object key, Object value,
+                                     BiFunction<? super Object, ? super Object, ?> remappingFunction) {
         return getBizProperties().merge(key, value, remappingFunction);
     }
 
-    protected ClassLoader getInvokeClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
-    }
-
-    private Properties getBizProperties() {
-        ClassLoader classLoader = getInvokeClassLoader();
-        return getProperties(classLoader);
-    }
-
-    private Properties getProperties(ClassLoader classLoader) {
-        return bizPropertiesMap.computeIfAbsent(classLoader, k -> new Properties());
-    }
-
-    private Properties getCombineProperties() {
-        Properties bizProperties = getBizProperties();
-        Properties baseProperties = getProperties(baseClassLoader);
-        Properties properties = new Properties(baseProperties);
-        if (baseProperties == bizProperties) {
-            return bizProperties;
+    private synchronized Properties getBizProperties() {
+        ClassLoader invokeClassLoader = Thread.currentThread().getContextClassLoader();
+        if (bizPropertiesMap.containsKey(invokeClassLoader)) {
+            return bizPropertiesMap.get(invokeClassLoader);
         }
-        properties.putAll(bizProperties);
-        return properties;
+        for (ClassLoader classLoader = invokeClassLoader; classLoader != null; classLoader = classLoader.getParent()) {
+            String name = classLoader.getClass().getName();
+            if (Objects.equals(name, BIZ_CLASS_LOADER)) {
+                Properties props = bizPropertiesMap.computeIfAbsent(classLoader, k -> new Properties(baseProperties));
+                bizPropertiesMap.put(invokeClassLoader, props);
+                return props;
+            }
+        }
+        bizPropertiesMap.put(invokeClassLoader, baseProperties);
+        return baseProperties;
+    }
+
+    /**
+     * replace the system properties to multi biz properties<br/>
+     * if you want to use, you need invoke the method in base application
+     */
+    public static void initSystem() {
+        Properties properties = System.getProperties();
+        MultiBizProperties multiBizProperties = new MultiBizProperties(properties);
+        System.setProperties(multiBizProperties);
     }
 }
