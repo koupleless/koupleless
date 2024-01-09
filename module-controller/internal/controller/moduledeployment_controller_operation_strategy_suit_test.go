@@ -695,7 +695,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 		It("2. check if use Beta strategy", func() {
 			Eventually(func() error {
 				return checkModuleDeploymentReplicas(nn, 1)
-			})
+			}, timeout, interval).Should(Succeed())
 		})
 
 		It("3. clean environment", func() {
@@ -745,7 +745,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 		It("2. check if use Beta strategy", func() {
 			Eventually(func() error {
 				return checkModuleDeploymentReplicas(nn, 1)
-			})
+			}, timeout, interval).Should(Succeed())
 		})
 
 		It("3. clean environment", func() {
