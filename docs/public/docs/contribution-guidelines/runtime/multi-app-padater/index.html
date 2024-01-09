@@ -18,45 +18,53 @@
 <link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
 
-<title>简介与适用场景 | SOFAServerless</title>
-<meta name="description" content="简介 SOFAServerless 是一种模块化的 Serverless 技术解决方案，它能让普通应用以比较低的代价演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。
-随着各行各业的信息化数字化转型，企业面临越来越多的研发效率、协作效率、资源成本和服务治理痛点，接下来带领大家逐一体验这些痛点，以及它们在 SOFAServerless 中是如何被解决的。
-适用场景 痛点 1：应用构建发布慢或者 SDK 升级繁琐 传统应用镜像化构建一般要 3 - 5 分钟，单机代码发布到启动完成也要 3 - 5 分钟，开发者每次验证代码修改或上线代码修改，都需要经历数次 6 - 10 分钟的构建发布等待，严重影响开发效率。此外，每次 SDK 升级（比如中间件框架、rpc、logging、json 等），都需要修改所有应用代码并重新构建发布，对开发者也造成了不必要的打扰。
-通过使用 SOFAServerless 通用基座与配套工具，您可以低成本的将应用切分为 “基座” 与 “模块”，其中基座沉淀了公司或者某个业务部门的公共 SDK，基座升级可以由专人负责，对业务开发者无感，业务开发者只需要编写模块。在我们目前支持的 Java 技术栈中，模块就是一个 SpringBoot 应用代码包（FatJar），只不过 SpringBoot 框架本身和其他的企业公共依赖在运行时会让基座提前加载预热，模块每次发布都会找一台预热 SpringBoot 的基座进行热部署，整个过程类似 AppEngine，能够帮用户实现应用 10 秒级构建发布和公共 SDK 升级无感。
-痛点 2：长尾应用资源成本高 在企业中，80% 的应用只服务了不到 20% 的流量，同时伴随着业务的变化，企业存在大量的长尾应用，这些长尾应用 CPU 使用率长期不到 10%，造成了极大的资源浪费。
-通过使用 SOFAServerless 合并部署与配套工具，您可以低成本的实现多个应用的合并部署，从而解决企业应用过度拆分和低流量业务带来的资源浪费，节约成本。
-这里 “业务A 应用1” 在 SOFAServerless 术语中叫 “模块”。多个模块应用可以使用 SOFAArk 技术合并到同一个基座。基座可以是完全空的 SpringBoot应用（Java 技术栈），也可以下沉一些公共 SDK 到基座，模块应用每次发布会重启基座机器。在这种方式下，模块应用最大程度复用了基座的内存（Metaspace 和 Heap），构建产物大小也能从数百 MB 瘦身到几十 MB 甚至更激进，CPU 使用率也得到了有效提升。">
-<meta property="og:title" content="简介与适用场景" />
-<meta property="og:description" content="简介 SOFAServerless 是一种模块化的 Serverless 技术解决方案，它能让普通应用以比较低的代价演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。
-随着各行各业的信息化数字化转型，企业面临越来越多的研发效率、协作效率、资源成本和服务治理痛点，接下来带领大家逐一体验这些痛点，以及它们在 SOFAServerless 中是如何被解决的。
-适用场景 痛点 1：应用构建发布慢或者 SDK 升级繁琐 传统应用镜像化构建一般要 3 - 5 分钟，单机代码发布到启动完成也要 3 - 5 分钟，开发者每次验证代码修改或上线代码修改，都需要经历数次 6 - 10 分钟的构建发布等待，严重影响开发效率。此外，每次 SDK 升级（比如中间件框架、rpc、logging、json 等），都需要修改所有应用代码并重新构建发布，对开发者也造成了不必要的打扰。
-通过使用 SOFAServerless 通用基座与配套工具，您可以低成本的将应用切分为 “基座” 与 “模块”，其中基座沉淀了公司或者某个业务部门的公共 SDK，基座升级可以由专人负责，对业务开发者无感，业务开发者只需要编写模块。在我们目前支持的 Java 技术栈中，模块就是一个 SpringBoot 应用代码包（FatJar），只不过 SpringBoot 框架本身和其他的企业公共依赖在运行时会让基座提前加载预热，模块每次发布都会找一台预热 SpringBoot 的基座进行热部署，整个过程类似 AppEngine，能够帮用户实现应用 10 秒级构建发布和公共 SDK 升级无感。
-痛点 2：长尾应用资源成本高 在企业中，80% 的应用只服务了不到 20% 的流量，同时伴随着业务的变化，企业存在大量的长尾应用，这些长尾应用 CPU 使用率长期不到 10%，造成了极大的资源浪费。
-通过使用 SOFAServerless 合并部署与配套工具，您可以低成本的实现多个应用的合并部署，从而解决企业应用过度拆分和低流量业务带来的资源浪费，节约成本。
-这里 “业务A 应用1” 在 SOFAServerless 术语中叫 “模块”。多个模块应用可以使用 SOFAArk 技术合并到同一个基座。基座可以是完全空的 SpringBoot应用（Java 技术栈），也可以下沉一些公共 SDK 到基座，模块应用每次发布会重启基座机器。在这种方式下，模块应用最大程度复用了基座的内存（Metaspace 和 Heap），构建产物大小也能从数百 MB 瘦身到几十 MB 甚至更激进，CPU 使用率也得到了有效提升。" />
+<title>SOFAServerless 多应用治理补丁治理 | SOFAServerless</title>
+<meta name="description" content="SOFAServerless 为什么需要多应用治理补丁？ SOFAServerless 是一种多应用的架构，而传统的中间件可能只考虑了一个应用的场景，故在一些行为上无法兼容多应用共存的行为，会发生共享变量污染、classLoader 加载异常、class 判断不符合预期等问题。 由此，在使用 SOFAServerless 中间件时，我们需要对一些潜在的问题做补丁，覆盖掉原有中间件的实现，使开源的中间件也能兼容多应用的模式。
+SOFAServerless 多应用治理补丁方案调研 在多应用兼容性治理中，我们不仅仅只考虑生产部署，还要考虑用户本地开发的兼容性(IDEA 点击 Debug)，单测编写的兼容性(如 @SpringbootTest)等等。 下面是不同方案的对比表格。
+方案对比 方案名 接入成本 可维护性 部署兼容性 IDE 兼容性 单测兼容性 A：将补丁包的依赖放在 maven dependency 的首部，以此保证补丁类能优先被 classLoader 加载。 低。
+用户只需要控制 maven 家在的顺序。 低
+用户需要严格保证相关依赖在最前面，且启动的时候不手动传入 classpath。 兼容✅ 兼容✅ 兼容✅ B：通过 maven 插件修改 springboot 构建产物的索引文件的顺序。 低。
+只需要新增一个 package 周期的 maven 插件即可，用户感知低。 中
+用户需要保证启动的时候不手动传入 classpath。 兼容✅ 不兼容❌
+jetbrains 无法兼容，jetbrains 会自己构建 cli 命令行把 classpath 按照 maven 依赖的顺序传进去，这会导致 adapter 的顺序加载不一定是最优先的。 不兼容❌
+单测不走 repackage 周期，不依赖 classpath.">
+<meta property="og:title" content="SOFAServerless 多应用治理补丁治理" />
+<meta property="og:description" content="SOFAServerless 为什么需要多应用治理补丁？ SOFAServerless 是一种多应用的架构，而传统的中间件可能只考虑了一个应用的场景，故在一些行为上无法兼容多应用共存的行为，会发生共享变量污染、classLoader 加载异常、class 判断不符合预期等问题。 由此，在使用 SOFAServerless 中间件时，我们需要对一些潜在的问题做补丁，覆盖掉原有中间件的实现，使开源的中间件也能兼容多应用的模式。
+SOFAServerless 多应用治理补丁方案调研 在多应用兼容性治理中，我们不仅仅只考虑生产部署，还要考虑用户本地开发的兼容性(IDEA 点击 Debug)，单测编写的兼容性(如 @SpringbootTest)等等。 下面是不同方案的对比表格。
+方案对比 方案名 接入成本 可维护性 部署兼容性 IDE 兼容性 单测兼容性 A：将补丁包的依赖放在 maven dependency 的首部，以此保证补丁类能优先被 classLoader 加载。 低。
+用户只需要控制 maven 家在的顺序。 低
+用户需要严格保证相关依赖在最前面，且启动的时候不手动传入 classpath。 兼容✅ 兼容✅ 兼容✅ B：通过 maven 插件修改 springboot 构建产物的索引文件的顺序。 低。
+只需要新增一个 package 周期的 maven 插件即可，用户感知低。 中
+用户需要保证启动的时候不手动传入 classpath。 兼容✅ 不兼容❌
+jetbrains 无法兼容，jetbrains 会自己构建 cli 命令行把 classpath 按照 maven 依赖的顺序传进去，这会导致 adapter 的顺序加载不一定是最优先的。 不兼容❌
+单测不走 repackage 周期，不依赖 classpath." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/docs/introduction/intro-and-scenario/" /><meta property="article:section" content="docs" />
+<meta property="og:url" content="/docs/contribution-guidelines/runtime/multi-app-padater/" /><meta property="article:section" content="docs" />
+<meta property="article:published_time" content="2024-01-05T12:00:00+08:00" />
+<meta property="article:modified_time" content="2024-01-05T18:16:16+08:00" />
 
-<meta property="article:modified_time" content="2023-11-02T13:48:30+08:00" />
-
-<meta itemprop="name" content="简介与适用场景">
-<meta itemprop="description" content="简介 SOFAServerless 是一种模块化的 Serverless 技术解决方案，它能让普通应用以比较低的代价演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。
-随着各行各业的信息化数字化转型，企业面临越来越多的研发效率、协作效率、资源成本和服务治理痛点，接下来带领大家逐一体验这些痛点，以及它们在 SOFAServerless 中是如何被解决的。
-适用场景 痛点 1：应用构建发布慢或者 SDK 升级繁琐 传统应用镜像化构建一般要 3 - 5 分钟，单机代码发布到启动完成也要 3 - 5 分钟，开发者每次验证代码修改或上线代码修改，都需要经历数次 6 - 10 分钟的构建发布等待，严重影响开发效率。此外，每次 SDK 升级（比如中间件框架、rpc、logging、json 等），都需要修改所有应用代码并重新构建发布，对开发者也造成了不必要的打扰。
-通过使用 SOFAServerless 通用基座与配套工具，您可以低成本的将应用切分为 “基座” 与 “模块”，其中基座沉淀了公司或者某个业务部门的公共 SDK，基座升级可以由专人负责，对业务开发者无感，业务开发者只需要编写模块。在我们目前支持的 Java 技术栈中，模块就是一个 SpringBoot 应用代码包（FatJar），只不过 SpringBoot 框架本身和其他的企业公共依赖在运行时会让基座提前加载预热，模块每次发布都会找一台预热 SpringBoot 的基座进行热部署，整个过程类似 AppEngine，能够帮用户实现应用 10 秒级构建发布和公共 SDK 升级无感。
-痛点 2：长尾应用资源成本高 在企业中，80% 的应用只服务了不到 20% 的流量，同时伴随着业务的变化，企业存在大量的长尾应用，这些长尾应用 CPU 使用率长期不到 10%，造成了极大的资源浪费。
-通过使用 SOFAServerless 合并部署与配套工具，您可以低成本的实现多个应用的合并部署，从而解决企业应用过度拆分和低流量业务带来的资源浪费，节约成本。
-这里 “业务A 应用1” 在 SOFAServerless 术语中叫 “模块”。多个模块应用可以使用 SOFAArk 技术合并到同一个基座。基座可以是完全空的 SpringBoot应用（Java 技术栈），也可以下沉一些公共 SDK 到基座，模块应用每次发布会重启基座机器。在这种方式下，模块应用最大程度复用了基座的内存（Metaspace 和 Heap），构建产物大小也能从数百 MB 瘦身到几十 MB 甚至更激进，CPU 使用率也得到了有效提升。">
-<meta itemprop="dateModified" content="2023-11-02T13:48:30+08:00" />
-<meta itemprop="wordCount" content="135">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="简介与适用场景"/>
-<meta name="twitter:description" content="简介 SOFAServerless 是一种模块化的 Serverless 技术解决方案，它能让普通应用以比较低的代价演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。
-随着各行各业的信息化数字化转型，企业面临越来越多的研发效率、协作效率、资源成本和服务治理痛点，接下来带领大家逐一体验这些痛点，以及它们在 SOFAServerless 中是如何被解决的。
-适用场景 痛点 1：应用构建发布慢或者 SDK 升级繁琐 传统应用镜像化构建一般要 3 - 5 分钟，单机代码发布到启动完成也要 3 - 5 分钟，开发者每次验证代码修改或上线代码修改，都需要经历数次 6 - 10 分钟的构建发布等待，严重影响开发效率。此外，每次 SDK 升级（比如中间件框架、rpc、logging、json 等），都需要修改所有应用代码并重新构建发布，对开发者也造成了不必要的打扰。
-通过使用 SOFAServerless 通用基座与配套工具，您可以低成本的将应用切分为 “基座” 与 “模块”，其中基座沉淀了公司或者某个业务部门的公共 SDK，基座升级可以由专人负责，对业务开发者无感，业务开发者只需要编写模块。在我们目前支持的 Java 技术栈中，模块就是一个 SpringBoot 应用代码包（FatJar），只不过 SpringBoot 框架本身和其他的企业公共依赖在运行时会让基座提前加载预热，模块每次发布都会找一台预热 SpringBoot 的基座进行热部署，整个过程类似 AppEngine，能够帮用户实现应用 10 秒级构建发布和公共 SDK 升级无感。
-痛点 2：长尾应用资源成本高 在企业中，80% 的应用只服务了不到 20% 的流量，同时伴随着业务的变化，企业存在大量的长尾应用，这些长尾应用 CPU 使用率长期不到 10%，造成了极大的资源浪费。
-通过使用 SOFAServerless 合并部署与配套工具，您可以低成本的实现多个应用的合并部署，从而解决企业应用过度拆分和低流量业务带来的资源浪费，节约成本。
-这里 “业务A 应用1” 在 SOFAServerless 术语中叫 “模块”。多个模块应用可以使用 SOFAArk 技术合并到同一个基座。基座可以是完全空的 SpringBoot应用（Java 技术栈），也可以下沉一些公共 SDK 到基座，模块应用每次发布会重启基座机器。在这种方式下，模块应用最大程度复用了基座的内存（Metaspace 和 Heap），构建产物大小也能从数百 MB 瘦身到几十 MB 甚至更激进，CPU 使用率也得到了有效提升。"/>
+<meta itemprop="name" content="SOFAServerless 多应用治理补丁治理">
+<meta itemprop="description" content="SOFAServerless 为什么需要多应用治理补丁？ SOFAServerless 是一种多应用的架构，而传统的中间件可能只考虑了一个应用的场景，故在一些行为上无法兼容多应用共存的行为，会发生共享变量污染、classLoader 加载异常、class 判断不符合预期等问题。 由此，在使用 SOFAServerless 中间件时，我们需要对一些潜在的问题做补丁，覆盖掉原有中间件的实现，使开源的中间件也能兼容多应用的模式。
+SOFAServerless 多应用治理补丁方案调研 在多应用兼容性治理中，我们不仅仅只考虑生产部署，还要考虑用户本地开发的兼容性(IDEA 点击 Debug)，单测编写的兼容性(如 @SpringbootTest)等等。 下面是不同方案的对比表格。
+方案对比 方案名 接入成本 可维护性 部署兼容性 IDE 兼容性 单测兼容性 A：将补丁包的依赖放在 maven dependency 的首部，以此保证补丁类能优先被 classLoader 加载。 低。
+用户只需要控制 maven 家在的顺序。 低
+用户需要严格保证相关依赖在最前面，且启动的时候不手动传入 classpath。 兼容✅ 兼容✅ 兼容✅ B：通过 maven 插件修改 springboot 构建产物的索引文件的顺序。 低。
+只需要新增一个 package 周期的 maven 插件即可，用户感知低。 中
+用户需要保证启动的时候不手动传入 classpath。 兼容✅ 不兼容❌
+jetbrains 无法兼容，jetbrains 会自己构建 cli 命令行把 classpath 按照 maven 依赖的顺序传进去，这会导致 adapter 的顺序加载不一定是最优先的。 不兼容❌
+单测不走 repackage 周期，不依赖 classpath."><meta itemprop="datePublished" content="2024-01-05T12:00:00+08:00" />
+<meta itemprop="dateModified" content="2024-01-05T18:16:16+08:00" />
+<meta itemprop="wordCount" content="159">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="SOFAServerless 多应用治理补丁治理"/>
+<meta name="twitter:description" content="SOFAServerless 为什么需要多应用治理补丁？ SOFAServerless 是一种多应用的架构，而传统的中间件可能只考虑了一个应用的场景，故在一些行为上无法兼容多应用共存的行为，会发生共享变量污染、classLoader 加载异常、class 判断不符合预期等问题。 由此，在使用 SOFAServerless 中间件时，我们需要对一些潜在的问题做补丁，覆盖掉原有中间件的实现，使开源的中间件也能兼容多应用的模式。
+SOFAServerless 多应用治理补丁方案调研 在多应用兼容性治理中，我们不仅仅只考虑生产部署，还要考虑用户本地开发的兼容性(IDEA 点击 Debug)，单测编写的兼容性(如 @SpringbootTest)等等。 下面是不同方案的对比表格。
+方案对比 方案名 接入成本 可维护性 部署兼容性 IDE 兼容性 单测兼容性 A：将补丁包的依赖放在 maven dependency 的首部，以此保证补丁类能优先被 classLoader 加载。 低。
+用户只需要控制 maven 家在的顺序。 低
+用户需要严格保证相关依赖在最前面，且启动的时候不手动传入 classpath。 兼容✅ 兼容✅ 兼容✅ B：通过 maven 插件修改 springboot 构建产物的索引文件的顺序。 低。
+只需要新增一个 package 周期的 maven 插件即可，用户感知低。 中
+用户需要保证启动的时候不手动传入 classpath。 兼容✅ 不兼容❌
+jetbrains 无法兼容，jetbrains 会自己构建 cli 命令行把 classpath 按照 maven 依赖的顺序传进去，这会导致 adapter 的顺序加载不一定是最优先的。 不兼容❌
+单测不走 repackage 周期，不依赖 classpath."/>
 
 
 
@@ -170,11 +178,11 @@ if (!doNotTrack) {
       <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docs-li">
   <a href="/docs/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-docs"><span class="">产品文档</span></a>
   <ul class="ul-1">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docsintroduction-li">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsintroduction-li">
   <a href="/docs/introduction/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docsintroduction"><span class="">产品介绍</span></a>
   <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-docsintroductionintro-and-scenario-li">
-  <a href="/docs/introduction/intro-and-scenario/" class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id="m-docsintroductionintro-and-scenario"><span class="td-sidebar-nav-active-item">简介与适用场景</span></a>
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsintroductionintro-and-scenario-li">
+  <a href="/docs/introduction/intro-and-scenario/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsintroductionintro-and-scenario"><span class="">简介与适用场景</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsintroductionindustry-background-li">
   <a href="/docs/introduction/industry-background/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsintroductionindustry-background"><span class="">行业背景</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsintroductionarchitecture-li">
@@ -263,7 +271,7 @@ if (!doNotTrack) {
   </ul>
 </li>
   </ul>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docscontribution-guidelines-li">
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docscontribution-guidelines-li">
   <a href="/docs/contribution-guidelines/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docscontribution-guidelines"><span class="">参与社区</span></a>
   <ul class="ul-2 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesour-vision-li">
@@ -318,11 +326,11 @@ if (!doNotTrack) {
   <a href="/docs/contribution-guidelines/arkctl/architecture/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesarkctlarchitecture"><span class="">Arkctl 技术文档</span></a>
 </li>
   </ul>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docscontribution-guidelinesruntime-li">
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docscontribution-guidelinesruntime-li">
   <a href="/docs/contribution-guidelines/runtime/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docscontribution-guidelinesruntime"><span class="">多模块运行时适配或最佳实践</span></a>
   <ul class="ul-3 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimemulti-app-padater-li">
-  <a href="/docs/contribution-guidelines/runtime/multi-app-padater/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimemulti-app-padater"><span class="">SOFAServerless 多应用治理补丁治理</span></a>
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-docscontribution-guidelinesruntimemulti-app-padater-li">
+  <a href="/docs/contribution-guidelines/runtime/multi-app-padater/" class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimemulti-app-padater"><span class="td-sidebar-nav-active-item">SOFAServerless 多应用治理补丁治理</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogj42-li">
   <a href="/docs/contribution-guidelines/runtime/logj42/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimelogj42"><span class="">log4j2 的多模块化适配</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimeehcache-li">
@@ -351,22 +359,19 @@ if (!doNotTrack) {
           <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
             
 <div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
-<a href="https://github.com/sofastack/sofa-serverless/tree/master/docs/content/zh-cn/docs/introduction/intro-and-scenario.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> 查看页面源码</a>
-  <a href="https://github.com/sofastack/sofa-serverless/edit/master/docs/content/zh-cn/docs/introduction/intro-and-scenario.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> 编辑此页</a>
-  <a href="https://github.com/sofastack/sofa-serverless/new/master/docs/content/zh-cn/docs/introduction/intro-and-scenario.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> 添加子页面</a>
-  <a href="https://github.com/sofastack/sofa-serverless/issues/new?title=%e7%ae%80%e4%bb%8b%e4%b8%8e%e9%80%82%e7%94%a8%e5%9c%ba%e6%99%af" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> 提交文档问题</a>
-  <a id="print" href="/docs/introduction/_print/"><i class="fa-solid fa-print fa-fw"></i> 整节打印</a>
+<a href="https://github.com/sofastack/sofa-serverless/tree/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/multi-app-padater.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> 查看页面源码</a>
+  <a href="https://github.com/sofastack/sofa-serverless/edit/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/multi-app-padater.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> 编辑此页</a>
+  <a href="https://github.com/sofastack/sofa-serverless/new/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/multi-app-padater.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> 添加子页面</a>
+  <a href="https://github.com/sofastack/sofa-serverless/issues/new?title=SOFAServerless%20%e5%a4%9a%e5%ba%94%e7%94%a8%e6%b2%bb%e7%90%86%e8%a1%a5%e4%b8%81%e6%b2%bb%e7%90%86" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> 提交文档问题</a>
+  <a id="print" href="/docs/contribution-guidelines/runtime/_print/"><i class="fa-solid fa-print fa-fw"></i> 整节打印</a>
 
 </div>
 
             <div class="td-toc">
         <nav id="TableOfContents">
   <ul>
-    <li><a href="#痛点-1应用构建发布慢或者-sdk-升级繁琐">痛点 1：应用构建发布慢或者 SDK 升级繁琐</a></li>
-    <li><a href="#痛点-2长尾应用资源成本高">痛点 2：长尾应用资源成本高</a></li>
-    <li><a href="#痛点-3企业研发协作效率低">痛点 3：企业研发协作效率低</a></li>
-    <li><a href="#痛点-4难以沉淀业务资产提高中台效率">痛点 4：难以沉淀业务资产提高中台效率</a></li>
-    <li><a href="#痛点-5微服务演进成本高">痛点 5：微服务演进成本高</a></li>
+    <li><a href="#方案对比">方案对比</a></li>
+    <li><a href="#结论">结论</a></li>
   </ul>
 </nav>
       </div>
@@ -381,34 +386,83 @@ if (!doNotTrack) {
             
             
 <div class="td-content">
-	<h1>简介与适用场景</h1>
+	<h1>SOFAServerless 多应用治理补丁治理</h1>
 	
 	<header class="article-meta">
 		
 </header>
-	<h1 id="简介">简介</h1>
-<p>SOFAServerless 是一种模块化的 Serverless 技术解决方案，它能让普通应用以比较低的代价演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。<br />随着各行各业的信息化数字化转型，企业面临越来越多的研发效率、协作效率、资源成本和服务治理痛点，接下来带领大家逐一体验这些痛点，以及它们在 SOFAServerless 中是如何被解决的。</p>
-<h1 id="适用场景">适用场景</h1>
-<h2 id="痛点-1应用构建发布慢或者-sdk-升级繁琐">痛点 1：应用构建发布慢或者 SDK 升级繁琐</h2>
-<p>传统应用镜像化构建一般要 3 - 5 分钟，单机代码发布到启动完成也要 3 - 5 分钟，开发者每次验证代码修改或上线代码修改，都需要经历<strong>数次 6 - 10 分钟</strong>的构建发布等待，严重影响开发效率。此外，每次 SDK 升级（比如中间件框架、rpc、logging、json 等），都需要修改所有应用代码并重新构建发布，对开发者也造成了不必要的打扰。<br />通过使用 <strong>SOFAServerless</strong> <strong>通用基座</strong>与配套工具，您可以低成本的将应用切分为 “<strong>基座</strong>” 与 “<strong>模块</strong>”，其中基座沉淀了公司或者某个业务部门的公共 SDK，基座升级可以由专人负责，对业务开发者无感，业务开发者只需要编写模块。在我们目前支持的 Java 技术栈中，模块就是一个 SpringBoot 应用代码包（FatJar），只不过 SpringBoot 框架本身和其他的企业公共依赖在运行时会让基座提前加载预热，模块每次发布都会找一台预热 SpringBoot 的基座进行热部署，整个过程类似 AppEngine，能够帮用户实现应用 <strong>10 秒级构建发布</strong>和<strong>公共 SDK 升级无感</strong>。</p>
-<img width="800px" src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694592240984-8ea49823-ebd0-4bb7-909c-380f0439382b.png#clientId=u0d56718b-4144-4&from=paste&height=164&id=uab4fd245&originHeight=328&originWidth=2350&originalType=binary&ratio=2&rotation=0&showTitle=false&size=259703&status=done&style=none&taskId=u4aa5d723-f988-41e6-86fc-8c08d59e517&title=&width=1175" />
-<h2 id="痛点-2长尾应用资源成本高">痛点 2：长尾应用资源成本高</h2>
-<p>在企业中，80% 的应用只服务了不到 20% 的流量，同时伴随着业务的变化，企业存在大量的<strong>长尾应用</strong>，这些长尾应用 CPU 使用率长期不到 10%，造成了极大的<strong>资源浪费</strong>。<br />通过使用 <strong>SOFAServerless</strong> <strong>合并部署</strong>与配套工具，您可以低成本的实现多个应用的合并部署，从而解决企业应用过度拆分和低流量业务带来的<strong>资源浪费</strong>，<strong>节约成本</strong>。<br />
-<img width="700px" src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694593117757-d2932c29-c4c2-4ecc-9a41-59a750d53823.png#clientId=u0d56718b-4144-4&from=paste&height=132&id=u349c574f&originHeight=318&originWidth=1382&originalType=binary&ratio=2&rotation=0&showTitle=false&size=158864&status=done&style=none&taskId=u1389af9d-06db-468f-810a-09bc615b751&title=&width=574" /><br />
-这里 “业务A 应用1” 在 SOFAServerless 术语中叫 “模块”。多个模块应用可以使用 SOFAArk 技术合并到同一个基座。基座可以是完全空的 SpringBoot应用（Java 技术栈），也可以下沉一些公共 SDK 到基座，模块应用每次发布会重启基座机器。在这种方式下，模块应用最大程度复用了基座的<strong>内存</strong>（Metaspace 和 Heap），构建产物<strong>大小</strong>也能从<strong>数百 MB</strong> 瘦身到<strong>几十 MB</strong> 甚至更激进，<strong>CPU 使用率</strong>也得到了有效提升。</p>
-<h2 id="痛点-3企业研发协作效率低">痛点 3：企业研发协作效率低</h2>
-<p>在企业中，一些应用需要<strong>多人开发</strong>协作。在传统研发模式下，每一个人的代码变更都需要发布整个应用，这就导致应用需要以<strong>赶火车</strong>式的方式进行研发迭代，大家需要统一一个时间窗口做迭代开发，统一的时间点做发布上线，因此存在大量的需求上线相互<strong>等待</strong>、环境机器<strong>抢占</strong>、迭代<strong>冲突</strong>等情况。<br />通过使用 <strong>SOFAServerless</strong>，您可以方便的将应用拆分为一个<strong>基座</strong>与多个功能<strong>模块</strong>，一个功能模块就是一组代码文件。不同的功能模块可以<strong>同时进行</strong>迭代开发和发布运维，模块间<strong>互不感知互不影响</strong>，这样就消除了传统应用迭代赶火车式的相互等待，每个模块拥有自己的独立迭代，<strong>需求交付效率</strong>因此得到了极大提升。如果您对模块额外启用了<strong>热部署</strong>方式（也可以每次发布模块重启整个基座），那么模块的单次构建+发布也会从普通应用的 <strong>6 - 10 分钟减少到十秒级。</strong><br />
-<img width="800px" src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694594675815-3037ffe1-2048-4c86-bc50-456697b197d5.png#clientId=u0d56718b-4144-4&from=paste&height=552&id=u36ac4b83&originHeight=1066&originWidth=1154&originalType=binary&ratio=2&rotation=0&showTitle=false&size=428189&status=done&style=none&taskId=u7fc53ae9-ff48-4ae5-a821-44dbee64aaa&title=&width=598" /></p>
-<h2 id="痛点-4难以沉淀业务资产提高中台效率">痛点 4：难以沉淀业务资产提高中台效率</h2>
-<p>在一些中大型企业中，会沉淀各种<strong>业务中台</strong>应用。中台一般封装了业务的公共 API 实现，和 <strong>SPI</strong> 定义。其中 SPI 定义允许中台上的插件去实现各自的业务逻辑，流量进入中台应用后，会调用对应的 SPI 实现组件去完成相应的业务逻辑。中台应用内的组件，业务逻辑一般不复杂，如果拆出去部署为独立应用会带来高昂的<strong>资源成本和运维成本</strong>，而且构建发布<strong>速度很慢</strong>，严重加剧研发负担影响研发效率。<br />通过使用 SOFAServerless，您可以方便的将中台应用拆分一个<strong>基座</strong>和多个功能<strong>模块</strong>。基座可以沉淀比较厚的业务依赖、公共逻辑、API 实现、SPI 定义等（即所谓的业务资产），提供给上面的模块使用。模块使用基座的能力可以是对象之间或 Bean 之间的<strong>直接调用</strong>，代码几乎不用改造。而且多个模块间可以<strong>同时进行</strong>迭代开发和发布运维，<strong>互不感知互不影响</strong>，<strong>协作交付效率</strong>得到了极大提升。此外对于比较简单的模块还可以开启热部署，单次构建+发布也会从普通应用的 <strong>6 - 10 分钟减少到 30 秒内。</strong><br />
-<img width="800px" src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694601773808-b25f5beb-a4e4-4d93-ba55-6f61bf0377bc.png#clientId=u2162a7aa-3111-4&from=paste&height=386&id=uf98e4ae9&originHeight=1016&originWidth=1400&originalType=binary&ratio=2&rotation=0&showTitle=false&size=470581&status=done&style=none&taskId=u44970d8c-1234-447f-bbb6-ceea4a44cfc&title=&width=532" /></p>
-<h2 id="痛点-5微服务演进成本高">痛点 5：微服务演进成本高</h2>
-<p>企业里不同业务有不同的发展阶段，因此应用也拥有自己的生命周期。</p>
-<p><strong>初创期</strong>：一个初创的应用一般会先采用<strong>单体架构</strong>。<br />↓<br /><strong>增长期</strong>：随着业务增长，应用开发者也随之增加。此时您可能<strong>不确定</strong>业务的未来前景，也不希望过早把业务拆分成多个应用以避免不必要的<strong>维护、治理和资源成本</strong>，那么您可以用 <strong>SOFAServerless</strong> 低成本地将应用<strong>拆分</strong>为一个基座和多个功能<strong>模块</strong>，不同功能模块之间可以并行研发运维独立迭代，从而提高应用在此阶段的研发协作和<strong>需求交付</strong>效率。<br />↓<br /><strong>成熟期</strong>：随着业务进一步增长，您可以使用 SOFAServerless 低成本地将部分或全部功能模块<strong>拆分成独立应用</strong>去研发运维。<br />↓<br /><strong>长尾期</strong>：部分业务在经历增长期或者成熟期后，也可能慢慢步入到低活状态或者长尾状态，此时您可以用 SOFAServerless 低成本地将这些应用<strong>一键改回模块</strong>，<strong>合并部署</strong>到一起实现<strong>降本增效</strong>。</p>
-<p>可以看到 <strong>SOFAServerless</strong> 支持企业应用低成本地在初创期、增长期、成熟期、长尾期之间平滑过渡甚至来回切换，从而轻松让应用架构与业务发展保持同步。<br />应用生命周期演进<br />
-<img width="1200px" src="https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694602307402-510d44ec-314c-44c4-96d8-bb978dd027ff.png#clientId=u2162a7aa-3111-4&from=paste&height=217&id=u8b5b547c&originHeight=434&originWidth=2458&originalType=binary&ratio=2&rotation=0&showTitle=false&size=266126&status=done&style=none&taskId=u09776530-0a41-4081-be17-c42db50e8b1&title=&width=1229" /></p>
-<br/>
-<br/>
+	<h1 id="sofaserverless-为什么需要多应用治理补丁">SOFAServerless 为什么需要多应用治理补丁？</h1>
+<p>SOFAServerless 是一种多应用的架构，而传统的中间件可能只考虑了一个应用的场景，故在一些行为上无法兼容多应用共存的行为，会发生共享变量污染、classLoader 加载异常、class 判断不符合预期等问题。
+由此，在使用 SOFAServerless 中间件时，我们需要对一些潜在的问题做补丁，覆盖掉原有中间件的实现，使开源的中间件也能兼容多应用的模式。</p>
+<h1 id="sofaserverless-多应用治理补丁方案调研">SOFAServerless 多应用治理补丁方案调研</h1>
+<p>在多应用兼容性治理中，我们不仅仅只考虑生产部署，还要考虑用户本地开发的兼容性(IDEA 点击 Debug)，单测编写的兼容性(如 @SpringbootTest)等等。
+<br/>下面是不同方案的对比表格。</p>
+<h2 id="方案对比">方案对比</h2>
+<table>
+<thead>
+<tr>
+<th>方案名</th>
+<th>接入成本</th>
+<th>可维护性</th>
+<th>部署兼容性</th>
+<th>IDE 兼容性</th>
+<th>单测兼容性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A：将补丁包的依赖放在 maven dependency 的首部，以此保证补丁类能优先被 classLoader 加载。</td>
+<td>低。<br>用户只需要控制 maven 家在的顺序。</td>
+<td>低<br>用户需要严格保证相关依赖在最前面，且启动的时候不手动传入 classpath。</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+</tr>
+<tr>
+<td>B：通过 maven 插件修改 springboot 构建产物的索引文件的顺序。</td>
+<td>低。<br>只需要新增一个 package 周期的 maven 插件即可，用户感知低。</td>
+<td>中<br>用户需要保证启动的时候不手动传入 classpath。</td>
+<td>兼容✅</td>
+<td>不兼容❌<br>jetbrains 无法兼容，jetbrains 会自己构建 cli 命令行把 classpath 按照 maven 依赖的顺序传进去，这会导致 adapter 的顺序加载不一定是最优先的。</td>
+<td>不兼容❌<br>单测不走 repackage 周期，不依赖 classpath.idx 文件。</td>
+</tr>
+<tr>
+<td>C：新增自定义的 springboot 的 jarlaunch 启动器，通过启动器控制 classLoader 加载的行为。</td>
+<td>高。<br>需要用户修改自己的基座启动逻辑，使用 sofa-serverless 自定义的 jarlaunch。</td>
+<td>高<br>自定义的 jarlaunch 可以通过钩子控制代码的加载顺序。</td>
+<td>兼容✅</td>
+<td>兼容✅<br>但需要配置 IDE 使用自定义的 jarlaunch。</td>
+<td>不兼容❌<br>因为单测不会走 jarlaunch 逻辑。</td>
+</tr>
+<tr>
+<td>D：增强基座的 classloader, 保证优先搜索和加载补丁类。</td>
+<td>高。<br>用户需要初始化增强的代码，且该模式对 sofa-ark 识别 master biz 的逻辑也有侵入，需要改造支持。</td>
+<td>高<br>基座的 classloader 可以编程化地控制依赖加载的顺序。</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+</tr>
+<tr>
+<td>E：通过 maven 插件配置配置拷贝补丁类代码到当前项目中, 当前项目的文件会被优先加载。</td>
+<td>高。<br>maven 目前的拷贝插件无法用通配符，所以接入一个 adapter 就得多一个配置。</td>
+<td>高<br>用户只要配置了，就可以保证依赖有限被加载（因为本地项目的类最优先被加载）。</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+<td>不兼容❌<br>因为单测不会走到 package 周期，而 maven 的拷贝插件是在 package 周期生效的。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="结论">结论</h2>
+<p>综合地来看，没有办法完全做到用户 0 感知接入，每个方法都需要微小程度的业务改造。
+在诸多方案中，A 和 D 能做到完全兼容，不过 A 方案不需要业务改代码，也不会侵入运行时逻辑，仅需要用户在 maven dependency 的第一行中加入如下依赖:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-base-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>${sofa.serverless.runtime.version}<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#204a87;font-weight:bold">&lt;type&gt;</span>pom<span style="color:#204a87;font-weight:bold">&lt;/type&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><p>故我们将采取方案 A。
+<br/>如果你有更多的想法，或输入，欢迎开源社区讨论！</p>
 
 	<style>
   .feedback--answer {
@@ -472,7 +526,7 @@ if (!doNotTrack) {
 
 		<br />
 	<div class="text-muted mt-5 pt-3 border-top">
-  最后修改 November 2, 2023: <a href="https://github.com/sofastack/sofa-serverless/commit/43cd10f10de547f611ba57d2c98f2df8d4ca6f2c">udpate doc (43cd10f1)</a>
+  最后修改 January 5, 2024: <a href="https://github.com/sofastack/sofa-serverless/commit/01ead849594ff74b84e990cffdbc3097cdef7f42">&lt;doc&gt; add doc (01ead849)</a>
 </div>
 
 </div>

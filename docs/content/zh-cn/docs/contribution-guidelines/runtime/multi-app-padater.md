@@ -1,15 +1,15 @@
 ---
-title: SOFAServerless 兼容补丁治理
+title: SOFAServerless 多应用治理补丁治理
 date: 2024-01-05T12:00:00+08:00
 weight: 1
 ---
 
-# SOFAServerless 为什么需要兼容补丁？
+# SOFAServerless 为什么需要多应用治理补丁？
 SOFAServerless 是一种多应用的架构，而传统的中间件可能只考虑了一个应用的场景，故在一些行为上无法兼容多应用共存的行为，会发生共享变量污染、classLoader 加载异常、class 判断不符合预期等问题。
 由此，在使用 SOFAServerless 中间件时，我们需要对一些潜在的问题做补丁，覆盖掉原有中间件的实现，使开源的中间件也能兼容多应用的模式。
 
-# SOFAServerless 兼容补丁方案调研
-在兼容性治理中，我们不仅仅只考虑生产部署，还要考虑用户本地开发的兼容性(IDEA 点击 Debug)，单测编写的兼容性(如 @SpringbootTest)等等。
+# SOFAServerless 多应用治理补丁方案调研
+在多应用兼容性治理中，我们不仅仅只考虑生产部署，还要考虑用户本地开发的兼容性(IDEA 点击 Debug)，单测编写的兼容性(如 @SpringbootTest)等等。
 <br/>下面是不同方案的对比表格。
 ## 方案对比
 
