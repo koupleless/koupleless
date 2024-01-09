@@ -41,7 +41,7 @@ jetbrains 无法兼容，jetbrains 会自己构建 cli 命令行把 classpath �
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/contribution-guidelines/runtime/multi-app-padater/" /><meta property="article:section" content="docs" />
 <meta property="article:published_time" content="2024-01-05T12:00:00+08:00" />
-<meta property="article:modified_time" content="2024-01-05T18:16:16+08:00" />
+<meta property="article:modified_time" content="2024-01-09T14:45:05+08:00" />
 
 <meta itemprop="name" content="SOFAServerless 多应用治理补丁治理">
 <meta itemprop="description" content="SOFAServerless 为什么需要多应用治理补丁？ SOFAServerless 是一种多应用的架构，而传统的中间件可能只考虑了一个应用的场景，故在一些行为上无法兼容多应用共存的行为，会发生共享变量污染、classLoader 加载异常、class 判断不符合预期等问题。 由此，在使用 SOFAServerless 中间件时，我们需要对一些潜在的问题做补丁，覆盖掉原有中间件的实现，使开源的中间件也能兼容多应用的模式。
@@ -53,7 +53,7 @@ SOFAServerless 多应用治理补丁方案调研 在多应用兼容性治理中�
 用户需要保证启动的时候不手动传入 classpath。 兼容✅ 不兼容❌
 jetbrains 无法兼容，jetbrains 会自己构建 cli 命令行把 classpath 按照 maven 依赖的顺序传进去，这会导致 adapter 的顺序加载不一定是最优先的。 不兼容❌
 单测不走 repackage 周期，不依赖 classpath."><meta itemprop="datePublished" content="2024-01-05T12:00:00+08:00" />
-<meta itemprop="dateModified" content="2024-01-05T18:16:16+08:00" />
+<meta itemprop="dateModified" content="2024-01-09T14:45:05+08:00" />
 <meta itemprop="wordCount" content="159">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="SOFAServerless 多应用治理补丁治理"/>
 <meta name="twitter:description" content="SOFAServerless 为什么需要多应用治理补丁？ SOFAServerless 是一种多应用的架构，而传统的中间件可能只考虑了一个应用的场景，故在一些行为上无法兼容多应用共存的行为，会发生共享变量污染、classLoader 加载异常、class 判断不符合预期等问题。 由此，在使用 SOFAServerless 中间件时，我们需要对一些潜在的问题做补丁，覆盖掉原有中间件的实现，使开源的中间件也能兼容多应用的模式。
@@ -526,7 +526,7 @@ if (!doNotTrack) {
 
 		<br />
 	<div class="text-muted mt-5 pt-3 border-top">
-  最后修改 January 5, 2024: <a href="https://github.com/sofastack/sofa-serverless/commit/01ead849594ff74b84e990cffdbc3097cdef7f42">&lt;doc&gt; add doc (01ead849)</a>
+  最后修改 January 9, 2024: <a href="https://github.com/sofastack/sofa-serverless/commit/6e7c43048d039451bbe839a502e66cbeec897871">update multi app adapter docs (6e7c4304)</a>
 </div>
 
 </div>
