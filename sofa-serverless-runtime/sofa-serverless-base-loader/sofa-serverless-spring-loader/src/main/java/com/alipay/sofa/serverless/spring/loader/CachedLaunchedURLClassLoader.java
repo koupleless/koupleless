@@ -34,26 +34,33 @@ import org.springframework.boot.loader.archive.Archive;
  * @version CachedLaunchedURLClassLoader.java, v 0.1 2023年12月26日 14:45 syd
  */
 public class CachedLaunchedURLClassLoader extends LaunchedURLClassLoader {
-    private static final int                   ENTRY_CACHE_SIZE  = 6000;
-    protected final Map<String, LoadClassResult> classCache        = Collections
-                                                                     .synchronizedMap(new LinkedHashMap<String, LoadClassResult>(
-                                                                         3000, 0.75f, true) {
+    private static final int                   ENTRY_CACHE_SIZE  = Integer
+                                                                     .getInteger(
+                                                                         "sofaserverless.class.cache.size",
+                                                                         6000);
+    private static final Object                NOT_FOUND         = new Object();
+    protected final Map<String, Object>        classCache        = Collections
+                                                                     .synchronizedMap(new LinkedHashMap<String, Object>(
+                                                                         ENTRY_CACHE_SIZE, 0.75f,
+                                                                         true) {
                                                                          @Override
-                                                                         protected boolean removeEldestEntry(Map.Entry<String, LoadClassResult> eldest) {
+                                                                         protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
                                                                              return size() >= ENTRY_CACHE_SIZE;
                                                                          }
                                                                      });
-    protected final Map<String, Optional<URL>>   resourceUrlCache  = Collections
+    protected final Map<String, Optional<URL>> resourceUrlCache  = Collections
                                                                      .synchronizedMap(new LinkedHashMap<String, Optional<URL>>(
-                                                                         3000, 0.75f, true) {
+                                                                         ENTRY_CACHE_SIZE, 0.75f,
+                                                                         true) {
                                                                          @Override
                                                                          protected boolean removeEldestEntry(Map.Entry<String, Optional<URL>> eldest) {
                                                                              return size() >= ENTRY_CACHE_SIZE;
                                                                          }
                                                                      });
-    protected final Map<String, Optional>        resourcesUrlCache = Collections
+    protected final Map<String, Optional>      resourcesUrlCache = Collections
                                                                      .synchronizedMap(new LinkedHashMap<String, Optional>(
-                                                                         300, 0.75f, true) {
+                                                                         ENTRY_CACHE_SIZE, 0.75f,
+                                                                         true) {
                                                                          @Override
                                                                          protected boolean removeEldestEntry(Map.Entry<String, Optional> eldest) {
                                                                              return size() >= ENTRY_CACHE_SIZE;
@@ -109,55 +116,27 @@ public class CachedLaunchedURLClassLoader extends LaunchedURLClassLoader {
      */
     protected Class<?> loadClassWithCache(String name, boolean resolve)
                                                                        throws ClassNotFoundException {
-        LoadClassResult resultInCache = classCache.get(name);
-        if (resultInCache != null) {
-            if (resultInCache.getEx() != null) {
-                throw resultInCache.getEx();
-            }
-            return resultInCache.getClazz();
+        Object resultInCache = classCache.get(name);
+        if (resultInCache == NOT_FOUND) {
+            throw new ClassNotFoundException(name);
         }
         try {
             Class<?> clazz = super.findLoadedClass(name);
             if (clazz == null) {
                 clazz = super.loadClass(name, resolve);
             }
-            if (clazz == null) {
-                classCache.put(name, LoadClassResult.NOT_FOUND);
-            }
             return clazz;
         } catch (ClassNotFoundException exception) {
-            classCache.put(name, LoadClassResult.NOT_FOUND);
+            classCache.put(name, NOT_FOUND);
             throw exception;
         }
     }
 
-    protected static class LoadClassResult {
-        private Class<?>                 clazz;
-        private ClassNotFoundException   ex;
-        protected static LoadClassResult NOT_FOUND = new LoadClassResult(
-                                                       new ClassNotFoundException());
-
-        public LoadClassResult() {
-        }
-
-        public LoadClassResult(ClassNotFoundException ex) {
-            this.ex = ex;
-        }
-
-        public Class<?> getClazz() {
-            return clazz;
-        }
-
-        public void setClazz(Class<?> clazz) {
-            this.clazz = clazz;
-        }
-
-        public ClassNotFoundException getEx() {
-            return ex;
-        }
-
-        public void setEx(ClassNotFoundException ex) {
-            this.ex = ex;
-        }
+    @Override
+    public void clearCache() {
+        super.clearCache();
+        classCache.clear();
+        resourceUrlCache.clear();
+        resourcesUrlCache.clear();
     }
 }
