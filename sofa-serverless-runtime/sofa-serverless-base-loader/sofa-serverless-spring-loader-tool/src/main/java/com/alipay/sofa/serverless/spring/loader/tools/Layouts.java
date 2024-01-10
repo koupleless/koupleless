@@ -52,13 +52,7 @@ public class Layouts {
         if (lowerCaseFileName.endsWith(".jar")) {
             return new Jar();
         }
-        if (lowerCaseFileName.endsWith(".war")) {
-            return new War();
-        }
-        if (file.isDirectory() || lowerCaseFileName.endsWith(".zip")) {
-            return new Expanded();
-        }
-        throw new IllegalStateException("Unable to deduce layout for '" + file + "'");
+        return  org.springframework.boot.loader.tools.Layouts.forFile(file);
     }
 
     /**
@@ -66,7 +60,6 @@ public class Layouts {
      */
     public static class Jar extends org.springframework.boot.loader.tools.Layouts.Jar implements
                                                                                      CustomLoaderLayout {
-
         @Override
         public String getLauncherClassName() {
             return "com.alipay.sofa.serverless.spring.loader.JarLauncher";
@@ -76,82 +69,6 @@ public class Layouts {
         public void writeLoadedClasses(LoaderClassesWriter writer) throws IOException {
             writer.writeLoaderClasses("META-INF/loader/spring-boot-loader.jar");
             writer.writeLoaderClasses("META-INF/loader/sofa-serverless-spring-loader.jar");
-        }
-    }
-
-    /**
-     * Executable expanded archive layout.
-     */
-    public static class Expanded extends Jar {
-
-        @Override
-        public String getLauncherClassName() {
-            return "org.springframework.boot.loader.PropertiesLauncher";
-        }
-
-    }
-
-    /**
-     * No layout.
-     */
-    public static class None extends Jar {
-
-        @Override
-        public String getLauncherClassName() {
-            return null;
-        }
-
-        @Override
-        public boolean isExecutable() {
-            return false;
-        }
-
-    }
-
-    /**
-     * Executable WAR layout.
-     */
-    public static class War implements Layout {
-
-        private static final Map<LibraryScope, String> SCOPE_LOCATION;
-
-        static {
-            Map<LibraryScope, String> locations = new HashMap<>();
-            locations.put(LibraryScope.COMPILE, "WEB-INF/lib/");
-            locations.put(LibraryScope.CUSTOM, "WEB-INF/lib/");
-            locations.put(LibraryScope.RUNTIME, "WEB-INF/lib/");
-            locations.put(LibraryScope.PROVIDED, "WEB-INF/lib-provided/");
-            SCOPE_LOCATION = Collections.unmodifiableMap(locations);
-        }
-
-        @Override
-        public String getLauncherClassName() {
-            return "org.springframework.boot.loader.WarLauncher";
-        }
-
-        @Override
-        public String getLibraryLocation(String libraryName, LibraryScope scope) {
-            return SCOPE_LOCATION.get(scope);
-        }
-
-        @Override
-        public String getClassesLocation() {
-            return "WEB-INF/classes/";
-        }
-
-        @Override
-        public String getClasspathIndexFileLocation() {
-            return "WEB-INF/classpath.idx";
-        }
-
-        @Override
-        public String getLayersIndexFileLocation() {
-            return "WEB-INF/layers.idx";
-        }
-
-        @Override
-        public boolean isExecutable() {
-            return true;
         }
     }
 }
