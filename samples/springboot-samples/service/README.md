@@ -112,11 +112,11 @@ curl http://localhost:8080
 
 #### 验证模块调用基座
 
-访问 biz2 的 web 服务
+访问 biz 的 web 服务
 ```shell
-curl http://localhost:8080/biz2
+curl http://localhost:8080/biz/
 ```
-返回 `hello to ark2 dynamic deploy`
+返回 `hello to ark dynamic deploy`
 
 且日志里能看到对基座base的调用都是成功的，证明模块通过 @AutowiredFromBase 或者 SpringServiceFinder.getBaseService() 方式调用基座是成功的
 
@@ -124,7 +124,7 @@ curl http://localhost:8080/biz2
 
 访问 biz2 的 web 服务
 ```shell
-curl http://localhost:8080/biz2
+curl http://localhost:8080/biz2/
 ```
 返回 `hello to ark2 dynamic deploy`
 
@@ -132,4 +132,5 @@ curl http://localhost:8080/biz2
 
 ## 注意事项
 这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
+这里验证模块功能时，web接口后需要加上斜号，例如curl http://localhost:8080/biz/ ，而不是 http://localhost:8080/biz
 
