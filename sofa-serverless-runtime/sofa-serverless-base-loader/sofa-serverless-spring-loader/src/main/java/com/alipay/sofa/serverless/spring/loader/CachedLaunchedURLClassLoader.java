@@ -34,10 +34,9 @@ import org.springframework.boot.loader.archive.Archive;
  * @version CachedLaunchedURLClassLoader.java, v 0.1 2023年12月26日 14:45 syd
  */
 public class CachedLaunchedURLClassLoader extends LaunchedURLClassLoader {
-    private static final int                   ENTRY_CACHE_SIZE  = Integer
-                                                                     .getInteger(
-                                                                         "serverless.class.cache.size",
-                                                                         6000);
+    private static final int                   ENTRY_CACHE_SIZE  = Integer.getInteger(
+                                                                     "serverless.class.cache.size",
+                                                                     6000);
     private static final Object                NOT_FOUND         = new Object();
     protected final Map<String, Object>        classCache        = Collections
                                                                      .synchronizedMap(new LinkedHashMap<String, Object>(
