@@ -36,7 +36,7 @@ import org.springframework.boot.loader.archive.Archive;
 public class CachedLaunchedURLClassLoader extends LaunchedURLClassLoader {
     private static final int                   ENTRY_CACHE_SIZE  = Integer
                                                                      .getInteger(
-                                                                         "sofaserverless.class.cache.size",
+                                                                         "serverless.class.cache.size",
                                                                          6000);
     private static final Object                NOT_FOUND         = new Object();
     protected final Map<String, Object>        classCache        = Collections
