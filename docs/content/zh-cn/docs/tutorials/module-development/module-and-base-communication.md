@@ -8,6 +8,17 @@ weight: 300
 
 # Spring 环境
 
+## 模块里引入依赖
+
+```xml
+<dependency>
+    <groupId>com.alipay.sofa.serverless</groupId>
+    <artifactId>sofa-serverless-app-starter</artifactId>
+    <version>0.5.6</version>
+    <scope>provided</scope>
+</dependency>
+```
+
 ## 基座调用模块
 
 只能使用 SpringServiceFinder 

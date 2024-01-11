@@ -12,6 +12,21 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<dependencies>
+		<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom,
+            原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+		<!--    must add this dependency as the first one in the pom for building jar, and set type=pom,
+            check the reason from here https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-base-starter</artifactId>
+			<version>${sofa.serverless.runtime.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa</groupId>
+			<artifactId>web-ark-plugin</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>com.alipay.sofa.web</groupId>
 			<artifactId>base-web-single-host-facade</artifactId>
@@ -39,20 +54,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-logging</artifactId>
 		</dependency>
-
-		<!-- 这里添加动态模块相关依赖 -->
-		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-base-starter</artifactId>
-		</dependency>
-		<!-- end 动态模块相关依赖 -->
-
-		<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>web-ark-plugin</artifactId>
-		</dependency>
-		<!-- end 单 host 部署的依赖 -->
 	</dependencies>
 
 	<build>

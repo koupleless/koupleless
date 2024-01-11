@@ -10,9 +10,13 @@ base 为普通 springboot 改造成的基座，改造内容为在主 pom 里增�
 
 
 <!-- 这里添加动态模块相关依赖 -->
+<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
+    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-base-starter</artifactId>
+    <version>${sofa.serverless.runtime.version}</version>
+    <type>pom</type>
 </dependency>
 <!-- end 动态模块相关依赖 -->
 
@@ -46,6 +50,8 @@ base 为普通 springboot 改造成的基座，改造内容为在主 pom 里增�
 
 ### biz1
 biz1 包含两个打包插件，一个常规 springboot 插件, 构建普通 springboot 包; 另一个插件为 sofaArk biz 模块插件，构建 ark biz jar 包，打包插件配置如下：
+
+**特别注意**： sofa ark 插件定义顺序必须在 springboot 打包插件前;
 ```xml
 <!-- 模块需要引入专门的 log4j2 adapter 做日志适配 -->
 <dependency>

@@ -6,6 +6,7 @@
 		<artifactId>dubbo26</artifactId>
 		<groupId>com.alipay.sofa</groupId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -35,12 +36,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-adapter-log4j2</artifactId>
-			<version>${sofa.serverless.runtime.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
@@ -48,7 +43,6 @@
 		<dependency>
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>dubbo26model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -57,7 +51,7 @@
 			<plugin>
 				<groupId>com.alipay.sofa</groupId>
 				<artifactId>sofa-ark-maven-plugin</artifactId>
-				<version>2.2.3</version>
+				<version>${sofa.ark.version}</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>

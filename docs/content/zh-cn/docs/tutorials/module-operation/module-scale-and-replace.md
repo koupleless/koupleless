@@ -26,9 +26,9 @@ spec:
   template:
     spec:
       module:
-        name: dynamic-provider
-        version: '1.0.0'
-        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.0-ark-biz.jar
+        name: provider
+        version: '1.0.2'
+        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
   replicas: 2  # 注意：在此处修改模块实例 Module 副本数，实现扩缩容
   operationStrategy:
     upgradePolicy: installThenUninstall
@@ -36,7 +36,7 @@ spec:
     useBeta: false
     batchCount: 2
   schedulingStrategy: # 此处可自定义调度策略
-    schedulingType: Scatter  
+    schedulingPolicy: Scatter  
 ```
 
 如果要自定义模块发布运维策略可配置 operationStrategy 和 schedulingStrategy，具体可参考[模块发布运维策略](../operation-and-scheduling-strategy)。<br />样例演示的是使用 kubectl 方式，直接调用 K8S APIServer 修改 ModuleDeployment CR 一样能实现扩缩容。

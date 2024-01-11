@@ -6,6 +6,7 @@
 		<artifactId>dubbo26</artifactId>
 		<groupId>com.alipay.sofa</groupId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +17,21 @@
 		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 	<dependencies>
+		<!--覆盖dubbo 2.6同名类-->
+		<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom,
+    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+		<!--    must add this dependency as the first one in the pom for building jar, and set type=pom,
+            check the reason from here https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-base-starter</artifactId>
+			<version>${sofa.serverless.runtime.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa</groupId>
+			<artifactId>web-ark-plugin</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -42,11 +58,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-base-starter</artifactId>
-			<version>${sofa.serverless.runtime.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.lmax</groupId>
 			<artifactId>disruptor</artifactId>
 		</dependency>
@@ -69,6 +80,7 @@
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
+			<version>4.1.42.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -77,20 +89,6 @@
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>web-ark-plugin</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>ch.qos.logback</groupId>
-					<artifactId>logback-classic</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>ch.qos.logback</groupId>
-					<artifactId>logback-core</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -114,7 +112,6 @@
 				<version>${spring.boot.version}</version>
 				<configuration>
 					<mainClass>com.alipay.sofa.rpc.dubbo26.base.Dubbo26BaseApplication</mainClass>
-					<skip>true</skip>
 				</configuration>
 				<executions>
 					<execution>

@@ -15,6 +15,21 @@
 	<description>base for mybatis</description>
 
 	<dependencies>
+		<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom,
+            原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+		<!--    must add this dependency as the first one in the pom for building jar, and set type=pom,
+            check the reason from here https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-base-starter</artifactId>
+			<version>${sofa.serverless.runtime.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa</groupId>
+			<artifactId>web-ark-plugin</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -61,23 +76,6 @@
 			<groupId>com.lmax</groupId>
 			<artifactId>disruptor</artifactId>
 			<version>${disruptor.version}</version>
-		</dependency>
-
-		<!-- 这里添加动态模块相关依赖 -->
-		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-base-starter</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>web-ark-plugin</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-adapter-log4j2</artifactId>
-			<version>${sofa.serverless.runtime.version}</version>
 		</dependency>
 	</dependencies>
 

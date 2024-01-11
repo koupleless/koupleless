@@ -16,9 +16,13 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.builtin.handler;
 
+import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.api.ResponseCode;
+import com.alipay.sofa.ark.common.util.FileUtils;
 import com.alipay.sofa.ark.common.util.StringUtils;
+import com.alipay.sofa.ark.spi.model.Biz;
+import com.alipay.sofa.ark.spi.service.biz.BizFactoryService;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.meta.AbstractCommandHandler;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Command;
@@ -27,11 +31,17 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizOps;
 import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletRuntimeException;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
+import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
+import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
+import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -43,6 +53,7 @@ public class InstallBizHandler
                               AbstractCommandHandler<InstallBizHandler.Input, InstallBizHandler.InstallBizClientResponse>
                                                                                                                          implements
                                                                                                                          ArkBizOps {
+    private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
 
     @Override
     public Output<InstallBizClientResponse> handle(Input input) {
@@ -87,11 +98,46 @@ public class InstallBizHandler
 
     @Override
     public void validate(Input input) throws CommandValidationException {
-        notBlank(input.getBizName(), "bizName should not be blank");
-        notBlank(input.getBizVersion(), "bizVersion should not be blank");
         isTrue(!input.isAsync() || !StringUtils.isEmpty(input.getRequestId()),
             "requestId should not be blank when async is true");
         notBlank(input.getBizUrl(), "bizUrl should not be blank");
+
+        if (StringUtils.isEmpty(input.getBizName()) || StringUtils.isEmpty(input.getBizVersion())) {
+            LOGGER
+                .warn("biz name and version should not be empty, or it will reduce the performance.");
+        }
+
+        if (StringUtils.isEmpty(input.getBizName()) && StringUtils.isEmpty(input.getBizVersion())) {
+            // if bizName and bizVersion is blank, it means that we should parse them from the jar. this will cost io operation.
+            try {
+                refreshBizInfoFromJar(input);
+            } catch (IOException e) {
+                throw new CommandValidationException(String.format(
+                    "refresh biz info from jar failed: %s", e.getMessage()));
+            }
+        } else if (!StringUtils.isEmpty(input.getBizName())
+                   && !StringUtils.isEmpty(input.getBizVersion())) {
+            // if bizName and bizVersion is not blank, it means that we should install the biz with the given bizName and bizVersion.
+            // do nothing.
+        } else {
+            // if bizName or bizVersion is blank, it is invalid, throw exception.
+            throw new CommandValidationException(
+                "bizName and bizVersion should be both blank or both not blank.");
+        }
+    }
+
+    private void refreshBizInfoFromJar(Input input) throws IOException {
+        // 如果入参里没有jar，例如模块卸载，这里就直接返回
+        if (StringUtils.isEmpty(input.getBizUrl())) {
+            return;
+        }
+        BizFactoryService bizFactoryService = ArkClient.getBizFactoryService();
+        URL url = new URL(input.getBizUrl());
+        File bizFile = ArkClient.createBizSaveFile(input.getBizName(), input.getBizVersion());
+        FileUtils.copyInputStreamToFile(url.openStream(), bizFile);
+        Biz biz = bizFactoryService.createBiz(bizFile);
+        input.setBizName(biz.getBizName());
+        input.setBizVersion(biz.getBizVersion());
     }
 
     @Getter

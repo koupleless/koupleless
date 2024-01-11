@@ -34,7 +34,7 @@ excludeArtifactIds=commons-lang
     <plugin>
         <groupId>com.alipay.sofa</groupId>
         <artifactId>sofa-ark-maven-plugin</artifactId>
-        <version>2.2.4</version>
+        <version>${sofa.ark.version}</version>
         <executions>
             <execution>
                 <id>default-cli</id>

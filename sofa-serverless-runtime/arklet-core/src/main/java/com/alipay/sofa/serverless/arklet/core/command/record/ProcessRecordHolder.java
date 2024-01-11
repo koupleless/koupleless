@@ -16,9 +16,8 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.record;
 
-import com.alipay.sofa.serverless.arklet.core.command.meta.InputMeta;
+import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +37,7 @@ public class ProcessRecordHolder {
     private static Map<String, ProcessRecord> processRecords = new ConcurrentHashMap<>();
 
     public static ProcessRecord getProcessRecord(String rid) {
-        if (StringUtils.isNotBlank(rid)) {
+        if (!StringUtils.isEmpty(rid)) {
             return processRecords.get(rid);
         }
         return null;
@@ -53,7 +52,7 @@ public class ProcessRecordHolder {
     }
 
     public static List<ProcessRecord> getProcessRecordsByStatus(String status) {
-        return processRecords.values().stream().filter(record -> StringUtils.equals(record.getStatus().name(), status)).collect(Collectors.toList());
+        return processRecords.values().stream().filter(record -> StringUtils.isSameStr(record.getStatus().name(), status)).collect(Collectors.toList());
     }
 
     public static ProcessRecord createProcessRecord(String rid, ArkBizMeta arkBizMeta) {

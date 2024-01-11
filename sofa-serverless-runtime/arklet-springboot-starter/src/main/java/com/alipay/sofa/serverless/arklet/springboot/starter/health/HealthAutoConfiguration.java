@@ -18,7 +18,7 @@ package com.alipay.sofa.serverless.arklet.springboot.starter.health;
 
 import com.alipay.sofa.serverless.arklet.core.ArkletComponentRegistry;
 import com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint.ArkHealthCodeEndpoint;
-import com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint.ArkHealthzEndpoint;
+import com.alipay.sofa.serverless.arklet.springboot.starter.health.endpoint.ArkHealthEndpoint;
 import com.alipay.sofa.serverless.arklet.springboot.starter.health.extension.indicator.MasterBizHealthIndicator;
 import com.alipay.sofa.serverless.common.environment.ConditionalOnMasterBiz;
 import org.springframework.beans.BeansException;
@@ -29,7 +29,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 import java.util.Set;
 
@@ -55,8 +54,8 @@ public class HealthAutoConfiguration implements ApplicationContextAware {
 
     @Bean
     @ConditionalOnAvailableEndpoint
-    public ArkHealthzEndpoint arkHealthzEndpoint() {
-        return new ArkHealthzEndpoint();
+    public ArkHealthEndpoint arkHealthEndpoint() {
+        return new ArkHealthEndpoint();
     }
 
     @Bean

@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.alipay.sofa.biz1.mapper")
+//@MapperScan(basePackages = "com.alipay.sofa.biz1.mapper")
 public class Biz1Application {
     private static Logger LOGGER = LoggerFactory.getLogger(Biz1Application.class);
 

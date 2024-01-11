@@ -19,21 +19,37 @@ package com.alipay.sofa.serverless.arklet.core.component;
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ClientResponse;
 import com.alipay.sofa.ark.spi.model.BizOperation;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallRequest;
+import com.alipay.sofa.serverless.arklet.core.common.model.BatchInstallResponse;
+import com.alipay.sofa.serverless.arklet.core.ops.BatchInstallHelper;
 import com.alipay.sofa.serverless.arklet.core.ops.UnifiedOperationServiceImpl;
+import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doReturn;
 
 /**
  * @author mingmen
  * @date 2023/10/26
  */
 
+@RunWith(MockitoJUnitRunner.class)
 public class UnifiedOperationServiceImplTests {
-
+    @InjectMocks
     private UnifiedOperationServiceImpl unifiedOperationService;
+
+    @Spy
+    private BatchInstallHelper          batchInstallHelper;
 
     @Before
     public void setUp() {
@@ -98,5 +114,31 @@ public class UnifiedOperationServiceImplTests {
             arkClientMockedStatic.verify(() -> ArkClient.switchBiz(Mockito.anyString(), Mockito.anyString()));
             Assert.assertEquals(clientResponse, response);
         }
+    }
+
+    @SneakyThrows
+    @Test
+    public void testBatchInstall() {
+        {
+            List<String> paths = new ArrayList<>();
+            paths.add("/file/a-biz.jar");
+            paths.add("/file/b-biz.jar");
+            paths.add("/file/notbiz.jar");
+
+            doReturn(paths).when(batchInstallHelper).getBizUrlsFromLocalFileSystem(any());
+
+            doReturn(new HashMap<>()).when(batchInstallHelper).getMainAttributes(anyString());
+        }
+
+        BatchInstallResponse response = unifiedOperationService.batchInstall(BatchInstallRequest
+            .builder().bizDirAbsolutePath("/path/to/biz").build());
+
+        Assert.assertTrue(response.getBizUrlToResponse().
+
+        containsKey("/file/a-biz.jar"));
+        Assert.assertTrue(response.getBizUrlToResponse().
+
+        containsKey("/file/b-biz.jar"));
+
     }
 }

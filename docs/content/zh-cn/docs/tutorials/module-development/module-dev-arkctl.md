@@ -1,9 +1,11 @@
 ---
-title: 模式本地开发
+title: 模块本地开发
 weight: 400
 ---
 
 ## Arkctl 工具安装
+
+Arkctl 模块安装主要提供自动打包和部署能力，自动打包调用 mvn 命令构建模块 jar包，自动部署调用 [arklet](/docs/contribution-guidelines/arklet/architecture/) 提供的 api 接口进行部署。如果不想使用命令行工具，也可以直接使用 arklet 提供的 api 接口发起部署操作。
 
 方法一：
 
@@ -12,7 +14,7 @@ weight: 400
 
 方法二：
 
-1. 在 [二进制列表](https://github.com/sofastack/sofa-serverless/tree/master/arkctl/bin) 中下载对应的二进制并加入到本地
+1. 在 [二进制列表](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0) 中下载对应的二进制并加入到本地
    path 中。
 
 ### 本地快速部署

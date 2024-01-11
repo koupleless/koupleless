@@ -71,28 +71,10 @@ SOFAServerless 技术体系是蚂蚁集团随着业务发展、研发运维的�
 
 ## SOFAServerless 开源组件
 
-|  系统/组件   | 职责描述  |
-|  ----  | ----  |
-| <b>sofa-ark</b>  | 原来的 sofa-ark 2.0 Java 合并部署与热部署框架。 |
-| <b>arkctl</b>  | 研发运维本地工具集，帮助开发者轻松拆分合并模块、开发测试、部署调试、瘦身模块等等。 |
-| <b>arklet</b>  | 一个客户端框架，对接 SOFAArk 实现 Biz 模块的热部署和热卸载，并且暴露 HTTP API 接口可以让上游系统或者开发者直接使用。 |
-| <b>nodejslet</b>  | 一个客户端框架，对接 NodeJS 原生 API 实现 NodeJS 模块的热替换，并且暴露 HTTP API 接口可以让上游系统或者开发者直接使用。 |
-| <b>module-controller</b> | 模块运维、调度、弹性伸缩系统，清晰的定义 ModuleDeployment 相关模型和 API，并且既支持 K8S CR + ETCD 调和的实现方式又支持标准 HTTP/RPC + DB 的实现方式。底层对接编排模块热替换的客户端（arklet、nodejslet 等）。最终实现模块秒级发布运维能力，让开发者享受 Serverless 发布运维体验。 |
+![image](https://github.com/sofastack/sofa-serverless/assets/101314559/995f1e17-f3be-4672-b1b8-c0c041590fb0)
 
 <br/>
 
 ## SOFAServerless 开源版大体里程碑
 
-SOFAServerless 开源版非常希望并且欢迎与社区同学一起共建，凡是 23 年下半年参与社区共建的同学我们都会颁发奖品。2023 年下半年初步的里程碑计划如下：
-
-- <b>2023.8：</b>整体 0.1 版本发布
-- <b>2023.8：</b>完成 SOFABoot 完整的部署功能验证，产出 benchmark 基线
-- <b>2023.9：</b>发布基础运维和调度系统 ModuleController 0.5 版
-- <b>2023.9：</b>发布研发运维工具 Arkctl 与 Arklet 0.5 版
-- <b>2023.10：</b>发布模块半自动拆分工具 0.5 版
-- <b>2023.10：</b>编写基础使用教程，新增 2+ SOFABoot 技术栈公司使用
-- <b>2023.11：</b>支持 SpringBoot 完整能力和 5+ 社区常用中间件
-- <b>2023.11：</b>SOFAServerless (ModuleController、Arkctl、Arklet、SpringBoot 兼容) 1.0 版本正式发布
-- <b>2023.12：</b>基础自动弹性伸缩能力发布
-
-更具体的里程碑细节随开源项目推进及时更新。
+https://github.com/sofastack/sofa-serverless/releases

@@ -52,9 +52,8 @@ quality = 75
 anchor = "smart"
 
 [services]
-[services.googleAnalytics]
-# Comment out the next line to disable GA tracking. Also disables the feature described in [params.ui.feedback].
-id = "UA-00000000-0"
+  [services.googleAnalytics]
+    ID = "G-DZ8Q3F0GZ7"
 
 # Language configuration
 
@@ -97,6 +96,9 @@ section = ["HTML", "print"]
 
 [params]
 copyright = "SOFAServerless 开源社区"
+customcss = ["/search/pagefind-ui.css"]
+customjs = ["/search/pagefind-ui.js", "/js/init.js"]
+disableGtagForUniversalAnalytics = true
 
 # First one is picked as the Twitter card image if not set on page.
 # images = ["images/project-illustration.png"]
@@ -138,7 +140,7 @@ gcs_engine_id = "d72aa9b2712488cc3"
 algolia_docsearch = false
 
 # Enable Lunr.js offline search
-offlineSearch = true
+offlineSearch = false
 
 # Enable syntax highlighting and copy buttons on code blocks with Prism
 prism_syntax_highlighting = true
@@ -166,7 +168,8 @@ sidebar_search_disable = false
 enable = true
 # The responses that the user sees after clicking "yes" (the page was helpful) or "no" (the page was not helpful).
 yes = '很高兴文档对您有帮助! 欢迎<a href="https://github.com/sofastack/sofa-serverless/issues/new?assignees=&labels=&projects=&template=feature_request.md">为社区提建议</a>。'
-no = '很抱歉文档对您没帮助。邀请您<a href="https://github.com/sofastack/sofa-serverless/issues/new?assignees=&labels=&projects=&template=feature_request.md">为文档提建议</a>或<a href="https://github.com/sofastack/sofa-serverless/tree/master/user-docs/content/zh-cn">直接完善文档</a>。'
+no = '很抱歉文档对您没帮助。邀请您<a href="https://github.com/sofastack/sofa-serverless/issues/new?assignees=&labels=&projects=&template=feature_request.md">为文档提建议</a>或者<a href="https://github.com/sofastack/sofa-serverless/tree/master/user-docs/content/zh-cn">直接完善该文档</a>。'
+max_value = 1
 
 # Adds a reading time to the top of each doc.
 # If you want this feature, but occasionally need to remove the Reading time from a single page,
@@ -211,9 +214,6 @@ no = '很抱歉文档对您没帮助。邀请您<a href="https://github.com/sofa
 #  desc = "Discuss development issues around the project"
 
 # hugo module configuration
-
-
-
 [module]
   # uncomment line below for temporary local development of module
   # replacements = "github.com/google/docsy -> ../../docsy"

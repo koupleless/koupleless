@@ -16,15 +16,31 @@
  */
 package com.alipay.sofa.serverless.arklet.core.command.handler;
 
+import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.ark.spi.archive.BizArchive;
+import com.alipay.sofa.ark.spi.model.Biz;
+import com.alipay.sofa.ark.spi.model.BizOperation;
+import com.alipay.sofa.ark.spi.service.biz.BizFactoryService;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.BuiltinCommand;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler;
 import com.alipay.sofa.serverless.arklet.core.command.builtin.handler.InstallBizHandler.Input;
 import com.alipay.sofa.serverless.arklet.core.command.meta.Output;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
+import com.alipay.sofa.serverless.arklet.core.health.custom.model.CustomBiz;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 /**
@@ -34,6 +50,8 @@ import static org.mockito.Mockito.when;
 public class InstallBizHandlerTest extends BaseHandlerTest {
 
     private InstallBizHandler handler;
+
+    public BizFactoryService  bizFactoryService = Mockito.mock(BizFactoryService.class);
 
     @Before
     public void setupInstallBizHandler() {
@@ -88,6 +106,64 @@ public class InstallBizHandlerTest extends BaseHandlerTest {
 
         // 执行测试
         handler.validate(input);
+    }
+
+    @Test
+    public void testValidate_BlankBizName_BlankBizVersion() throws CommandValidationException, IOException {
+        // 准备测试数据
+        URL url = this.getClass().getClassLoader().getResource("test-biz.jar");
+        String bizName = "sofa-ark-sample-springboot-ark";
+        String bizVersion = "0.3.0";
+
+        Input input = new Input();
+        input.setBizName("");
+        input.setBizVersion("");
+        input.setBizUrl("file://" + url.getFile());
+
+
+        when(bizFactoryService.createBiz(any(File.class))).thenReturn(new CustomBiz(bizName, bizVersion));
+        arkClient.when(ArkClient::getBizFactoryService).thenReturn(bizFactoryService);
+        arkClient.when(() -> ArkClient.createBizSaveFile(anyString(), anyString())).thenReturn(new File(url.getFile()));
+
+        // 执行测试
+        handler.validate(input);
+        Assert.assertEquals(bizName, input.getBizName());
+        Assert.assertEquals(bizVersion, input.getBizVersion());
+    }
+
+    @Test(expected = CommandValidationException.class)
+    public void testValidate_BizName_BlankBizVersion() throws CommandValidationException,
+                                                      IOException {
+        // 准备测试数据
+        URL url = this.getClass().getClassLoader().getResource("test-biz.jar");
+        String bizName = "sofa-ark-sample-springboot-ark";
+        String bizVersion = "0.3.0";
+
+        Input input = new Input();
+        input.setBizName(bizName);
+        input.setBizVersion("");
+        input.setBizUrl("file://" + url.getFile());
+
+        // 执行测试
+        handler.validate(input);
+    }
+
+    @Test
+    public void testValidate_BizName_BizVersion() throws CommandValidationException {
+        // 准备测试数据
+        URL url = this.getClass().getClassLoader().getResource("test-biz.jar");
+        String bizName = "sofa-ark-sample-springboot-ark";
+        String bizVersion = "0.3.0";
+
+        Input input = new Input();
+        input.setBizName(bizName);
+        input.setBizVersion(bizVersion);
+        input.setBizUrl("file://" + url.getFile());
+
+        // 执行测试
+        handler.validate(input);
+        // 测试验证 ArkClient.createBizSaveFile 被调用 0 次
+        arkClient.verify(() -> ArkClient.createBizSaveFile(anyString(), anyString()), times(0));
     }
 
     @Test(expected = CommandValidationException.class)
