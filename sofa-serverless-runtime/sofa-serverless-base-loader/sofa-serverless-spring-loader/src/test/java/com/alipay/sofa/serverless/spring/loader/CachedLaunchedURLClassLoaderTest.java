@@ -33,7 +33,7 @@ public class CachedLaunchedURLClassLoaderTest extends TestCase {
 
         URL appJar = getClass().getClassLoader().getResource("jars/demo.jar");
 
-        System.setProperty("sofaserverless.class.cache.size", "100");
+        System.setProperty("serverless.class.cache.size", "100");
         CachedLaunchedURLClassLoader loader = new CachedLaunchedURLClassLoader(false, null,
                 new URL[] { appJar }, null);
         URL url = loader.getResource("com/example/demo/DemoApplication.class");
