@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.jar.JarFile;
 
 import com.alipay.sofa.serverless.spring.loader.tools.Layouts.Jar;
 import junit.framework.TestCase;
@@ -43,24 +44,23 @@ public class LayoutsTest extends TestCase {
     public void testForFile() throws IOException {
         CustomLayoutFactory customLayoutFactory = new CustomLayoutFactory();
 
-        File appJar = new File(
-                getClass().getClassLoader().getResource("demo-executable.jar").getFile());
+        File appJar = new File(getClass().getClassLoader().getResource("demo-executable.jar")
+            .getFile());
         Layout layout = customLayoutFactory.getLayout(appJar);
         assertTrue(layout instanceof Jar);
         Jar jar = (Jar) layout;
         assertEquals("com.alipay.sofa.serverless.spring.loader.JarLauncher",
-                jar.getLauncherClassName());
+            jar.getLauncherClassName());
         File rewrite = new File(appJar.getParent() + "/demo-executable-rewrite.jar");
         JarWriter writer = new JarWriter(rewrite);
         jar.writeLoadedClasses(writer);
-        URLClassLoader urlClassLoader = new URLClassLoader(new URL[] { rewrite.toURI().toURL() });
-        Assert.assertNotNull(urlClassLoader.getResource(
-                "com/alipay/sofa/serverless/spring/loader/JarLauncher.class"));
+        writer.close();
+        URLClassLoader urlClassLoader = new URLClassLoader(new URL[] { rewrite.toURI().toURL() },
+            null);
         try {
             urlClassLoader.loadClass(jar.getLauncherClassName());
         } catch (ClassNotFoundException e) {
             Assert.fail(e.getMessage());
         }
-
     }
 }
