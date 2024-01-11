@@ -29,7 +29,13 @@
 </plugin>
 ```
 2. fat jar启动方式不变，会默认使用sofa-serverless-spring-loader的JarLauncher启动
+```shell
+java -jar xxx-executable.jar
+```
 3. 解压启动方式，Launcher需要改成com.alipay.sofa.serverless.spring.loader.JarLauncher
+```shell
+java -classpath  xxx-executable-unpack com.alipay.sofa.serverless.spring.loader.JarLauncher
+```
 
 # 维护说明
 
