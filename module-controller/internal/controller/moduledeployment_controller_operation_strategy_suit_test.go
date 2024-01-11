@@ -29,6 +29,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 	deployment := prepareDeployment(namespace)
 	moduleDeploymentName := "module-deployment-test-demo"
 	moduleDeployment := utils.PrepareModuleDeployment(namespace, moduleDeploymentName)
+	moduleDeployment.Spec.OperationStrategy.BatchCount = 4
 	pod := preparePod(namespace, "fake-pod-1")
 	Context("create module deployment", func() {
 		It("prepare deployment and pod", func() {
