@@ -52,7 +52,7 @@ public class Layouts {
         if (lowerCaseFileName.endsWith(".jar")) {
             return new Jar();
         }
-        return  org.springframework.boot.loader.tools.Layouts.forFile(file);
+        return org.springframework.boot.loader.tools.Layouts.forFile(file);
     }
 
     /**
