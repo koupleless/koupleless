@@ -65,13 +65,14 @@ public class HealthAutoConfiguration implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        WebEndpointProperties webEndpointProperties = applicationContext.getBean(WebEndpointProperties.class);
+        WebEndpointProperties webEndpointProperties = applicationContext
+            .getBean(WebEndpointProperties.class);
         WebEndpointProperties.Exposure exposure = webEndpointProperties.getExposure();
         Set<String> includePath = exposure.getInclude();
         includePath.add("*");
         webEndpointProperties.getExposure().setInclude(includePath);
         webEndpointProperties.setBasePath("/");
-        
+
         this.context = applicationContext;
     }
 }
