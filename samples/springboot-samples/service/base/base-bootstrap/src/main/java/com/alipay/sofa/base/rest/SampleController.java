@@ -22,7 +22,7 @@ public class SampleController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
 
-        Provider studentProvider = SpringServiceFinder.getModuleService("biz", "0.0.1-SNAPSHOT",
+        Provider studentProvider = SpringServiceFinder.getModuleService("biz1", "0.0.1-SNAPSHOT",
                 "studentProvider", Provider.class);
         Result result = studentProvider.provide(new Param());
         System.out.println(result.getClass());
@@ -30,7 +30,7 @@ public class SampleController {
         System.out.println(result.getPeople().getClass());
         System.out.println(result);
 
-        Provider teacherProvider = SpringServiceFinder.getModuleService("biz", "0.0.1-SNAPSHOT",
+        Provider teacherProvider = SpringServiceFinder.getModuleService("biz1", "0.0.1-SNAPSHOT",
                 "teacherProvider", Provider.class);
         Result result1 = teacherProvider.provide(new Param());
         System.out.println(result1.getClass());
@@ -38,7 +38,7 @@ public class SampleController {
         System.out.println(result1.getPeople().getClass());
         System.out.println(result1);
 
-        Map<String, Provider> providerMap = SpringServiceFinder.listModuleServices("biz", "0.0.1-SNAPSHOT",
+        Map<String, Provider> providerMap = SpringServiceFinder.listModuleServices("biz1", "0.0.1-SNAPSHOT",
                 Provider.class);
         for (String beanName : providerMap.keySet()) {
             Result result2 = providerMap.get(beanName).provide(new Param());

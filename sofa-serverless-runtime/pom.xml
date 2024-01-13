@@ -9,9 +9,9 @@
     <packaging>pom</packaging>
 
     <properties>
-        <sofa.ark.version>3.0.1</sofa.ark.version>
-        <spring.boot.version>3.0.9</spring.boot.version>
-        <revision>0.5.5-jdk17</revision>
+        <revision>0.5.6</revision>
+        <sofa.ark.version>2.2.6</sofa.ark.version>
+        <spring.boot.version>2.7.15</spring.boot.version>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -174,18 +174,6 @@
                 <groupId>com.caucho</groupId>
                 <artifactId>hessian</artifactId>
                 <version>${hessian.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-all</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
             </dependency>
 
             <!--            测试-->

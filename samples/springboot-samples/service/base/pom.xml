@@ -8,16 +8,13 @@
 		<module>base-bootstrap</module>
 	</modules>
 	<parent>
-		<groupId>com.alipay.sofa</groupId>
-		<artifactId>springboot-samples</artifactId>
+		<groupId>com.alipay.sofa.service</groupId>
+		<artifactId>cross-biz-calling</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
+		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.alipay.sofa.service</groupId>
 	<artifactId>base</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sample-service-base</name>
-	<description>sample-service-base</description>
 	<packaging>pom</packaging>
 
 	<dependencyManagement>
