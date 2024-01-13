@@ -16,6 +16,7 @@
  */
 package com.alipay.sofa.serverless.common.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
@@ -37,6 +38,10 @@ public class SerializeUtils {
             if (targetClassLoader != null) {
                 Thread.currentThread().setContextClassLoader(targetClassLoader);
             }
+
+//             使用 fastjson 将 source 序列化为 byte 数组，饭后又反序列化回来
+//            return JSONObject.parseObject(JSONObject.toJSONString(source), source.getClass());
+
             SerializerFactory serializerFactory = new SerializerFactory();
             serializerFactory.setAllowNonSerializable(true);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

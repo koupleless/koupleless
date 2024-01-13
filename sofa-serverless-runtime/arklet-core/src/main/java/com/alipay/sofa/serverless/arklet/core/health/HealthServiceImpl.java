@@ -16,8 +16,6 @@
  */
 package com.alipay.sofa.serverless.arklet.core.health;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.common.util.AssertUtils;
 import com.alipay.sofa.ark.common.util.StringUtils;

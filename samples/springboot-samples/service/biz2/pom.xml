@@ -8,16 +8,13 @@
         <module>biz2-facade</module>
     </modules>
     <parent>
-        <groupId>com.alipay.sofa</groupId>
-        <artifactId>springboot-samples</artifactId>
+        <groupId>com.alipay.sofa.service</groupId>
+        <artifactId>cross-biz-calling</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.alipay.sofa.service</groupId>
     <artifactId>biz2</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sample-service-biz2</name>
-    <description>sample-service-biz2</description>
 
     <dependencyManagement>
         <dependencies>
