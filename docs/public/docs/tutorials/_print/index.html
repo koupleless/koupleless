@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.121.1">
+<meta name="generator" content="Hugo 0.121.2">
 <link rel="canonical" type="text/html" href="/docs/tutorials/">
 <meta name="robots" content="noindex, nofollow">
 
@@ -475,8 +475,8 @@ if (!doNotTrack) {
 </span></span><span style="display:flex;"><span><span style="color:#c4a000">spring.application.name</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">${替换为实际基座应用名}</span>
 </span></span></code></pre></div><h4 id="修改主-pomxml">修改主 pom.xml</h4>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;properties&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.ark.verion&gt;</span>2.2.5<span style="color:#204a87;font-weight:bold">&lt;/sofa.ark.verion&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.serverless.runtime.version&gt;</span>0.5.3<span style="color:#204a87;font-weight:bold">&lt;/sofa.serverless.runtime.version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.ark.verion&gt;</span>2.2.6<span style="color:#204a87;font-weight:bold">&lt;/sofa.ark.verion&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.serverless.runtime.version&gt;</span>0.5.6<span style="color:#204a87;font-weight:bold">&lt;/sofa.serverless.runtime.version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/properties&gt;</span>
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/groupId&gt;</span>
@@ -687,7 +687,7 @@ if (!doNotTrack) {
 <li>在 **pom.xml **里增加必要的依赖</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;properties&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.serverless.runtime.version&gt;</span>0.5.3<span style="color:#204a87;font-weight:bold">&lt;/sofa.serverless.runtime.version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.serverless.runtime.version&gt;</span>0.5.6<span style="color:#204a87;font-weight:bold">&lt;/sofa.serverless.runtime.version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/properties&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependencies&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
@@ -968,7 +968,7 @@ if (!doNotTrack) {
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;plugin&gt;</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa<span style="color:#204a87;font-weight:bold">&lt;/groupId&gt;</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-ark-maven-plugin<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>2.2.5<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>${sofa.ark.version}<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">&lt;executions&gt;</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&lt;execution&gt;</span>
 </span></span><span style="display:flex;"><span>                <span style="color:#204a87;font-weight:bold">&lt;id&gt;</span>default-cli<span style="color:#204a87;font-weight:bold">&lt;/id&gt;</span>
@@ -1070,7 +1070,14 @@ if (!doNotTrack) {
 	<p>基座与模块之间、模块与模块之间存在 spring 上下文隔离，互相的 bean 不会冲突、不可见。然而很多应用场景比如中台模式、独立模块模式等存在基座调用模块、模块调用基座、模块与模块互相调用的场景。
 当前支持3种方式调用，@AutowiredFromBiz, @AutowiredFromBase, SpringServiceFinder 方法调用，注意三个方式使用的情况不同。</p>
 <h1 id="spring-环境">Spring 环境</h1>
-<h2 id="基座调用模块">基座调用模块</h2>
+<h2 id="模块里引入依赖">模块里引入依赖</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-app-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>0.5.6<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;scope&gt;</span>provided<span style="color:#204a87;font-weight:bold">&lt;/scope&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><h2 id="基座调用模块">基座调用模块</h2>
 <p>只能使用 SpringServiceFinder</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#5c35cc;font-weight:bold">@RestController</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">public</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">SampleController</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">{</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -1233,7 +1240,7 @@ if (!doNotTrack) {
 </ol>
 <p>方法二：</p>
 <ol>
-<li>在 [二进制列表](<a href="https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0">https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0</a> 中下载对应的二进制并加入到本地
+<li>在 <a href="https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0">二进制列表</a> 中下载对应的二进制并加入到本地
 path 中。</li>
 </ol>
 <h3 id="本地快速部署">本地快速部署</h3>
@@ -2433,7 +2440,7 @@ Maven 插件 sofa-ark-maven-plugin 打包生成。</p>
         
       </div>
       <div class="td-footer__copyright-etc col-12 col-sm-4 text-center py-2 order-sm-2">
-        <span>&copy; 2023 SOFAServerless 开源社区 保留所有权利</span>
+        <span>&copy; 2024 SOFAServerless 开源社区 保留所有权利</span>
         
         
       </div>

@@ -37,6 +37,8 @@ public class SerializeUtils {
             if (targetClassLoader != null) {
                 Thread.currentThread().setContextClassLoader(targetClassLoader);
             }
+
+            // 支持多态的序列化与反序列化，需要使用 hessian
             SerializerFactory serializerFactory = new SerializerFactory();
             serializerFactory.setAllowNonSerializable(true);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

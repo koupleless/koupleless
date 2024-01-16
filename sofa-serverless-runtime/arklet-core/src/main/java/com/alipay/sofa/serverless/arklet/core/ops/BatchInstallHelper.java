@@ -37,8 +37,6 @@ import java.util.jar.Manifest;
  */
 public class BatchInstallHelper {
 
-    private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
-
     /**
      * 判断是否是 biz jar 文件
      * 目前简单的以后缀 '-biz.jar' 为约束。
@@ -62,7 +60,8 @@ public class BatchInstallHelper {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                 Path absolutePath = file.toAbsolutePath();
                 if (isBizJarFile(absolutePath)) {
-                    LOGGER.info("Found biz jar file: {}", absolutePath);
+                    ArkletLoggerFactory.getDefaultLogger().info("Found biz jar file: {}",
+                        absolutePath);
                     bizUrls.add(absolutePath.toString());
                 }
                 return FileVisitResult.CONTINUE;

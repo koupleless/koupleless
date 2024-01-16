@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.121.1">
+<meta name="generator" content="Hugo 0.121.2">
 <meta name="robots" content="index, follow">
 
 
@@ -20,27 +20,27 @@
 
 <title>模块与模块、模块与基座通信 | SOFAServerless</title>
 <meta name="description" content="基座与模块之间、模块与模块之间存在 spring 上下文隔离，互相的 bean 不会冲突、不可见。然而很多应用场景比如中台模式、独立模块模式等存在基座调用模块、模块调用基座、模块与模块互相调用的场景。 当前支持3种方式调用，@AutowiredFromBiz, @AutowiredFromBase, SpringServiceFinder 方法调用，注意三个方式使用的情况不同。
-Spring 环境 基座调用模块 只能使用 SpringServiceFinder
-@RestController public class SampleController { @RequestMapping(value = &amp;#34;/&amp;#34;, method = RequestMethod.GET) public String hello() { Provider studentProvider = SpringServiceFinder.getModuleService(&amp;#34;biz&amp;#34;, &amp;#34;0.0.1-SNAPSHOT&amp;#34;, &amp;#34;studentProvider&amp;#34;, Provider.class); Result result = studentProvider.provide(new Param()); Provider teacherProvider = SpringServiceFinder.getModuleService(&amp;#34;biz&amp;#34;, &amp;#34;0.0.1-SNAPSHOT&amp;#34;, &amp;#34;teacherProvider&amp;#34;, Provider.class); Result result1 = teacherProvider.provide(new Param()); Map&amp;lt;String, Provider&amp;gt; providerMap = SpringServiceFinder.listModuleServices(&amp;#34;biz&amp;#34;, &amp;#34;0.0.1-SNAPSHOT&amp;#34;, Provider.class); for (String beanName : providerMap.keySet()) { Result result2 = providerMap.get(beanName).provide(new Param()); } return &amp;#34;hello to ark master biz&amp;#34;; } } 模块调用基座 方式一：注解 @AutowiredFromBase @RestController public class SampleController { @AutowiredFromBase(name = &amp;#34;sampleServiceImplNew&amp;#34;) private SampleService sampleServiceImplNew; @AutowiredFromBase(name = &amp;#34;sampleServiceImpl&amp;#34;) private SampleService sampleServiceImpl; @AutowiredFromBase private List&amp;lt;SampleService&amp;gt; sampleServiceList; @AutowiredFromBase private Map&amp;lt;String, SampleService&amp;gt; sampleServiceMap; @AutowiredFromBase private AppService appService; @RequestMapping(value = &amp;#34;/&amp;#34;, method = RequestMethod.">
+Spring 环境 模块里引入依赖 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa.serverless&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;sofa-serverless-app-starter&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.5.6&amp;lt;/version&amp;gt; &amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt; &amp;lt;/dependency&amp;gt; 基座调用模块 只能使用 SpringServiceFinder
+@RestController public class SampleController { @RequestMapping(value = &amp;#34;/&amp;#34;, method = RequestMethod.GET) public String hello() { Provider studentProvider = SpringServiceFinder.getModuleService(&amp;#34;biz&amp;#34;, &amp;#34;0.0.1-SNAPSHOT&amp;#34;, &amp;#34;studentProvider&amp;#34;, Provider.class); Result result = studentProvider.provide(new Param()); Provider teacherProvider = SpringServiceFinder.getModuleService(&amp;#34;biz&amp;#34;, &amp;#34;0.0.1-SNAPSHOT&amp;#34;, &amp;#34;teacherProvider&amp;#34;, Provider.class); Result result1 = teacherProvider.provide(new Param()); Map&amp;lt;String, Provider&amp;gt; providerMap = SpringServiceFinder.listModuleServices(&amp;#34;biz&amp;#34;, &amp;#34;0.0.1-SNAPSHOT&amp;#34;, Provider.class); for (String beanName : providerMap.">
 <meta property="og:title" content="模块与模块、模块与基座通信" />
 <meta property="og:description" content="基座与模块之间、模块与模块之间存在 spring 上下文隔离，互相的 bean 不会冲突、不可见。然而很多应用场景比如中台模式、独立模块模式等存在基座调用模块、模块调用基座、模块与模块互相调用的场景。 当前支持3种方式调用，@AutowiredFromBiz, @AutowiredFromBase, SpringServiceFinder 方法调用，注意三个方式使用的情况不同。
-Spring 环境 基座调用模块 只能使用 SpringServiceFinder
-@RestController public class SampleController { @RequestMapping(value = &#34;/&#34;, method = RequestMethod.GET) public String hello() { Provider studentProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;studentProvider&#34;, Provider.class); Result result = studentProvider.provide(new Param()); Provider teacherProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;teacherProvider&#34;, Provider.class); Result result1 = teacherProvider.provide(new Param()); Map&lt;String, Provider&gt; providerMap = SpringServiceFinder.listModuleServices(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, Provider.class); for (String beanName : providerMap.keySet()) { Result result2 = providerMap.get(beanName).provide(new Param()); } return &#34;hello to ark master biz&#34;; } } 模块调用基座 方式一：注解 @AutowiredFromBase @RestController public class SampleController { @AutowiredFromBase(name = &#34;sampleServiceImplNew&#34;) private SampleService sampleServiceImplNew; @AutowiredFromBase(name = &#34;sampleServiceImpl&#34;) private SampleService sampleServiceImpl; @AutowiredFromBase private List&lt;SampleService&gt; sampleServiceList; @AutowiredFromBase private Map&lt;String, SampleService&gt; sampleServiceMap; @AutowiredFromBase private AppService appService; @RequestMapping(value = &#34;/&#34;, method = RequestMethod." />
+Spring 环境 模块里引入依赖 &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-app-starter&lt;/artifactId&gt; &lt;version&gt;0.5.6&lt;/version&gt; &lt;scope&gt;provided&lt;/scope&gt; &lt;/dependency&gt; 基座调用模块 只能使用 SpringServiceFinder
+@RestController public class SampleController { @RequestMapping(value = &#34;/&#34;, method = RequestMethod.GET) public String hello() { Provider studentProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;studentProvider&#34;, Provider.class); Result result = studentProvider.provide(new Param()); Provider teacherProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;teacherProvider&#34;, Provider.class); Result result1 = teacherProvider.provide(new Param()); Map&lt;String, Provider&gt; providerMap = SpringServiceFinder.listModuleServices(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, Provider.class); for (String beanName : providerMap." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/tutorials/module-development/module-and-base-communication/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2023-11-09T15:03:43+08:00" />
+<meta property="article:modified_time" content="2024-01-04T15:55:32+08:00" />
 
 <meta itemprop="name" content="模块与模块、模块与基座通信">
 <meta itemprop="description" content="基座与模块之间、模块与模块之间存在 spring 上下文隔离，互相的 bean 不会冲突、不可见。然而很多应用场景比如中台模式、独立模块模式等存在基座调用模块、模块调用基座、模块与模块互相调用的场景。 当前支持3种方式调用，@AutowiredFromBiz, @AutowiredFromBase, SpringServiceFinder 方法调用，注意三个方式使用的情况不同。
-Spring 环境 基座调用模块 只能使用 SpringServiceFinder
-@RestController public class SampleController { @RequestMapping(value = &#34;/&#34;, method = RequestMethod.GET) public String hello() { Provider studentProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;studentProvider&#34;, Provider.class); Result result = studentProvider.provide(new Param()); Provider teacherProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;teacherProvider&#34;, Provider.class); Result result1 = teacherProvider.provide(new Param()); Map&lt;String, Provider&gt; providerMap = SpringServiceFinder.listModuleServices(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, Provider.class); for (String beanName : providerMap.keySet()) { Result result2 = providerMap.get(beanName).provide(new Param()); } return &#34;hello to ark master biz&#34;; } } 模块调用基座 方式一：注解 @AutowiredFromBase @RestController public class SampleController { @AutowiredFromBase(name = &#34;sampleServiceImplNew&#34;) private SampleService sampleServiceImplNew; @AutowiredFromBase(name = &#34;sampleServiceImpl&#34;) private SampleService sampleServiceImpl; @AutowiredFromBase private List&lt;SampleService&gt; sampleServiceList; @AutowiredFromBase private Map&lt;String, SampleService&gt; sampleServiceMap; @AutowiredFromBase private AppService appService; @RequestMapping(value = &#34;/&#34;, method = RequestMethod.">
-<meta itemprop="dateModified" content="2023-11-09T15:03:43+08:00" />
-<meta itemprop="wordCount" content="345">
+Spring 环境 模块里引入依赖 &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-app-starter&lt;/artifactId&gt; &lt;version&gt;0.5.6&lt;/version&gt; &lt;scope&gt;provided&lt;/scope&gt; &lt;/dependency&gt; 基座调用模块 只能使用 SpringServiceFinder
+@RestController public class SampleController { @RequestMapping(value = &#34;/&#34;, method = RequestMethod.GET) public String hello() { Provider studentProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;studentProvider&#34;, Provider.class); Result result = studentProvider.provide(new Param()); Provider teacherProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;teacherProvider&#34;, Provider.class); Result result1 = teacherProvider.provide(new Param()); Map&lt;String, Provider&gt; providerMap = SpringServiceFinder.listModuleServices(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, Provider.class); for (String beanName : providerMap.">
+<meta itemprop="dateModified" content="2024-01-04T15:55:32+08:00" />
+<meta itemprop="wordCount" content="352">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="模块与模块、模块与基座通信"/>
 <meta name="twitter:description" content="基座与模块之间、模块与模块之间存在 spring 上下文隔离，互相的 bean 不会冲突、不可见。然而很多应用场景比如中台模式、独立模块模式等存在基座调用模块、模块调用基座、模块与模块互相调用的场景。 当前支持3种方式调用，@AutowiredFromBiz, @AutowiredFromBase, SpringServiceFinder 方法调用，注意三个方式使用的情况不同。
-Spring 环境 基座调用模块 只能使用 SpringServiceFinder
-@RestController public class SampleController { @RequestMapping(value = &#34;/&#34;, method = RequestMethod.GET) public String hello() { Provider studentProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;studentProvider&#34;, Provider.class); Result result = studentProvider.provide(new Param()); Provider teacherProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;teacherProvider&#34;, Provider.class); Result result1 = teacherProvider.provide(new Param()); Map&lt;String, Provider&gt; providerMap = SpringServiceFinder.listModuleServices(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, Provider.class); for (String beanName : providerMap.keySet()) { Result result2 = providerMap.get(beanName).provide(new Param()); } return &#34;hello to ark master biz&#34;; } } 模块调用基座 方式一：注解 @AutowiredFromBase @RestController public class SampleController { @AutowiredFromBase(name = &#34;sampleServiceImplNew&#34;) private SampleService sampleServiceImplNew; @AutowiredFromBase(name = &#34;sampleServiceImpl&#34;) private SampleService sampleServiceImpl; @AutowiredFromBase private List&lt;SampleService&gt; sampleServiceList; @AutowiredFromBase private Map&lt;String, SampleService&gt; sampleServiceMap; @AutowiredFromBase private AppService appService; @RequestMapping(value = &#34;/&#34;, method = RequestMethod."/>
+Spring 环境 模块里引入依赖 &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-app-starter&lt;/artifactId&gt; &lt;version&gt;0.5.6&lt;/version&gt; &lt;scope&gt;provided&lt;/scope&gt; &lt;/dependency&gt; 基座调用模块 只能使用 SpringServiceFinder
+@RestController public class SampleController { @RequestMapping(value = &#34;/&#34;, method = RequestMethod.GET) public String hello() { Provider studentProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;studentProvider&#34;, Provider.class); Result result = studentProvider.provide(new Param()); Provider teacherProvider = SpringServiceFinder.getModuleService(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, &#34;teacherProvider&#34;, Provider.class); Result result1 = teacherProvider.provide(new Param()); Map&lt;String, Provider&gt; providerMap = SpringServiceFinder.listModuleServices(&#34;biz&#34;, &#34;0.0.1-SNAPSHOT&#34;, Provider.class); for (String beanName : providerMap."/>
 
 
 
@@ -305,7 +305,9 @@ if (!doNotTrack) {
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docscontribution-guidelinesruntime-li">
   <a href="/docs/contribution-guidelines/runtime/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docscontribution-guidelinesruntime"><span class="">多模块运行时适配或最佳实践</span></a>
   <ul class="ul-3 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogj42-li">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimemulti-app-padater-li">
+  <a href="/docs/contribution-guidelines/runtime/multi-app-padater/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimemulti-app-padater"><span class="">SOFAServerless 多应用治理补丁治理</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogj42-li">
   <a href="/docs/contribution-guidelines/runtime/logj42/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimelogj42"><span class="">log4j2 的多模块化适配</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimeehcache-li">
   <a href="/docs/contribution-guidelines/runtime/ehcache/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimeehcache"><span class="">ehcache 的多模块化最佳实践</span></a>
@@ -344,6 +346,7 @@ if (!doNotTrack) {
             <div class="td-toc">
         <nav id="TableOfContents">
   <ul>
+    <li><a href="#模块里引入依赖">模块里引入依赖</a></li>
     <li><a href="#基座调用模块">基座调用模块</a></li>
     <li><a href="#模块调用基座">模块调用基座</a>
       <ul>
@@ -379,7 +382,14 @@ if (!doNotTrack) {
 	<p>基座与模块之间、模块与模块之间存在 spring 上下文隔离，互相的 bean 不会冲突、不可见。然而很多应用场景比如中台模式、独立模块模式等存在基座调用模块、模块调用基座、模块与模块互相调用的场景。
 当前支持3种方式调用，@AutowiredFromBiz, @AutowiredFromBase, SpringServiceFinder 方法调用，注意三个方式使用的情况不同。</p>
 <h1 id="spring-环境">Spring 环境</h1>
-<h2 id="基座调用模块">基座调用模块</h2>
+<h2 id="模块里引入依赖">模块里引入依赖</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-app-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>0.5.6<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;scope&gt;</span>provided<span style="color:#204a87;font-weight:bold">&lt;/scope&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><h2 id="基座调用模块">基座调用模块</h2>
 <p>只能使用 SpringServiceFinder</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#5c35cc;font-weight:bold">@RestController</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">public</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">SampleController</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">{</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -579,7 +589,7 @@ if (!doNotTrack) {
 
 		<br />
 	<div class="text-muted mt-5 pt-3 border-top">
-  最后修改 November 9, 2023: <a href="https://github.com/sofastack/sofa-serverless/commit/5b4aa8efbbfb313072f0db58f33d54a6415ad37f">add notication for modules communication (5b4aa8ef)</a>
+  最后修改 January 4, 2024: <a href="https://github.com/sofastack/sofa-serverless/commit/5bdb9915f30a9540263bca764a0d66fb020a8263">update to 0.5.6 (5bdb9915)</a>
 </div>
 
 </div>
@@ -626,7 +636,7 @@ if (!doNotTrack) {
         
       </div>
       <div class="td-footer__copyright-etc col-12 col-sm-4 text-center py-2 order-sm-2">
-        <span>&copy; 2023 SOFAServerless 开源社区 保留所有权利</span>
+        <span>&copy; 2024 SOFAServerless 开源社区 保留所有权利</span>
         
         
       </div>

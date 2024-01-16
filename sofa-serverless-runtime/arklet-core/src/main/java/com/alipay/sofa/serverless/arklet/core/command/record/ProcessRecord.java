@@ -37,31 +37,29 @@ import static com.alipay.sofa.serverless.arklet.core.command.record.ProcessRecor
 @Setter
 public class ProcessRecord {
 
-    private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
+    private String     requestId;
 
-    private String                    requestId;
+    private ArkBizMeta arkBizMeta;
 
-    private ArkBizMeta                arkBizMeta;
+    private String     threadName;
 
-    private String                    threadName;
+    private Status     status;
 
-    private Status                    status;
+    private Throwable  throwable;
 
-    private Throwable                 throwable;
+    private String     errorCode;
 
-    private String                    errorCode;
+    private String     message;
 
-    private String                    message;
+    private Date       startTime;
 
-    private Date                      startTime;
+    private long       startTimestamp;
 
-    private long                      startTimestamp;
+    private Date       endTime;
 
-    private Date                      endTime;
+    private long       endTimestamp;
 
-    private long                      endTimestamp;
-
-    private long                      elapsedTime;
+    private long       elapsedTime;
 
     public enum Status {
 
@@ -102,21 +100,24 @@ public class ProcessRecord {
     public void start() {
         if (INITIALIZED.equals(getStatus())) {
             setStatus(EXECUTING);
-            LOGGER.info("Command execution status change: INIT -> EXECUTING");
+            ArkletLoggerFactory.getDefaultLogger().info(
+                "Command execution status change: INIT -> EXECUTING");
         }
     }
 
     public void success() {
         if (EXECUTING.equals(getStatus())) {
             setStatus(SUCCEEDED);
-            LOGGER.info("Command execution status change: EXECUTING -> SUCCESS");
+            ArkletLoggerFactory.getDefaultLogger().info(
+                "Command execution status change: EXECUTING -> SUCCESS");
         }
     }
 
     public void fail() {
         if (EXECUTING.equals(getStatus())) {
             setStatus(FAILED);
-            LOGGER.info("Command execution status change: EXECUTING -> FAIL");
+            ArkletLoggerFactory.getDefaultLogger().info(
+                "Command execution status change: EXECUTING -> FAIL");
         }
     }
 

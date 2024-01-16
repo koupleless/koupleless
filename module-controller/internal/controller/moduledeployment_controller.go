@@ -214,10 +214,13 @@ func handleInitModuleDeployment(moduleDeployment *v1alpha1.ModuleDeployment, new
 	)
 
 	batchCount := moduleDeployment.Spec.OperationStrategy.BatchCount
+	useBeta := moduleDeployment.Spec.OperationStrategy.UseBeta
 	if batchCount <= 0 {
 		realBatchCount = 1
 	} else if int32(math.Abs(float64(deltaReplicas))) < batchCount {
 		realBatchCount = int32(math.Abs(float64(deltaReplicas)))
+	} else if useBeta && moduleDeployment.Spec.Replicas-1 > 1 {
+		realBatchCount = batchCount + 1
 	} else {
 		realBatchCount = batchCount
 	}

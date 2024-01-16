@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.121.1">
+<meta name="generator" content="Hugo 0.121.2">
 <link rel="canonical" type="text/html" href="/docs/contribution-guidelines/runtime/">
 <meta name="robots" content="noindex, nofollow">
 
@@ -153,7 +153,7 @@ if (!doNotTrack) {
     
     
 	
-<li>1: <a href="#pg-e8336cb2ec84a57eea63b09a2d517063">log4j2 的多模块化适配</a></li>
+<li>1: <a href="#pg-d2c8dae71abd632d19e610337041d350">SOFAServerless 多应用治理补丁治理</a></li>
 
 
     
@@ -161,7 +161,15 @@ if (!doNotTrack) {
     
     
 	
-<li>2: <a href="#pg-fce299658e201c9a561eaab5974c0199">ehcache 的多模块化最佳实践</a></li>
+<li>2: <a href="#pg-e8336cb2ec84a57eea63b09a2d517063">log4j2 的多模块化适配</a></li>
+
+
+    
+  
+    
+    
+	
+<li>3: <a href="#pg-fce299658e201c9a561eaab5974c0199">ehcache 的多模块化最佳实践</a></li>
 
 
     
@@ -192,7 +200,96 @@ if (!doNotTrack) {
 
 <div class="td-content" style="">
     
-	<h1 id="pg-e8336cb2ec84a57eea63b09a2d517063">1 - log4j2 的多模块化适配</h1>
+	<h1 id="pg-d2c8dae71abd632d19e610337041d350">1 - SOFAServerless 多应用治理补丁治理</h1>
+    
+	<h1 id="sofaserverless-为什么需要多应用治理补丁">SOFAServerless 为什么需要多应用治理补丁？</h1>
+<p>SOFAServerless 是一种多应用的架构，而传统的中间件可能只考虑了一个应用的场景，故在一些行为上无法兼容多应用共存的行为，会发生共享变量污染、classLoader 加载异常、class 判断不符合预期等问题。
+由此，在使用 SOFAServerless 中间件时，我们需要对一些潜在的问题做补丁，覆盖掉原有中间件的实现，使开源的中间件也能兼容多应用的模式。</p>
+<h1 id="sofaserverless-多应用治理补丁方案调研">SOFAServerless 多应用治理补丁方案调研</h1>
+<p>在多应用兼容性治理中，我们不仅仅只考虑生产部署，还要考虑用户本地开发的兼容性(IDEA 点击 Debug)，单测编写的兼容性(如 @SpringbootTest)等等。
+<br/>下面是不同方案的对比表格。</p>
+<h2 id="方案对比">方案对比</h2>
+<table>
+<thead>
+<tr>
+<th>方案名</th>
+<th>接入成本</th>
+<th>可维护性</th>
+<th>部署兼容性</th>
+<th>IDE 兼容性</th>
+<th>单测兼容性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A：将补丁包的依赖放在 maven dependency 的首部，以此保证补丁类能优先被 classLoader 加载。</td>
+<td>低。<br>用户只需要控制 maven 家在的顺序。</td>
+<td>低<br>用户需要严格保证相关依赖在最前面，且启动的时候不手动传入 classpath。</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+</tr>
+<tr>
+<td>B：通过 maven 插件修改 springboot 构建产物的索引文件的顺序。</td>
+<td>低。<br>只需要新增一个 package 周期的 maven 插件即可，用户感知低。</td>
+<td>中<br>用户需要保证启动的时候不手动传入 classpath。</td>
+<td>兼容✅</td>
+<td>不兼容❌<br>jetbrains 无法兼容，jetbrains 会自己构建 cli 命令行把 classpath 按照 maven 依赖的顺序传进去，这会导致 adapter 的顺序加载不一定是最优先的。</td>
+<td>不兼容❌<br>单测不走 repackage 周期，不依赖 classpath.idx 文件。</td>
+</tr>
+<tr>
+<td>C：新增自定义的 springboot 的 jarlaunch 启动器，通过启动器控制 classLoader 加载的行为。</td>
+<td>高。<br>需要用户修改自己的基座启动逻辑，使用 sofa-serverless 自定义的 jarlaunch。</td>
+<td>高<br>自定义的 jarlaunch 可以通过钩子控制代码的加载顺序。</td>
+<td>兼容✅</td>
+<td>兼容✅<br>但需要配置 IDE 使用自定义的 jarlaunch。</td>
+<td>不兼容❌<br>因为单测不会走 jarlaunch 逻辑。</td>
+</tr>
+<tr>
+<td>D：增强基座的 classloader, 保证优先搜索和加载补丁类。</td>
+<td>高。<br>用户需要初始化增强的代码，且该模式对 sofa-ark 识别 master biz 的逻辑也有侵入，需要改造支持。</td>
+<td>高<br>基座的 classloader 可以编程化地控制依赖加载的顺序。</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+</tr>
+<tr>
+<td>E：通过 maven 插件配置配置拷贝补丁类代码到当前项目中, 当前项目的文件会被优先加载。</td>
+<td>高。<br>maven 目前的拷贝插件无法用通配符，所以接入一个 adapter 就得多一个配置。</td>
+<td>高<br>用户只要配置了，就可以保证依赖有限被加载（因为本地项目的类最优先被加载）。</td>
+<td>兼容✅</td>
+<td>兼容✅</td>
+<td>不兼容❌<br>因为单测不会走到 package 周期，而 maven 的拷贝插件是在 package 周期生效的。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="结论">结论</h2>
+<p>综合地来看，没有办法完全做到用户 0 感知接入，每个方法都需要微小程度的业务改造。
+在诸多方案中，A 和 D 能做到完全兼容，不过 A 方案不需要业务改代码，也不会侵入运行时逻辑，仅需要用户在 maven dependency 的第一行中加入如下依赖:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-base-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>${sofa.serverless.runtime.version}<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#204a87;font-weight:bold">&lt;type&gt;</span>pom<span style="color:#204a87;font-weight:bold">&lt;/type&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><p>故我们将采取方案 A。
+<br/>如果你有更多的想法，或输入，欢迎开源社区讨论！</p>
+
+</div>
+
+
+
+    
+	
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-e8336cb2ec84a57eea63b09a2d517063">2 - log4j2 的多模块化适配</h1>
     
 	<h2 id="为什么需要做适配">为什么需要做适配</h2>
 <p>原生 log4j2 在多模块下，模块没有独立打印的日志目录，统一打印到基座目录里，导致日志和对应的监控无法隔离。这里做适配的目的就是要让模块能有独立的日志目录。</p>
@@ -272,7 +369,7 @@ b. 日志配置时，只能使用 ctx:xxx:xxx 的配置方式</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-fce299658e201c9a561eaab5974c0199">2 - ehcache 的多模块化最佳实践</h1>
+	<h1 id="pg-fce299658e201c9a561eaab5974c0199">3 - ehcache 的多模块化最佳实践</h1>
     
 	<h2 id="为什么需要最佳实践">为什么需要最佳实践</h2>
 <p>CacheManager 初始化的时候存在共用 static 变量，多应用使用相同的 ehcache name，导致缓存互相覆盖。</p>
@@ -401,7 +498,7 @@ b. 日志配置时，只能使用 ctx:xxx:xxx 的配置方式</p>
         
       </div>
       <div class="td-footer__copyright-etc col-12 col-sm-4 text-center py-2 order-sm-2">
-        <span>&copy; 2023 SOFAServerless 开源社区 保留所有权利</span>
+        <span>&copy; 2024 SOFAServerless 开源社区 保留所有权利</span>
         
         
       </div>

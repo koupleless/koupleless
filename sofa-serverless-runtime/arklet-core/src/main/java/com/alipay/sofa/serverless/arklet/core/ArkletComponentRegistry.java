@@ -42,8 +42,6 @@ import com.google.inject.multibindings.Multibinder;
  */
 public class ArkletComponentRegistry {
 
-    private static final ArkletLogger    LOGGER            = ArkletLoggerFactory.getDefaultLogger();
-
     private static final Injector        componentInjector = Guice
                                                                .createInjector(new ComponentGuiceModule());
 
@@ -60,20 +58,20 @@ public class ArkletComponentRegistry {
 
     private static void initComponents() {
             String components = componentList.stream().map(s -> s.getClass().getSimpleName()).collect(Collectors.joining(", "));
-            LOGGER.info("found components: {}", components);
-            LOGGER.info("start to initialize components");
+            ArkletLoggerFactory.getDefaultLogger().info("found components: {}", components);
+            ArkletLoggerFactory.getDefaultLogger().info("start to initialize components");
             for (ArkletComponent component : componentList) {
                 component.init();
             }
-            LOGGER.info("finish initialize components");
+            ArkletLoggerFactory.getDefaultLogger().info("finish initialize components");
     }
 
     private static void destroyComponents() {
-        LOGGER.info("start to destroy components");
+        ArkletLoggerFactory.getDefaultLogger().info("start to destroy components");
         for (ArkletComponent component : componentList) {
             component.destroy();
         }
-        LOGGER.info("finish destroy components");
+        ArkletLoggerFactory.getDefaultLogger().info("finish destroy components");
     }
 
     public static UnifiedOperationService getOperationServiceInstance() {

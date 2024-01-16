@@ -9,10 +9,9 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>0.5.6</revision>
+        <revision>0.5.7-SNAPSHOT</revision>
         <sofa.ark.version>2.2.6</sofa.ark.version>
         <spring.boot.version>2.7.15</spring.boot.version>
-        <logback.core>1.2.9</logback.core>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -30,11 +29,6 @@
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <oshi.version>6.4.5</oshi.version>
         <guice.version>6.0.0</guice.version>
-        <netty.version>4.1.94.Final</netty.version>
-        <logback.version>1.2.9</logback.version>
-        <lombok.version>1.18.22</lombok.version>
-        <junit.version>4.13.1</junit.version>
-        <mockito.version>4.8.1</mockito.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <oshi.version>6.4.5</oshi.version>
         <guava.version>32.1.3-jre</guava.version>
@@ -82,10 +76,19 @@
         <module>arklet-core</module>
         <module>arklet-springboot-starter</module>
         <module>sofa-serverless-adapter-ext</module>
-    </modules>
+        <module>sofa-serverless-base-loader</module>
+	</modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <dependency>
                 <groupId>com.alipay.sofa.serverless</groupId>
                 <artifactId>arklet-core</artifactId>
@@ -138,57 +141,13 @@
                 <artifactId>sofa-ark-api</artifactId>
                 <version>${sofa.ark.version}</version>
             </dependency>
-            <!--  sofa-ark end  -->
 
-            <!--  springboot start  -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-actuator</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>sofa-ark-springboot-starter</artifactId>
                 <version>${sofa.ark.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-autoconfigure</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-loader</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>${spring.boot.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-actuator</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-logging</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-            <!--  springboot end  -->
+            <!--  sofa-ark end  -->
 
             <dependency>
                 <groupId>com.google.inject</groupId>
@@ -215,57 +174,10 @@
             </dependency>
 
             <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-all</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-            </dependency>
-
-            <!--            测试-->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>com.github.oshi</groupId>
                 <artifactId>oshi-core</artifactId>
                 <version>${oshi.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-inline</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.121.1">
+<meta name="generator" content="Hugo 0.121.2">
 <link rel="canonical" type="text/html" href="/docs/faq/">
 <meta name="robots" content="noindex, nofollow">
 
@@ -206,7 +206,7 @@ if (!doNotTrack) {
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/igroupId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-app-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>0.5.5<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>0.5.6<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
 </span></span></code></pre></div><p>或者升级 sofa-serverless 版本到最新版本</p>
 <h4 id="问题-1-3-通过-go-install-无法安装-arkctl">问题 1-3: 通过 go install 无法安装 arkctl</h4>
@@ -217,18 +217,28 @@ if (!doNotTrack) {
 </span></span></code></pre></div><h5 id="解决方式-2">解决方式</h5>
 <p>arkctl 是作为 sofa-serverless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考<a href="https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0">安装 arkctl</a></p>
 <h4 id="问题-1-4模块安装报-master-biz-environment-is-null">问题 1-4：模块安装报 <code>Master biz environment is null</code></h4>
-<p>解决方式，升级 sofa-serverless 版本到最新版本</p>
+<h5 id="解决方式升级-sofa-serverless-版本到最新版本">解决方式，升级 sofa-serverless 版本到最新版本</h5>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/igroupId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-app-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>${最新版本号}<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
 </span></span></code></pre></div><h4 id="问题-1-5模块静态合并部署无法从制定的目录里找到模块包">问题 1-5：模块静态合并部署无法从制定的目录里找到模块包</h4>
-<p>解决方式，升级 sofa-serverless 版本到最新版本</p>
+<h5 id="解决方式升级-sofa-serverless-版本到最新版本-1">解决方式：升级 sofa-serverless 版本到最新版本</h5>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/igroupId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-app-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>${最新版本号}<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><h4 id="问题-1-6用户工程与-sofaserverless-里-guice-版本不一致且版本较老">问题 1-6：用户工程与 SOFAServerless 里 guice 版本不一致，且版本较老</h4>
+<p>报错信息：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Caused by: java.Lang.ClassNotFoundException: com.google.inject.multibindings.Multibinder
+</span></span></code></pre></div><p><img src="imgs/guice_version_incompatibility.png" alt="guice_version_incompatibility.png"></p>
+<h5 id="解决方式升级-guice-版本到较新版本如">解决方式：升级 guice 版本到较新版本，如</h5>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.google.inject<span style="color:#204a87;font-weight:bold">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>guice<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>6.0.0<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
 </span></span></code></pre></div>
 </div>
@@ -307,7 +317,7 @@ if (!doNotTrack) {
         
       </div>
       <div class="td-footer__copyright-etc col-12 col-sm-4 text-center py-2 order-sm-2">
-        <span>&copy; 2023 SOFAServerless 开源社区 保留所有权利</span>
+        <span>&copy; 2024 SOFAServerless 开源社区 保留所有权利</span>
         
         
       </div>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.121.1">
+<meta name="generator" content="Hugo 0.121.2">
 <meta name="robots" content="index, follow">
 
 
@@ -23,35 +23,35 @@
 合并部署 中台应用（该场景需要先完成合并部署，再完成中台应用 demo) 本文实验工程代码在：开源仓库 samples 目录库里
 场景一：合并部署 先介绍第一个场景多应用合并部署，整体流程如下: 可以看到，整体上需要完成的动作是基座/模块接入改造后进行开发与验证，而基座与模块的合并部署动作都是可以并行的。接下来我们将逐步介绍操作细节。
 1. 基座接入改造 为 **application.properties **增加应用名（如果没有的话）： spring.application.name=${基座应用名}
-在 **pom.xml **里增加必要的依赖 &amp;lt;properties&amp;gt; &amp;lt;sofa.serverless.runtime.version&amp;gt;0.5.3&amp;lt;/sofa.serverless.runtime.version&amp;gt; &amp;lt;/properties&amp;gt; &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa.serverless&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;sofa-serverless-base-starter&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;${sofa.serverless.runtime.version}&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt; 理论上增加这个依赖就可以了，但由于本 demo 需要演示多个 web 模块应用使用一个端口合并部署，需要再引入 web-ark-plugin 依赖，详细原理查看这里。
+在 **pom.xml **里增加必要的依赖 &amp;lt;properties&amp;gt; &amp;lt;sofa.serverless.runtime.version&amp;gt;0.5.6&amp;lt;/sofa.serverless.runtime.version&amp;gt; &amp;lt;/properties&amp;gt; &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa.serverless&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;sofa-serverless-base-starter&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;${sofa.serverless.runtime.version}&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt; 理论上增加这个依赖就可以了，但由于本 demo 需要演示多个 web 模块应用使用一个端口合并部署，需要再引入 web-ark-plugin 依赖，详细原理查看这里。
 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;web-ark-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; 点击编译器启动基座。 2. 模块 1 接入改造 添加模块需要的依赖和打包插件 &amp;lt;plugins&amp;gt; &amp;lt;!--这里添加ark 打包插件--&amp;gt; &amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;sofa-ark-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;executions&amp;gt; &amp;lt;execution&amp;gt; &amp;lt;id&amp;gt;default-cli&amp;lt;/id&amp;gt; &amp;lt;goals&amp;gt; &amp;lt;goal&amp;gt;repackage&amp;lt;/goal&amp;gt; &amp;lt;/goals&amp;gt; &amp;lt;/execution&amp;gt; &amp;lt;/executions&amp;gt; &amp;lt;configuration&amp;gt; &amp;lt;skipArkExecutable&amp;gt;true&amp;lt;/skipArkExecutable&amp;gt; &amp;lt;outputDirectory&amp;gt;./target&amp;lt;/outputDirectory&amp;gt; &amp;lt;bizName&amp;gt;${替换为模块名}&amp;lt;/bizName&amp;gt; &amp;lt;webContextPath&amp;gt;${模块自定义的 web context path，需要与其他模块不同}&amp;lt;/webContextPath&amp;gt; &amp;lt;declaredMode&amp;gt;true&amp;lt;/declaredMode&amp;gt; &amp;lt;!">
 <meta property="og:title" content="基座与模块并行开发验证" />
 <meta property="og:description" content="欢迎使用 SOFAServerless 完成多 SpringBoot 应用合并部署与动态更新模块！本文将详细介绍操作流程与方法，希望能够帮助大家节省资源、提高研发效率。 首先，利用 SOFAServerless 完成合并部署与动态更新模块，适用于两种典型场景：
 合并部署 中台应用（该场景需要先完成合并部署，再完成中台应用 demo) 本文实验工程代码在：开源仓库 samples 目录库里
 场景一：合并部署 先介绍第一个场景多应用合并部署，整体流程如下: 可以看到，整体上需要完成的动作是基座/模块接入改造后进行开发与验证，而基座与模块的合并部署动作都是可以并行的。接下来我们将逐步介绍操作细节。
 1. 基座接入改造 为 **application.properties **增加应用名（如果没有的话）： spring.application.name=${基座应用名}
-在 **pom.xml **里增加必要的依赖 &lt;properties&gt; &lt;sofa.serverless.runtime.version&gt;0.5.3&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; 理论上增加这个依赖就可以了，但由于本 demo 需要演示多个 web 模块应用使用一个端口合并部署，需要再引入 web-ark-plugin 依赖，详细原理查看这里。
+在 **pom.xml **里增加必要的依赖 &lt;properties&gt; &lt;sofa.serverless.runtime.version&gt;0.5.6&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; 理论上增加这个依赖就可以了，但由于本 demo 需要演示多个 web 模块应用使用一个端口合并部署，需要再引入 web-ark-plugin 依赖，详细原理查看这里。
 &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;web-ark-plugin&lt;/artifactId&gt; &lt;/dependency&gt; 点击编译器启动基座。 2. 模块 1 接入改造 添加模块需要的依赖和打包插件 &lt;plugins&gt; &lt;!--这里添加ark 打包插件--&gt; &lt;plugin&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;sofa-ark-maven-plugin&lt;/artifactId&gt; &lt;executions&gt; &lt;execution&gt; &lt;id&gt;default-cli&lt;/id&gt; &lt;goals&gt; &lt;goal&gt;repackage&lt;/goal&gt; &lt;/goals&gt; &lt;/execution&gt; &lt;/executions&gt; &lt;configuration&gt; &lt;skipArkExecutable&gt;true&lt;/skipArkExecutable&gt; &lt;outputDirectory&gt;./target&lt;/outputDirectory&gt; &lt;bizName&gt;${替换为模块名}&lt;/bizName&gt; &lt;webContextPath&gt;${模块自定义的 web context path，需要与其他模块不同}&lt;/webContextPath&gt; &lt;declaredMode&gt;true&lt;/declaredMode&gt; &lt;!" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/tutorials/trial_step_by_step/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2023-11-24T17:36:32+08:00" />
+<meta property="article:modified_time" content="2024-01-04T15:55:32+08:00" />
 
 <meta itemprop="name" content="基座与模块并行开发验证">
 <meta itemprop="description" content="欢迎使用 SOFAServerless 完成多 SpringBoot 应用合并部署与动态更新模块！本文将详细介绍操作流程与方法，希望能够帮助大家节省资源、提高研发效率。 首先，利用 SOFAServerless 完成合并部署与动态更新模块，适用于两种典型场景：
 合并部署 中台应用（该场景需要先完成合并部署，再完成中台应用 demo) 本文实验工程代码在：开源仓库 samples 目录库里
 场景一：合并部署 先介绍第一个场景多应用合并部署，整体流程如下: 可以看到，整体上需要完成的动作是基座/模块接入改造后进行开发与验证，而基座与模块的合并部署动作都是可以并行的。接下来我们将逐步介绍操作细节。
 1. 基座接入改造 为 **application.properties **增加应用名（如果没有的话）： spring.application.name=${基座应用名}
-在 **pom.xml **里增加必要的依赖 &lt;properties&gt; &lt;sofa.serverless.runtime.version&gt;0.5.3&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; 理论上增加这个依赖就可以了，但由于本 demo 需要演示多个 web 模块应用使用一个端口合并部署，需要再引入 web-ark-plugin 依赖，详细原理查看这里。
+在 **pom.xml **里增加必要的依赖 &lt;properties&gt; &lt;sofa.serverless.runtime.version&gt;0.5.6&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; 理论上增加这个依赖就可以了，但由于本 demo 需要演示多个 web 模块应用使用一个端口合并部署，需要再引入 web-ark-plugin 依赖，详细原理查看这里。
 &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;web-ark-plugin&lt;/artifactId&gt; &lt;/dependency&gt; 点击编译器启动基座。 2. 模块 1 接入改造 添加模块需要的依赖和打包插件 &lt;plugins&gt; &lt;!--这里添加ark 打包插件--&gt; &lt;plugin&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;sofa-ark-maven-plugin&lt;/artifactId&gt; &lt;executions&gt; &lt;execution&gt; &lt;id&gt;default-cli&lt;/id&gt; &lt;goals&gt; &lt;goal&gt;repackage&lt;/goal&gt; &lt;/goals&gt; &lt;/execution&gt; &lt;/executions&gt; &lt;configuration&gt; &lt;skipArkExecutable&gt;true&lt;/skipArkExecutable&gt; &lt;outputDirectory&gt;./target&lt;/outputDirectory&gt; &lt;bizName&gt;${替换为模块名}&lt;/bizName&gt; &lt;webContextPath&gt;${模块自定义的 web context path，需要与其他模块不同}&lt;/webContextPath&gt; &lt;declaredMode&gt;true&lt;/declaredMode&gt; &lt;!">
-<meta itemprop="dateModified" content="2023-11-24T17:36:32+08:00" />
+<meta itemprop="dateModified" content="2024-01-04T15:55:32+08:00" />
 <meta itemprop="wordCount" content="445">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="基座与模块并行开发验证"/>
 <meta name="twitter:description" content="欢迎使用 SOFAServerless 完成多 SpringBoot 应用合并部署与动态更新模块！本文将详细介绍操作流程与方法，希望能够帮助大家节省资源、提高研发效率。 首先，利用 SOFAServerless 完成合并部署与动态更新模块，适用于两种典型场景：
 合并部署 中台应用（该场景需要先完成合并部署，再完成中台应用 demo) 本文实验工程代码在：开源仓库 samples 目录库里
 场景一：合并部署 先介绍第一个场景多应用合并部署，整体流程如下: 可以看到，整体上需要完成的动作是基座/模块接入改造后进行开发与验证，而基座与模块的合并部署动作都是可以并行的。接下来我们将逐步介绍操作细节。
 1. 基座接入改造 为 **application.properties **增加应用名（如果没有的话）： spring.application.name=${基座应用名}
-在 **pom.xml **里增加必要的依赖 &lt;properties&gt; &lt;sofa.serverless.runtime.version&gt;0.5.3&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; 理论上增加这个依赖就可以了，但由于本 demo 需要演示多个 web 模块应用使用一个端口合并部署，需要再引入 web-ark-plugin 依赖，详细原理查看这里。
+在 **pom.xml **里增加必要的依赖 &lt;properties&gt; &lt;sofa.serverless.runtime.version&gt;0.5.6&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; 理论上增加这个依赖就可以了，但由于本 demo 需要演示多个 web 模块应用使用一个端口合并部署，需要再引入 web-ark-plugin 依赖，详细原理查看这里。
 &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;web-ark-plugin&lt;/artifactId&gt; &lt;/dependency&gt; 点击编译器启动基座。 2. 模块 1 接入改造 添加模块需要的依赖和打包插件 &lt;plugins&gt; &lt;!--这里添加ark 打包插件--&gt; &lt;plugin&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;sofa-ark-maven-plugin&lt;/artifactId&gt; &lt;executions&gt; &lt;execution&gt; &lt;id&gt;default-cli&lt;/id&gt; &lt;goals&gt; &lt;goal&gt;repackage&lt;/goal&gt; &lt;/goals&gt; &lt;/execution&gt; &lt;/executions&gt; &lt;configuration&gt; &lt;skipArkExecutable&gt;true&lt;/skipArkExecutable&gt; &lt;outputDirectory&gt;./target&lt;/outputDirectory&gt; &lt;bizName&gt;${替换为模块名}&lt;/bizName&gt; &lt;webContextPath&gt;${模块自定义的 web context path，需要与其他模块不同}&lt;/webContextPath&gt; &lt;declaredMode&gt;true&lt;/declaredMode&gt; &lt;!"/>
 
 
@@ -317,7 +317,9 @@ if (!doNotTrack) {
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docscontribution-guidelinesruntime-li">
   <a href="/docs/contribution-guidelines/runtime/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docscontribution-guidelinesruntime"><span class="">多模块运行时适配或最佳实践</span></a>
   <ul class="ul-3 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogj42-li">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimemulti-app-padater-li">
+  <a href="/docs/contribution-guidelines/runtime/multi-app-padater/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimemulti-app-padater"><span class="">SOFAServerless 多应用治理补丁治理</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogj42-li">
   <a href="/docs/contribution-guidelines/runtime/logj42/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimelogj42"><span class="">log4j2 的多模块化适配</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimeehcache-li">
   <a href="/docs/contribution-guidelines/runtime/ehcache/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimeehcache"><span class="">ehcache 的多模块化最佳实践</span></a>
@@ -413,7 +415,7 @@ if (!doNotTrack) {
 <li>在 **pom.xml **里增加必要的依赖</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;properties&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.serverless.runtime.version&gt;</span>0.5.3<span style="color:#204a87;font-weight:bold">&lt;/sofa.serverless.runtime.version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.serverless.runtime.version&gt;</span>0.5.6<span style="color:#204a87;font-weight:bold">&lt;/sofa.serverless.runtime.version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/properties&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependencies&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
@@ -664,7 +666,7 @@ if (!doNotTrack) {
 
 		<br />
 	<div class="text-muted mt-5 pt-3 border-top">
-  最后修改 November 24, 2023: <a href="https://github.com/sofastack/sofa-serverless/commit/b8d62aa1b0c660ace36fd8d2db767c21e69eba3c">add order number (b8d62aa1)</a>
+  最后修改 January 4, 2024: <a href="https://github.com/sofastack/sofa-serverless/commit/5bdb9915f30a9540263bca764a0d66fb020a8263">update to 0.5.6 (5bdb9915)</a>
 </div>
 
 </div>
@@ -711,7 +713,7 @@ if (!doNotTrack) {
         
       </div>
       <div class="td-footer__copyright-etc col-12 col-sm-4 text-center py-2 order-sm-2">
-        <span>&copy; 2023 SOFAServerless 开源社区 保留所有权利</span>
+        <span>&copy; 2024 SOFAServerless 开源社区 保留所有权利</span>
         
         
       </div>

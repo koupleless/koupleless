@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.121.1">
+<meta name="generator" content="Hugo 0.121.2">
 <meta name="robots" content="index, follow">
 
 
@@ -19,20 +19,20 @@
 <link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
 
 <title>SpringBoot 或 SOFABoot 升级为基座 | SOFAServerless</title>
-<meta name="description" content="前提条件 SpringBoot 版本 &amp;gt;= 2.3.0（针对 SpringBoot 用户） SOFABoot 版本 &amp;gt;= 3.9.0 或 SOFABoot &amp;gt;= 4.0.0（针对 SOFABoot 用户） 接入步骤 代码与配置修改 修改 application.properties # 需要定义应用名 spring.application.name = ${替换为实际基座应用名} 修改主 pom.xml &amp;lt;properties&amp;gt; &amp;lt;sofa.ark.verion&amp;gt;2.2.5&amp;lt;/sofa.ark.verion&amp;gt; &amp;lt;sofa.serverless.runtime.version&amp;gt;0.5.3&amp;lt;/sofa.serverless.runtime.version&amp;gt; &amp;lt;/properties&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa.serverless&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;sofa-serverless-base-starter&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;${sofa.serverless.runtime.version}&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ --&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;web-ark-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; 启动验证 基座应用能正常启动即表示验证成功！">
+<meta name="description" content="前提条件 SpringBoot 版本 &amp;gt;= 2.3.0（针对 SpringBoot 用户） SOFABoot 版本 &amp;gt;= 3.9.0 或 SOFABoot &amp;gt;= 4.0.0（针对 SOFABoot 用户） 接入步骤 代码与配置修改 修改 application.properties # 需要定义应用名 spring.application.name = ${替换为实际基座应用名} 修改主 pom.xml &amp;lt;properties&amp;gt; &amp;lt;sofa.ark.verion&amp;gt;2.2.6&amp;lt;/sofa.ark.verion&amp;gt; &amp;lt;sofa.serverless.runtime.version&amp;gt;0.5.6&amp;lt;/sofa.serverless.runtime.version&amp;gt; &amp;lt;/properties&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa.serverless&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;sofa-serverless-base-starter&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;${sofa.serverless.runtime.version}&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ --&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;web-ark-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; 启动验证 基座应用能正常启动即表示验证成功！">
 <meta property="og:title" content="SpringBoot 或 SOFABoot 升级为基座" />
-<meta property="og:description" content="前提条件 SpringBoot 版本 &gt;= 2.3.0（针对 SpringBoot 用户） SOFABoot 版本 &gt;= 3.9.0 或 SOFABoot &gt;= 4.0.0（针对 SOFABoot 用户） 接入步骤 代码与配置修改 修改 application.properties # 需要定义应用名 spring.application.name = ${替换为实际基座应用名} 修改主 pom.xml &lt;properties&gt; &lt;sofa.ark.verion&gt;2.2.5&lt;/sofa.ark.verion&gt; &lt;sofa.serverless.runtime.version&gt;0.5.3&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ --&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;web-ark-plugin&lt;/artifactId&gt; &lt;/dependency&gt; 启动验证 基座应用能正常启动即表示验证成功！" />
+<meta property="og:description" content="前提条件 SpringBoot 版本 &gt;= 2.3.0（针对 SpringBoot 用户） SOFABoot 版本 &gt;= 3.9.0 或 SOFABoot &gt;= 4.0.0（针对 SOFABoot 用户） 接入步骤 代码与配置修改 修改 application.properties # 需要定义应用名 spring.application.name = ${替换为实际基座应用名} 修改主 pom.xml &lt;properties&gt; &lt;sofa.ark.verion&gt;2.2.6&lt;/sofa.ark.verion&gt; &lt;sofa.serverless.runtime.version&gt;0.5.6&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ --&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;web-ark-plugin&lt;/artifactId&gt; &lt;/dependency&gt; 启动验证 基座应用能正常启动即表示验证成功！" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/tutorials/base-create/springboot-and-sofaboot/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2023-12-12T14:38:24+08:00" />
+<meta property="article:modified_time" content="2024-01-04T15:55:32+08:00" />
 
 <meta itemprop="name" content="SpringBoot 或 SOFABoot 升级为基座">
-<meta itemprop="description" content="前提条件 SpringBoot 版本 &gt;= 2.3.0（针对 SpringBoot 用户） SOFABoot 版本 &gt;= 3.9.0 或 SOFABoot &gt;= 4.0.0（针对 SOFABoot 用户） 接入步骤 代码与配置修改 修改 application.properties # 需要定义应用名 spring.application.name = ${替换为实际基座应用名} 修改主 pom.xml &lt;properties&gt; &lt;sofa.ark.verion&gt;2.2.5&lt;/sofa.ark.verion&gt; &lt;sofa.serverless.runtime.version&gt;0.5.3&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ --&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;web-ark-plugin&lt;/artifactId&gt; &lt;/dependency&gt; 启动验证 基座应用能正常启动即表示验证成功！">
-<meta itemprop="dateModified" content="2023-12-12T14:38:24+08:00" />
+<meta itemprop="description" content="前提条件 SpringBoot 版本 &gt;= 2.3.0（针对 SpringBoot 用户） SOFABoot 版本 &gt;= 3.9.0 或 SOFABoot &gt;= 4.0.0（针对 SOFABoot 用户） 接入步骤 代码与配置修改 修改 application.properties # 需要定义应用名 spring.application.name = ${替换为实际基座应用名} 修改主 pom.xml &lt;properties&gt; &lt;sofa.ark.verion&gt;2.2.6&lt;/sofa.ark.verion&gt; &lt;sofa.serverless.runtime.version&gt;0.5.6&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ --&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;web-ark-plugin&lt;/artifactId&gt; &lt;/dependency&gt; 启动验证 基座应用能正常启动即表示验证成功！">
+<meta itemprop="dateModified" content="2024-01-04T15:55:32+08:00" />
 <meta itemprop="wordCount" content="48">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="SpringBoot 或 SOFABoot 升级为基座"/>
-<meta name="twitter:description" content="前提条件 SpringBoot 版本 &gt;= 2.3.0（针对 SpringBoot 用户） SOFABoot 版本 &gt;= 3.9.0 或 SOFABoot &gt;= 4.0.0（针对 SOFABoot 用户） 接入步骤 代码与配置修改 修改 application.properties # 需要定义应用名 spring.application.name = ${替换为实际基座应用名} 修改主 pom.xml &lt;properties&gt; &lt;sofa.ark.verion&gt;2.2.5&lt;/sofa.ark.verion&gt; &lt;sofa.serverless.runtime.version&gt;0.5.3&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ --&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;web-ark-plugin&lt;/artifactId&gt; &lt;/dependency&gt; 启动验证 基座应用能正常启动即表示验证成功！"/>
+<meta name="twitter:description" content="前提条件 SpringBoot 版本 &gt;= 2.3.0（针对 SpringBoot 用户） SOFABoot 版本 &gt;= 3.9.0 或 SOFABoot &gt;= 4.0.0（针对 SOFABoot 用户） 接入步骤 代码与配置修改 修改 application.properties # 需要定义应用名 spring.application.name = ${替换为实际基座应用名} 修改主 pom.xml &lt;properties&gt; &lt;sofa.ark.verion&gt;2.2.6&lt;/sofa.ark.verion&gt; &lt;sofa.serverless.runtime.version&gt;0.5.6&lt;/sofa.serverless.runtime.version&gt; &lt;/properties&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/groupId&gt; &lt;artifactId&gt;sofa-serverless-base-starter&lt;/artifactId&gt; &lt;version&gt;${sofa.serverless.runtime.version}&lt;/version&gt; &lt;/dependency&gt; &lt;!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ --&gt; &lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa&lt;/groupId&gt; &lt;artifactId&gt;web-ark-plugin&lt;/artifactId&gt; &lt;/dependency&gt; 启动验证 基座应用能正常启动即表示验证成功！"/>
 
 
 
@@ -297,7 +297,9 @@ if (!doNotTrack) {
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docscontribution-guidelinesruntime-li">
   <a href="/docs/contribution-guidelines/runtime/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docscontribution-guidelinesruntime"><span class="">多模块运行时适配或最佳实践</span></a>
   <ul class="ul-3 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogj42-li">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimemulti-app-padater-li">
+  <a href="/docs/contribution-guidelines/runtime/multi-app-padater/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimemulti-app-padater"><span class="">SOFAServerless 多应用治理补丁治理</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogj42-li">
   <a href="/docs/contribution-guidelines/runtime/logj42/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimelogj42"><span class="">log4j2 的多模块化适配</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimeehcache-li">
   <a href="/docs/contribution-guidelines/runtime/ehcache/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimeehcache"><span class="">ehcache 的多模块化最佳实践</span></a>
@@ -374,8 +376,8 @@ if (!doNotTrack) {
 </span></span><span style="display:flex;"><span><span style="color:#c4a000">spring.application.name</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">${替换为实际基座应用名}</span>
 </span></span></code></pre></div><h4 id="修改主-pomxml">修改主 pom.xml</h4>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;properties&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.ark.verion&gt;</span>2.2.5<span style="color:#204a87;font-weight:bold">&lt;/sofa.ark.verion&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.serverless.runtime.version&gt;</span>0.5.3<span style="color:#204a87;font-weight:bold">&lt;/sofa.serverless.runtime.version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.ark.verion&gt;</span>2.2.6<span style="color:#204a87;font-weight:bold">&lt;/sofa.ark.verion&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;sofa.serverless.runtime.version&gt;</span>0.5.6<span style="color:#204a87;font-weight:bold">&lt;/sofa.serverless.runtime.version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/properties&gt;</span>
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/groupId&gt;</span>
@@ -455,7 +457,7 @@ if (!doNotTrack) {
 
 		<br />
 	<div class="text-muted mt-5 pt-3 border-top">
-  最后修改 December 12, 2023: <a href="https://github.com/sofastack/sofa-serverless/commit/155856d06c206d3cfa20f787d7e8b8f4367ba30b">update ark to 2.2.5 (155856d0)</a>
+  最后修改 January 4, 2024: <a href="https://github.com/sofastack/sofa-serverless/commit/5bdb9915f30a9540263bca764a0d66fb020a8263">update to 0.5.6 (5bdb9915)</a>
 </div>
 
 </div>
@@ -502,7 +504,7 @@ if (!doNotTrack) {
         
       </div>
       <div class="td-footer__copyright-etc col-12 col-sm-4 text-center py-2 order-sm-2">
-        <span>&copy; 2023 SOFAServerless 开源社区 保留所有权利</span>
+        <span>&copy; 2024 SOFAServerless 开源社区 保留所有权利</span>
         
         
       </div>

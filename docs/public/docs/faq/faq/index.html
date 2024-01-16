@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.121.1">
+<meta name="generator" content="Hugo 0.121.2">
 <meta name="robots" content="index, follow">
 
 
@@ -22,7 +22,7 @@
 <meta name="description" content="问题 1-1：模块 compile 引入 springboot 依赖，模块安装时报错 java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 模块需要做好瘦身，参考这里：模块瘦身
 问题 1-2：模块安装找不到 ServerlessApplicationListener 报错信息如下：
 com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SNAPSHOT : can not load class: com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 请在模块里面添加如下依赖：
-&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa.serverless&amp;lt;/igroupId&amp;gt; &amp;lt;artifactId&amp;gt;sofa-serverless-app-starter&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.5.5&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; 或者升级 sofa-serverless 版本到最新版本
+&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alipay.sofa.serverless&amp;lt;/igroupId&amp;gt; &amp;lt;artifactId&amp;gt;sofa-serverless-app-starter&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.5.6&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; 或者升级 sofa-serverless 版本到最新版本
 问题 1-3: 通过 go install 无法安装 arkctl 执行如下命令，报错
 go install serverless.alipay.com/sofa-serverless/v1/arkctl@latest 报错信息如下：
 go: serverless.alipay.com/sofa-serverless/v1/arkctl@latest: module serverless.alipay.com/sofa-serverless/v1/arkctl: Get &amp;#34;https://proxy.golang.org/serverless.alipay.com/sofa-serverless/v1/arkctl/@v/list&amp;#34;: dial tcp 142.251.42.241:443: i/o timeout 解决方式 arkctl 是作为 sofa-serverless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考安装 arkctl">
@@ -30,30 +30,30 @@ go: serverless.alipay.com/sofa-serverless/v1/arkctl@latest: module serverless.al
 <meta property="og:description" content="问题 1-1：模块 compile 引入 springboot 依赖，模块安装时报错 java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 模块需要做好瘦身，参考这里：模块瘦身
 问题 1-2：模块安装找不到 ServerlessApplicationListener 报错信息如下：
 com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SNAPSHOT : can not load class: com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 请在模块里面添加如下依赖：
-&lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/igroupId&gt; &lt;artifactId&gt;sofa-serverless-app-starter&lt;/artifactId&gt; &lt;version&gt;0.5.5&lt;/version&gt; &lt;/dependency&gt; 或者升级 sofa-serverless 版本到最新版本
+&lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/igroupId&gt; &lt;artifactId&gt;sofa-serverless-app-starter&lt;/artifactId&gt; &lt;version&gt;0.5.6&lt;/version&gt; &lt;/dependency&gt; 或者升级 sofa-serverless 版本到最新版本
 问题 1-3: 通过 go install 无法安装 arkctl 执行如下命令，报错
 go install serverless.alipay.com/sofa-serverless/v1/arkctl@latest 报错信息如下：
 go: serverless.alipay.com/sofa-serverless/v1/arkctl@latest: module serverless.alipay.com/sofa-serverless/v1/arkctl: Get &#34;https://proxy.golang.org/serverless.alipay.com/sofa-serverless/v1/arkctl/@v/list&#34;: dial tcp 142.251.42.241:443: i/o timeout 解决方式 arkctl 是作为 sofa-serverless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考安装 arkctl" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/faq/faq/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2023-12-22T12:27:20+08:00" />
+<meta property="article:modified_time" content="2024-01-04T15:55:32+08:00" />
 
 <meta itemprop="name" content="常见问题列表">
 <meta itemprop="description" content="问题 1-1：模块 compile 引入 springboot 依赖，模块安装时报错 java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 模块需要做好瘦身，参考这里：模块瘦身
 问题 1-2：模块安装找不到 ServerlessApplicationListener 报错信息如下：
 com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SNAPSHOT : can not load class: com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 请在模块里面添加如下依赖：
-&lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/igroupId&gt; &lt;artifactId&gt;sofa-serverless-app-starter&lt;/artifactId&gt; &lt;version&gt;0.5.5&lt;/version&gt; &lt;/dependency&gt; 或者升级 sofa-serverless 版本到最新版本
+&lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/igroupId&gt; &lt;artifactId&gt;sofa-serverless-app-starter&lt;/artifactId&gt; &lt;version&gt;0.5.6&lt;/version&gt; &lt;/dependency&gt; 或者升级 sofa-serverless 版本到最新版本
 问题 1-3: 通过 go install 无法安装 arkctl 执行如下命令，报错
 go install serverless.alipay.com/sofa-serverless/v1/arkctl@latest 报错信息如下：
 go: serverless.alipay.com/sofa-serverless/v1/arkctl@latest: module serverless.alipay.com/sofa-serverless/v1/arkctl: Get &#34;https://proxy.golang.org/serverless.alipay.com/sofa-serverless/v1/arkctl/@v/list&#34;: dial tcp 142.251.42.241:443: i/o timeout 解决方式 arkctl 是作为 sofa-serverless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考安装 arkctl">
-<meta itemprop="dateModified" content="2023-12-22T12:27:20+08:00" />
-<meta itemprop="wordCount" content="96">
+<meta itemprop="dateModified" content="2024-01-04T15:55:32+08:00" />
+<meta itemprop="wordCount" content="115">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="常见问题列表"/>
 <meta name="twitter:description" content="问题 1-1：模块 compile 引入 springboot 依赖，模块安装时报错 java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 模块需要做好瘦身，参考这里：模块瘦身
 问题 1-2：模块安装找不到 ServerlessApplicationListener 报错信息如下：
 com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SNAPSHOT : can not load class: com.alipay.sofa.serverless.common.spring.ServerlessApplicationListener 解决方式 请在模块里面添加如下依赖：
-&lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/igroupId&gt; &lt;artifactId&gt;sofa-serverless-app-starter&lt;/artifactId&gt; &lt;version&gt;0.5.5&lt;/version&gt; &lt;/dependency&gt; 或者升级 sofa-serverless 版本到最新版本
+&lt;dependency&gt; &lt;groupId&gt;com.alipay.sofa.serverless&lt;/igroupId&gt; &lt;artifactId&gt;sofa-serverless-app-starter&lt;/artifactId&gt; &lt;version&gt;0.5.6&lt;/version&gt; &lt;/dependency&gt; 或者升级 sofa-serverless 版本到最新版本
 问题 1-3: 通过 go install 无法安装 arkctl 执行如下命令，报错
 go install serverless.alipay.com/sofa-serverless/v1/arkctl@latest 报错信息如下：
 go: serverless.alipay.com/sofa-serverless/v1/arkctl@latest: module serverless.alipay.com/sofa-serverless/v1/arkctl: Get &#34;https://proxy.golang.org/serverless.alipay.com/sofa-serverless/v1/arkctl/@v/list&#34;: dial tcp 142.251.42.241:443: i/o timeout 解决方式 arkctl 是作为 sofa-serverless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考安装 arkctl"/>
@@ -321,7 +321,9 @@ if (!doNotTrack) {
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docscontribution-guidelinesruntime-li">
   <a href="/docs/contribution-guidelines/runtime/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id="m-docscontribution-guidelinesruntime"><span class="">多模块运行时适配或最佳实践</span></a>
   <ul class="ul-3 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogj42-li">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimemulti-app-padater-li">
+  <a href="/docs/contribution-guidelines/runtime/multi-app-padater/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimemulti-app-padater"><span class="">SOFAServerless 多应用治理补丁治理</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimelogj42-li">
   <a href="/docs/contribution-guidelines/runtime/logj42/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimelogj42"><span class="">log4j2 的多模块化适配</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontribution-guidelinesruntimeehcache-li">
   <a href="/docs/contribution-guidelines/runtime/ehcache/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontribution-guidelinesruntimeehcache"><span class="">ehcache 的多模块化最佳实践</span></a>
@@ -396,7 +398,7 @@ if (!doNotTrack) {
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/igroupId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-app-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>0.5.5<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>0.5.6<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
 </span></span></code></pre></div><p>或者升级 sofa-serverless 版本到最新版本</p>
 <h4 id="问题-1-3-通过-go-install-无法安装-arkctl">问题 1-3: 通过 go install 无法安装 arkctl</h4>
@@ -407,18 +409,28 @@ if (!doNotTrack) {
 </span></span></code></pre></div><h5 id="解决方式-2">解决方式</h5>
 <p>arkctl 是作为 sofa-serverless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考<a href="https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0">安装 arkctl</a></p>
 <h4 id="问题-1-4模块安装报-master-biz-environment-is-null">问题 1-4：模块安装报 <code>Master biz environment is null</code></h4>
-<p>解决方式，升级 sofa-serverless 版本到最新版本</p>
+<h5 id="解决方式升级-sofa-serverless-版本到最新版本">解决方式，升级 sofa-serverless 版本到最新版本</h5>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/igroupId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-app-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>${最新版本号}<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
 </span></span></code></pre></div><h4 id="问题-1-5模块静态合并部署无法从制定的目录里找到模块包">问题 1-5：模块静态合并部署无法从制定的目录里找到模块包</h4>
-<p>解决方式，升级 sofa-serverless 版本到最新版本</p>
+<h5 id="解决方式升级-sofa-serverless-版本到最新版本-1">解决方式：升级 sofa-serverless 版本到最新版本</h5>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.alipay.sofa.serverless<span style="color:#204a87;font-weight:bold">&lt;/igroupId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>sofa-serverless-app-starter<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>${最新版本号}<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><h4 id="问题-1-6用户工程与-sofaserverless-里-guice-版本不一致且版本较老">问题 1-6：用户工程与 SOFAServerless 里 guice 版本不一致，且版本较老</h4>
+<p>报错信息：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Caused by: java.Lang.ClassNotFoundException: com.google.inject.multibindings.Multibinder
+</span></span></code></pre></div><p><img src="imgs/guice_version_incompatibility.png" alt="guice_version_incompatibility.png"></p>
+<h5 id="解决方式升级-guice-版本到较新版本如">解决方式：升级 guice 版本到较新版本，如</h5>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;groupId&gt;</span>com.google.inject<span style="color:#204a87;font-weight:bold">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;artifactId&gt;</span>guice<span style="color:#204a87;font-weight:bold">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&lt;version&gt;</span>6.0.0<span style="color:#204a87;font-weight:bold">&lt;/version&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">&lt;/dependency&gt;</span>
 </span></span></code></pre></div>
 	<style>
@@ -483,7 +495,7 @@ if (!doNotTrack) {
 
 		<br />
 	<div class="text-muted mt-5 pt-3 border-top">
-  最后修改 December 22, 2023: <a href="https://github.com/sofastack/sofa-serverless/commit/a042f2199922945d8a30c8d137a06bb1239e6b3e">update docs (a042f219)</a>
+  最后修改 January 4, 2024: <a href="https://github.com/sofastack/sofa-serverless/commit/5bdb9915f30a9540263bca764a0d66fb020a8263">update to 0.5.6 (5bdb9915)</a>
 </div>
 
 </div>
@@ -530,7 +542,7 @@ if (!doNotTrack) {
         
       </div>
       <div class="td-footer__copyright-etc col-12 col-sm-4 text-center py-2 order-sm-2">
-        <span>&copy; 2023 SOFAServerless 开源社区 保留所有权利</span>
+        <span>&copy; 2024 SOFAServerless 开源社区 保留所有权利</span>
         
         
       </div>
