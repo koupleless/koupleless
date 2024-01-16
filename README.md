@@ -47,8 +47,8 @@ Koupleless 是蚂蚁集团内部经过4-5年打磨成熟的研发框架和运维
 
 |软件|群号|二维码|
 |-|-|-|
-| 钉钉群（推荐）| 24970018417 | |
-| QQ 群 | 813757901 | |
+| 钉钉群（推荐）| 24970018417 | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/7ba1db74-20c1-43a4-a2ab-d38c99a920cd"> |
+| QQ 群 | 813757901 | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/4445e3b3-dbc9-4761-a578-90c578e21954"> |
 
 ## 长期规划与愿景
 希望能将这些能力做的更加极致，更加开发，适用更多的场景，帮助更多的企业解决应用研发等的问题，帮助降本增效，也为中国绿色计算提供一套研发框架和解决方法。做到
@@ -57,3 +57,5 @@ Koupleless 是蚂蚁集团内部经过4-5年打磨成熟的研发框架和运维
 2. Pay as you need
 3. Deploy as you need
 4. Evolution as you need
+
+<img width="1069" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/17ebd41d-38c7-46e8-a4ba-b6b8bf8f76dd">
