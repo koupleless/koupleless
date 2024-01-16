@@ -17,7 +17,7 @@ weight: 600
 
 
 ## 调度策略
-可以为基座 K8S Pod Deployment 配置 Label "serverless.alipay.com/max-module-count"，指定每个 Pod 最多可以安装多少个模块。支持配置为 0 - N 的整数。模块支持打散调度和堆叠调度。<br />
+可以为基座 K8S Pod Deployment 配置 Label "koupleless.alipay.com/max-module-count"，指定每个 Pod 最多可以安装多少个模块。支持配置为 0 - N 的整数。模块支持打散调度和堆叠调度。<br />
 **打散调度**：设置 ModuleDeployment.spec.schedulingStrategy.schedulingPolicy 为 **scatter**。打散调度表示在模块上线、扩容、替换时，优先把模块调度到模块数最少的机器上去安装。<br />
 **堆叠调度**：设置 ModuleDeployment.spec.schedulingStrategy.schedulingPolicy 为 **stacking**。堆叠调度表示在模块上线、扩容、替换时，优先把模块调度到模块数最多且没达到基座 max-module-count 上限的机器上去安装。
 

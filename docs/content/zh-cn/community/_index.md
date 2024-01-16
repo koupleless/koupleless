@@ -137,7 +137,7 @@ menu: {main: {weight: 40}}
                                 <tspan x="0" y="25">学习和沟通</tspan>
                             </text>
                             <text id="正在或打算使用-SOFAServerle" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22">
-                                <tspan x="0" y="55">正在或打算使用 SOFAServerless ？</tspan>
+                                <tspan x="0" y="55">正在或打算使用 Koupleless ？</tspan>
                             </text>
                         </g>
                     </g>
@@ -154,12 +154,12 @@ menu: {main: {weight: 40}}
                     </text>
                     <g id="编组-6" transform="translate(52.000000, 183.000000)">
                         <text id="完成您的第一次提交，想了解如何为SOFA" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="16" font-weight="normal" line-spacing="24">
-                            <tspan x="99" y="17" fill="#FFFFFF" fill-opacity="0.65">完成您的第一次提交，想了解如何为SOFAServerless 做</tspan>
+                            <tspan x="99" y="17" fill="#FFFFFF" fill-opacity="0.65">完成您的第一次提交，想了解如何为 Koupleless 做</tspan>
                             <tspan x="0" y="41" fill="#FFFFFF" fill-opacity="0.65">出贡献，请参考我们的</tspan>
                             <a xlink:href="/docs/contribution-guidelines/contribution/first-pr/" target="_blank"><tspan x="160" y="41" fill="#0077FF">贡献指南</tspan></a>
                             <tspan x="224" y="41" fill="#FFFFFF" fill-opacity="0.65">。</tspan>
                         </text>
-                        <a xlink:href="https://github.com/sofastack/sofa-serverless/pulls" target="_blank">
+                        <a xlink:href="https://github.com/sofastack/koupleless/pulls" target="_blank">
                         <text id="点击此处" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="16" font-weight="normal" line-spacing="24" fill="#0077FF">
                             <tspan x="0" y="17">点击此处</tspan>
                         </text>
@@ -189,7 +189,7 @@ menu: {main: {weight: 40}}
                                 <tspan x="0" y="25">开发和贡献</tspan>
                             </text>
                             <text id="如果你想通过为-SOFAServerle" opacity="0.45" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="14" font-weight="normal" line-spacing="22">
-                                <tspan x="0" y="55">如果你想通过为 SOFAServerless 贡献更多</tspan>
+                                <tspan x="0" y="55">如果你想通过为 Koupleless 贡献更多</tspan>
                             </text>
                         </g>
                     </g>

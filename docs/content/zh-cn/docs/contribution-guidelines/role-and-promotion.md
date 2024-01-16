@@ -5,7 +5,7 @@ weight: 400
 ---
 
 ## 角色职责与晋升机制
-SOFAServerless 社区角色参考了 Apache 开源产品组织方式，SOFAArk、Arklet、ModuleController、ArkCtl 每个组件都有各自的角色。每个组件的角色职责从低到高分别是：**Contributor、Committer、PMC (Project Management Committee)、Maintainer**。<br/>
+Koupleless 社区角色参考了 Apache 开源产品组织方式，SOFAArk、Arklet、ModuleController、ArkCtl 每个组件都有各自的角色。每个组件的角色职责从低到高分别是：**Contributor、Committer、PMC (Project Management Committee)、Maintainer**。<br/>
 | 角色 | 责任与权限 | 晋升到更高角色机制 |
 | --- | --- | --- |
 | Contributor | 所有在社区提 **Issue**、回答 Issue、对外**运营**、提交**文档**内容或者提交任意**代码**的同学，都是相应组件的 **Contributor**。Contributor 拥有 Issue 提交、Issue 回复、官网或文档内容提交、代码提交（不包括代码评审）和对外发表文章权限。 | 当 Contributor 完成合并的代码或者文档内容足够多，就可以由该组件的 PMC 成员投票晋升为 Committer。当 Contributor 回答的 Issue 或者参与的运营活动足够多，也可以被 PMC 成员投票晋升为 Committer。 |

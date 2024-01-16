@@ -84,4 +84,4 @@ CacheManager 初始化的时候存在共用 static 变量，多应用使用相�
 
 
 ## 最佳实践的样例
-样例工程请[参考这里](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/cache/ehcache)
+样例工程请[参考这里](https://github.com/sofastack/koupleless/tree/master/samples/springboot-samples/cache/ehcache)

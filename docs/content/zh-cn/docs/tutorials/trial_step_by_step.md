@@ -5,13 +5,13 @@ weight: 501
 draft: false
 ---
 
-欢迎使用 **SOFAServerless 完成多 SpringBoot 应用合并部署与动态更新模块**！本文将详细介绍操作流程与方法，希望能够帮助大家节省资源、提高研发效率。
-首先，利用 SOFAServerless 完成合并部署与动态更新模块，适用于两种典型场景：
+欢迎使用 **Koupleless 完成多 SpringBoot 应用合并部署与动态更新模块**！本文将详细介绍操作流程与方法，希望能够帮助大家节省资源、提高研发效率。
+首先，利用 Koupleless 完成合并部署与动态更新模块，适用于两种典型场景：
 
 1. **合并部署**
 2. **中台应用**_（该场景需要先完成合并部署，再完成中台应用 demo)_
 
-> 本文实验工程代码在：[开源仓库 samples 目录库里](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/web/tomcat)
+> 本文实验工程代码在：[开源仓库 samples 目录库里](https://github.com/sofastack/koupleless/tree/master/samples/springboot-samples/web/tomcat)
 
 ## 场景一：合并部署
 先介绍第一个场景**多应用合并部署**，整体流程如下:
@@ -28,13 +28,13 @@ draft: false
 2. 在 **pom.xml **里增加必要的依赖
 ```xml
 <properties>
-    <sofa.serverless.runtime.version>0.5.6</sofa.serverless.runtime.version>
+    <koupleless.runtime.version>0.5.6</koupleless.runtime.version>
 </properties>
 <dependencies>
     <dependency>
-        <groupId>com.alipay.sofa.serverless</groupId>
-        <artifactId>sofa-serverless-base-starter</artifactId>
-        <version>${sofa.serverless.runtime.version}</version>
+        <groupId>com.alipay.koupleless</groupId>
+        <artifactId>koupleless-base-starter</artifactId>
+        <version>${koupleless.runtime.version}</version>
     </dependency>
 </dependencies>
 ```
@@ -73,7 +73,7 @@ draft: false
             <bizName>${替换为模块名}</bizName>
             <webContextPath>${模块自定义的 web context path，需要与其他模块不同}</webContextPath>
             <declaredMode>true</declaredMode>
-            <!--  配置模块自动排包列表，从 github 下载 rules.txt，并放在模块根目录的 conf/ark/ 目录下，下载地址：https://github.com/sofastack/sofa-serverless/blob/master/samples/springboot-samples/slimming/log4j2/biz1/conf/ark/rules.txt  -->
+            <!--  配置模块自动排包列表，从 github 下载 rules.txt，并放在模块根目录的 conf/ark/ 目录下，下载地址：https://github.com/sofastack/koupleless/blob/master/samples/springboot-samples/slimming/log4j2/biz1/conf/ark/rules.txt  -->
             <packExcludesConfig>rules.txt</packExcludesConfig>
         </configuration>
     </plugin>
@@ -86,7 +86,7 @@ draft: false
 </plugins>
 ```
 
-2. 参考官网模块瘦身里[自动排包部分](https://sofaserverless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB)，下载排包配置文件 **rules.txt**，放在在 **conf/ark/** 目录下
+2. 参考官网模块瘦身里[自动排包部分](https://koupleless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB)，下载排包配置文件 **rules.txt**，放在在 **conf/ark/** 目录下
 
 3. 开发模块，例如增加 Rest Controller，提供 Rest 接口
 ```json
@@ -106,7 +106,7 @@ public class SampleController {
 }
 ```
 
-4. [点击这里下载 Arkctl](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0)，mac/linux 电脑放入 `**/usr/local/bin**` 目录中，windows 可以考虑直接放在项目根目录下
+4. [点击这里下载 Arkctl](https://github.com/sofastack/koupleless/releases/tag/arkctl-release-0.1.0)，mac/linux 电脑放入 `**/usr/local/bin**` 目录中，windows 可以考虑直接放在项目根目录下
 
 5. 执行 `arkctl deploy` 构建部署，成功后 `curl localhost:8080/${模块1 web context path}/` 验证服务返回。显示正常，进入下一步。
 ```
@@ -227,12 +227,12 @@ public class StrategyServiceImpl implements StrategyService {
 更改排序后的 products 列表
 ```
 
-基于上述操作，就可以继续进行上文中模块 [**开发与验证**](https://sofaserverless.gitee.io/docs/tutorials/trial_step_by_step/) 的操作了。整体流程丝滑易上手，欢迎试用！
+基于上述操作，就可以继续进行上文中模块 [**开发与验证**](https://koupleless.gitee.io/docs/tutorials/trial_step_by_step/) 的操作了。整体流程丝滑易上手，欢迎试用！
 
 ## 文档中的链接地址
 
-1. 本实验工程样例地址：[https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/web/tomcat](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/web/tomcat)
+1. 本实验工程样例地址：[https://github.com/sofastack/koupleless/tree/master/samples/springboot-samples/web/tomcat](https://github.com/sofastack/koupleless/tree/master/samples/springboot-samples/web/tomcat)
 2. `web-ark-plugin` 原理： [https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)
-3. 自动排包原理与配置文件下载：[https://sofaserverless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB](https://sofaserverless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB)
-4. Arkctl 下载地址：[https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0](https://github.com/sofastack/sofa-serverless/releases/tag/arkctl-release-0.1.0)
-5. 本文档地址：[https://sofaserverless.gitee.io/docs/tutorials/trial_step_by_step/](https://sofaserverless.gitee.io/docs/tutorials/trial_step_by_step/)
+3. 自动排包原理与配置文件下载：[https://koupleless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB](https://koupleless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB)
+4. Arkctl 下载地址：[https://github.com/sofastack/koupleless/releases/tag/arkctl-release-0.1.0](https://github.com/sofastack/koupleless/releases/tag/arkctl-release-0.1.0)
+5. 本文档地址：[https://koupleless.gitee.io/docs/tutorials/trial_step_by_step/](https://koupleless.gitee.io/docs/tutorials/trial_step_by_step/)

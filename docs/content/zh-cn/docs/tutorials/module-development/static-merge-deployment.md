@@ -63,7 +63,7 @@ biz -a
 ```
 
 此时应当可以看到 Master Biz（基座）和所有静态合并部署的 Ark Biz（模块）。<br/>
-上述操作可以通过 [SOFAArk 静态合并部署样例](https://github.com/sofastack/sofa-serverless/blob/master/samples/springboot-samples/web/tomcat/README.md#%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9(%E9%9D%99%E6%80%81%E5%90%88%E5%B9%B6%E9%83%A8%E7%BD%B2))
+上述操作可以通过 [SOFAArk 静态合并部署样例](https://github.com/koupleless/koupleless/blob/master/samples/springboot-samples/web/tomcat/README.md#%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9(%E9%9D%99%E6%80%81%E5%90%88%E5%B9%B6%E9%83%A8%E7%BD%B2))
 体验。<br/>
 
 <br/>

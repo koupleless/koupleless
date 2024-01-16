@@ -21,15 +21,15 @@ spring.application.name = ${替换为实际基座应用名}
 ```xml
 <properties>
     <sofa.ark.verion>2.2.6</sofa.ark.verion>
-    <sofa.serverless.runtime.version>0.5.6</sofa.serverless.runtime.version>
+    <koupleless.runtime.version>0.5.6</koupleless.runtime.version>
 </properties>
 ```
 
 ```xml
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-base-starter</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <groupId>com.alipay.koupleless</groupId>
+    <artifactId>koupleless-base-starter</artifactId>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 
 <!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ -->
