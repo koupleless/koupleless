@@ -8,7 +8,7 @@ K8S 通过 [Service](https://kubernetes.io/docs/concepts/services-networking/ser
 模块也支持 Module 相关的 Service ，在模块发布时自动创建一个 service 来服务模块，将安装在一个或一组 Pod 的模块公开为网络服务。
 具体见：OperationStrategy.ServiceStrategy
 ```yaml
-apiVersion: serverless.alipay.com/v1alpha1
+apiVersion: koupleless.alipay.com/v1alpha1
 kind: ModuleDeployment
 metadata:
   labels:
@@ -25,7 +25,7 @@ spec:
       module:
         name: provider
         version: '1.0.2'
-        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
+        url: http://koupleless.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
   replicas: 1
   operationStrategy:
     needConfirm: false
@@ -51,7 +51,7 @@ OperationStrategy.ServiceStrategy 字段解释如下：
 
 ## 示例
 ```bash
-kubectl apply -f sofa-serverless/module-controller/config/samples/module-deployment_v1alpha1_moduledeployment_provider.yaml --namespace yournamespace
+kubectl apply -f koupleless/module-controller/config/samples/module-deployment_v1alpha1_moduledeployment_provider.yaml --namespace yournamespace
 ```
 自动创建的模块的 service
 ```yaml
@@ -79,7 +79,7 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    module.serverless.alipay.com/dynamic-provider: "true"
+    module.koupleless.alipay.com/dynamic-provider: "true"
   sessionAffinity: None
   type: NodePort
 status:

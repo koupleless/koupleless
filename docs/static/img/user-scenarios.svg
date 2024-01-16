@@ -174,8 +174,8 @@
                     <text id="SDK-升级繁琐" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                         <tspan x="117" y="145">SDK 升级繁琐</tspan>
                     </text>
-                    <text id="借助-SOFAServerless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
-                        <tspan x="71.629" y="179">借助 SOFAServerless 将应用依赖尽可</tspan>
+                    <text id="借助-Koupleless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                        <tspan x="71.629" y="179">借助 Koupleless 将应用依赖尽可</tspan>
                         <tspan x="73.176" y="203">能下沉到基座 (类似业务 Sidecar)，可</tspan>
                         <tspan x="109.142" y="227">以实现 SDK 的无打扰升级</tspan>
                     </text>
@@ -203,8 +203,8 @@
                 <text id="高昂的长尾应用资源开销" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                     <tspan x="61" y="145">高昂的长尾应用资源开销</tspan>
                 </text>
-                <text id="通过-SOFAServerless-将多" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
-                    <tspan x="71.629" y="179">通过 SOFAServerless 将多个应用合并</tspan>
+                <text id="通过-Koupleless-将多" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                    <tspan x="71.629" y="179">通过 Koupleless 将多个应用合并</tspan>
                     <tspan x="72" y="203">部署在一起，可以实现大量的长尾应用</tspan>
                     <tspan x="156" y="227">服务器裁撤</tspan>
                 </text>
@@ -227,8 +227,8 @@
                 <text id="应用研发协作效率低下" opacity="0.95" font-family="AlibabaPuHuiTiM, Alibaba PuHuiTi" font-size="24" font-weight="400" line-spacing="32" fill="#FFFFFF">
                     <tspan x="72" y="145">应用研发协作效率低下</tspan>
                 </text>
-                <text id="通过-SOFAServerless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
-                    <tspan x="64.629" y="179">通过 SOFAServerless 将应用快速划分成</tspan>
+                <text id="通过-Koupleless-将应" opacity="0.5" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="24" fill="#FFFFFF">
+                    <tspan x="64.629" y="179">通过 Koupleless 将应用快速划分成</tspan>
                     <tspan x="65.007" y="203">多个模块 (代码包)，且多个模块间可以同</tspan>
                     <tspan x="65" y="227">时迭代互不影响，进而大幅提升研发效率</tspan>
                 </text>

@@ -7,7 +7,7 @@ weight: 600
 强烈建议使用本文档方式，在模块中尽可能**复用基座数据源**，否则模块反复部署就会反复创建、消耗数据源连接，导致模块发布运维会变慢，同时也会额外消耗内存。<br/>
 
 ## SpringBoot 解法
-在模块的代码中写个 MybatisConfig 类即可，这样事务模板都是复用基座的，只有 Mybatis 的 SqlSessionFactoryBean 需要新创建。<br /> 参考 demo：/sofa-serverless/samples/springboot-samples/db/mybatis/biz1
+在模块的代码中写个 MybatisConfig 类即可，这样事务模板都是复用基座的，只有 Mybatis 的 SqlSessionFactoryBean 需要新创建。<br /> 参考 demo：/koupleless/samples/springboot-samples/db/mybatis/biz1
 
 通过`SpringBeanFinder.getBaseBean`获取到基座的 Bean 对象，然后注册成模块的 Bean：
 
@@ -50,14 +50,14 @@ public class MybatisConfig {
 ```java
 
 @Configuration
-@MapperScan(basePackages = "com.alipay.serverless.dal.dao", sqlSessionFactoryRef = "mysqlSqlFactory")
+@MapperScan(basePackages = "com.alipay.koupleless.dal.dao", sqlSessionFactoryRef = "mysqlSqlFactory")
 @EnableTransactionManagement
 public class MybatisConfig {
 
     // 注意：不要初始化一个基座的 DataSource，会导致模块被热卸载的时候，基座的数据源被销毁，不符合预期。
     // 但是 transactionManager，transactionTemplate，mysqlSqlFactory 这些资源被销毁没有问题
     
-    private static final String BASE_DAL_BUNDLE_NAME = "com.alipay.serverless.dal"
+    private static final String BASE_DAL_BUNDLE_NAME = "com.alipay.koupleless.dal"
 
     @Bean(name = "transactionManager")
     public PlatformTransactionManager platformTransactionManager() {

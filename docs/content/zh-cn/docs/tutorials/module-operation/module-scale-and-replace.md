@@ -7,11 +7,11 @@ weight: 400
 ## 模块扩缩容
 修改 ModuleDeployment CR 的 replicas 字段并重新 apply，即可实现模块扩缩容，例如：
 ```bash
-kubectl apply -f sofa-serverless/module-controller/config/samples/module-deployment_v1alpha1_moduledeployment.yaml --namespace yournamespace
+kubectl apply -f koupleless/module-controller/config/samples/module-deployment_v1alpha1_moduledeployment.yaml --namespace yournamespace
 ```
 其中 _deployment_v1alpha1_moduledeployment.yaml_ 替换成您的 ModuleDeployment 定义 yaml 文件，_yournamespace_ 替换成您的 namespace。module-deployment_v1alpha1_moduledeployment.yaml 完整内容如下：
 ```yaml
-apiVersion: serverless.alipay.com/v1alpha1
+apiVersion: koupleless.alipay.com/v1alpha1
 kind: ModuleDeployment
 metadata:
   labels:
@@ -28,7 +28,7 @@ spec:
       module:
         name: provider
         version: '1.0.2'
-        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
+        url: http://koupleless.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
   replicas: 2  # 注意：在此处修改模块实例 Module 副本数，实现扩缩容
   operationStrategy:
     upgradePolicy: installThenUninstall

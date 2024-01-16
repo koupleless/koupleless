@@ -1,12 +1,12 @@
 {
-  "name": "SOFAServerless",
-  "version": "0.8.0",
-  "description": "SOFAServerless is a modularization application architecture patterns for company business rapid development, operation, evolution and cooperation with low cost.",
-  "repository": "https://github.com/sofastack/sofa-serverless",
-  "homepage": "https://sofaserverless.netlify.app/",
+  "name": "Koupleless",
+  "version": "1.0",
+  "description": "Koupleless is a modularization application architecture patterns for company business rapid development, operation, evolution and cooperation with low cost.",
+  "repository": "https://github.com/koupleless/koupleless",
+  "homepage": "https://koupleless.netlify.app/",
   "author": "lvjing2 lylingzhen",
   "license": "Apache-2.0",
-  "bugs": "https://github.com/sofastack/sofa-serverless/issues",
+  "bugs": "https://github.com/koupleless/koupleless/issues",
   "spelling": "cSpell:ignore HTMLTEST precheck postbuild -",
   "scripts": {
     "_build": "npm run _hugo-dev",

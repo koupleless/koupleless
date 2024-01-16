@@ -7,12 +7,12 @@ weight: 200
 
 合并部署是指：选定一个应用作为底座，然后将多个其它应用合并部署到这个底座之上，从而实现长尾应用的极致资源降本。典型业务场景为应用的低成本交付 以及 微服务过度拆分一键重新合并。
 
-1. 选定一个应用作为底座（SOFAServerless 术语叫**基座**），将普通应用[一键升级为基座](/docs/tutorials/base-create/springboot-and-sofaboot/)。
-2. 选定一个应用作为上层应用（SOFAServerless 术语叫**模块**），将其[一键转为模块应用并完成合并部署](/docs/tutorials/module-create/springboot-and-sofaboot/)。
+1. 选定一个应用作为底座（Koupleless 术语叫**基座**），将普通应用[一键升级为基座](/docs/tutorials/base-create/springboot-and-sofaboot/)。
+2. 选定一个应用作为上层应用（Koupleless 术语叫**模块**），将其[一键转为模块应用并完成合并部署](/docs/tutorials/module-create/springboot-and-sofaboot/)。
 <br/>
-您也可以直接使用 [官方 Demo 和文档](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/service) 在本地完成实验。 
+您也可以直接使用 [官方 Demo 和文档](https://github.com/sofastack/koupleless/tree/master/samples/springboot-samples/service) 在本地完成实验。 
 
-小贴士：无论**基座**还是**模块**，接入 SOFAServerless 后，同一套代码分支既能像原来一样独立启动，又能做到合并部署。
+小贴士：无论**基座**还是**模块**，接入 Koupleless 后，同一套代码分支既能像原来一样独立启动，又能做到合并部署。
 
 <br/>
 <br/>
@@ -23,8 +23,8 @@ weight: 200
 ## 步骤 1：本地软件安装
 下载安装 **go**（建议 1.20 或以上）、**docker**、**minikube**、**kubectl**。
 
-## 步骤 2：一键启动 SOFAServerless
-使用 **git** 拉取 GitHub sofa-severless 项目：[https://github.com/sofastack/sofa-serverless](https://github.com/sofastack/sofa-serverless) <br />在 **module-controller** 目录下执行 **make dev** 命令一键部署环境，会自动执行 minikube service 命令弹出网页，由于此时您还没有发布模块，所以网页不会有任何内容显示。
+## 步骤 2：一键启动 Koupleless
+使用 **git** 拉取 GitHub Koupleless 项目：[https://github.com/sofastack/koupleless](https://github.com/sofastack/koupleless) <br />在 **module-controller** 目录下执行 **make dev** 命令一键部署环境，会自动执行 minikube service 命令弹出网页，由于此时您还没有发布模块，所以网页不会有任何内容显示。
 
 ## 步骤 3：秒级发布模块
 执行以下命令：
@@ -39,6 +39,6 @@ kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_prov
 <br/>
 <br/>
 
-# 欢迎大家学习 SOFAServerless 视频教程
+# 欢迎大家学习 Koupleless 视频教程
 
-[点击此处](/docs/tutorials/video-training)查看 SOFAServerless 平台与研发框架视频培训教程。
+[点击此处](/docs/tutorials/video-training)查看 Koupleless 平台与研发框架视频培训教程。

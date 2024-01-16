@@ -10,7 +10,7 @@ Arklet 为 SofaArk 基础和模块的交付提供了一个操作接口。有了 
 
 Arklet 是由 **ArkletComponent** 内部构建的
 
-![image](https://github.com/sofastack/sofa-serverless/assets/11410549/a2740422-569e-4dd3-9c9a-1503996bd2f1)
+![image](https://github.com/sofastack/koupleless/assets/11410549/a2740422-569e-4dd3-9c9a-1503996bd2f1)
 - ApiClient: 负责与外界交互的核心组件
 - CommandService: Arklet 对外暴露能力指令定义和扩展
 - OperationService: Ark Biz 与 SofaArk 交互，进行添加、删除、修改和封装基本能力
@@ -33,7 +33,7 @@ Arklet 外部公开了指令 API，并通过每个 API 映射的 CommandHandler 
 以下所有的指令 api 都使用 POST(application/json) 请求格式访问 arklet
 
 启用了 http 协议，默认端口是 1238
-> 您可以设置 `sofa.serverless.arklet.http.port` JVM 启动参数覆盖默认端口
+> 您可以设置 `koupleless.arklet.http.port` JVM 启动参数覆盖默认端口
 
 
 ## 查询支持的命令

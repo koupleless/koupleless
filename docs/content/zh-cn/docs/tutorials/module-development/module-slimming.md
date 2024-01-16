@@ -18,7 +18,7 @@ weight: 200
 
 ### 步骤一
 
-在「模块项目根目录/conf/ark/文件名.txt」中（比如：my-module/conf/ark/rules.txt），按照如下格式配置需要下沉到基座的框架和中间件常用包。您也可以直接复制[默认的 rules.txt 文件内容](https://github.com/sofastack/sofa-serverless/blob/module-slimming/samples/springboot-samples/slimming/log4j2/biz1/conf/ark/rules.txt)到您的项目中。
+在「模块项目根目录/conf/ark/文件名.txt」中（比如：my-module/conf/ark/rules.txt），按照如下格式配置需要下沉到基座的框架和中间件常用包。您也可以直接复制[默认的 rules.txt 文件内容](https://github.com/sofastack/koupleless/blob/module-slimming/samples/springboot-samples/slimming/log4j2/biz1/conf/ark/rules.txt)到您的项目中。
 
 ```xml
 excludeGroupIds=org.apache*
@@ -63,11 +63,11 @@ excludeArtifactIds=commons-lang
 
 打包构建出模块 ark-biz jar 包即可，您可以明显看出瘦身后的 ark-biz jar 包大小差异。
 
-您可[点击此处](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/slimming)查看完整模块瘦身样例工程。您也可以阅读下文继续了解模块的瘦身原理。
+您可[点击此处](https://github.com/sofastack/koupleless/tree/master/samples/springboot-samples/slimming)查看完整模块瘦身样例工程。您也可以阅读下文继续了解模块的瘦身原理。
 
 
 ## 基本原理
-SOFAServerless 底层借助 SOFAArk 框架，实现了模块之间、模块和基座之间的相互隔离，以下两个核心逻辑对编码非常重要，需要深刻理解：
+Koupleless 底层借助 SOFAArk 框架，实现了模块之间、模块和基座之间的相互隔离，以下两个核心逻辑对编码非常重要，需要深刻理解：
 
 1. 基座有独立的类加载器和 Spring 上下文，模块也有**独立的类加载器**和** Spring 上下文**，相互之间 Spring 上下文都是**隔离的**。
 2. 模块启动时会初始化各种对象，会**优先使用模块的类加载器**去加载构建产物 FatJar 中的 class、resource 和 Jar 包，**找不到的类会委托基座的类加载器**去查找。
@@ -87,7 +87,7 @@ SOFAServerless 底层借助 SOFAArk 框架，实现了模块之间、模块和�
 有些依赖引入了过多的间接依赖，手动排查比较困难，此时可以通过通配符匹配，把那些中间件、基座的依赖全部剔除掉，如 org.apache.commons、org.springframework 等等，这种方式会把间接依赖都排除掉，相比使用 sofa-ark-maven-plugin 排包效率会更高：
 ```xml
 <dependency>
-    <groupId>com.serverless.mymodule</groupId>
+    <groupId>com.koupleless.mymodule</groupId>
     <artifactId>mymodule-core</artifactId>
     <exclusions>
           <exclusion>

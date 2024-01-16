@@ -7,11 +7,11 @@ weight: 100
 ## 模块上线
 在 K8S 集群中创建一个 ModuleDeployment CR 资源即可完成模块上线，例如：
 ```bash
-kubectl apply -f sofa-serverless/module-controller/config/samples/module-deployment_v1alpha1_moduledeployment.yaml --namespace yournamespace
+kubectl apply -f koupleless/module-controller/config/samples/module-deployment_v1alpha1_moduledeployment.yaml --namespace yournamespace
 ```
 其中 _deployment_v1alpha1_moduledeployment.yaml_ 替换成您的 ModuleDeployment 定义 yaml 文件，_yournamespace_ 替换成您的 namespace。module-deployment_v1alpha1_moduledeployment.yaml 完整内容如下：
 ```yaml
-apiVersion: serverless.alipay.com/v1alpha1
+apiVersion: koupleless.alipay.com/v1alpha1
 kind: ModuleDeployment
 metadata:
   labels:
@@ -28,7 +28,7 @@ spec:
       module:
         name: provider
         version: '1.0.2'
-        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
+        url: http://koupleless.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
   replicas: 2
   operationStrategy:  # 此处可自定义发布运维策略
     upgradePolicy: installThenUninstall

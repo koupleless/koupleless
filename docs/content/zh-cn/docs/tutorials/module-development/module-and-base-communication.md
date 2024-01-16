@@ -12,8 +12,8 @@ weight: 300
 
 ```xml
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-app-starter</artifactId>
+    <groupId>com.alipay.koupleless</groupId>
+    <artifactId>koupleless-app-starter</artifactId>
     <version>0.5.6</version>
     <scope>provided</scope>
 </dependency>
@@ -175,7 +175,7 @@ public class SampleController {
 }
 ```
 
-[完整样例](https://github.com/sofastack/sofa-serverless/tree/master/samples)
+[完整样例](https://github.com/sofastack/koupleless/tree/master/samples)
 
 # SOFABoot 环境
 

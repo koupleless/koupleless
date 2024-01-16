@@ -7,11 +7,11 @@ weight: 200
 ## 模块发布
 修改 ModuleDeployment.spec.template.spec.module.version 字段和 ModuleDeployment.spec.template.spec.module.url（可选）字段并重新 apply，即可实现新版本模块的分组发布，例如：
 ```bash
-kubectl apply -f sofa-serverless/module-controller/config/samples/module-deployment_v1alpha1_moduledeployment.yaml --namespace yournamespace
+kubectl apply -f koupleless/module-controller/config/samples/module-deployment_v1alpha1_moduledeployment.yaml --namespace yournamespace
 ```
 其中 _deployment_v1alpha1_moduledeployment.yaml_ 替换成您的 ModuleDeployment 定义 yaml 文件，_yournamespace_ 替换成您的 namespace。module-deployment_v1alpha1_moduledeployment.yaml 完整内容如下：
 ```yaml
-apiVersion: serverless.alipay.com/v1alpha1
+apiVersion: koupleless.alipay.com/v1alpha1
 kind: ModuleDeployment
 metadata:
   labels:
@@ -29,7 +29,7 @@ spec:
         name: provider
         version: '2.0.0'  # 注意：这里将 version 字段从 1.0.2 修改为了 2.0.0 即可实现模块新版本分组发布
         # 注意：url 字段可以修改为新的 jar 包地址，也可以不用修改
-        url: http://serverless-opensource.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
+        url: http://koupleless.oss-cn-shanghai.aliyuncs.com/module-packages/stable/dynamic-provider-1.0.2-ark-biz.jar
   replicas: 2
   operationStrategy:
     upgradePolicy: install_then_uninstall

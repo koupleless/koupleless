@@ -1,5 +1,5 @@
 baseURL = ""
-title = "SOFAServerless"
+title = "Koupleless"
 
 # Language settings
 contentDir = "content/zh-cn"
@@ -65,14 +65,14 @@ anchor = "smart"
 # Weight used for sorting.
 #weight = 1
 #[languages.en.params]
-#title = "SOFAServerless"
-#description = "SOFAServerless Web Site"
+#title = "Koupleless"
+#description = "Koupleless Web Site"
 
 [languages.zh-cn]
 languageName ="中文"
 [languages.no.params]
-title = "SOFAServerless"
-description = "SOFAServerless 官网"
+title = "Koupleless"
+description = "Koupleless 官网"
 time_format_default = "2006.02.01"
 time_format_blog = "2006.02.01"
 
@@ -95,7 +95,7 @@ time_format_blog = "2006.02.01"
 section = ["HTML", "print"]
 
 [params]
-copyright = "SOFAServerless 开源社区"
+copyright = "Koupleless 开源社区"
 customcss = ["/search/pagefind-ui.css"]
 customjs = ["/search/pagefind-ui.js", "/js/init.js"]
 disableGtagForUniversalAnalytics = true
@@ -122,9 +122,9 @@ version = "0.6.0"
 url_latest_version = "/docs"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
-github_repo = "https://github.com/sofastack/sofa-serverless"
+github_repo = "https://github.com/koupleless/koupleless"
 # An optional link to a related project repo. For example, the sibling repository where your product code lives.
-#github_project_repo = "https://github.com/sofastack/sofa-serverless"
+#github_project_repo = "https://github.com/koupleless/koupleless"
 
 # Specify a value here if your content directory is not in your repo's root directory
 github_subdir = "docs"
@@ -167,8 +167,8 @@ sidebar_search_disable = false
 [params.ui.feedback]
 enable = true
 # The responses that the user sees after clicking "yes" (the page was helpful) or "no" (the page was not helpful).
-yes = '很高兴文档对您有帮助! 欢迎<a href="https://github.com/sofastack/sofa-serverless/issues/new?assignees=&labels=&projects=&template=feature_request.md">为社区提建议</a>。'
-no = '很抱歉文档对您没帮助。邀请您<a href="https://github.com/sofastack/sofa-serverless/issues/new?assignees=&labels=&projects=&template=feature_request.md">为文档提建议</a>或者<a href="https://github.com/sofastack/sofa-serverless/tree/master/user-docs/content/zh-cn">直接完善该文档</a>。'
+yes = '很高兴文档对您有帮助! 欢迎<a href="https://github.com/koupleless/koupleless/issues/new?assignees=&labels=&projects=&template=feature_request.md">为社区提建议</a>。'
+no = '很抱歉文档对您没帮助。邀请您<a href="https://github.com/koupleless/koupleless/issues/new?assignees=&labels=&projects=&template=feature_request.md">为文档提建议</a>或者<a href="https://github.com/koupleless/koupleless/tree/master/user-docs/content/zh-cn">直接完善该文档</a>。'
 max_value = 1
 
 # Adds a reading time to the top of each doc.
