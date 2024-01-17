@@ -198,5 +198,4 @@ public class MultiBizPropertiesTest {
         Assert.assertEquals(properties.computeIfAbsent(key3, k -> value1), value1);
         Assert.assertEquals(properties.computeIfPresent(key3, (k, v) -> v + value2), value1 + value2);
     }
-
 }
