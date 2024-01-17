@@ -22,7 +22,7 @@ draft: true
 2. K8S 集群环境开发验证
 
 ### 本地环境开发验证
-1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/sofastack/koupleless/releases/tag/arkctl-release-0.1.0) , 并放入 `/usr/local/bin` 目录中
+1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.0) , 并放入 `/usr/local/bin` 目录中
 2. 在基座和模块已经改造完成后，启动好基座后，可以使用 arkctl 快速完成构建与部署，将模块部署到基座中
 ```shell
 arkctl deploy ${模块构建出的 jar 包路径}
@@ -30,7 +30,7 @@ arkctl deploy ${模块构建出的 jar 包路径}
 ### K8S 集群环境开发验证, 以 minikube 集群为例
 #### 基座发布
 1. 基座构建成镜像，推送到镜像中心
-2. 基座部署到 k8s 集群中，创建基座的 service，暴露端口, 可[参考这里](https://github.com/sofastack/koupleless/blob/master/module-controller/config/samples/dynamic-stock-service.yaml)
+2. 基座部署到 k8s 集群中，创建基座的 service，暴露端口, 可[参考这里](https://github.com/koupleless/koupleless/blob/master/module-controller/config/samples/dynamic-stock-service.yaml)
 3. 执行 minikube service base-web-single-host-service, 访问基座的服务
 
 #### 模块发布
@@ -46,4 +46,4 @@ arkctl deploy ${模块构建出的 jar 包路径} --pod ${namespace}/${podname}
 
 ## 更多实验请查看 samples 用例
 
-[点击此处](https://github.com/sofastack/koupleless/tree/master/samples)
+[点击此处](https://github.com/koupleless/koupleless/tree/master/samples)

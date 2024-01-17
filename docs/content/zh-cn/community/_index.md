@@ -159,7 +159,7 @@ menu: {main: {weight: 40}}
                             <a xlink:href="/docs/contribution-guidelines/contribution/first-pr/" target="_blank"><tspan x="160" y="41" fill="#0077FF">贡献指南</tspan></a>
                             <tspan x="224" y="41" fill="#FFFFFF" fill-opacity="0.65">。</tspan>
                         </text>
-                        <a xlink:href="https://github.com/sofastack/koupleless/pulls" target="_blank">
+                        <a xlink:href="https://github.com/koupleless/koupleless/pulls" target="_blank">
                         <text id="点击此处" font-family="PingFangSC-Regular, PingFang SC, Microsoft Yahei" font-size="16" font-weight="normal" line-spacing="24" fill="#0077FF">
                             <tspan x="0" y="17">点击此处</tspan>
                         </text>

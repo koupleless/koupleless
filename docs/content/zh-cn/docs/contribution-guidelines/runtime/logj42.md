@@ -60,5 +60,5 @@ weight: 1
    b. 日志配置时，只能使用 ctx:xxx:xxx 的配置方式
 
 ## 模块改造方式
-[详细查看源码](https://github.com/sofastack/koupleless/tree/master/koupleless-runtime/koupleless-adapter-ext/koupleless-adapter-log4j2/src/main/java/com/alipay/sofa/koupleless/log4j2)
+[详细查看源码](https://github.com/koupleless/koupleless/tree/master/koupleless-runtime/koupleless-adapter-ext/koupleless-adapter-log4j2/src/main/java/com/alipay/sofa/koupleless/log4j2)
 

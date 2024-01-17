@@ -36,7 +36,7 @@ go install koupleless.alipay.com/koupleless/v1/arkctl@latest
 go: koupleless.alipay.com/koupleless/v1/arkctl@latest: module koupleless.alipay.com/koupleless/v1/arkctl: Get "https://proxy.golang.org/koupleless.alipay.com/koupleless/v1/arkctl/@v/list": dial tcp 142.251.42.241:443: i/o timeout
 ```
 ##### 解决方式
-arkctl 是作为 koupleless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考[安装 arkctl](https://github.com/sofastack/koupleless/releases/tag/arkctl-release-0.1.0)
+arkctl 是作为 koupleless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考[安装 arkctl](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.0)
 
 #### 问题 1-4：模块安装报 `Master biz environment is null`
 

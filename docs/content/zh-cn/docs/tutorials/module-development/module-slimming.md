@@ -18,7 +18,7 @@ weight: 200
 
 ### 步骤一
 
-在「模块项目根目录/conf/ark/文件名.txt」中（比如：my-module/conf/ark/rules.txt），按照如下格式配置需要下沉到基座的框架和中间件常用包。您也可以直接复制[默认的 rules.txt 文件内容](https://github.com/sofastack/koupleless/blob/module-slimming/samples/springboot-samples/slimming/log4j2/biz1/conf/ark/rules.txt)到您的项目中。
+在「模块项目根目录/conf/ark/文件名.txt」中（比如：my-module/conf/ark/rules.txt），按照如下格式配置需要下沉到基座的框架和中间件常用包。您也可以直接复制[默认的 rules.txt 文件内容](https://github.com/koupleless/koupleless/blob/module-slimming/samples/springboot-samples/slimming/log4j2/biz1/conf/ark/rules.txt)到您的项目中。
 
 ```xml
 excludeGroupIds=org.apache*
@@ -63,7 +63,7 @@ excludeArtifactIds=commons-lang
 
 打包构建出模块 ark-biz jar 包即可，您可以明显看出瘦身后的 ark-biz jar 包大小差异。
 
-您可[点击此处](https://github.com/sofastack/koupleless/tree/master/samples/springboot-samples/slimming)查看完整模块瘦身样例工程。您也可以阅读下文继续了解模块的瘦身原理。
+您可[点击此处](https://github.com/koupleless/koupleless/tree/master/samples/springboot-samples/slimming)查看完整模块瘦身样例工程。您也可以阅读下文继续了解模块的瘦身原理。
 
 
 ## 基本原理

@@ -175,7 +175,7 @@ public class SampleController {
 }
 ```
 
-[完整样例](https://github.com/sofastack/koupleless/tree/master/samples)
+[完整样例](https://github.com/koupleless/koupleless/tree/master/samples)
 
 # SOFABoot 环境
 

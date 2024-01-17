@@ -5,7 +5,7 @@ weight: 200
 ---
 
 ## 认领或提交 Issue
-不论您是修复 bug、新增功能或者改进现有功能，在您提交代码之前，请在 [Koupleless](https://github.com/sofastack/koupleless) 或 [SOFAArk](https://github.com/sofastack/sofa-ark) GitHub 上认领一个 Issue 并将 Assignee 指定为自己（新人建议认领 <b>good-first-issue</b> 标签的新手任务）。或者提交一个新的 Issue，描述您要修复的问题或者要增加、改进的功能。这样做的好处是能避免与其他人的**工作重复**。
+不论您是修复 bug、新增功能或者改进现有功能，在您提交代码之前，请在 [Koupleless](https://github.com/koupleless/koupleless) 或 [SOFAArk](https://github.com/sofastack/sofa-ark) GitHub 上认领一个 Issue 并将 Assignee 指定为自己（新人建议认领 <b>good-first-issue</b> 标签的新手任务）。或者提交一个新的 Issue，描述您要修复的问题或者要增加、改进的功能。这样做的好处是能避免与其他人的**工作重复**。
 
 ## 获取源码
 要修改或新增功能，在提 Issue 或者领取现有 Issue 后，点击左上角的`fork`按钮，复制一份 Koupleless 或 SOFAArk 主干代码到您的代码仓库。

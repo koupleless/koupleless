@@ -74,7 +74,7 @@ Serverless 架构演技的实施过程分为两个部分：
 
 <img src="https://github.com/sofastack/sofa-serverless/assets/11410549/92bb0727-abad-49a0-a175-9cba64ffdbbb" width="350"></img>
 
-**voyager-serverless framework** 是一个基于 **[SOFAServerless](https://github.com/sofastack/sofa-serverless/)** 技术自研的提供 `Serverless编程界面` 的研发框架，允许业务 App 以 `动态` 的方式被装载到一个正在运行的基座容器(ArkContainer)中。在 [SOFAServerless](https://github.com/sofastack/sofa-serverless/) 模块隔离能力的基础上，我们针对阿里集团技术栈做了深度改造定制。
+**voyager-serverless framework** 是一个基于 **[Koupleless](https://github.com/koupleless/koupleless/)** 技术自研的提供 `Serverless编程界面` 的研发框架，允许业务 App 以 `动态` 的方式被装载到一个正在运行的基座容器(ArkContainer)中。在 [Koupleless](https://github.com/koupleless/koupleless/) 模块隔离能力的基础上，我们针对阿里集团技术栈做了深度改造定制。
 
 整套框架提供以下关键能力:
 
@@ -193,6 +193,6 @@ Serverless 插件提供了一种能够让 App 运行时所需的类默认从基�
 <img src="https://github.com/sofastack/sofa-serverless/assets/11410549/298650c3-ef2f-48b3-8b85-3754bd62e5cb" width="1100"></img>
 
 
-可以看到，本次 Serverless 架构的升级，无论从理论推演还是实践结果，都产生了较大的正向收益与效率提升，这给后续业务 App 的快速迭代带来了不少便利。同时，由于平台代码下沉为基座应用，也具备了跟业务站点正交的发布能力，基本上可以实现基础链路平台版本统一的目标；"关注点分离"也解放了业务开发者，让他们更多关注在自己的业务代码上。但是，还有一些如开发配套成熟度、问题定位与诊断、生产环境成本最优的基座配置等问题与挑战需要进一步解决。我们也会深度参与共建 **[SOFAServerless](https://github.com/sofastack/sofa-serverless/)** 开源社区，发掘更多的落地场景与实践经验。
+可以看到，本次 Serverless 架构的升级，无论从理论推演还是实践结果，都产生了较大的正向收益与效率提升，这给后续业务 App 的快速迭代带来了不少便利。同时，由于平台代码下沉为基座应用，也具备了跟业务站点正交的发布能力，基本上可以实现基础链路平台版本统一的目标；"关注点分离"也解放了业务开发者，让他们更多关注在自己的业务代码上。但是，还有一些如开发配套成熟度、问题定位与诊断、生产环境成本最优的基座配置等问题与挑战需要进一步解决。我们也会深度参与共建 **[Koupleless](https://github.com/koupleless/koupleless/)** 开源社区，发掘更多的落地场景与实践经验。
 
 Serverless 从来不是某个单一的架构形态，它带来的更多是一种理念和生产方式。理解它、利用它，帮助我们拓宽新的思路与解题方法。
