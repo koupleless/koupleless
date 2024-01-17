@@ -28,14 +28,16 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultiBizPropertiesTest {
-    private final String key1 = "test-key-1";
-    private final String key2 = "test-key-2";
+    private final String key1   = "test-key-1";
+    private final String key2   = "test-key-2";
 
-    private final String key3 = "test-key-3";
+    private final String key3   = "test-key-3";
+
+    private final String key4   = "test-key-4";
     private final String value1 = "test-value-1";
     private final String value2 = "test-value-2";
 
-    private ClassLoader baseClassLoader;
+    private ClassLoader  baseClassLoader;
 
     @Before
     public void before() {
@@ -43,6 +45,9 @@ public class MultiBizPropertiesTest {
         baseClassLoader = thread.getContextClassLoader();
 
         System.clearProperty(key1);
+        System.clearProperty(key2);
+        System.clearProperty(key3);
+        System.clearProperty(key4);
         MultiBizProperties.initSystem(URLClassLoader.class.getName());
     }
 
@@ -154,7 +159,6 @@ public class MultiBizPropertiesTest {
         Assert.assertTrue(properties.containsKey(key1));
         Assert.assertTrue(properties.contains(value1));
 
-
         out = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(out);
         properties.list(writer);
@@ -192,7 +196,7 @@ public class MultiBizPropertiesTest {
         Assert.assertNull(properties.putIfAbsent(key2, value2));
 
         Assert.assertEquals(properties.computeIfAbsent(key3, k -> value1), value1);
+        Assert.assertEquals(properties.computeIfPresent(key3, (k, v) -> v + value2), value1 + value2);
     }
-
 
 }
