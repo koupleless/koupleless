@@ -25,12 +25,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class MultiBizPropertiesTest {
-    private final String key1 = "test-key-1";
+    private final String key1   = "test-key-1";
     private final String value1 = "test-value-1";
     private final String value2 = "test-value-2";
 
-    private ClassLoader baseClassLoader;
-
+    private ClassLoader  baseClassLoader;
 
     @Before
     public void before() {
@@ -40,7 +39,6 @@ public class MultiBizPropertiesTest {
         System.clearProperty(key1);
         MultiBizProperties.initSystem(URLClassLoader.class.getName());
     }
-
 
     @After
     public void after() {
