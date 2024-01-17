@@ -35,14 +35,14 @@ import java.util.function.Function;
  */
 public class MultiBizProperties extends Properties {
 
-    private final String bizClassLoaderName;
+    private final String                  bizClassLoaderName;
 
-    private static final String BIZ_CLASS_LOADER = "com.alipay.sofa.ark.container.service.classloader.BizClassLoader";
+    private static final String           BIZ_CLASS_LOADER = "com.alipay.sofa.ark.container.service.classloader.BizClassLoader";
 
-    private Map<ClassLoader, Set<String>> modifiedKeysMap = new HashMap<>();
+    private Map<ClassLoader, Set<String>> modifiedKeysMap  = new HashMap<>();
 
-    private final Properties baseProperties;
-    private Map<ClassLoader, Properties> bizPropertiesMap;
+    private final Properties              baseProperties;
+    private Map<ClassLoader, Properties>  bizPropertiesMap;
 
     public MultiBizProperties(String bizClassLoaderName, Properties baseProperties) {
         this.bizPropertiesMap = new HashMap<>();
@@ -208,8 +208,7 @@ public class MultiBizProperties extends Properties {
     @Override
     public synchronized boolean replace(Object key, Object oldValue, Object newValue) {
         Object curValue = get(key);
-        if (!Objects.equals(curValue, oldValue) ||
-                (curValue == null && !containsKey(key))) {
+        if (!Objects.equals(curValue, oldValue) || (curValue == null && !containsKey(key))) {
             return false;
         }
         put(key, newValue);
@@ -361,8 +360,7 @@ public class MultiBizProperties extends Properties {
     public synchronized Object merge(Object key, Object value,
                                      BiFunction<? super Object, ? super Object, ?> remappingFunction) {
         Object oldValue = get(key);
-        Object newValue = (oldValue == null) ? value :
-                remappingFunction.apply(oldValue, value);
+        Object newValue = (oldValue == null) ? value : remappingFunction.apply(oldValue, value);
         if (newValue == null) {
             remove(key);
         } else {
@@ -370,7 +368,6 @@ public class MultiBizProperties extends Properties {
         }
         return newValue;
     }
-
 
     private synchronized Properties getReadProperties() {
         Properties bizProperties = getWriteProperties();
@@ -404,7 +401,6 @@ public class MultiBizProperties extends Properties {
         return baseProperties;
     }
 
-
     private synchronized Set<String> getModifiedKeys() {
         ClassLoader invokeClassLoader = Thread.currentThread().getContextClassLoader();
         if (modifiedKeysMap.containsKey(invokeClassLoader)) {
@@ -432,14 +428,14 @@ public class MultiBizProperties extends Properties {
         }
     }
 
-
     /**
      * replace the system properties to multi biz properties<br/>
      * if you want to use, you need invoke the method in base application
      */
     public static void initSystem(String bizClassLoaderName) {
         Properties properties = System.getProperties();
-        MultiBizProperties multiBizProperties = new MultiBizProperties(bizClassLoaderName, properties);
+        MultiBizProperties multiBizProperties = new MultiBizProperties(bizClassLoaderName,
+            properties);
         System.setProperties(multiBizProperties);
     }
 
