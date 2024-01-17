@@ -37,6 +37,8 @@ public class MultiBizProperties extends Properties {
 
     private static final String BIZ_CLASS_LOADER = "com.alipay.sofa.ark.container.service.classloader.BizClassLoader";
 
+    private Map<ClassLoader, Set<String>> modifiedKeysMap = new HashMap<>();
+
     private final Properties baseProperties;
     private ClassLoader baseClassLoader;
     private Map<ClassLoader, Properties> bizPropertiesMap;
@@ -52,122 +54,145 @@ public class MultiBizProperties extends Properties {
 
 
     public synchronized Object setProperty(String key, String value) {
-        return getBizProperties().setProperty(key, value);
+        getModifiedKeys().add(key);
+        return getWriteProperties().setProperty(key, value);
     }
 
     @Override
     public String getProperty(String key) {
-        return getBizProperties().getProperty(key);
+        return getReadProperties().getProperty(key);
     }
 
     @Override
     public String getProperty(String key, String defaultValue) {
-        return getBizProperties().getProperty(key, defaultValue);
+        return getReadProperties().getProperty(key, defaultValue);
     }
 
     @Override
     public synchronized void load(Reader reader) throws IOException {
-        getBizProperties().load(reader);
+        Properties properties = getWriteProperties();
+        properties.load(reader);
+        getModifiedKeys().addAll(properties.stringPropertyNames());
     }
 
     @Override
     public synchronized void load(InputStream inStream) throws IOException {
-        getBizProperties().load(inStream);
+        Properties properties = getWriteProperties();
+        properties.load(inStream);
+        getModifiedKeys().addAll(properties.stringPropertyNames());
     }
 
     @Override
     public void list(PrintStream out) {
-        getBizProperties().list(out);
+        getWriteProperties().list(out);
     }
 
     @Override
     public void list(PrintWriter out) {
-        getBizProperties().list(out);
+        getWriteProperties().list(out);
     }
 
     @Override
     public void save(OutputStream out, String comments) {
-        getBizProperties().save(out, comments);
+        Properties properties = getWriteProperties();
+        properties.save(out, comments);
     }
 
     @Override
     public void store(Writer writer, String comments) throws IOException {
-        getBizProperties().store(writer, comments);
+        Properties properties = getWriteProperties();
+        properties.store(writer, comments);
     }
 
     @Override
     public void store(OutputStream out, String comments) throws IOException {
-        getBizProperties().store(out, comments);
+        Properties properties = getWriteProperties();
+        properties.store(out, comments);
     }
 
     @Override
     public synchronized void loadFromXML(InputStream in) throws IOException {
-        getBizProperties().loadFromXML(in);
+        Properties properties = getWriteProperties();
+        properties.loadFromXML(in);
+        getModifiedKeys().addAll(properties.stringPropertyNames());
     }
 
     @Override
     public void storeToXML(OutputStream os, String comment) throws IOException {
-        getBizProperties().storeToXML(os, comment);
+        Properties properties = getWriteProperties();
+        properties.storeToXML(os, comment);
     }
 
     @Override
     public void storeToXML(OutputStream os, String comment, String encoding) throws IOException {
-        getBizProperties().storeToXML(os, comment, encoding);
+        Properties properties = getWriteProperties();
+        properties.storeToXML(os, comment, encoding);
     }
 
     @Override
     public Enumeration<?> propertyNames() {
-        return getBizProperties().propertyNames();
+        return getReadProperties().propertyNames();
     }
 
     @Override
     public Set<String> stringPropertyNames() {
-        return getBizProperties().stringPropertyNames();
+        return getReadProperties().stringPropertyNames();
     }
 
     @Override
     public synchronized boolean remove(Object key, Object value) {
-        return getBizProperties().remove(key, value);
+        boolean success = getWriteProperties().remove(key, value);
+        if (success) {
+            getModifiedKeys().add(key.toString());
+        }
+        return success;
     }
 
     @Override
     public synchronized Object get(Object key) {
-        return getBizProperties().get(key);
+        return getReadProperties().get(key);
     }
 
     @Override
     public synchronized Object remove(Object key) {
-        return getBizProperties().remove(key);
+        if (key != null) {
+            getModifiedKeys().remove(key.toString());
+        }
+        return getWriteProperties().remove(key);
     }
 
     @Override
     public synchronized Object put(Object key, Object value) {
-        return getBizProperties().put(key, value);
+        String text = key == null ? null : key.toString();
+        getModifiedKeys().remove(text);
+        return getWriteProperties().put(key, value);
     }
 
     @Override
     public synchronized boolean equals(Object o) {
-        return getBizProperties().equals(o);
+        return getReadProperties().equals(o);
     }
 
     @Override
     public synchronized String toString() {
-        return getBizProperties().toString();
+        return getReadProperties().toString();
     }
 
     @Override
     public Collection<Object> values() {
-        return getBizProperties().values();
+        return getReadProperties().values();
     }
 
     @Override
     public synchronized int hashCode() {
-        return getBizProperties().hashCode();
+        return getReadProperties().hashCode();
     }
 
     @Override
     public synchronized void clear() {
-        getBizProperties().clear();
+        Set<String> keys = baseProperties.stringPropertyNames();
+        getWriteProperties().clear();
+        getModifiedKeys().addAll(keys);
     }
 
     @Override
@@ -177,114 +202,190 @@ public class MultiBizProperties extends Properties {
         bizPropertiesMap.forEach((k, p) -> mbp.put(k, p.clone()));
         mbp.bizPropertiesMap.putAll(bizPropertiesMap);
         mbp.baseClassLoader = baseClassLoader;
+        mbp.modifiedKeysMap = modifiedKeysMap;
         return mbp;
     }
 
     @Override
     public synchronized boolean replace(Object key, Object oldValue, Object newValue) {
-        return getBizProperties().replace(key, oldValue, newValue);
+        Object curValue = get(key);
+        if (!Objects.equals(curValue, oldValue) ||
+                (curValue == null && !containsKey(key))) {
+            return false;
+        }
+        put(key, newValue);
+        return true;
     }
 
     @Override
     public synchronized boolean isEmpty() {
-        return getBizProperties().isEmpty();
+        return getReadProperties().isEmpty();
     }
 
     @Override
     public synchronized Object replace(Object key, Object value) {
-        return getBizProperties().replace(key, value);
+        Object curValue;
+        if (((curValue = get(key)) != null) || containsKey(key)) {
+            curValue = put(key, value);
+        }
+        return curValue;
     }
 
     @Override
     public synchronized boolean containsKey(Object key) {
-        return getBizProperties().containsKey(key);
+        return getReadProperties().containsKey(key);
     }
 
     @Override
     public synchronized boolean contains(Object value) {
-        return getBizProperties().contains(value);
+        return getReadProperties().contains(value);
     }
 
     @Override
     public synchronized void replaceAll(BiFunction<? super Object, ? super Object, ?> function) {
-        getBizProperties().replaceAll(function);
+        Map map = new HashMap();
+        for (Map.Entry entry : entrySet()) {
+            Object k = entry.getKey();
+            Object v = entry.getValue();
+            v = function.apply(k, v);
+            map.put(k, v);
+        }
+        putAll(map);
     }
 
     @Override
     public synchronized int size() {
-        return getBizProperties().size();
+        return getReadProperties().size();
     }
 
     @Override
     public Set<Map.Entry<Object, Object>> entrySet() {
-        return getBizProperties().entrySet();
+        return getReadProperties().entrySet();
     }
 
     @Override
-    public synchronized void putAll(Map<?, ?> t) {
-        getBizProperties().putAll(t);
+    public synchronized void putAll(Map map) {
+        Set<String> keys = new HashSet<>();
+        for (Object key : map.keySet()) {
+            String text = key == null ? null : key.toString();
+            keys.add(text);
+        }
+        getModifiedKeys().addAll(keys);
+        getWriteProperties().putAll(map);
     }
 
     @Override
     public synchronized Object computeIfAbsent(Object key,
                                                Function<? super Object, ?> mappingFunction) {
-        return getBizProperties().computeIfAbsent(key, mappingFunction);
+        Object value = get(key);
+        if (value == null) {
+            Object newValue = mappingFunction.apply(key);
+            if (newValue != null) {
+                put(key, newValue);
+                return newValue;
+            }
+        }
+        return value;
     }
 
     @Override
     public synchronized Enumeration<Object> elements() {
-        return getBizProperties().elements();
+        return getReadProperties().elements();
     }
 
     @Override
     public synchronized void forEach(BiConsumer<? super Object, ? super Object> action) {
-        getBizProperties().forEach(action);
+        getReadProperties().forEach(action);
     }
 
     @Override
     public synchronized Object putIfAbsent(Object key, Object value) {
-        return getBizProperties().putIfAbsent(key, value);
+        Object v = get(key);
+        if (v == null) {
+            v = put(key, value);
+        }
+        return v;
     }
 
     @Override
     public synchronized Enumeration<Object> keys() {
-        return getBizProperties().keys();
+        return getReadProperties().keys();
     }
 
     @Override
     public Set<Object> keySet() {
-        return getBizProperties().keySet();
+        return getReadProperties().keySet();
     }
 
     @Override
     public boolean containsValue(Object value) {
-        return getBizProperties().containsValue(value);
+        return getReadProperties().containsValue(value);
     }
 
     @Override
     public synchronized Object getOrDefault(Object key, Object defaultValue) {
-        return getBizProperties().getOrDefault(key, defaultValue);
+        return getReadProperties().getOrDefault(key, defaultValue);
     }
 
     @Override
     public synchronized Object computeIfPresent(Object key,
                                                 BiFunction<? super Object, ? super Object, ?> remappingFunction) {
-        return getBizProperties().computeIfPresent(key, remappingFunction);
+        Object oldValue = get(key);
+        if (oldValue == null) {
+            return null;
+        }
+        Object newValue = remappingFunction.apply(key, oldValue);
+        if (newValue != null) {
+            put(key, newValue);
+            return newValue;
+        }
+        remove(key);
+        return null;
     }
 
     @Override
     public synchronized Object compute(Object key,
                                        BiFunction<? super Object, ? super Object, ?> remappingFunction) {
-        return getBizProperties().compute(key, remappingFunction);
+        Object oldValue = get(key);
+        Object newValue = remappingFunction.apply(key, oldValue);
+        if (newValue == null) {
+            if (oldValue != null || containsKey(key)) {
+                remove(key);
+            }
+            return null;
+        }
+        put(key, newValue);
+        return newValue;
     }
 
     @Override
     public synchronized Object merge(Object key, Object value,
                                      BiFunction<? super Object, ? super Object, ?> remappingFunction) {
-        return getBizProperties().merge(key, value, remappingFunction);
+        Object oldValue = get(key);
+        Object newValue = (oldValue == null) ? value :
+                remappingFunction.apply(oldValue, value);
+        if (newValue == null) {
+            remove(key);
+        } else {
+            put(key, newValue);
+        }
+        return newValue;
     }
 
-    private synchronized Properties getBizProperties() {
+
+    private synchronized Properties getReadProperties() {
+        Properties bizProperties = getWriteProperties();
+        if (bizProperties == baseProperties) {
+            return baseProperties;
+        }
+        Properties properties = new Properties();
+        properties.putAll(baseProperties);
+        getModifiedKeys().forEach(properties::remove);
+        properties.putAll(bizProperties);
+        return properties;
+    }
+
+    private synchronized Properties getWriteProperties() {
         ClassLoader invokeClassLoader = Thread.currentThread().getContextClassLoader();
         if (bizPropertiesMap.containsKey(invokeClassLoader)) {
             return bizPropertiesMap.get(invokeClassLoader);
@@ -292,7 +393,7 @@ public class MultiBizProperties extends Properties {
         for (ClassLoader classLoader = invokeClassLoader; classLoader != null; classLoader = classLoader.getParent()) {
             String name = classLoader.getClass().getName();
             if (Objects.equals(name, BIZ_CLASS_LOADER)) {
-                Properties props = bizPropertiesMap.computeIfAbsent(classLoader, k -> new Properties(baseProperties));
+                Properties props = bizPropertiesMap.computeIfAbsent(classLoader, k -> new Properties());
                 bizPropertiesMap.put(invokeClassLoader, props);
                 return props;
             }
@@ -300,6 +401,23 @@ public class MultiBizProperties extends Properties {
         bizPropertiesMap.put(invokeClassLoader, baseProperties);
         return baseProperties;
     }
+
+    private synchronized Set<String> getModifiedKeys() {
+        ClassLoader invokeClassLoader = Thread.currentThread().getContextClassLoader();
+        if (modifiedKeysMap.containsKey(invokeClassLoader)) {
+            return modifiedKeysMap.get(invokeClassLoader);
+        }
+        for (ClassLoader classLoader = invokeClassLoader; classLoader != null; classLoader = classLoader.getParent()) {
+            String name = classLoader.getClass().getName();
+            if (Objects.equals(name, BIZ_CLASS_LOADER)) {
+                Set<String> keys = modifiedKeysMap.computeIfAbsent(classLoader, k -> new HashSet<>());
+                modifiedKeysMap.put(invokeClassLoader, keys);
+                return keys;
+            }
+        }
+        return Collections.emptySet();
+    }
+
 
     /**
      * replace the system properties to multi biz properties<br/>
