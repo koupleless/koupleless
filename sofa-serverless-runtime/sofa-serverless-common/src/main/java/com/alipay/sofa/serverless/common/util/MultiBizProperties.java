@@ -35,19 +35,23 @@ import java.util.function.Function;
  */
 public class MultiBizProperties extends Properties {
 
-    private final String                  bizClassLoaderName;
+    private final String bizClassLoaderName;
 
-    private static final String           BIZ_CLASS_LOADER = "com.alipay.sofa.ark.container.service.classloader.BizClassLoader";
+    private static final String BIZ_CLASS_LOADER = "com.alipay.sofa.ark.container.service.classloader.BizClassLoader";
 
-    private Map<ClassLoader, Set<String>> modifiedKeysMap  = new HashMap<>();
+    private Map<ClassLoader, Set<String>> modifiedKeysMap = new HashMap<>();
 
-    private final Properties              baseProperties;
-    private Map<ClassLoader, Properties>  bizPropertiesMap;
+    private final Properties baseProperties;
+    private Map<ClassLoader, Properties> bizPropertiesMap;
 
-    public MultiBizProperties(String bizClassLoaderName, Properties baseProperties) {
+    private MultiBizProperties(String bizClassLoaderName, Properties baseProperties) {
         this.bizPropertiesMap = new HashMap<>();
         this.baseProperties = baseProperties;
         this.bizClassLoaderName = bizClassLoaderName;
+    }
+
+    public MultiBizProperties(String bizClassLoaderName) {
+        this(bizClassLoaderName, new Properties());
     }
 
     public synchronized Object setProperty(String key, String value) {
@@ -199,9 +203,10 @@ public class MultiBizProperties extends Properties {
     public synchronized Object clone() {
         MultiBizProperties mbp = new MultiBizProperties(bizClassLoaderName, baseProperties);
         mbp.bizPropertiesMap = new HashMap<>();
-        bizPropertiesMap.forEach((k, p) -> mbp.put(k, p.clone()));
+        bizPropertiesMap.forEach((k, p) -> mbp.bizPropertiesMap.put(k, (Properties) p.clone()));
         mbp.bizPropertiesMap.putAll(bizPropertiesMap);
-        mbp.modifiedKeysMap = modifiedKeysMap;
+        mbp.modifiedKeysMap = new HashMap<>();
+        modifiedKeysMap.forEach((k, s) -> mbp.modifiedKeysMap.put(k, new HashSet<>(s)));
         return mbp;
     }
 
@@ -435,7 +440,7 @@ public class MultiBizProperties extends Properties {
     public static void initSystem(String bizClassLoaderName) {
         Properties properties = System.getProperties();
         MultiBizProperties multiBizProperties = new MultiBizProperties(bizClassLoaderName,
-            properties);
+                properties);
         System.setProperties(multiBizProperties);
     }
 
