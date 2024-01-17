@@ -6,24 +6,10 @@ menu: {main: {weight: 10}}
 url: "/home/"
 ---
 
-<script>
-    // document.addEventListener("DOMContentLoaded", function() {
-    //   var test = document.getElementById("notification");
-    //   test.addEventListener("mousemove", function(e) {
-    //     var halo = document.querySelector('.halo');
-    //       halo.style.left = e.clientX + 'px';
-    //       halo.style.top = e.clientY + 'px';
-    //       halo.style.opacity = '1';
-    //   });
-    // });
-</script>
-
-<div class="halo"></div>
-
 {{< blocks/cover image_anchor="top" height="min" >}}
 
 <div id="home-page">
-<div style="height: 72px;">
+<div style="padding-bottom: 2px; ">
 <svg width="844px" height="72px" viewBox="0 0 844 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
         <linearGradient x1="50%" y1="100%" x2="50%" y2="6.16297582e-31%" id="linearGradient-lq3e3ccur_-1">
@@ -456,8 +442,8 @@ url: "/home/"
     <img width="1200" src="/img/benefits.png" />
 </div>
 
-<div style="margin: 0 -20px 0 -20px; background: url('https://koupleless.oss-cn-shanghai.aliyuncs.com/outer-materials/docs/img/communication-channel-background.png') round;">
-    <div style="height: 200px;"></div>
+<div style="background: url('https://koupleless.oss-cn-shanghai.aliyuncs.com/outer-materials/docs/img/communication-channel-background.png') round;
+    padding-top: 200px; padding-bottom: 86px;">
     <div style="display: inline-block; width: 420px; vertical-align: top;" >
         <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 20px; font-weight: 600; color: #FFFFFF; 
             letter-spacing: 0; line-height: 26px; margin: 0px; margin-bottom: 16px;">欢迎参与社区</p>
@@ -485,7 +471,6 @@ url: "/home/"
             <img style="border: solid; border-radius: 6px; margin-top: 12px; width: 178px;" src="/img/wechat-qcode.png" />
         </div>
     </div>
-    <div style="height: 86px;"></div>
 </div>
 </div>
 

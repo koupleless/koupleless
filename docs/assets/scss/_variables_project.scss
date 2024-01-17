@@ -13,6 +13,14 @@ body {
 }
 
 #home-page {
+
+  background: url("/img/home-head-background.png") no-repeat center 0;
+  background-size: 100%;
+  margin-top: -132px;
+  margin-right: -20px;
+  margin-left: -20px;
+  padding-top: 150px;
+
   * {
     border: none;
     border-radius: 0;
@@ -34,8 +42,6 @@ a, input {
   content: '';
   position: absolute;
   left: 0; top: 600px; right: 0; bottom: 0;
-  margin-left: -20px;
-  margin-right: -20px;
   height: 484px;
   background: url("/img/star-sky-background.png") no-repeat right;
   z-index: 1;
@@ -110,6 +116,20 @@ header > nav.td-navbar {
   max-height: 63px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   background: rgb(16, 21, 28) !important;
+
+  &.td-navbar-cover {
+
+    background: transparent !important;
+    backdrop-filter: blur(5px);
+
+    .nav-link:not(.active) {
+      &:hover, &:focus {
+        > span {
+          //background: rgba(35, 43, 73, 0.9);
+        }
+      }
+    }
+  }
 
   > .container-fluid {
     padding: 0px;
