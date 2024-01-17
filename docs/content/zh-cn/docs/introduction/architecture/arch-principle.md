@@ -49,7 +49,8 @@ SOFAArk 的隔离方式和 OSGI 是一致的，但是在共享方面 OSGI 和 JP
 ![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695175141130-d3b55e17-70c3-4e7c-aeef-2e071f89ada8.png#clientId=uaaa65411-0843-4&from=paste&height=316&id=u589ef06e&originHeight=632&originWidth=3642&originalType=binary&ratio=2&rotation=0&showTitle=false&size=139102&status=done&style=none&taskId=uf9f96d68-7456-4af5-951e-d9351092988&title=&width=1821)<br />图中的箭头是双向的，如果当前微服务拆分过多，也可以将多个微服务低成本改造成模块合并部署在一个 JVM 内。所以这里的本质是通过在单体架构和微服务架构之间增加一个可以双向过渡的模块化架构，降低改造成本的同时，也让开发者可以根据业务发展按需演进或回退。这样可以把微服务的这几个问题解决掉
 
 ### 模块化架构的优势
-模块化架构的优势主要集中在这四点：快、省、灵活部署、可演进，<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695180240688-82520d0c-2304-47dc-a9f3-22af08424100.png#clientId=ueb39d37f-ca7b-4&from=paste&height=237&id=u4c60feb3&originHeight=688&originWidth=1504&originalType=binary&ratio=2&rotation=0&showTitle=false&size=437668&status=done&style=none&taskId=uf04ead3d-7cf7-41e7-bfff-81857bf5918&title=&width=518)
+模块化架构的优势主要集中在这四点：快、省、灵活部署、可演进，<br />![image.png](https://github.com/sofastack/sofa-serverless/assets/3754074/11d1d662-d33b-482b-946b-bf600aeb34da)
+
 
 与传统应用对比数据如下，可以看到在研发阶段、部署阶段、运行阶段都得到了10倍以上的提升效果。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695180250909-f5eca1b3-c416-4bac-9732-549a9bed8b87.png#clientId=ueb39d37f-ca7b-4&from=paste&height=261&id=u8907b613&originHeight=522&originWidth=2838&originalType=binary&ratio=2&rotation=0&showTitle=false&size=219589&status=done&style=none&taskId=ua4b2bd1b-a75f-4945-abce-68826a43377&title=&width=1419)
 

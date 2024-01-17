@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.9</version>
+        <version>3.2.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -18,10 +18,10 @@
     <packaging>pom</packaging>
 
     <properties>
-        <spring.boot.version>3.0.9</spring.boot.version>
+        <spring.boot.version>3.2.1</spring.boot.version>
         <java.version>17</java.version>
         <sofa.ark.version>3.0.1</sofa.ark.version>
-        <sofa.serverless.runtime.version>0.5.5-jdk17</sofa.serverless.runtime.version>
+        <sofa.serverless.runtime.version>0.5.6-jdk17-SNAPSHOT</sofa.serverless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
@@ -102,6 +102,25 @@
                 <groupId>com.alipay.sofa.serverless</groupId>
                 <artifactId>sofa-serverless-app-starter</artifactId>
                 <version>${sofa.serverless.runtime.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>log-sofa-boot-starter</artifactId>
+                <version>3.9.1</version>
+            </dependency>
+
+            <dependency>
+                <!-- 增加适配 springboot3 的 sofa-common-tools 版本 -->
+                <groupId>com.alipay.sofa.common</groupId>
+                <artifactId>sofa-common-tools</artifactId>
+                <version>2.0.3</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

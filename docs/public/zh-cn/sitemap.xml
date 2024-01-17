@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>/docs/contribution-guidelines/runtime/multi-app-padater/</loc>
+    <lastmod>2024-01-09T14:45:05+08:00</lastmod>
+  </url><url>
     <loc>/docs/contribution-guidelines/runtime/logj42/</loc>
     <lastmod>2023-11-17T23:49:47+08:00</lastmod>
   </url><url>
@@ -87,7 +90,7 @@
     <lastmod>2023-10-30T23:00:45+08:00</lastmod>
   </url><url>
     <loc>/docs/video-training/</loc>
-    <lastmod>2023-11-24T20:17:46+08:00</lastmod>
+    <lastmod>2024-01-09T16:24:24+08:00</lastmod>
   </url><url>
     <loc>/blog/2023/09/22/%E7%A4%BE%E5%8C%BA%E4%BC%9A%E8%AE%AE%E7%BA%AA%E8%A6%81/</loc>
     <lastmod>2023-10-26T18:06:20+08:00</lastmod>

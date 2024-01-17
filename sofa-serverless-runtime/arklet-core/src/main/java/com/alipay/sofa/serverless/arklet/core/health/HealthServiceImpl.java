@@ -16,8 +16,6 @@
  */
 package com.alipay.sofa.serverless.arklet.core.health;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.common.util.AssertUtils;
 import com.alipay.sofa.ark.common.util.StringUtils;
@@ -47,7 +45,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class HealthServiceImpl implements HealthService {
 
-    private static final ArkletLogger    LOGGER        = ArkletLoggerFactory.getDefaultLogger();
     private final HealthBuilder          healthBuilder = new HealthBuilder();
 
     private final Map<String, Indicator> indicators    = new ConcurrentHashMap<>(3);
@@ -190,7 +187,8 @@ public class HealthServiceImpl implements HealthService {
     @Override
     public void registerIndicator(Indicator indicator) {
         this.indicators.put(indicator.getIndicatorId(), indicator);
-        LOGGER.info("register indicator " + indicator.getIndicatorId());
+        ArkletLoggerFactory.getDefaultLogger().info(
+            "register indicator " + indicator.getIndicatorId());
     }
 
     private void initIndicators() {

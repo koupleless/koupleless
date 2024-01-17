@@ -38,9 +38,7 @@
         <module>web/tomcat</module>
         <module>web/webflux/base</module>
         <module>web/webflux/biz</module>
-        <module>service/sample-service-base</module>
-        <module>service/sample-service-biz</module>
-        <module>service/sample-service-biz2</module>
+        <module>service</module>
         <module>slimming/log4j2</module>
         <module>msg/kafka/base</module>
         <module>msg/kafka/biz1</module>
