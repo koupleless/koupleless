@@ -13,24 +13,24 @@
 7. 微服务拆分、演进成本高
 
 为什么 Koupleless 能解决呢？原因是 Koupleless 对传统应用同时进行了纵向和横向的拆分，纵向拆分出基座，横向拆分出多个模块，基座为模块屏蔽基础设施，模块只包含业务自身部分启动快且不感知基础设施专注于业务本身，模块开发者实际上具备了 Serverless 的体验。所以 Koupleless 是从细化研发运维粒度和屏蔽基础设施的两个方面，演进出的一套低成本接入的 Serverless 解决方案。
-详细原理介绍[可以查看官网介绍](https://koupleless.gitee.io/docs/introduction/architecture/arch-principle/)
+详细原理介绍[可以查看官网介绍](https://koupleless.gitee.io/docs/introduction/architecture/arch-principle/)。
 
-![](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695131554610-ef5c4a2f-0080-45eb-8fed-55fdf5d827f9.png#clientId=ua84a92a5-30aa-4&from=paste&height=459&id=u7227f759&originHeight=918&originWidth=3714&originalType=binary&ratio=2&rotation=0&showTitle=false&size=309179&status=done&style=none&taskId=u12307968-2a79-4f77-9c78-e976399c60e&title=&width=1857)
+![image](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695131554610-ef5c4a2f-0080-45eb-8fed-55fdf5d827f9.png#clientId=ua84a92a5-30aa-4&from=paste&height=459&id=u7227f759&originHeight=918&originWidth=3714&originalType=binary&ratio=2&rotation=0&showTitle=false&size=309179&status=done&style=none&taskId=u12307968-2a79-4f77-9c78-e976399c60e&title=&width=1857)
 
 最重要的是, Koupleless 能以 **极低成本** 帮助 **存量应用** 演进为模块化研发模式，解决上述问题，帮助企业降本增效提升竞争力。
 
 ## Koupleless 优势
 
-![](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695180250909-f5eca1b3-c416-4bac-9732-549a9bed8b87.png#clientId=ueb39d37f-ca7b-4&from=paste&height=261&id=u8907b613&originHeight=522&originWidth=2838&originalType=binary&ratio=2&rotation=0&showTitle=false&size=219589&status=done&style=none&taskId=ua4b2bd1b-a75f-4945-abce-68826a43377&title=&width=1419)
-Koupleless 是蚂蚁集团内部经过 5 年打磨成熟的研发框架和运维调度平台能力，相较于传统镜像化的应用模式研发、运维、运行阶段都有 10 倍左右的提升，总结起来 5 大特点：快、省、灵活部署、平滑演进、生产规模化验证
-![](https://github.com/sofastack/sofa-serverless/assets/3754074/11d1d662-d33b-482b-946b-bf600aeb34da)
+![image](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695180250909-f5eca1b3-c416-4bac-9732-549a9bed8b87.png#clientId=ueb39d37f-ca7b-4&from=paste&height=261&id=u8907b613&originHeight=522&originWidth=2838&originalType=binary&ratio=2&rotation=0&showTitle=false&size=219589&status=done&style=none&taskId=ua4b2bd1b-a75f-4945-abce-68826a43377&title=&width=1419)
+Koupleless 是蚂蚁集团内部经过 5 年打磨成熟的研发框架和运维调度平台能力，相较于传统镜像化的应用模式研发、运维、运行阶段都有 10 倍左右的提升，总结起来 5 大特点：快、省、灵活部署、平滑演进、生产规模化验证。
+![image](https://github.com/sofastack/sofa-serverless/assets/3754074/11d1d662-d33b-482b-946b-bf600aeb34da)
 
 ## 模块是什么？
 这里的模块采用了极致的共享和隔离技术，隔离之后就可以做到热部署（不重启机器的方式更新线上代码）。
-隔离 = 基于 [SOFAArk](https://github.com/sofastack/sofa-ark) 的 ClassLoader 类隔离, 基于 [SpringBoot](https://github.com/spring-projects/spring-boot) 的 SpringContext 对象隔离
-共享 = 基于 [SOFAArk](https://github.com/sofastack/sofa-ark) 的类委托加载，基于 SpringBootManager 的跨 SpringContext 的对象查找调用 
+隔离 = 基于 [SOFAArk](https://github.com/sofastack/sofa-ark) 的 ClassLoader 类隔离, 基于 [SpringBoot](https://github.com/spring-projects/spring-boot) 的 SpringContext 对象隔离。
+共享 = 基于 [SOFAArk](https://github.com/sofastack/sofa-ark) 的类委托加载，基于 SpringBootManager 的跨 SpringContext 的对象查找调用。
 
-所以从物理上，可以认为模块 = 一个 ClassLoader + 一个 SpringContext
+所以从物理上，可以认为模块 = 一个 ClassLoader + 一个 SpringContext。
 
 ## 基座是什么？
 基座就是普通应用，与原有体系（比如标准 SpringBoot）没有任何区别。
