@@ -14,6 +14,21 @@
 	<name>demowebflux</name>
 	<description>Demo project for Spring Boot</description>
 	<dependencies>
+		<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom,
+            原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+		<!--    must add this dependency as the first one in the pom for building jar, and set type=pom,
+            check the reason from here https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+		<dependency>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-base-starter</artifactId>
+			<version>${sofa.serverless.runtime.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa</groupId>
+			<artifactId>netty-ark-plugin</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
@@ -22,24 +37,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-base-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>sofa-ark-all</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>sofa-ark-springboot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>netty-ark-plugin</artifactId>
-			<version>${sofa.ark.version}</version>
 		</dependency>
 	</dependencies>
 

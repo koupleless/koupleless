@@ -42,17 +42,6 @@ public class HealthAutoConfiguration implements ApplicationContextAware {
     private ApplicationContext context;
 
     @Bean
-    public void initEndpoint() {
-        WebEndpointProperties webEndpointProperties = this.context
-            .getBean(WebEndpointProperties.class);
-        WebEndpointProperties.Exposure exposure = webEndpointProperties.getExposure();
-        Set<String> includePath = exposure.getInclude();
-        includePath.add("*");
-        webEndpointProperties.getExposure().setInclude(includePath);
-        webEndpointProperties.setBasePath("/");
-    }
-
-    @Bean
     @ConditionalOnAvailableEndpoint
     public ArkHealthEndpoint arkHealthEndpoint() {
         return new ArkHealthEndpoint();
@@ -76,6 +65,14 @@ public class HealthAutoConfiguration implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        WebEndpointProperties webEndpointProperties = applicationContext
+            .getBean(WebEndpointProperties.class);
+        WebEndpointProperties.Exposure exposure = webEndpointProperties.getExposure();
+        Set<String> includePath = exposure.getInclude();
+        includePath.add("*");
+        webEndpointProperties.getExposure().setInclude(includePath);
+        webEndpointProperties.setBasePath("/");
+
         this.context = applicationContext;
     }
 }

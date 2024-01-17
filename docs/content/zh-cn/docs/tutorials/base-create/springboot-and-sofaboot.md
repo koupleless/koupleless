@@ -20,8 +20,8 @@ spring.application.name = ${替换为实际基座应用名}
 #### 修改主 pom.xml
 ```xml
 <properties>
-    <sofa.ark.verion>2.2.5-SNAPSHOT</sofa.ark.verion>
-    <sofa.serverless.runtime.version>0.5.3</sofa.serverless.runtime.version>
+    <sofa.ark.verion>2.2.6</sofa.ark.verion>
+    <sofa.serverless.runtime.version>0.5.6</sofa.serverless.runtime.version>
 </properties>
 ```
 

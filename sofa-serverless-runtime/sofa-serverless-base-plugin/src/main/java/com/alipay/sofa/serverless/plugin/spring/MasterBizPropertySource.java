@@ -27,14 +27,14 @@ import java.util.Set;
  * @author: yuanyuan
  * @date: 2023/10/30 9:52 下午
  */
-public class MasterBizPropertySource extends EnumerablePropertySource<Environment> {
+public class MasterBizPropertySource extends EnumerablePropertySource<Set<String>> {
 
     private final Set<String> keys;
     private final Environment environment;
 
     public MasterBizPropertySource(String name, @NonNull Environment environment,
                                    @NonNull Set<String> keys) {
-        super(name, environment);
+        super(name, keys);
         this.environment = environment;
         this.keys = keys;
     }

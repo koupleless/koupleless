@@ -35,7 +35,7 @@ System.setProperty("env", "DEV");
 ```shell
 docker-compose up
 ```
-2. 登录 apollo 管理后台 `localhost:8080`，创建 app id 为 `biz` 的项目和 key=data.name 的配置，创建 app id 为 `biz2` 的项目和 key=data.name 的配置，具体查看 https://www.apolloconfig.com/#/zh/deployment/quick-start
+2. 登录 apollo 管理后台 `localhost:8080`，创建 app id 为 `biz1` 的项目和 key=data.name 的配置，创建 app id 为 `biz2` 的项目和 key=data.name 的配置，具体查看 https://www.apolloconfig.com/#/zh/deployment/quick-start
 
 ![apps.png](imgs/apps.png)
 

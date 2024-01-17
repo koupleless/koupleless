@@ -31,6 +31,8 @@ import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizMeta;
 import com.alipay.sofa.serverless.arklet.core.command.meta.bizops.ArkBizOps;
 import com.alipay.sofa.serverless.arklet.core.common.exception.ArkletRuntimeException;
 import com.alipay.sofa.serverless.arklet.core.common.exception.CommandValidationException;
+import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLogger;
+import com.alipay.sofa.serverless.arklet.core.common.log.ArkletLoggerFactory;
 import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,6 +53,8 @@ public class InstallBizHandler
                               AbstractCommandHandler<InstallBizHandler.Input, InstallBizHandler.InstallBizClientResponse>
                                                                                                                          implements
                                                                                                                          ArkBizOps {
+    private static final ArkletLogger LOGGER = ArkletLoggerFactory.getDefaultLogger();
+
     @Override
     public Output<InstallBizClientResponse> handle(Input input) {
         MemoryPoolMXBean metaSpaceMXBean = getMetaSpaceMXBean();
@@ -97,6 +101,11 @@ public class InstallBizHandler
         isTrue(!input.isAsync() || !StringUtils.isEmpty(input.getRequestId()),
             "requestId should not be blank when async is true");
         notBlank(input.getBizUrl(), "bizUrl should not be blank");
+
+        if (StringUtils.isEmpty(input.getBizName()) || StringUtils.isEmpty(input.getBizVersion())) {
+            LOGGER
+                .warn("biz name and version should not be empty, or it will reduce the performance.");
+        }
 
         if (StringUtils.isEmpty(input.getBizName()) && StringUtils.isEmpty(input.getBizVersion())) {
             // if bizName and bizVersion is blank, it means that we should parse them from the jar. this will cost io operation.
