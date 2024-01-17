@@ -21,19 +21,21 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultiBizPropertiesTest {
-    private final String key1   = "test-key-1";
+    private final String key1 = "test-key-1";
+    private final String key2 = "test-key-2";
+
+    private final String key3 = "test-key-3";
     private final String value1 = "test-value-1";
     private final String value2 = "test-value-2";
 
-    private ClassLoader  baseClassLoader;
+    private ClassLoader baseClassLoader;
 
     @Before
     public void before() {
@@ -149,9 +151,48 @@ public class MultiBizPropertiesTest {
         }
 
         Assert.assertEquals(properties.size(), size);
-
         Assert.assertTrue(properties.containsKey(key1));
         Assert.assertTrue(properties.contains(value1));
+
+
+        out = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(out);
+        properties.list(writer);
+        writer.close();
+        properties.clear();
+        Assert.assertTrue(properties.isEmpty());
+
+        input = new ByteArrayInputStream(out.toByteArray());
+        Reader reader = new InputStreamReader(input);
+        properties.load(reader);
+        reader.close();
+        Assert.assertFalse(properties.isEmpty());
     }
+
+    @Test
+    public void testRead() {
+        Properties properties = new MultiBizProperties(URLClassLoader.class.getName());
+        properties.setProperty(key1, value1);
+        Assert.assertEquals(properties.keys().nextElement(), key1);
+        Assert.assertTrue(properties.containsValue(value1));
+
+        AtomicInteger num = new AtomicInteger();
+        properties.forEach((k, v) -> {
+            Assert.assertEquals(k, key1);
+            Assert.assertEquals(v, value1);
+            num.incrementAndGet();
+        });
+        Assert.assertEquals(num.get(), 1);
+
+        Assert.assertEquals(properties.getOrDefault(key1, value2), value1);
+        Assert.assertEquals(properties.getOrDefault(key2, value2), value2);
+
+
+        Assert.assertEquals(properties.putIfAbsent(key1, value2), value1);
+        Assert.assertNull(properties.putIfAbsent(key2, value2));
+
+        Assert.assertEquals(properties.computeIfAbsent(key3, k -> value1), value1);
+    }
+
 
 }
