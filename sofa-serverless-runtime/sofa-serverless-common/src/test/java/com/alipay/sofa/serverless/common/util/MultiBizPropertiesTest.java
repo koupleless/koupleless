@@ -29,11 +29,11 @@ import java.net.URLClassLoader;
 import java.util.Properties;
 
 public class MultiBizPropertiesTest {
-    private final String key1 = "test-key-1";
+    private final String key1   = "test-key-1";
     private final String value1 = "test-value-1";
     private final String value2 = "test-value-2";
 
-    private ClassLoader baseClassLoader;
+    private ClassLoader  baseClassLoader;
 
     @Before
     public void before() {
@@ -114,7 +114,6 @@ public class MultiBizPropertiesTest {
         Assert.assertEquals(properties, other);
     }
 
-
     @Test
     public void testStoreAndLoad() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -129,7 +128,6 @@ public class MultiBizPropertiesTest {
         properties.load(input);
         Assert.assertEquals(properties.size(), size);
 
-
         out = new ByteArrayOutputStream();
         properties.save(out, "test store");
         properties.clear();
@@ -138,12 +136,11 @@ public class MultiBizPropertiesTest {
         properties.load(input);
         Assert.assertEquals(properties.size(), size);
 
-
         out = new ByteArrayOutputStream();
         properties.storeToXML(out, "test store");
         properties.clear();
         Assert.assertEquals(properties.size(), 0);
-//        System.out.println(out);
+        //        System.out.println(out);
         input = new ByteArrayInputStream(out.toByteArray());
         try {
             properties.loadFromXML(input);
