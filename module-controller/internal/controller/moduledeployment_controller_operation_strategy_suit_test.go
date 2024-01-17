@@ -578,7 +578,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 					return err
 				}
 
-				if !moduleDeployment.Spec.Pause {
+				if moduleDeployment.Spec.ConfirmBatchNum > 0 {
 					return fmt.Errorf("the deployment is not paused")
 				}
 
@@ -593,9 +593,13 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 			Eventually(func() bool {
 				Expect(k8sClient.Get(context.TODO(), nn, &moduleDeployment)).Should(Succeed())
 
-				moduleDeployment.Spec.Pause = false
+				moduleDeployment.Spec.ConfirmBatchNum = 1
 				return Expect(k8sClient.Update(context.TODO(), &moduleDeployment)).Should(Succeed())
 			}, timeout, interval).Should(BeTrue())
+		})
+
+		It("wait moduleDeployment Completed", func() {
+			waitModuleDeploymentCompleted(moduleDeploymentName, namespace)
 		})
 
 		It("4. check if the moduleDeployment status is completed", func() {
@@ -604,7 +608,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 					return false
 				}
 
-				if moduleDeployment.Spec.Pause != false {
+				if moduleDeployment.Spec.ConfirmBatchNum != 0 {
 					return false
 				}
 
@@ -627,7 +631,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 					return err
 				}
 
-				if !moduleDeployment.Spec.Pause {
+				if moduleDeployment.Spec.ConfirmBatchNum > 0 {
 					return fmt.Errorf("the deployment is not paused")
 				}
 
@@ -642,7 +646,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 			Eventually(func() bool {
 				Expect(k8sClient.Get(context.TODO(), nn, &moduleDeployment)).Should(Succeed())
 
-				moduleDeployment.Spec.Pause = false
+				moduleDeployment.Spec.ConfirmBatchNum = 1
 				return Expect(k8sClient.Update(context.TODO(), &moduleDeployment)).Should(Succeed())
 			}, timeout, interval).Should(BeTrue())
 		})
@@ -653,7 +657,7 @@ var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
 					return err
 				}
 
-				if moduleDeployment.Spec.Pause != false {
+				if moduleDeployment.Spec.ConfirmBatchNum != 1 {
 					return fmt.Errorf("the module-deployment is paused")
 				}
 

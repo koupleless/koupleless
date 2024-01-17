@@ -163,6 +163,7 @@ type ModuleDeploymentSpec struct {
 
 	ProgressDeadlineSeconds int32 `json:"progressDeadlineSeconds,omitempty"`
 
+	// +kubebuilder:default:=0
 	// +kubebuilder:validation:Minimum=0
 	ConfirmBatchNum int32 `json:"confirmBatchNum,omitempty"`
 
