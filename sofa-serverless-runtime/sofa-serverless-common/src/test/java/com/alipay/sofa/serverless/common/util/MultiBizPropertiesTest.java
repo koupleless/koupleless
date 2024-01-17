@@ -37,6 +37,8 @@ public class MultiBizPropertiesTest {
     private final String value1 = "test-value-1";
     private final String value2 = "test-value-2";
 
+    private final String value3 = "test-value-3";
+
     private ClassLoader  baseClassLoader;
 
     @Before
@@ -179,6 +181,7 @@ public class MultiBizPropertiesTest {
         properties.setProperty(key1, value1);
         Assert.assertEquals(properties.keys().nextElement(), key1);
         Assert.assertTrue(properties.containsValue(value1));
+        Assert.assertEquals(properties.elements().nextElement(), value1);
 
         AtomicInteger num = new AtomicInteger();
         properties.forEach((k, v) -> {
@@ -197,5 +200,25 @@ public class MultiBizPropertiesTest {
 
         Assert.assertEquals(properties.computeIfAbsent(key3, k -> value1), value1);
         Assert.assertEquals(properties.computeIfPresent(key3, (k, v) -> v + value2), value1 + value2);
+        Assert.assertEquals(properties.computeIfPresent(key3, (k, v) -> null), null);
+        Assert.assertEquals(properties.computeIfPresent(key4, (k, v) -> v + value2), null);
+
+
+        properties.setProperty(key3, value1);
+        Assert.assertEquals(properties.compute(key3, (k, v) -> v + value2), value1 + value2);
+        Assert.assertEquals(properties.compute(key3, (k, v) -> null), null);
+    }
+
+    @Test
+    public void testReplace() {
+        Properties properties = new MultiBizProperties(URLClassLoader.class.getName());
+        properties.setProperty(key1, value1);
+        properties.replace(key1, value2, value3);
+        Assert.assertNotEquals(properties.get(key1), value3);
+        properties.replace(key1, value1, value3);
+        Assert.assertEquals(properties.get(key1), value3);
+        Assert.assertEquals(properties.replace(key1, value2), value3);
+        properties.replaceAll((k, v) -> v + value1);
+        Assert.assertEquals(properties.get(key1), value2 + value1);
     }
 }
