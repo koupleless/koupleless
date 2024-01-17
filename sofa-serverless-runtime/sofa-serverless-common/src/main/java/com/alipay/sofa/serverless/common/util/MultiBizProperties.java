@@ -35,26 +35,23 @@ import java.util.function.Function;
  */
 public class MultiBizProperties extends Properties {
 
+    private final String bizClassLoaderName;
+
     private static final String BIZ_CLASS_LOADER = "com.alipay.sofa.ark.container.service.classloader.BizClassLoader";
 
     private Map<ClassLoader, Set<String>> modifiedKeysMap = new HashMap<>();
 
     private final Properties baseProperties;
-    private ClassLoader baseClassLoader;
     private Map<ClassLoader, Properties> bizPropertiesMap;
 
-    public MultiBizProperties(Properties baseProperties) {
+    public MultiBizProperties(String bizClassLoaderName, Properties baseProperties) {
         this.bizPropertiesMap = new HashMap<>();
         this.baseProperties = baseProperties;
+        this.bizClassLoaderName = bizClassLoaderName;
     }
-
-    public MultiBizProperties() {
-        this(new Properties());
-    }
-
 
     public synchronized Object setProperty(String key, String value) {
-        getModifiedKeys().add(key);
+        addModifiedKey(key);
         return getWriteProperties().setProperty(key, value);
     }
 
@@ -70,16 +67,18 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public synchronized void load(Reader reader) throws IOException {
-        Properties properties = getWriteProperties();
+        Properties properties = new Properties();
         properties.load(reader);
-        getModifiedKeys().addAll(properties.stringPropertyNames());
+        getWriteProperties().putAll(properties);
+        addModifiedKeys(properties.stringPropertyNames());
     }
 
     @Override
     public synchronized void load(InputStream inStream) throws IOException {
-        Properties properties = getWriteProperties();
+        Properties properties = new Properties();
         properties.load(inStream);
-        getModifiedKeys().addAll(properties.stringPropertyNames());
+        getWriteProperties().putAll(properties);
+        addModifiedKeys(properties.stringPropertyNames());
     }
 
     @Override
@@ -100,32 +99,33 @@ public class MultiBizProperties extends Properties {
 
     @Override
     public void store(Writer writer, String comments) throws IOException {
-        Properties properties = getWriteProperties();
+        Properties properties = getReadProperties();
         properties.store(writer, comments);
     }
 
     @Override
     public void store(OutputStream out, String comments) throws IOException {
-        Properties properties = getWriteProperties();
+        Properties properties = getReadProperties();
         properties.store(out, comments);
     }
 
     @Override
     public synchronized void loadFromXML(InputStream in) throws IOException {
-        Properties properties = getWriteProperties();
+        Properties properties = new Properties();
         properties.loadFromXML(in);
-        getModifiedKeys().addAll(properties.stringPropertyNames());
+        getWriteProperties().putAll(properties);
+        addModifiedKeys(properties.stringPropertyNames());
     }
 
     @Override
     public void storeToXML(OutputStream os, String comment) throws IOException {
-        Properties properties = getWriteProperties();
+        Properties properties = getReadProperties();
         properties.storeToXML(os, comment);
     }
 
     @Override
     public void storeToXML(OutputStream os, String comment, String encoding) throws IOException {
-        Properties properties = getWriteProperties();
+        Properties properties = getReadProperties();
         properties.storeToXML(os, comment, encoding);
     }
 
@@ -143,7 +143,7 @@ public class MultiBizProperties extends Properties {
     public synchronized boolean remove(Object key, Object value) {
         boolean success = getWriteProperties().remove(key, value);
         if (success) {
-            getModifiedKeys().add(key.toString());
+            addModifiedKey(key.toString());
         }
         return success;
     }
@@ -156,7 +156,7 @@ public class MultiBizProperties extends Properties {
     @Override
     public synchronized Object remove(Object key) {
         if (key != null) {
-            getModifiedKeys().remove(key.toString());
+            addModifiedKey(key.toString());
         }
         return getWriteProperties().remove(key);
     }
@@ -164,7 +164,7 @@ public class MultiBizProperties extends Properties {
     @Override
     public synchronized Object put(Object key, Object value) {
         String text = key == null ? null : key.toString();
-        getModifiedKeys().remove(text);
+        addModifiedKey(text);
         return getWriteProperties().put(key, value);
     }
 
@@ -192,16 +192,15 @@ public class MultiBizProperties extends Properties {
     public synchronized void clear() {
         Set<String> keys = baseProperties.stringPropertyNames();
         getWriteProperties().clear();
-        getModifiedKeys().addAll(keys);
+        addModifiedKeys(keys);
     }
 
     @Override
     public synchronized Object clone() {
-        MultiBizProperties mbp = new MultiBizProperties(baseProperties);
+        MultiBizProperties mbp = new MultiBizProperties(bizClassLoaderName, baseProperties);
         mbp.bizPropertiesMap = new HashMap<>();
         bizPropertiesMap.forEach((k, p) -> mbp.put(k, p.clone()));
         mbp.bizPropertiesMap.putAll(bizPropertiesMap);
-        mbp.baseClassLoader = baseClassLoader;
         mbp.modifiedKeysMap = modifiedKeysMap;
         return mbp;
     }
@@ -270,7 +269,7 @@ public class MultiBizProperties extends Properties {
             String text = key == null ? null : key.toString();
             keys.add(text);
         }
-        getModifiedKeys().addAll(keys);
+        addModifiedKeys(keys);
         getWriteProperties().putAll(map);
     }
 
@@ -380,7 +379,10 @@ public class MultiBizProperties extends Properties {
         }
         Properties properties = new Properties();
         properties.putAll(baseProperties);
-        getModifiedKeys().forEach(properties::remove);
+        Set<String> modifiedKeys = getModifiedKeys();
+        if (modifiedKeys != null) {
+            modifiedKeys.forEach(properties::remove);
+        }
         properties.putAll(bizProperties);
         return properties;
     }
@@ -392,7 +394,7 @@ public class MultiBizProperties extends Properties {
         }
         for (ClassLoader classLoader = invokeClassLoader; classLoader != null; classLoader = classLoader.getParent()) {
             String name = classLoader.getClass().getName();
-            if (Objects.equals(name, BIZ_CLASS_LOADER)) {
+            if (Objects.equals(name, bizClassLoaderName)) {
                 Properties props = bizPropertiesMap.computeIfAbsent(classLoader, k -> new Properties());
                 bizPropertiesMap.put(invokeClassLoader, props);
                 return props;
@@ -402,6 +404,7 @@ public class MultiBizProperties extends Properties {
         return baseProperties;
     }
 
+
     private synchronized Set<String> getModifiedKeys() {
         ClassLoader invokeClassLoader = Thread.currentThread().getContextClassLoader();
         if (modifiedKeysMap.containsKey(invokeClassLoader)) {
@@ -409,13 +412,24 @@ public class MultiBizProperties extends Properties {
         }
         for (ClassLoader classLoader = invokeClassLoader; classLoader != null; classLoader = classLoader.getParent()) {
             String name = classLoader.getClass().getName();
-            if (Objects.equals(name, BIZ_CLASS_LOADER)) {
+            if (Objects.equals(name, bizClassLoaderName)) {
                 Set<String> keys = modifiedKeysMap.computeIfAbsent(classLoader, k -> new HashSet<>());
                 modifiedKeysMap.put(invokeClassLoader, keys);
                 return keys;
             }
         }
-        return Collections.emptySet();
+        return null;
+    }
+
+    private void addModifiedKey(String key) {
+        addModifiedKeys(Collections.singleton(key));
+    }
+
+    private void addModifiedKeys(Collection<String> keys) {
+        Set<String> modifiedKeys = getModifiedKeys();
+        if (modifiedKeys != null && keys != null) {
+            modifiedKeys.addAll(keys);
+        }
     }
 
 
@@ -423,9 +437,13 @@ public class MultiBizProperties extends Properties {
      * replace the system properties to multi biz properties<br/>
      * if you want to use, you need invoke the method in base application
      */
-    public static void initSystem() {
+    public static void initSystem(String bizClassLoaderName) {
         Properties properties = System.getProperties();
-        MultiBizProperties multiBizProperties = new MultiBizProperties(properties);
+        MultiBizProperties multiBizProperties = new MultiBizProperties(bizClassLoaderName, properties);
         System.setProperties(multiBizProperties);
+    }
+
+    public static void initSystem() {
+        initSystem(BIZ_CLASS_LOADER);
     }
 }
