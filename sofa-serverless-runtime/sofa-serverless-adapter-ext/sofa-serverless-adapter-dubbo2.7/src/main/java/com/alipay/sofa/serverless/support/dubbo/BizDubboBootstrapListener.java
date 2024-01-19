@@ -16,10 +16,20 @@
  */
 package com.alipay.sofa.serverless.support.dubbo;
 
+import org.apache.dubbo.config.ServiceConfigBase;
 import org.apache.dubbo.config.bootstrap.DubboBootstrap;
+import org.apache.dubbo.config.context.ConfigManager;
+import org.apache.dubbo.rpc.model.ApplicationModel;
+import org.apache.dubbo.rpc.model.ServiceRepository;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author: yuanyuan
@@ -29,12 +39,14 @@ public class BizDubboBootstrapListener implements ApplicationListener {
 
     private final DubboBootstrap dubboBootstrap;
 
-    //    private final ConfigManager configManager;
+        private final ConfigManager configManager;
+        private final ServiceRepository serviceRepository;
     //    private final Environment environment;
 
     public BizDubboBootstrapListener() {
         this.dubboBootstrap = DubboBootstrap.getInstance();
-        //        this.configManager = ApplicationModel.getConfigManager();
+        this.configManager = ApplicationModel.getConfigManager();
+        this.serviceRepository = ApplicationModel.getServiceRepository();
         //        this.environment = ApplicationModel.getEnvironment();
     }
 
@@ -46,6 +58,9 @@ public class BizDubboBootstrapListener implements ApplicationListener {
         if (event instanceof ContextRefreshedEvent) {
             onContextRefreshedEvent((ContextRefreshedEvent) event);
         }
+        if (event instanceof ContextClosedEvent) {
+            onContextClosedEvent((ContextClosedEvent) event);
+        }
     }
 
     private void onContextRefreshedEvent(ContextRefreshedEvent event) {
@@ -56,5 +71,27 @@ public class BizDubboBootstrapListener implements ApplicationListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void onContextClosedEvent(ContextClosedEvent event) {
+        // DubboBootstrap.unexportServices 会 unexport 所有服务，只需要 unexport 当前 biz 的服务即可
+        Map<String, ServiceConfigBase<?>> exportedServices = ReflectionUtils.getField(dubboBootstrap, DubboBootstrap.class, "exportedServices");
+
+        Set<String> bizUnexportServices = new HashSet<>();
+        for (Map.Entry<String, ServiceConfigBase<?>> entry : exportedServices.entrySet()) {
+            String serviceKey = entry.getKey();
+            ServiceConfigBase<?> sc = entry.getValue();
+            if (sc.getRef().getClass().getClassLoader() == Thread.currentThread().getContextClassLoader()) {
+                bizUnexportServices.add(serviceKey);
+                configManager.removeConfig(sc);
+                sc.unexport();
+
+                serviceRepository.unregisterService(sc.getUniqueServiceName());
+            }
+        }
+        for (String service : bizUnexportServices) {
+            exportedServices.remove(service);
+        }
+
     }
 }
