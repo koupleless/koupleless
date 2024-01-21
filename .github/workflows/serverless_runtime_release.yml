@@ -30,12 +30,12 @@ jobs:
           images: |
             node:14
 
-      - name: get sofa-runtime version & update sofa-runtime version for all test sample app
+      - name: get koupleless-runtime version & update koupleless-runtime version for all test sample app
         run: |
-          serverless_runtime_version=$(find koupleless-runtime/sofa-serverless-common -name "*.jar" |grep -v source |sed "s/.*sofa-serverless-common-\(.*\).jar/\1/")
-          echo "升级sofa-runtime version to $serverless_runtime_version"
-          for testsample in `find samples -name "*[^3|^dubbo]-samples"`;do  sed -i "s/<koupleless.runtime.version>.*<\/koupleless.runtime.version>/<koupleless.runtime.version>$serverless_runtime_version<\/koupleless.runtime.version>/g"  $testsample/pom.xml ;done
-          for testsample in `find samples -name "*[^3|^dubbo]-samples"`;do if cat $testsample/pom.xml |grep "<koupleless.runtime.version>"|grep $serverless_runtime_version;then echo "版本校验通过";else echo "版本校验失败";exit 1;fi;done
+          koupleless_runtime_version=$(find koupleless-runtime/koupleless-common -name "*.jar" |grep -v source |sed "s/.*koupleless-common-\(.*\).jar/\1/")
+          echo "升级 koupleless-runtime version to $koupleless_runtime_version"
+          for testsample in `find samples -name "*[^3|^dubbo]-samples"`;do  sed -i "s/<koupleless.runtime.version>.*<\/koupleless.runtime.version>/<koupleless.runtime.version>$koupleless_runtime_version<\/koupleless.runtime.version>/g"  $testsample/pom.xml ;done
+          for testsample in `find samples -name "*[^3|^dubbo]-samples"`;do if cat $testsample/pom.xml |grep "<koupleless.runtime.version>"|grep $koupleless_runtime_version;then echo "版本校验通过";else echo "版本校验失败";exit 1;fi;done
 
       - name: Test Env prepare
         run: |
@@ -49,7 +49,7 @@ jobs:
           sudo systemctl start redis-server
           sudo cp .github/workflows/ccbin/arkctl /usr/bin/arkctl
 
-      - name: Run jdk8 serverless runtime test
+      - name: Run jdk8 koupleless runtime test
         run: |
           set -e
           bash -x .github/workflows/ccbin/start.sh jdk8
