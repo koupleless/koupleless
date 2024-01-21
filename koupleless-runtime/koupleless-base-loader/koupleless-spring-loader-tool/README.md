@@ -20,7 +20,7 @@
     </executions>
     <dependencies>
         <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
+            <groupId>com.alipay.sofa.koupleless</groupId>
             <artifactId>koupleless-spring-loader-tool</artifactId>
             <!--最新版本0.5.6-->
             <version>0.5.6</version>
@@ -32,9 +32,9 @@
 ```shell
 java -jar xxx-executable.jar
 ```
-3. 解压启动方式，Launcher需要改成com.alipay.sofa.serverless.spring.loader.JarLauncher
+3. 解压启动方式，Launcher需要改成com.alipay.sofa.koupleless.spring.loader.JarLauncher
 ```shell
-java -classpath  xxx-executable-unpack com.alipay.sofa.serverless.spring.loader.JarLauncher
+java -classpath  xxx-executable-unpack com.alipay.sofa.koupleless.spring.loader.JarLauncher
 ```
 
 # 维护说明

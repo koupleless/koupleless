@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.alipay.sofa.serverless</groupId>
+        <groupId>com.alipay.sofa.koupleless</groupId>
         <artifactId>koupleless-adapter-ext</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
@@ -52,7 +52,7 @@
 
                         <configuration>
                             <activator>
-                                com.alipay.sofa.serverless.adapter.Log4j2AdapterActivator
+                                com.alipay.sofa.koupleless.adapter.Log4j2AdapterActivator
                             </activator>
                             <exported>
 <!--                                <mode>override</mode>-->
@@ -64,7 +64,7 @@
                             </exported>
                             <excludes>
                                 <exclude>*:*:*</exclude>
-                                <exclude>com.alipay.sofa.serverless:koupleless-adapter-log4j2</exclude>
+                                <exclude>com.alipay.sofa.koupleless:koupleless-adapter-log4j2</exclude>
                             </excludes>
                         </configuration>
                     </execution>

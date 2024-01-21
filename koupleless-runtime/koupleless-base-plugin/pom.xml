@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>koupleless-runtime</artifactId>
-        <groupId>com.alipay.sofa.serverless</groupId>
+        <groupId>com.alipay.sofa.koupleless</groupId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -28,7 +28,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
+            <groupId>com.alipay.sofa.koupleless</groupId>
             <artifactId>koupleless-common</artifactId>
         </dependency>
         <dependency>
@@ -42,7 +42,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
+            <groupId>com.alipay.sofa.koupleless</groupId>
             <artifactId>arklet-core</artifactId>
         </dependency>
 
@@ -75,17 +75,17 @@
 
                         <configuration>
                             <activator>
-                                com.alipay.sofa.serverless.plugin.ServerlessRuntimeActivator
+                                com.alipay.sofa.koupleless.plugin.ServerlessRuntimeActivator
                             </activator>
                             <exported>
                                 <packages>
-                                    <package>com.alipay.sofa.serverless.plugin.*</package>
+                                    <package>com.alipay.sofa.koupleless.plugin.*</package>
                                 </packages>
                             </exported>
                             <!-- 打包插件时，排除指定的包依赖；格式为: ${groupId:artifactId} 或者 ${groupId:artifactId:classifier} -->
                             <excludes>
                                 <exclude>*:*:*</exclude>
-                                <exclude>com.alipay.sofa.serverless:koupleless-base-plugin</exclude>
+                                <exclude>com.alipay.sofa.koupleless:koupleless-base-plugin</exclude>
                             </excludes>
                         </configuration>
                     </execution>
