@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.alipay.sofa.serverless.cache</groupId>
+    <groupId>com.alipay.sofa.koupleless.cache</groupId>
     <artifactId>ehcache</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>

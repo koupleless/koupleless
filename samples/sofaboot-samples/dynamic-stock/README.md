@@ -19,8 +19,8 @@ base 为普通 SOFABoot 改造成的基座，改造内容为在 pom 里增加如
     <artifactId>runtime-sofa-boot-plugin</artifactId>
 </dependency>
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-base-starter</artifactId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-base-starter</artifactId>
 </dependency>
 <dependency>
     <groupId>com.alipay.sofa</groupId>

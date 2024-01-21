@@ -2,8 +2,8 @@ package com.alipay.sofa.web.base.rest;
 
 import com.alipay.sofa.dynamicstock.base.facade.StrategyService;
 import com.alipay.sofa.dynamicstock.base.model.ProductInfo;
-import com.alipay.sofa.serverless.common.api.SpringServiceFinder;
-import com.alipay.sofa.serverless.common.exception.BizRuntimeException;
+import com.alipay.sofa.koupleless.common.api.SpringServiceFinder;
+import com.alipay.sofa.koupleless.common.exception.BizRuntimeException;
 import com.alipay.sofa.web.base.data.DatabaseSeed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

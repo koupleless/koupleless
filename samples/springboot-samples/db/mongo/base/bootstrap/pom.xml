@@ -19,8 +19,8 @@
 		<!--    must add this dependency as the first one in the pom for building jar, and set type=pom,
             check the reason from here https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 		<dependency>
-			<groupId>com.alipay.sofa.serverless</groupId>
-			<artifactId>sofa-serverless-base-starter</artifactId>
+			<groupId>com.alipay.sofa.koupleless</groupId>
+			<artifactId>koupleless-base-starter</artifactId>
 			<version>${koupleless.runtime.version}</version>
 			<type>pom</type>
 		</dependency>

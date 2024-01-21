@@ -13,8 +13,8 @@ base 为普通 springboot 改造成的基座，改造内容为在主 pom 里增�
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
     原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-base-starter</artifactId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-base-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
@@ -40,8 +40,8 @@ base 为普通 springboot 改造成的基座，改造内容为在主 pom 里增�
     <version>${disruptor.version}</version>
 </dependency>
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-log4j2-starter</artifactId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-log4j2-starter</artifactId>
     <version>${sofa.serverless.runtime.version}</version>
 </dependency>
 <!-- end log4j2 依赖引入 -->
@@ -55,8 +55,8 @@ biz1 包含两个打包插件，一个常规 springboot 插件, 构建普通 spr
 ```xml
 <!-- 模块需要引入专门的 log4j2 adapter 做日志适配 -->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-adapter-log4j2</artifactId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-adapter-log4j2</artifactId>
     <version>${sofa.serverless.runtime.version}</version>
     <!--<scope>provided</scope> -->
     <!-- 不进行模块瘦身，需要修改依赖 scope 为 provided，使得模块复用基座的 jar 包 -->

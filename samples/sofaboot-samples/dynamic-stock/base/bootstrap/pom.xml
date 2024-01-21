@@ -41,8 +41,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
-            <artifactId>sofa-serverless-base-starter</artifactId>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-base-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alipay.sofa</groupId>

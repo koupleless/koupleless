@@ -12,7 +12,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import javax.sql.DataSource;
 import java.io.IOException;
 
-import static com.alipay.sofa.serverless.common.api.SpringBeanFinder.getBaseBean;
+import static com.alipay.sofa.koupleless.common.api.SpringBeanFinder.getBaseBean;
 
 /**
  * @author: yuanyuan

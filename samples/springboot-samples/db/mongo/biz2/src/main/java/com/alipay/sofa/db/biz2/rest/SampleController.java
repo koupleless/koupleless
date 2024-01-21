@@ -4,7 +4,7 @@ import com.alipay.sofa.db.base.infra.db.CRUDRepository;
 import com.alipay.sofa.db.base.model.CommonModel;
 import com.alipay.sofa.db.biz2.infra.db.UserRepository;
 import com.alipay.sofa.db.biz2.model.User;
-import com.alipay.sofa.serverless.common.api.AutowiredFromBase;
+import com.alipay.sofa.koupleless.common.api.AutowiredFromBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
