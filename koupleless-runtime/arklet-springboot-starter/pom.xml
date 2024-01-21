@@ -52,7 +52,7 @@
 
         <dependency>
             <groupId>com.alipay.sofa.serverless</groupId>
-            <artifactId>sofa-serverless-common</artifactId>
+            <artifactId>koupleless-common</artifactId>
             <scope>provided</scope>
         </dependency>
 

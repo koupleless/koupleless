@@ -69,14 +69,14 @@
     </scm>
 
     <modules>
-        <module>sofa-serverless-common</module>
-        <module>sofa-serverless-base-starter</module>
-        <module>sofa-serverless-base-plugin</module>
-        <module>sofa-serverless-app-starter</module>
+        <module>koupleless-common</module>
+        <module>koupleless-base-starter</module>
+        <module>koupleless-base-plugin</module>
+        <module>koupleless-app-starter</module>
         <module>arklet-core</module>
         <module>arklet-springboot-starter</module>
-        <module>sofa-serverless-adapter-ext</module>
-        <module>sofa-serverless-base-loader</module>
+        <module>koupleless-adapter-ext</module>
+        <module>koupleless-base-loader</module>
 	</modules>
 
     <dependencyManagement>
@@ -101,17 +101,17 @@
             </dependency>
             <dependency>
                 <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>sofa-serverless-common</artifactId>
+                <artifactId>koupleless-common</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>sofa-serverless-base-starter</artifactId>
+                <artifactId>koupleless-base-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>sofa-serverless-base-plugin</artifactId>
+                <artifactId>koupleless-base-plugin</artifactId>
                 <version>${revision}</version>
             </dependency>
 
