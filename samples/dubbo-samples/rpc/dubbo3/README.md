@@ -133,7 +133,7 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-adapter-log4j2</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
 ```

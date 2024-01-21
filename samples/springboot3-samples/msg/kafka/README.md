@@ -44,7 +44,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-log4j2-starter</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <!-- end log4j2 依赖引入 -->
 

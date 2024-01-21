@@ -8,7 +8,7 @@ base 为普通 springboot cloud改造成的基座，改造内容为在 pom 里�
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-base-starter</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
 

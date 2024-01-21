@@ -6,7 +6,7 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-adapter-dubbo2.6</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
@@ -94,7 +94,7 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
 <dependency>
     <groupId>com.alipay.sofa.serverless</groupId>
     <artifactId>sofa-serverless-adapter-log4j2</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
 ```

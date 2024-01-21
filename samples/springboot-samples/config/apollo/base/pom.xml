@@ -18,7 +18,7 @@
         <dependency>
             <groupId>com.alipay.sofa.serverless</groupId>
             <artifactId>sofa-serverless-base-starter</artifactId>
-            <version>${sofa.serverless.runtime.version}</version>
+            <version>${koupleless.runtime.version}</version>
             <type>pom</type>
         </dependency>
         <dependency>

@@ -22,4 +22,4 @@
 | springboot3 | springboot3            | springboot3                                 | [samples/sofaboot3-samples](https://github.com/sofastack/sofa-serverless/tree/master/samples/sofaboot3-samples)                                           |       |
 ### 注意请在编译器单独导入对应 samples 工程，例如 sofa-serverless/samples/springboot-samples 工程，否则会出现 BizRuntimeContext Not found 的报错。
 ![biz runtime context not found](bizruntimecontext_not_found.png)
-原因：samples 工程与 sofa-serverless-runtime 在一个工程目录里，会优先使用本地的 sofa-serverless-runtime，而不是 maven 依赖的 sofa-serverless-runtime，导致找不到 BizRuntimeContext 类。
+原因：samples 工程与 koupleless-runtime 在一个工程目录里，会优先使用本地的 koupleless-runtime，而不是 maven 依赖的 koupleless-runtime，导致找不到 BizRuntimeContext 类。
