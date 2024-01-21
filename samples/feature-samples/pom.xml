@@ -21,7 +21,7 @@
         <spring.boot.version>2.7.16</spring.boot.version>
         <java.version>1.8</java.version>
         <sofa.ark.version>2.2.6</sofa.ark.version>
-        <sofa.serverless.runtime.version>0.5.6</sofa.serverless.runtime.version>
+        <koupleless.runtime.version>0.5.7-SNAPSHOT</koupleless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
@@ -69,9 +69,9 @@
 
             <!-- 这里添加动态模块相关依赖 -->
             <dependency>
-                <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>sofa-serverless-base-starter</artifactId>
-                <version>${sofa.serverless.runtime.version}</version>
+                <groupId>com.alipay.sofa.koupleless</groupId>
+                <artifactId>koupleless-base-starter</artifactId>
+                <version>${koupleless.runtime.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
@@ -120,14 +120,14 @@
             </dependency>
 
             <dependency>
-                <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>sofa-serverless-app-starter</artifactId>
-                <version>${sofa.serverless.runtime.version}</version>
+                <groupId>com.alipay.sofa.koupleless</groupId>
+                <artifactId>koupleless-app-starter</artifactId>
+                <version>${koupleless.runtime.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.alipay.sofa.serverless</groupId>
-                <artifactId>sofa-serverless-adapter-log4j2</artifactId>
-                <version>${sofa.serverless.runtime.version}</version>
+                <groupId>com.alipay.sofa.koupleless</groupId>
+                <artifactId>koupleless-adapter-log4j2</artifactId>
+                <version>${koupleless.runtime.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

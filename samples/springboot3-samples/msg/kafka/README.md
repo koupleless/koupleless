@@ -8,8 +8,8 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 
 <!-- 这里添加动态模块相关依赖 -->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-base-starter</artifactId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-base-starter</artifactId>
     <!-- 以上版本支持springboot3 -->
     <version>0.5.5-jdk17</version>
 </dependency>
@@ -42,9 +42,9 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <version>${disruptor.version}</version>
 </dependency>
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-log4j2-starter</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-log4j2-starter</artifactId>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <!-- end log4j2 依赖引入 -->
 
@@ -61,8 +61,8 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 ```xml
 <!-- 模块需要引入专门的 log4j2 adapter -->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-adapter-log4j2</artifactId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-adapter-log4j2</artifactId>
     <version>${sofa.serverless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>

@@ -22,7 +22,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<spring.boot.version>2.7.16</spring.boot.version>
 		<sofa.ark.version>2.2.6</sofa.ark.version>
-		<sofa.serverless.runtime.version>0.5.6</sofa.serverless.runtime.version>
+		<koupleless.runtime.version>0.5.7-SNAPSHOT</koupleless.runtime.version>
 		<disruptor.version>3.4.2</disruptor.version>
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
 		<dubbo.version>3.1.11</dubbo.version>
@@ -71,9 +71,9 @@
 			</dependency>
 			<!-- 这里添加动态模块相关依赖 -->
 			<dependency>
-				<groupId>com.alipay.sofa.serverless</groupId>
-				<artifactId>sofa-serverless-base-starter</artifactId>
-				<version>${sofa.serverless.runtime.version}</version>
+				<groupId>com.alipay.sofa.koupleless</groupId>
+				<artifactId>koupleless-base-starter</artifactId>
+				<version>${koupleless.runtime.version}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>ch.qos.logback</groupId>

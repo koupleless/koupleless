@@ -6,23 +6,23 @@ on:
     branches:
       - master
     paths:
-      - 'sofa-serverless-runtime/**'
-      
+      - 'koupleless-runtime/**'
+
   pull_request:
     branches:
       - master
     paths:
-      - 'sofa-serverless-runtime/**'
-      
+      - 'koupleless-runtime/**'
+
   # enable manually running the workflow
   workflow_dispatch:
 
 env:
-  WORK_DIR: sofa-serverless-runtime
+  WORK_DIR: koupleless-runtime
 
 defaults:
   run:
-    working-directory: sofa-serverless-runtime
+    working-directory: koupleless-runtime
 
 jobs:
   unit-test-for-jdk8:
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup Java JDK
         uses: actions/setup-java@v3
-        with: 
+        with:
           distribution: adopt
           java-version: 8
           cache: maven

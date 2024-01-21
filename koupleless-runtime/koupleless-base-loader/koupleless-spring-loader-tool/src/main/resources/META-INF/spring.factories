@@ -1,0 +1,1 @@
+org.springframework.boot.loader.tools.LayoutFactory=com.alipay.sofa.koupleless.spring.loader.tools.CustomLayoutFactory

@@ -19,9 +19,9 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
     原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-base-starter</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-base-starter</artifactId>
+    <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
 <!-- end 动态模块相关依赖 -->
@@ -63,8 +63,8 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 
 <!-- 引入模块 starter，主要用于和基座通信 -->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-app-starter</artifactId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-app-starter</artifactId>
     <scope>provided</scope>
 </dependency>
 

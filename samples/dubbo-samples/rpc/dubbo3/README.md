@@ -14,8 +14,8 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
 ```
 <!-- 这里添加动态模块相关依赖 -->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-base-starter</artifactId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-base-starter</artifactId>
 </dependency>
 <!-- end 动态模块相关依赖 -->
 ```
@@ -131,9 +131,9 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
 - 如果不关心基座和模块日志是否打印在一起还是分开打印，那么这个依赖可以不加。
 ```xml
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-adapter-log4j2</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-adapter-log4j2</artifactId>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
 ```

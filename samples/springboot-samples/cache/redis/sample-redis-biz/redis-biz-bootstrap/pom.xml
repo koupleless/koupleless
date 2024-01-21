@@ -48,8 +48,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
-            <artifactId>sofa-serverless-app-starter</artifactId>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-app-starter</artifactId>
             <scope>provided</scope>
         </dependency>
 

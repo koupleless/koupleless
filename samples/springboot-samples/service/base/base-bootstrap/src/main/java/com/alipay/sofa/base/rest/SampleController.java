@@ -3,7 +3,7 @@ package com.alipay.sofa.base.rest;
 import com.alipay.sofa.biz.facade.Param;
 import com.alipay.sofa.biz.facade.Provider;
 import com.alipay.sofa.biz.facade.Result;
-import com.alipay.sofa.serverless.common.api.SpringServiceFinder;
+import com.alipay.sofa.koupleless.common.api.SpringServiceFinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

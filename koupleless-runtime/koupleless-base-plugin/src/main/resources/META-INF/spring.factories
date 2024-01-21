@@ -1,0 +1,9 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.alipay.sofa.koupleless.plugin.BaseRuntimeAutoConfiguration
+org.springframework.context.ApplicationListener=\
+  com.alipay.sofa.koupleless.plugin.spring.ServerlessApplicationListener,\
+  com.alipay.sofa.koupleless.plugin.manager.listener.StaticBatchInstallEventListener
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  com.alipay.sofa.koupleless.plugin.spring.ServerlessEnvironmentPostProcessor
+
+
