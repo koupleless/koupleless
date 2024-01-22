@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.common.util;
+package com.alipay.sofa.koupleless.common.util;
 
 import org.junit.After;
 import org.junit.Assert;
