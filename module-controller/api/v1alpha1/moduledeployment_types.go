@@ -163,10 +163,9 @@ type ModuleDeploymentSpec struct {
 
 	ProgressDeadlineSeconds int32 `json:"progressDeadlineSeconds,omitempty"`
 
-	// Indicates that the moduleDeployment is paused and will not be processed by the
-	// moduleDeployment controller.
-	// +optional
-	Pause bool `json:"pause,omitempty"`
+	// +kubebuilder:default:=0
+	// +kubebuilder:validation:Minimum=0
+	ConfirmBatchNum int32 `json:"confirmBatchNum,omitempty"`
 
 	OperationStrategy ModuleOperationStrategy `json:"operationStrategy,omitempty"`
 

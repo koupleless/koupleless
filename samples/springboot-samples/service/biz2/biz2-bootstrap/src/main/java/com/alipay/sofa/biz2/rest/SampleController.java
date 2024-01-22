@@ -77,10 +77,10 @@ public class SampleController {
             Result provide2 = provider.provide(new Param());
         }
 
-        Provider teacherProvider1 = SpringServiceFinder.getModuleService("biz", "0.0.1-SNAPSHOT", "teacherProvider", Provider.class);
+        Provider teacherProvider1 = SpringServiceFinder.getModuleService("biz1", "0.0.1-SNAPSHOT", "teacherProvider", Provider.class);
         Result result1 = teacherProvider1.provide(new Param());
 
-        Map<String, Provider> providerMap = SpringServiceFinder.listModuleServices("biz", "0.0.1-SNAPSHOT", Provider.class);
+        Map<String, Provider> providerMap = SpringServiceFinder.listModuleServices("biz1", "0.0.1-SNAPSHOT", Provider.class);
         for (String beanName : providerMap.keySet()) {
             Result result2 = providerMap.get(beanName).provide(new Param());
         }
