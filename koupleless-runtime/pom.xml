@@ -77,7 +77,6 @@
         <module>arklet-springboot-starter</module>
         <module>koupleless-adapter-ext</module>
         <module>koupleless-base-loader</module>
-	<module>sofa-serverless-base-loader</module>
 	</modules>
 
     <dependencyManagement>
