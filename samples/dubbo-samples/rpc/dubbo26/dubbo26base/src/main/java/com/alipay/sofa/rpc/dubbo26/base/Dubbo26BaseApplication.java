@@ -44,8 +44,8 @@ public class Dubbo26BaseApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
-//            installBiz("dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar");
-//            installBiz("dubbo26biz2/target/dubbo26biz2-0.0.1-SNAPSHOT-ark-biz.jar");
+            installBiz("dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar");
+            installBiz("dubbo26biz2/target/dubbo26biz2-0.0.1-SNAPSHOT-ark-biz.jar");
         } catch (Throwable e) {
             LOGGER.error("Install biz failed", e);
         }
