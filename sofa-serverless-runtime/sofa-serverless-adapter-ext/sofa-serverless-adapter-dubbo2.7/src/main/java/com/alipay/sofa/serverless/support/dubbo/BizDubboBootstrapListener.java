@@ -37,10 +37,11 @@ import java.util.Set;
  */
 public class BizDubboBootstrapListener implements ApplicationListener {
 
-    private final DubboBootstrap dubboBootstrap;
+    private final DubboBootstrap    dubboBootstrap;
 
-        private final ConfigManager configManager;
-        private final ServiceRepository serviceRepository;
+    private final ConfigManager     configManager;
+    private final ServiceRepository serviceRepository;
+
     //    private final Environment environment;
 
     public BizDubboBootstrapListener() {
@@ -75,13 +76,15 @@ public class BizDubboBootstrapListener implements ApplicationListener {
 
     private void onContextClosedEvent(ContextClosedEvent event) {
         // DubboBootstrap.unexportServices 会 unexport 所有服务，只需要 unexport 当前 biz 的服务即可
-        Map<String, ServiceConfigBase<?>> exportedServices = ReflectionUtils.getField(dubboBootstrap, DubboBootstrap.class, "exportedServices");
+        Map<String, ServiceConfigBase<?>> exportedServices = ReflectionUtils.getField(
+            dubboBootstrap, DubboBootstrap.class, "exportedServices");
 
         Set<String> bizUnexportServices = new HashSet<>();
         for (Map.Entry<String, ServiceConfigBase<?>> entry : exportedServices.entrySet()) {
             String serviceKey = entry.getKey();
             ServiceConfigBase<?> sc = entry.getValue();
-            if (sc.getRef().getClass().getClassLoader() == Thread.currentThread().getContextClassLoader()) {
+            if (sc.getRef().getClass().getClassLoader() == Thread.currentThread()
+                .getContextClassLoader()) {
                 bizUnexportServices.add(serviceKey);
                 configManager.removeConfig(sc);
                 sc.unexport();
