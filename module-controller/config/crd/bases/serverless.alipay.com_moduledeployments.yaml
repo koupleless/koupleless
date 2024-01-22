@@ -41,6 +41,11 @@ spec:
                   Important: Run "make" to regenerate code after modifying this file'
                 minLength: 1
                 type: string
+              confirmBatchNum:
+                default: 0
+                format: int32
+                minimum: 0
+                type: integer
               minReadySeconds:
                 format: int32
                 type: integer
@@ -75,10 +80,6 @@ spec:
                   useBeta:
                     type: boolean
                 type: object
-              pause:
-                description: Indicates that the moduleDeployment is paused and will
-                  not be processed by the moduleDeployment controller.
-                type: boolean
               progressDeadlineSeconds:
                 format: int32
                 type: integer

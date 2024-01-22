@@ -167,7 +167,6 @@ jobs:
         run: |
           # 定义要等待的资源名称和字段值
           moduledeploymentname=$(kubectl get moduledeployment -o name)
-          desired_field_value=true
           
           # 定义等待的超时时间（以秒为单位）
           timeout_seconds=300
@@ -183,11 +182,11 @@ jobs:
             fi
           
             # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
-            field_value=$(kubectl get $moduledeploymentname -o custom-columns=PAUSE:.spec.pause --no-headers)
+            field_value=$(kubectl get $moduledeploymentname -o custom-columns=CONFIRMBATCHNUM:.spec.confirmBatchNum --no-headers)
           
-            if [ "$field_value" == "$desired_field_value" ]; then
+            if [ "$field_value" == "0" ]; then
               echo "字段值已满足条件，执行分组确认"
-              kubectl patch $moduledeploymentname -p '{"spec":{"pause":false}}' --type=merge
+              kubectl patch $moduledeploymentname -p '{"spec":{"confirmBatchNum":1}}' --type=merge
               exit 0
             else
               echo "等待字段值满足条件..."
@@ -579,7 +578,6 @@ jobs:
         run: |
           # 定义要等待的资源名称和字段值
           moduledeploymentname=$(kubectl get moduledeployment -o name)
-          desired_field_value=true
 
           # 定义等待的超时时间（以秒为单位）
           timeout_seconds=300
@@ -595,11 +593,11 @@ jobs:
             fi
 
             # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
-            field_value=$(kubectl get $moduledeploymentname -o custom-columns=PAUSE:.spec.pause --no-headers)
+            field_value=$(kubectl get $moduledeploymentname -o custom-columns=CONFIRMBATCHNUM:.spec.confirmBatchNum --no-headers)
 
-            if [ "$field_value" == "$desired_field_value" ]; then
+            if [ "$field_value" == "0" ]; then
               echo "字段值已满足条件，执行分组确认"
-              kubectl patch $moduledeploymentname -p '{"spec":{"pause":false}}' --type=merge
+              kubectl patch $moduledeploymentname -p '{"spec":{"confirmBatchNum":1}}' --type=merge
               exit 0
             else
               echo "等待字段值满足条件..."
@@ -738,7 +736,6 @@ jobs:
         run: |
           # 定义要等待的资源名称和字段值
           moduledeploymentname=$(kubectl get moduledeployment -o name)
-          desired_field_value=true
           
           # 定义等待的超时时间（以秒为单位）
           timeout_seconds=300
@@ -754,11 +751,11 @@ jobs:
             fi
           
             # 使用 kubectl get 命令获取资源对象的详细信息，并提取自定义字段的值
-            field_value=$(kubectl get $moduledeploymentname -o custom-columns=PAUSE:.spec.pause --no-headers)
+            field_value=$(kubectl get $moduledeploymentname -o custom-columns=CONFIRMBATCHNUM:.spec.confirmBatchNum --no-headers)
           
-            if [ "$field_value" == "$desired_field_value" ]; then
+            if [ "$field_value" == "0" ]; then
               echo "字段值已满足条件，执行分组确认"
-              kubectl patch $moduledeploymentname -p '{"spec":{"pause":false}}' --type=merge
+              kubectl patch $moduledeploymentname -p '{"spec":{"confirmBatchNum":1}}' --type=merge
               exit 0
             else
               echo "等待字段值满足条件..."
