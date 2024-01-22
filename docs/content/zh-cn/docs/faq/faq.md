@@ -73,3 +73,10 @@ Caused by: java.Lang.ClassNotFoundException: com.google.inject.multibindings.Mul
     <version>6.0.0</version>
 </dependency>
 ```
+
+#### 问题 1-7：模块与基座共库时，模块启动了基座的逻辑
+例如基座引入了 druid，但是模块里没有引入，按照设计模块应该不需要初始化 dataSource，但是如果遇到模块也初始化了 dataSource，那么该行为是不符合预期的，也可能导致报错。
+
+##### 解决方式
+1. 确保模块可以独立构建，也就是可以在模块的目录里执行 `mvn clean package`，并且不会报错
+2. 升级 koupleless 版本到最新版本 0.5.7

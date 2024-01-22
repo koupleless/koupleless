@@ -442,7 +442,7 @@ public class MultiBizProperties extends Properties {
     public static void initSystem(String bizClassLoaderName) {
         Properties properties = System.getProperties();
         MultiBizProperties multiBizProperties = new MultiBizProperties(bizClassLoaderName,
-                properties);
+            properties);
         System.setProperties(multiBizProperties);
     }
 
