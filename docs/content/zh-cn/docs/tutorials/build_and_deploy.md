@@ -1,7 +1,8 @@
 ---
 title: 开发验证与部署上线
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless 基座、模块开发验证与部署上线
 weight: 500
-draft: true
 ---
 
 本文主要介绍动态合并部署模式，用于省资源与提高研发效率。如果你只是想节省资源，可以使用[静态合并部署](/docs/tutorials/module-development/static-merge-deployment/)。

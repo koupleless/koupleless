@@ -1,6 +1,7 @@
 ---
 title: log4j2 的多模块化适配
-date: 2023-10-10T20:32:35+08:00
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless log4j2 的多模块化适配
 weight: 1
 ---
 

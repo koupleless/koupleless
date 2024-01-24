@@ -1,5 +1,7 @@
 ---
 title: 架构原理
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless 架构原理
 weight: 100
 ---
 
