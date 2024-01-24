@@ -17,11 +17,7 @@
             <groupId>com.alipay.sofa</groupId>
             <artifactId>sofa-ark-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.alipay.sofa.koupleless</groupId>
-            <artifactId>koupleless-common</artifactId>
-            <version>${revision}</version>
-        </dependency>
+
 
         <dependency>
             <groupId>com.github.oshi</groupId>
