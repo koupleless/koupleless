@@ -21,6 +21,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
 	"strings"
 	"testing"
 
@@ -74,5 +75,5 @@ func TestParseBizModel_LocalJar(t *testing.T) {
 
 	assert.Equal(t, model.BizName, "testName")
 	assert.Equal(t, model.BizVersion, "version")
-	assert.Equal(t, model.BizUrl, fileutil.FileUrl("file://"+zipFilePath))
+	assert.Equal(t, model.BizUrl, fileutil.FileUrl(osutil.GetLocalFileProtocol()+zipFilePath))
 }

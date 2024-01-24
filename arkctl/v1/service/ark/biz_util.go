@@ -18,6 +18,7 @@ import (
 	"archive/zip"
 	"context"
 	"fmt"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
 	"strings"
 
 	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
@@ -37,8 +38,7 @@ func parseJarBizModel(ctx context.Context, bizUrl fileutil.FileUrl) (*BizModel, 
 		return nil, err
 	}
 
-	// remove file:// prefix
-	zipReader, err := zip.OpenReader(localPath[7:])
+	zipReader, err := zip.OpenReader(localPath[len(osutil.GetLocalFileProtocol()):])
 	if err != nil {
 		return nil, err
 	}

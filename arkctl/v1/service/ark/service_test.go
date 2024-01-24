@@ -19,6 +19,8 @@ import (
 	"encoding/json"
 	"net"
 	"net/http"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
 	"testing"
 
 	"github.com/sirupsen/logrus"
@@ -123,7 +125,7 @@ func TestInstallBiz_NoServer(t *testing.T) {
 		BizModel: BizModel{
 			BizName:    "biz",
 			BizVersion: "0.0.1-SNAPSHOT",
-			BizUrl:     "file:///foobar",
+			BizUrl:     fileutil.FileUrl(osutil.GetLocalFileProtocol() + "/foobar"),
 		},
 		TargetContainer: ArkContainerRuntimeInfo{
 			RunType: ArkContainerRunTypeLocal,

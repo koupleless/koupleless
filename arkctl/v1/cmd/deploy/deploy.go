@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
 	"strings"
 
 	"serverless.alipay.com/sofa-serverless/arkctl/common/cmdutil"
@@ -146,7 +147,7 @@ func execMavenBuild(ctx *contextutil.Context) bool {
 
 func execParseBizModel(ctx *contextutil.Context) bool {
 	style.InfoPrefix("Stage").Println("ParseBizModel")
-	bundlePath := "file://" + defaultArg
+	bundlePath := osutil.GetLocalFileProtocol() + defaultArg
 	if doBuild {
 		searchdir := defaultArg
 		if subBundlePath != "" {
@@ -164,7 +165,7 @@ func execParseBizModel(ctx *contextutil.Context) bool {
 			pterm.Error.Println("can not find pre built biz bundle in build dir!")
 			return false
 		}
-		bundlePath = "file://" + bundlePath
+		bundlePath = osutil.GetLocalFileProtocol() + bundlePath
 	}
 
 	bizModel, err := ark.ParseBizModel(ctx, fileutil.FileUrl(bundlePath))
@@ -289,7 +290,7 @@ func execInstallInKubePod(ctx *contextutil.Context) bool {
 		string(runtime.Must(json.Marshal(ark.BizModel{
 			BizName:    bizModel.BizName,
 			BizVersion: bizModel.BizVersion,
-			BizUrl:     fileutil.FileUrl("file://" + ctx.Value(ctxKeyArkBizBundlePathInSidePod).(string)),
+			BizUrl:     fileutil.FileUrl(osutil.GetLocalFileProtocol() + ctx.Value(ctxKeyArkBizBundlePathInSidePod).(string)),
 		}))),
 		fmt.Sprintf("http://127.0.0.1:%v/installBiz", portFlag),
 	)

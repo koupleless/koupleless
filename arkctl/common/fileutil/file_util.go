@@ -17,6 +17,7 @@ package fileutil
 import (
 	"context"
 	"fmt"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
 	"strings"
 )
 
@@ -25,8 +26,7 @@ type FileUrl string
 
 func (url FileUrl) GetFileUrlType() FileUrlType {
 	switch {
-	// start with file:// then it's a local file
-	case strings.HasPrefix(string(url), "file://"):
+	case strings.HasPrefix(string(url), osutil.GetLocalFileProtocol()):
 		return FileUrlTypeLocal
 
 	default:
