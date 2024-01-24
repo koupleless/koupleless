@@ -69,6 +69,7 @@
     </scm>
 
     <modules>
+        <module>koupleless-base-package-plugin</module>
         <module>koupleless-common</module>
         <module>koupleless-base-starter</module>
         <module>koupleless-base-plugin</module>
