@@ -18,14 +18,14 @@ import (
 	"archive/zip"
 	"context"
 	"fmt"
+	"github.com/koupleless/arkctl/common/osutil"
 	"io"
 	"os"
 	"path/filepath"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
 	"strings"
 	"testing"
 
-	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
+	"github.com/koupleless/arkctl/common/fileutil"
 
 	"github.com/google/uuid"
 	"github.com/magiconair/properties/assert"

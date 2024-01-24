@@ -19,8 +19,8 @@ package version
 
 import (
 	"fmt"
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/constant"
+	"github.com/koupleless/arkctl/v1/cmd/root"
+	"github.com/koupleless/arkctl/v1/constant"
 )
 
 import (

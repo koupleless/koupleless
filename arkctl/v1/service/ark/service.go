@@ -19,9 +19,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/runtime"
+	"github.com/koupleless/arkctl/common/contextutil"
+	"github.com/koupleless/arkctl/common/fileutil"
+	"github.com/koupleless/arkctl/common/runtime"
 
 	"github.com/go-resty/resty/v2"
 )

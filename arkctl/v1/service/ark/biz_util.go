@@ -18,10 +18,10 @@ import (
 	"archive/zip"
 	"context"
 	"fmt"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
+	"github.com/koupleless/arkctl/common/osutil"
 	"strings"
 
-	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
+	"github.com/koupleless/arkctl/common/fileutil"
 )
 
 // isJarFile return true if fileUrl provides a jar file.

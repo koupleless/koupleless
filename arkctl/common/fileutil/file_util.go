@@ -17,7 +17,7 @@ package fileutil
 import (
 	"context"
 	"fmt"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
+	"github.com/koupleless/arkctl/common/osutil"
 	"strings"
 )
 

@@ -19,8 +19,8 @@ package show
 
 import (
 	"fmt"
+	"github.com/koupleless/arkctl/v1/cmd/root"
 	"github.com/spf13/cobra"
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
 )
 
 // showCmd represents the show command
