@@ -14,7 +14,7 @@
 
 package ark
 
-import "serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
+import "github.com/koupleless/arkctl/common/fileutil"
 
 type ArkContainerRunType string
 
