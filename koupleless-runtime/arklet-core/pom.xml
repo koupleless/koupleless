@@ -17,6 +17,11 @@
             <groupId>com.alipay.sofa</groupId>
             <artifactId>sofa-ark-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-common</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
 
         <dependency>

@@ -24,6 +24,7 @@ import (
 	"github.com/koupleless/arkctl/common/osutil"
 	"os"
 	"path/filepath"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
 	"strings"
 
 	"github.com/koupleless/arkctl/common/cmdutil"

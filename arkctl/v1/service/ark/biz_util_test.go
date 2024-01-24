@@ -22,6 +22,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
 	"strings"
 	"testing"
 

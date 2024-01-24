@@ -21,6 +21,8 @@ import (
 	"github.com/koupleless/arkctl/common/osutil"
 	"net"
 	"net/http"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
+	"serverless.alipay.com/sofa-serverless/arkctl/common/osutil"
 	"testing"
 
 	"github.com/sirupsen/logrus"
