@@ -10,7 +10,7 @@
 5. 访问 curl http://NodeIP:NodePort/order1 查看结果
 
 ### 模块构建与部署
-1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/sofastack/sofa-serverless/tree/master/arkctl/bin) , 并放入 `/usr/local/bin` 目录中
+1. 根据实际运行操作系统，[下载 arkctl ]https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.1) , 并放入 `/usr/local/bin` 目录中
 2. 在对应项目里执行模块构建与部署，例如对于 web/tomcat 需要在 web/tomcat 目录里，执行
 ```shell
 arkctl deploy biz1/target/biz1-web-single-host-0.0.1-SNAPSHOT-ark-biz.jar --pod ${namespace}/${podName}

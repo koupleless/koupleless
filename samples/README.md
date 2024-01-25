@@ -20,6 +20,6 @@
 | dubbo       | dubbo + grpc           | 模块使用 grpc                                   | [samples/dubbo-samples/rpc/grpc](https://github.com/koupleless/koupleless/tree/main/samples/dubbo-samples/rpc/grpc)                                      |
 | sofaboot    | sofarpc/tomcat         | 基座调用模块、中台模式                                 | [samples/sofaboot-samples/dynamic-stock](https://github.com/koupleless/koupleless/tree/main/samples/sofaboot-samples/dynamic-stock)                      | 
 | springboot3 | springboot3            | springboot3                                 | [samples/springboot3-samples](https://github.com/koupleless/koupleless/tree/main/samples/springboot3-samples)                                            |       |
-### 注意请在编译器单独导入对应 samples 工程，例如 sofa-serverless/samples/springboot-samples 工程，否则会出现 BizRuntimeContext Not found 的报错。
+### 注意请在编译器单独导入对应 samples 工程，例如 koupleless/samples/springboot-samples 工程，否则会出现 BizRuntimeContext Not found 的报错。
 ![biz runtime context not found](bizruntimecontext_not_found.png)
 原因：samples 工程与 koupleless-runtime 在一个工程目录里，会优先使用本地的 koupleless-runtime，而不是 maven 依赖的 koupleless-runtime，导致找不到 BizRuntimeContext 类。

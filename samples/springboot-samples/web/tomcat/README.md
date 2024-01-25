@@ -154,15 +154,15 @@ curl http://localhost:8080/order2
 
 ```
 2023-xx-xx xx:xx:xx.xxx  INFO 39753 --- [           main] arklet : start to batch deploy from local dir:./biz
-2023-xx-xx xx:xx:xx.xxx  INFO 39753 --- [           main] arklet : Found biz jar file: ~/sofa-serverless/samples/springboot-samples/web/tomcat/static-deploy-demo/./biz/biz1-web-single-host-0.0.1-SNAPSHOT-ark-biz.jar
-2023-xx-xx xx:xx:xx.xxx  INFO 39753 --- [           main] arklet : Found biz jar file: ~/sofa-serverless/samples/springboot-samples/web/tomcat/static-deploy-demo/./biz/biz2-web-single-host-0.0.1-SNAPSHOT-ark-biz.jar
+2023-xx-xx xx:xx:xx.xxx  INFO 39753 --- [           main] arklet : Found biz jar file: ~/koupleless/samples/springboot-samples/web/tomcat/static-deploy-demo/./biz/biz1-web-single-host-0.0.1-SNAPSHOT-ark-biz.jar
+2023-xx-xx xx:xx:xx.xxx  INFO 39753 --- [           main] arklet : Found biz jar file: ~/koupleless/samples/springboot-samples/web/tomcat/static-deploy-demo/./biz/biz2-web-single-host-0.0.1-SNAPSHOT-ark-biz.jar
 ```
 
 观测到如下关键日志，代表静态合并部署成功了：
 
 ```
-2023-xx-xx xx:xx:xx.xxx  INFO 39753 --- [           main] arklet : ~/sofa-serverless/samples/springboot-samples/web/tomcat/static-deploy-demo/./biz/biz1-web-single-host-0.0.1-SNAPSHOT-ark-biz.jar, SUCCESS, Install Biz: biz1:0.0.1-SNAPSHOT success, cost: 4756 ms, started at: xx:xx:xx,xxx, BatchDeployResult
-2023-xx-xx xx:xx:xx.xxx  INFO 39753 --- [           main] arklet : ~/sofa-serverless/samples/springboot-samples/web/tomcat/static-deploy-demo/./biz/biz2-web-single-host-0.0.1-SNAPSHOT-ark-biz.jar, SUCCESS, Install Biz: biz2:0.0.1-SNAPSHOT success, cost: 4756 ms, started at: xx:xx:xx,xxx, BatchDeployResult
+2023-xx-xx xx:xx:xx.xxx  INFO 39753 --- [           main] arklet : ~/koupleless/samples/springboot-samples/web/tomcat/static-deploy-demo/./biz/biz1-web-single-host-0.0.1-SNAPSHOT-ark-biz.jar, SUCCESS, Install Biz: biz1:0.0.1-SNAPSHOT success, cost: 4756 ms, started at: xx:xx:xx,xxx, BatchDeployResult
+2023-xx-xx xx:xx:xx.xxx  INFO 39753 --- [           main] arklet : ~/koupleless/samples/springboot-samples/web/tomcat/static-deploy-demo/./biz/biz2-web-single-host-0.0.1-SNAPSHOT-ark-biz.jar, SUCCESS, Install Biz: biz2:0.0.1-SNAPSHOT success, cost: 4756 ms, started at: xx:xx:xx,xxx, BatchDeployResult
 ```
 
 可以通过执行如下 curl 验证是否部署成功:

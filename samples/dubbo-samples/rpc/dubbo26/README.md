@@ -140,7 +140,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 --data '{
     "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
-    "bizUrl": "file:////path/to/project/sofa-serverless/samples/dubbo-samples/rpc/dubbo3/dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:////path/to/project/koupleless/samples/dubbo-samples/rpc/dubbo3/dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 
