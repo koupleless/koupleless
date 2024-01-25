@@ -1,12 +1,12 @@
 # 支持基座、模块使用采用独立日志配置打印logback日志
-原理详看[这里](https://github.com/sofastack/sofa-serverless/blob/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/logj42.md)
+原理详看[这里](https://github.com/koupleless/koupleless/blob/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/logj42.md)
 
 # 实验内容
 ## 实验应用
 ### base
 base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
 ```xml
-<!-- sofa-serverless 相关依赖 -->
+<!-- koupleless 相关依赖 -->
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
     原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>

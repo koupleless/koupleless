@@ -20,7 +20,7 @@
 base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖，注意 ⚠️ netty-ark-plugin 版本要求 >= 2.2.5
 ```xml
 
-<!-- begin sofa-serverless相关依赖 -->
+<!-- begin koupleless相关依赖 -->
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
     原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
@@ -29,7 +29,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
-<!-- end sofa-serverless相关依赖 -->
+<!-- end koupleless相关依赖 -->
 
 <!-- begin spring boot webflux 相关依赖 -->
 <dependency>
@@ -105,7 +105,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/xxxxx/sofa-serverless/samples/springboot-samples/web/webflux/biz/target/bizwebflux-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/xxxxx/koupleless/samples/springboot-samples/web/webflux/biz/target/bizwebflux-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 
@@ -161,7 +161,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/xxxxx/sofa-serverless/samples/springboot-samples/web/webflux/biz/target/bizwebflux-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/xxxxx/koupleless/samples/springboot-samples/web/webflux/biz/target/bizwebflux-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 访问基座 base 的 web 服务
