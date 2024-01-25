@@ -22,10 +22,35 @@ draft: true
 2. K8S 集群环境开发验证
 
 ### 本地环境开发验证
-1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.0) , 并放入 `/usr/local/bin` 目录中
-2. 在基座和模块已经改造完成后，启动好基座后，可以使用 arkctl 快速完成构建与部署，将模块部署到基座中
+#### 安装
+1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.1)。
+2. 将对应的二进制解压并放到合适的系统变量 PATH 下。
+3. 在基座和模块已经改造完成后，启动好基座后，可以使用 arkctl 快速完成构建与部署，将模块部署到基座中。
+<br/>
+
+#### 如何找到 PATH 的值？
+Linux/Mac 下在终端执行
+```shell
+echo $PATH
+# 选择一个目录，将 arkctl 放到该目录下
+```
+Windows 下 
+1. 右键我的电脑。
+2. 点击属性。
+3. 点击高级系统设置。
+4. 点击环境变量。
+5. 双击 Path 变量。
+6. 在弹出的对话框中，可以看到当前的 Path 变量值。
+7. 找到对应的目录，将 arkctl.exe 放到该目录下。
+
+#### 使用
+快速部署构建好的模块 jar 包。
 ```shell
 arkctl deploy ${模块构建出的 jar 包路径}
+```
+构建当前目录下的 pom 项目，并将 target 目录下的 biz jar 包部署到基座中。
+```shell
+arkctl deploy 
 ```
 ### K8S 集群环境开发验证, 以 minikube 集群为例
 #### 基座发布

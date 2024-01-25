@@ -133,12 +133,9 @@ public class UnifiedOperationServiceImplTests {
         BatchInstallResponse response = unifiedOperationService.batchInstall(BatchInstallRequest
             .builder().bizDirAbsolutePath("/path/to/biz").build());
 
-        Assert.assertTrue(response.getBizUrlToResponse().
+        Assert.assertTrue(response.getBizUrlToResponse().containsKey("/file/a-biz.jar"));
 
-        containsKey("/file/a-biz.jar"));
-        Assert.assertTrue(response.getBizUrlToResponse().
-
-        containsKey("/file/b-biz.jar"));
+        Assert.assertTrue(response.getBizUrlToResponse().containsKey("/file/b-biz.jar"));
 
     }
 }

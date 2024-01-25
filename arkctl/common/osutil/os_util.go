@@ -12,13 +12,21 @@
  * limitations under the License.
  */
 
-package cmd
+package osutil
 
 import (
-	_ "github.com/koupleless/arkctl/v1/cmd/deploy"
-	_ "github.com/koupleless/arkctl/v1/cmd/gen"
-	_ "github.com/koupleless/arkctl/v1/cmd/root"
-	_ "github.com/koupleless/arkctl/v1/cmd/show"
-	_ "github.com/koupleless/arkctl/v1/cmd/status"
-	_ "github.com/koupleless/arkctl/v1/cmd/version"
+	"runtime"
+	"strings"
 )
+
+func IsWindows() bool {
+	return strings.HasPrefix(strings.ToLower(runtime.GOOS), "win")
+}
+
+func GetLocalFileProtocol() string {
+	if IsWindows() {
+		return "file:///"
+	} else {
+		return "file://"
+	}
+}

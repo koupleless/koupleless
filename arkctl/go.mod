@@ -1,4 +1,4 @@
-module serverless.alipay.com/sofa-serverless/arkctl
+module github.com/koupleless/arkctl
 
 go 1.21
 
