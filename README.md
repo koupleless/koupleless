@@ -1,6 +1,6 @@
 [![Coverage Status](https://codecov.io/gh/koupleless/koupleless/branch/main/graph/badge.svg)](https://codecov.io/gh/koupleless/koupleless/branch/main/graph/badge.svg)
 ![license](https://img.shields.io/badge/license-Apache--2.0-green.svg)
-![Maven Central](https://img.shields.io/maven-central/v/com.alipay.koupleless/koupleless-runtime)
+![Maven Central](https://img.shields.io/maven-central/v/com.alipay.sofa.koupleless/koupleless-runtime)
 
 你想让你的应用 10 秒启动，只占 20MB 内存吗？你是否遇到大应用多人协作互相阻塞、发布效率不高的问题？你是否遇到小应用太多，资源成本和长期维护成本太高的问题呢？如果你也是被这些问题困扰着的，那么 Koupleless 会是你想要的解决方案。Koupleless 从应用架构角度出发，采用模块化架构，以 **极低接入成本** 的方式，解决应用在研发、运维、运行等完整生命周期遇到的痛点问题：
 
