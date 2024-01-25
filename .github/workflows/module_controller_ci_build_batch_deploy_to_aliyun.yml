@@ -78,10 +78,10 @@ jobs:
 
       - name: Prepare development env
         run: |
-          kubectl apply -f config/crd/bases/serverless.alipay.com_moduledeployments.yaml
-          kubectl apply -f config/crd/bases/serverless.alipay.com_modulereplicasets.yaml
-          kubectl apply -f config/crd/bases/serverless.alipay.com_modules.yaml
-          kubectl apply -f config/crd/bases/serverless.alipay.com_moduletemplates.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_moduledeployments.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_modulereplicasets.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_modules.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_moduletemplates.yaml
           kubectl apply -f config/rbac/role.yaml
           kubectl apply -f config/rbac/role_binding.yaml
           kubectl apply -f config/rbac/service_account.yaml
@@ -438,7 +438,7 @@ jobs:
             echo "缩容失败"
             exit 1
           fi
-          
+
       - name: batch scaleup
         run: |
           kubectl apply -f config/samples/ci/module-deployment_v1alpha1_moduledeployment_batch_provider.yaml

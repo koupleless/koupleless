@@ -36,11 +36,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
-	"github.com/sofastack/sofa-serverless/internal/event"
-	"github.com/sofastack/sofa-serverless/internal/utils"
+	"github.com/koupleless/module-controller/api/v1alpha1"
+	"github.com/koupleless/module-controller/internal/constants/finalizer"
+	"github.com/koupleless/module-controller/internal/constants/label"
+	"github.com/koupleless/module-controller/internal/event"
+	"github.com/koupleless/module-controller/internal/utils"
 )
 
 // ModuleDeploymentReconciler reconciles a ModuleDeployment object
@@ -49,9 +49,9 @@ type ModuleDeploymentReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=serverless.alipay.com,resources=moduledeployments,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=serverless.alipay.com,resources=moduledeployments/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=serverless.alipay.com,resources=moduledeployments/finalizers,verbs=update
+//+kubebuilder:rbac:groups=koupleless.io,resources=moduledeployments,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=koupleless.io,resources=moduledeployments/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=koupleless.io,resources=moduledeployments/finalizers,verbs=update
 
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
 //+kubebuilder:rbac:groups="",resources=pods,verbs=create;delete;get;list;patch;update;watch

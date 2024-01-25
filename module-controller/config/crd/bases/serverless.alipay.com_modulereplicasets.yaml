@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.12.0
-  name: modulereplicasets.serverless.alipay.com
+  name: modulereplicasets.koupleless.io
 spec:
-  group: serverless.alipay.com
+  group: koupleless.io
   names:
     kind: ModuleReplicaSet
     listKind: ModuleReplicaSetList

@@ -1,6 +1,6 @@
 package event
 
-import "github.com/sofastack/sofa-serverless/api/v1alpha1"
+import "github.com/koupleless/module-controller/api/v1alpha1"
 
 type ModuleDeleteEvent struct {
 	Module v1alpha1.Module
