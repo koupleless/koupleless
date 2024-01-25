@@ -12,7 +12,7 @@ metadata:
   name: moduledeployment-editor-role
 rules:
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - moduledeployments
   verbs:
@@ -24,7 +24,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - moduledeployments/status
   verbs:

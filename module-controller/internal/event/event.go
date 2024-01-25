@@ -1,7 +1,7 @@
 package event
 
 import (
-	"github.com/sofastack/sofa-serverless/internal/utils"
+	"github.com/koupleless/module-controller/internal/utils"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 

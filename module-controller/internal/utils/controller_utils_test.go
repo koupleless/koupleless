@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/koupleless/module-controller/api/v1alpha1"
 	"golang.org/x/net/context"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"strconv"
@@ -15,8 +15,8 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/koupleless/module-controller/internal/constants/finalizer"
+	"github.com/koupleless/module-controller/internal/constants/label"
 )
 
 func TestAddNotExistedFinalizer(t *testing.T) {

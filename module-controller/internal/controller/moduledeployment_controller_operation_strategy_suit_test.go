@@ -14,9 +14,9 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
-	"github.com/sofastack/sofa-serverless/internal/utils"
+	"github.com/koupleless/module-controller/api/v1alpha1"
+	"github.com/koupleless/module-controller/internal/constants/label"
+	"github.com/koupleless/module-controller/internal/utils"
 )
 
 var _ = Describe("ModuleDeployment Controller OperationStrategy Test", func() {
