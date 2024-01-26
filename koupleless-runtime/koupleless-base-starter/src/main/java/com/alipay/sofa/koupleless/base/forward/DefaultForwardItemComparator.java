@@ -16,29 +16,45 @@
  */
 package com.alipay.sofa.koupleless.base.forward;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 /**
- * 该Java函数用于比较两个ForwardItem对象，通过比较它们的host和path属性长度决定优先级。
- * 若item1无host而item2有，则item2优先；反之item1优先。
- * 然后根据path长度差值判断，若相等则再依据host长度差值确定返回值（即优先级）。
+ * Compares the priorities of two ForwardItem objects.
  */
-@ConditionalOnMissingBean(ForwardItemComparator.class)
-@Component
-class DefaultForwardItemComparator implements ForwardItemComparator {
-    @Override
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class DefaultForwardItemComparator implements ForwardItemComparator {
+    @Getter
+    private static final ForwardItemComparator instance = new DefaultForwardItemComparator();
+
+    /**
+     * Compares the priorities of two ForwardItem objects.
+     *
+     * @param item1 The first ForwardItem object.
+     * @param item2 The second ForwardItem object.
+     * @return Returns a comparison result: if item1's host is empty and item2's host is not, returns 1;
+     * if item1's host is not empty and item2's host is empty, returns -1;
+     * otherwise, subtracts the length of item1's path from item2's path, and if the difference is 0,
+     * subtracts the length of item1's host from item2's host to determine the result.
+     */
     public int compare(ForwardItem item1, ForwardItem item2) {
-        if (!StringUtils.hasLength(item1.getHost()) && StringUtils.hasLength(item2.getHost())) {
+        // Retrieve the host strings
+        String host1 = item1.getHost();
+        String host2 = item2.getHost();
+        // Compare hosts: return 1 if item1's host is empty and item2's isn't, -1 otherwise
+        if (!StringUtils.hasLength(host1) && StringUtils.hasLength(host2)) {
             return 1;
         }
-        if (StringUtils.hasLength(item1.getHost()) && !StringUtils.hasLength(item2.getHost())) {
+        if (StringUtils.hasLength(host1) && !StringUtils.hasLength(host2)) {
             return -1;
         }
-        int num = item2.getPath().length() - item1.getPath().length();
+        // Compare path lengths; use Integer.compare for a cleaner comparison
+        int num = Integer.compare(item2.getPath().length(), item1.getPath().length());
         if (num == 0) {
-            num = item2.getHost().length() - item1.getHost().length();
+            num = Integer.compare(item2.getHost().length(), item1.getHost().length());
         }
         return num;
     }

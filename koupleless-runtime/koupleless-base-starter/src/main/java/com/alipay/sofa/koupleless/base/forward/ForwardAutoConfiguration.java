@@ -18,8 +18,8 @@ package com.alipay.sofa.koupleless.base.forward;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -35,38 +35,43 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ConditionalOnProperty(name = "koupleless.forward.conf.path")
 @ComponentScan(basePackages = "com.alipay.sofa.koupleless.base.forward")
 public class ForwardAutoConfiguration implements ApplicationContextAware {
-    private ApplicationContext    applicationContext;
+    private ApplicationContext  applicationContext;
 
-    @Autowired
-    private ForwardItemComparator forwardItemComparator;
+    private static final String EMPTY               = "";
+    private static final String CONTEXT_PATH_PREFIX = "/";
 
-    private static final String   EMPTY               = "";
-    private static final String   CONTEXT_PATH_PREFIX = "/";
+    private static final String PATH_PREFIX         = "/";
     @Value("${koupleless.forward.conf.path}")
-    private String                confPath;
+    private String              confPath;
 
     @Bean
-    public Forwards forwards() throws IOException {
+    public Forwards forwards(ForwardItemComparator forwardItemComparator) throws IOException {
         List<Forward> forwards = fromYaml();
         List<ForwardItem> items = toForwardItems(forwards);
         items.sort(forwardItemComparator);
         return new Forwards(items);
     }
 
+    @Bean
+    @ConditionalOnMissingBean(ForwardItemComparator.class)
+    public ForwardItemComparator forwardItemComparator() {
+        return DefaultForwardItemComparator.getInstance();
+    }
+
     private List<ForwardItem> toForwardItems(List<Forward> forwards) {
         if (CollectionUtils.isEmpty(forwards)) {
             return Collections.emptyList();
-        } else {
-            List<ForwardItem> items = new LinkedList<>();
-            for (Forward forward : forwards) {
-                items.addAll(toForwardItems(forward, items.size()));
-            }
-            return items;
         }
+        List<ForwardItem> items = new LinkedList<>();
+        for (Forward forward : forwards) {
+            items.addAll(toForwardItems(forward, items.size()));
+        }
+        return items;
     }
 
     private List<ForwardItem> toForwardItems(Forward forward, int startIndex) {
@@ -80,13 +85,17 @@ public class ForwardAutoConfiguration implements ApplicationContextAware {
         }
         Set<String> paths = forward.getPaths();
         if (CollectionUtils.isEmpty(paths)) {
-            paths = Collections.singleton(EMPTY);
+            paths = Collections.singleton(PATH_PREFIX);
+        } else {
+            paths = paths.stream()
+                    .map(path -> path.startsWith(CONTEXT_PATH_PREFIX) ? path : CONTEXT_PATH_PREFIX + path)
+                    .collect(Collectors.toSet());
         }
         List<ForwardItem> items = new LinkedList<>();
+        int index = startIndex;
         for (String host : hosts) {
             for (String path : paths) {
-                int index = startIndex + items.size();
-                ForwardItem item = new ForwardItem(index, contextPath, host, path);
+                ForwardItem item = new ForwardItem(index++, contextPath, host, path);
                 items.add(item);
             }
         }

@@ -39,7 +39,7 @@ public class ForwardController {
                                                                                   throws ServletException,
                                                                                   IOException {
         String path = request.getServletPath();
-        URI uri = URI.create(request.getRequestURI());
+        URI uri = URI.create(request.getRequestURL().toString());
         String contextPath = forwards.getContextPath(uri);
         ServletContext currentContext = request.getServletContext();
         ServletContext nextContext = currentContext.getContext(contextPath + path);

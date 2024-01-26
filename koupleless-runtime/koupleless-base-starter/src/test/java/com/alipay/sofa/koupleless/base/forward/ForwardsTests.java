@@ -23,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -32,18 +31,14 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
-import java.util.Comparator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ForwardsTests {
     @InjectMocks
     private ForwardAutoConfiguration configuration;
-
-    @Spy
-    private Comparator<ForwardItem>  forwardItemComparator = new DefaultForwardItemComparator();
     @Mock
     private ApplicationContext       applicationContext;
-    private String                   confPath              = "classpath:forwards.yaml";
+    private String                   confPath = "classpath:forwards.yaml";
 
     @Before
     public void before() throws NoSuchFieldException, IllegalAccessException, IOException {
@@ -57,7 +52,7 @@ public class ForwardsTests {
 
     @Test
     public void testForwards() throws IOException {
-        Forwards forwards = configuration.forwards();
+        Forwards forwards = configuration.forwards(DefaultForwardItemComparator.getInstance());
         Assert.assertNotNull(forwards);
         URI uri = URI.create("http://test1.xxx.com/test2");
         String contextPath = forwards.getContextPath(uri);

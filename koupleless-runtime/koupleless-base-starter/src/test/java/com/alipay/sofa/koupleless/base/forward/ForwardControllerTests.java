@@ -23,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -36,20 +35,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Comparator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ForwardControllerTests {
     @InjectMocks
     private ForwardAutoConfiguration configuration;
-
-    @Spy
-    private Comparator<ForwardItem>  forwardItemComparator = new DefaultForwardItemComparator();
     @Mock
     private ApplicationContext       applicationContext;
-    private String                   confPath              = "classpath:forwards.yaml";
+    private String                   confPath   = "classpath:forwards.yaml";
 
-    private ForwardController        controller            = new ForwardController();
+    private ForwardController        controller = new ForwardController();
 
     @Before
     public void before() throws NoSuchFieldException, IllegalAccessException, IOException {
@@ -58,7 +53,7 @@ public class ForwardControllerTests {
         field.set(configuration, confPath);
         Mockito.when(applicationContext.getResources(Mockito.anyString())).thenReturn(
             new Resource[] { new ClassPathResource("forwards.yaml") });
-        Forwards forwards = configuration.forwards();
+        Forwards forwards = configuration.forwards(DefaultForwardItemComparator.getInstance());
         field = ForwardController.class.getDeclaredField("forwards");
         field.setAccessible(true);
         field.set(controller, forwards);
@@ -98,25 +93,25 @@ public class ForwardControllerTests {
         });
 
 
-        Mockito.when(request.getRequestURI()).thenReturn("http://test1.xxx.com/test2");
+        Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://test1.xxx.com/test2"));
         Mockito.when(request.getServletPath()).thenReturn("/test2");
         controller.redirect(request, response);
         Mockito.verify(dispatcher2, Mockito.times(1)).forward(request, response);
 
 
-        Mockito.when(request.getRequestURI()).thenReturn("http://test1.xxx.com/test1/xx");
+        Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://test1.xxx.com/test1/xx"));
         Mockito.when(request.getServletPath()).thenReturn("/test1/xx");
         controller.redirect(request, response);
         Mockito.verify(dispatcher1, Mockito.times(1)).forward(request, response);
 
 
-        Mockito.when(request.getRequestURI()).thenReturn("http://test3.xxx.com/test1/xx");
+        Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://test3.xxx.com/test1/xx"));
         Mockito.when(request.getServletPath()).thenReturn("/test1/xx");
         controller.redirect(request, response);
         Mockito.verify(dispatcher3, Mockito.times(1)).forward(request, response);
 
 
-        Mockito.when(request.getRequestURI()).thenReturn("http://test4.xxx.com/test1/xx");
+        Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://test4.xxx.com/test1/xx"));
         Mockito.when(request.getServletPath()).thenReturn("/test1/xx");
         Assert.assertThrows(IllegalArgumentException.class, () -> controller.redirect(request, response));
     }
