@@ -1,5 +1,7 @@
 ---
 title: 所有 K8S 资源定义及部署方式
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless 所有 K8S 资源定义及部署方式
 weight: 900
 ---
 
