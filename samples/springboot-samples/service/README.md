@@ -81,7 +81,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/xxxx/xxxx/Code/sofa-serverless/samples/springboot-samples/service/sample-service-biz/biz-bootstrap/target/biz-bootstrap-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/xxxx/xxxx/Code/koupleless/samples/springboot-samples/service/sample-service-biz/biz-bootstrap/target/biz-bootstrap-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 
@@ -94,7 +94,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz2",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/xxxx/xxxx/Code/sofa-serverless/samples/springboot-samples/service/sample-service-biz2/biz2-bootstrap/target/biz2-bootstrap-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/xxxx/xxxx/Code/koupleless/samples/springboot-samples/service/sample-service-biz2/biz2-bootstrap/target/biz2-bootstrap-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 

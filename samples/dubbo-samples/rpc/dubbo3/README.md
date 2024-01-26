@@ -155,7 +155,7 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
 ```
 
 ### 运行代码
-1. 进入目录 `sofa-serverless/samples/dubbo-samples/rpc/dubbo3/`
+1. 进入目录 `koupleless/samples/dubbo-samples/rpc/dubbo3/`
 2. 执行 `mvn clean install -DskipTests`
 3. 启动 zookeeper（用于Dubbo服务注册）
 ```shell
@@ -170,7 +170,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 --data '{
     "bizName": "triplebiz",
     "bizVersion": "0.0.1-SNAPSHOT",
-    "bizUrl": "file:////path/to/project/sofa-serverless/samples/dubbo-samples/rpc/dubbo3/triplebiz/target/triplebiz-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:////path/to/project/koupleless/samples/dubbo-samples/rpc/dubbo3/triplebiz/target/triplebiz-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 

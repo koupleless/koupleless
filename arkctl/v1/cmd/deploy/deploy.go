@@ -21,17 +21,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/koupleless/arkctl/common/osutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"serverless.alipay.com/sofa-serverless/arkctl/common/cmdutil"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/runtime"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/style"
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/service/ark"
+	"github.com/koupleless/arkctl/common/cmdutil"
+	"github.com/koupleless/arkctl/common/contextutil"
+	"github.com/koupleless/arkctl/common/fileutil"
+	"github.com/koupleless/arkctl/common/runtime"
+	"github.com/koupleless/arkctl/common/style"
+	"github.com/koupleless/arkctl/v1/cmd/root"
+	"github.com/koupleless/arkctl/v1/service/ark"
 
 	"github.com/google/uuid"
 	"github.com/pterm/pterm"
@@ -146,7 +147,7 @@ func execMavenBuild(ctx *contextutil.Context) bool {
 
 func execParseBizModel(ctx *contextutil.Context) bool {
 	style.InfoPrefix("Stage").Println("ParseBizModel")
-	bundlePath := "file://" + defaultArg
+	bundlePath := osutil.GetLocalFileProtocol() + defaultArg
 	if doBuild {
 		searchdir := defaultArg
 		if subBundlePath != "" {
@@ -164,7 +165,7 @@ func execParseBizModel(ctx *contextutil.Context) bool {
 			pterm.Error.Println("can not find pre built biz bundle in build dir!")
 			return false
 		}
-		bundlePath = "file://" + bundlePath
+		bundlePath = osutil.GetLocalFileProtocol() + bundlePath
 	}
 
 	bizModel, err := ark.ParseBizModel(ctx, fileutil.FileUrl(bundlePath))
@@ -289,7 +290,7 @@ func execInstallInKubePod(ctx *contextutil.Context) bool {
 		string(runtime.Must(json.Marshal(ark.BizModel{
 			BizName:    bizModel.BizName,
 			BizVersion: bizModel.BizVersion,
-			BizUrl:     fileutil.FileUrl("file://" + ctx.Value(ctxKeyArkBizBundlePathInSidePod).(string)),
+			BizUrl:     fileutil.FileUrl(osutil.GetLocalFileProtocol() + ctx.Value(ctxKeyArkBizBundlePathInSidePod).(string)),
 		}))),
 		fmt.Sprintf("http://127.0.0.1:%v/installBiz", portFlag),
 	)

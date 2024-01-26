@@ -18,13 +18,14 @@ import (
 	"archive/zip"
 	"context"
 	"fmt"
+	"github.com/koupleless/arkctl/common/osutil"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
-	"serverless.alipay.com/sofa-serverless/arkctl/common/fileutil"
+	"github.com/koupleless/arkctl/common/fileutil"
 
 	"github.com/google/uuid"
 	"github.com/magiconair/properties/assert"
@@ -74,5 +75,5 @@ func TestParseBizModel_LocalJar(t *testing.T) {
 
 	assert.Equal(t, model.BizName, "testName")
 	assert.Equal(t, model.BizVersion, "version")
-	assert.Equal(t, model.BizUrl, fileutil.FileUrl("file://"+zipFilePath))
+	assert.Equal(t, model.BizUrl, fileutil.FileUrl(osutil.GetLocalFileProtocol()+zipFilePath))
 }

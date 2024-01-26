@@ -13,7 +13,7 @@ import (
 	"k8s.io/utils/env"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/koupleless/module-controller/api/v1alpha1"
 )
 
 const (

@@ -1,7 +1,7 @@
 package event
 
 import (
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/koupleless/module-controller/api/v1alpha1"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

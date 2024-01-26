@@ -1,11 +1,11 @@
 package finalizer
 
 const (
-	AllocatePodFinalizer = "serverless.alipay.com/allocate-pod"
+	AllocatePodFinalizer = "koupleless.io/allocate-pod"
 
-	ModuleReplicaSetExistedFinalizer = "serverless.alipay.com/module-replicaset-existed"
+	ModuleReplicaSetExistedFinalizer = "koupleless.io/module-replicaset-existed"
 
-	ModuleExistedFinalizer = "serverless.alipay.com/module-existed"
+	ModuleExistedFinalizer = "koupleless.io/module-existed"
 
 	ModuleNameFinalizer = "serverless.alipay.com/module-name"
 )

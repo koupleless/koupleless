@@ -80,7 +80,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz1",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/path/to/sofa-serverless/samples/sofaboot-samples/dynamic-stock/biz1/target/biz1-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/path/to/koupleless/samples/sofaboot-samples/dynamic-stock/biz1/target/biz1-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 查看部署状态
@@ -145,7 +145,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz1",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/path/to/sofa-serverless/samples/sofaboot-samples/dynamic-stock/biz1/target/biz1-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/path/to/koupleless/samples/sofaboot-samples/dynamic-stock/biz1/target/biz1-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 3. 查看部署状态
@@ -202,7 +202,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz1",
     "bizVersion": "0.0.2-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/path/to/sofa-serverless/samples/sofaboot-samples/dynamic-stock/biz1/target/biz1-0.0.2-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/path/to/koupleless/samples/sofaboot-samples/dynamic-stock/biz1/target/biz1-0.0.2-SNAPSHOT-ark-biz.jar"
 }'
 ```
 5. 查看部署状态
@@ -285,4 +285,4 @@ curl --location --request POST 'localhost:1238/queryAllBiz'
 
 ## 注意事项
 1. 这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
-2. 如果你对 web context path 的使用方式有疑问可以查看[这里](https://github.com/sofastack/sofa-serverless/tree/master/samples/springboot-samples/web/tomcat)
+2. 如果你对 web context path 的使用方式有疑问可以查看[这里](https://github.com/koupleless/koupleless/tree/master/samples/springboot-samples/web/tomcat)

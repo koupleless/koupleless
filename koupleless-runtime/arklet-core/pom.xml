@@ -18,6 +18,7 @@
             <artifactId>sofa-ark-api</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
@@ -74,6 +75,10 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-common</artifactId>
         </dependency>
 
     </dependencies>
