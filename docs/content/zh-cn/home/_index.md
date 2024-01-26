@@ -1,10 +1,14 @@
 ---
 title: Koupleless
 linkTitle: 首页
-date: 2023-10-21T10:28:35+08:00
+date: 2024-01-25T10:28:32+08:00
+description: Koupelelss - 让普通应用低成本享受 Serverless 体验，帮助企业降本增效！
 menu: {main: {weight: 10}}
 url: "/home/"
 ---
+
+<title>Koupleless</title>
+<meta name="description" content="Koupelelss - 让普通应用低成本享受 Serverless 体验，帮助企业降本增效！">
 
 {{< blocks/cover image_anchor="top" height="min" >}}
 
@@ -166,10 +170,10 @@ url: "/home/"
     >Koupleless 是一种模块化 Serverless 技术解决方案，它能让普通应用低成本演进为 Serverless 研发模式，让代码与资源解耦，轻松独立维护，
 与此同时支持秒级构建部署、合并部署、动态伸缩等能力为用户提供极致的研发运维体验，最终帮助企业实现降本增效。</p>
 
-<!-- For 搜索引擎检索，修改无用 --><p style="visibility: hidden; margin: 0; height: 0px;">十亿级可统计的企业线上每分钟流量。50%企业需求交付效率提升。75%长尾应用机器数量减少。</p>
+<!-- For 搜索引擎检索，修改无用 --><p style="visibility: hidden; margin: 0; height: 0px;">十亿级可统计的企业线上每分钟流量。50%企业需求交付效率提升。80%长尾应用机器数量减少。</p>
 
 <div style="margin-left: -25px; margin-top: -44px;">
-    <img style="margin: 0; border: none;" src="/img/statistic-digest.png" width="1003px" />
+    <img style="margin: 0; border: none;" alt="Koupleless 收益。Koupleless 规模。" src="/img/statistic-digest.png" width="1003px" />
 </div>
 <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 40px; color: #FFFFFF; letter-spacing: 0;
     text-align: center; line-height: 48px; margin-top: 125px; margin-bottom: 48px;">适用场景</p>
@@ -439,7 +443,7 @@ url: "/home/"
 <!-- For 搜索引擎检索，修改无用 --><p style="visibility: hidden; margin: 0; height: 0px;">Evolution as you need: 提供配套工具，传统应用能一键改造成模块，大应用能低成本拆分成模块，模块能轻松演进成微服务或者回到单体应用。</p>
 
 <div id="benefits">
-    <img width="1200" src="/img/benefits.png" />
+    <img width="1200" alt="Koupleless 优势" src="/img/benefits.png" />
 </div>
 
 <div style="background: url('https://koupleless.oss-cn-shanghai.aliyuncs.com/outer-materials/docs/img/communication-channel-background.png') round;
@@ -459,7 +463,7 @@ url: "/home/"
         <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-weight: 600; font-size: 20px; color: #FFFFFF; 
             letter-spacing: 0; line-height: 26px; margin: 0px; margin-bottom: 16px;">欢迎加入社区交流钉钉群</p>
         <div style="background: url('/img/qcode-background.png') center no-repeat; background-size: 204px; margin: 0 auto;">
-            <img style="border: solid; border-radius: 6px; margin-top: 12px; width: 178px;" src="/img/dingtalk-qcode.png" />
+            <img style="border: solid; border-radius: 6px; margin-top: 12px; width: 178px;" alt="Koupleless 交流钉钉群二维码" src="/img/dingtalk-qcode.png" />
         </div>
         <p style="opacity: 1; font-family: PingFangSC-Regular, 'Microsoft Yahei'; font-size: 16px; color: rgba(255,255,255,0.65); letter-spacing: 0;
             line-height: 24px; margin: 0px; margin-top: 14px; ">社区交流钉钉群号：24970018417</p>
@@ -468,7 +472,7 @@ url: "/home/"
         <p style="opacity: 0.95; font-family: AlibabaPuHuiTiB; font-size: 20px; color: #FFFFFF; letter-spacing: 0;
             line-height: 26px; margin: 0px; margin-bottom: 16px;">欢迎加入社区交流微信群</p>
         <div style="background: url('/img/qcode-background.png') center no-repeat; background-size: 204px; margin: 0 auto;">
-            <img style="border: solid; border-radius: 6px; margin-top: 12px; width: 178px;" src="/img/wechat-qcode.png" />
+            <img style="border: solid; border-radius: 6px; margin-top: 12px; width: 178px;" alt="Koupleless 交流微信群二维码" src="/img/wechat-qcode.png" />
         </div>
     </div>
 </div>

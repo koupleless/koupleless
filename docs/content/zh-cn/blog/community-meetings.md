@@ -1,7 +1,8 @@
 ---
 title: 社区会议纪要
-date: 2023-09-22T10:28:33+08:00
+date: 2024-01-25T10:28:32+08:00
 weight: 300
+description: Koupleless 社区会议纪要
 ---
 
 ### Koupleless (SOFAServerless) 23.01.09 社区会议
