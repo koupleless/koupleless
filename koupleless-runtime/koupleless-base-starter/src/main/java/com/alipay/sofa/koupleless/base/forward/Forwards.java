@@ -41,7 +41,7 @@ public class Forwards {
     private String parseContextPath(String host, String path) {
         for (ForwardItem item : items) {
             boolean matchHost = !StringUtils.hasLength(item.getHost())
-                                || host.startsWith(item.getHost() + ".");
+                                || host.startsWith(item.getHost());
             boolean matchPath = path.startsWith(item.getPath());
             if (matchHost && matchPath) {
                 return item.getContextPath();
