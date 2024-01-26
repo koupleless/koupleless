@@ -26,9 +26,13 @@ public class ForwardItem {
     @Getter
     private final String path;
 
-    public ForwardItem(String contextPath, String host, String path) {
+    @Getter
+    private final int    index;
+
+    public ForwardItem(int index, String contextPath, String host, String path) {
         this.contextPath = contextPath;
         this.host = host;
         this.path = path;
+        this.index = index;
     }
 }

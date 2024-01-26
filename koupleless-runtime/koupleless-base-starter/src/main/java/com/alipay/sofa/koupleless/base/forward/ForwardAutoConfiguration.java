@@ -31,20 +31,23 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 @ConditionalOnProperty(name = "koupleless.forward.conf.path")
 @ComponentScan(basePackages = "com.alipay.sofa.koupleless.base.forward")
 public class ForwardAutoConfiguration implements ApplicationContextAware {
-    private ApplicationContext      applicationContext;
+    private ApplicationContext    applicationContext;
 
     @Autowired
-    private Comparator<ForwardItem> forwardItemComparator;
+    private ForwardItemComparator forwardItemComparator;
 
-    private static final String     EMPTY               = "";
-    private static final String     CONTEXT_PATH_PREFIX = "/";
+    private static final String   EMPTY               = "";
+    private static final String   CONTEXT_PATH_PREFIX = "/";
     @Value("${koupleless.forward.conf.path}")
-    private String                  confPath;
+    private String                confPath;
 
     @Bean
     public Forwards forwards() throws IOException {
@@ -60,13 +63,13 @@ public class ForwardAutoConfiguration implements ApplicationContextAware {
         } else {
             List<ForwardItem> items = new LinkedList<>();
             for (Forward forward : forwards) {
-                items.addAll(toForwardItems(forward));
+                items.addAll(toForwardItems(forward, items.size()));
             }
             return items;
         }
     }
 
-    private List<ForwardItem> toForwardItems(Forward forward) {
+    private List<ForwardItem> toForwardItems(Forward forward, int startIndex) {
         Set<String> hosts = forward.getHosts();
         if (CollectionUtils.isEmpty(hosts)) {
             hosts = Collections.singleton(EMPTY);
@@ -82,7 +85,9 @@ public class ForwardAutoConfiguration implements ApplicationContextAware {
         List<ForwardItem> items = new LinkedList<>();
         for (String host : hosts) {
             for (String path : paths) {
-                items.add(new ForwardItem(contextPath, host, path));
+                int index = startIndex + items.size();
+                ForwardItem item = new ForwardItem(index, contextPath, host, path);
+                items.add(item);
             }
         }
         return items;

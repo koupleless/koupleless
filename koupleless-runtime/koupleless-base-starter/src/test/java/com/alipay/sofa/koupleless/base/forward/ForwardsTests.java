@@ -40,7 +40,7 @@ public class ForwardsTests {
     private ForwardAutoConfiguration configuration;
 
     @Spy
-    private Comparator<ForwardItem>  forwardItemComparator = new ForwardItemComparator();
+    private Comparator<ForwardItem>  forwardItemComparator = new DefaultForwardItemComparator();
     @Mock
     private ApplicationContext       applicationContext;
     private String                   confPath              = "classpath:forwards.yaml";
