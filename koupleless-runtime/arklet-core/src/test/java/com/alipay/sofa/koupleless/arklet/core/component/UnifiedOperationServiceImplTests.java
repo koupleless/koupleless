@@ -49,7 +49,7 @@ public class UnifiedOperationServiceImplTests {
     private UnifiedOperationServiceImpl unifiedOperationService;
 
     @Spy
-    private BatchInstallHelper batchInstallHelper;
+    private BatchInstallHelper          batchInstallHelper;
 
     @Before
     public void setUp() {
@@ -131,7 +131,7 @@ public class UnifiedOperationServiceImplTests {
         }
 
         BatchInstallResponse response = unifiedOperationService.batchInstall(BatchInstallRequest
-                .builder().bizDirAbsolutePath("/path/to/biz").build());
+            .builder().bizDirAbsolutePath("/path/to/biz").build());
 
         Assert.assertTrue(response.getBizUrlToResponse().containsKey("/file/a-biz.jar"));
 
