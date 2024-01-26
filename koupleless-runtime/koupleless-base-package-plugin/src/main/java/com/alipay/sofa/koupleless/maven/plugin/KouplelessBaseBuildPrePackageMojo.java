@@ -19,7 +19,6 @@ package com.alipay.sofa.koupleless.maven.plugin;
 import com.alipay.sofa.koupleless.maven.plugin.common.JarFileUtils;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
-import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
@@ -28,9 +27,7 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.DependencyResolutionRequest;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectDependenciesResolver;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
@@ -57,9 +54,6 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project.build.directory}", readonly = true)
     private File outputDirectory;
-
-    @Parameter(property = "promoteSofaServerlessAdapterPriority", defaultValue = "true")
-    private boolean promoteSofaServerlessAdapterPriority;
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     MavenProject project;
@@ -90,43 +84,6 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
     }
 
     @SneakyThrows
-    private void promoteSofaServerlessAdapterPriorityInClassPathIdx(Path targetJarFilePath) {
-        getLog().info("start to promote sofa serverless adapter priority for jar " + targetJarFilePath.toAbsolutePath().toString());
-        String targetJarFileAbsPath = targetJarFilePath.toAbsolutePath().toString();
-        File targetJarFile = new File(targetJarFileAbsPath);
-        List<String> classpathidx = JarFileUtils.getFileLines(targetJarFilePath.toFile(), "BOOT-INF/classpath.idx");
-        if (classpathidx == null) {
-            getLog().warn("classpathidx not found.");
-            return;
-        }
-
-        for (int i = 0; i < classpathidx.size(); i++) {
-            String line = classpathidx.get(i);
-            if (line.contains("sofa-serverless-adapter")) {
-                classpathidx.remove(i);
-                classpathidx.add(0, line);
-                break;
-            }
-        }
-        JarFileUtils.updateJarFileContent(targetJarFile, "BOOT-INF/classpath.idx", String.join(System.lineSeparator(), classpathidx));
-    }
-
-    /**
-     * move the priority of sofa serverless adapter priority so that it can be loaded before other dependencies.
-     * this would ensure the logic of compatibility fix file.
-     */
-    private void promoteThePriorityOfSofaServerlessAdapterDependency() throws Throwable {
-        if (!promoteSofaServerlessAdapterPriority) {
-            getLog().warn("if this is set to false, you should manually ensure the sofa-serverless-adapter is loaded before other dependencies.");
-            return;
-        }
-
-        Files.walk(outputDirectory.toPath()).
-                filter(path -> path.toString().contains(".jar")).
-                forEach((this::promoteSofaServerlessAdapterPriorityInClassPathIdx));
-    }
-
-    @SneakyThrows
     private void addPatchToProjectRoot(String entryName, Byte[] bytes) {
         Path outputfile = Paths.get(outputDirectory.getAbsolutePath(), "classes", entryName);
         Path parentDir = outputfile.getParent();
@@ -139,32 +96,13 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
         getLog().info("patched added " + outputfile.toAbsolutePath().toString());
     }
 
-    private void addDependencyToFirst() {
-        Dependency dependency = new Dependency();
-        dependency.setGroupId("com.alipay.sofa.serverless");
-        dependency.setArtifactId("sofa-serverless-adapter-dubbo2.6");
-        dependency.setVersion("0.5.5");
-
-        ArrayList<Dependency> newDependencies = new ArrayList<>();
-        newDependencies.add(dependency);
-        newDependencies.addAll(project.getDependencies());
-        project.setDependencies(newDependencies);
-
-        Artifact artifact = downloadAdapterDependency(
-                dependency.getGroupId(),
-                dependency.getArtifactId(),
-                dependency.getVersion()
-        );
-
-    }
-
     @Override
     public void execute() throws MojoExecutionException {
         try {
             File file = downloadAdapterDependency(
-                    "com.alipay.sofa.serverless",
-                    "sofa-serverless-adapter-dubbo2.6",
-                    "0.5.5"
+                    "com.alipay.sofa.koupleless",
+                    "koupleless-adapter-dubbo-2.6",
+                    "0.5.7-SNAPSHOT"
             ).getFile();
             Map<String, Byte[]> entryToContent = JarFileUtils.getFileContentAsLines(file, Pattern.compile(".*\\.class$"));
             for (Map.Entry<String, Byte[]> entry : entryToContent.entrySet()) {
