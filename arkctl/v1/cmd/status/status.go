@@ -18,13 +18,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/style"
+	"github.com/koupleless/arkctl/common/style"
 	"strings"
 
-	"serverless.alipay.com/sofa-serverless/arkctl/common/cmdutil"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/runtime"
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/service/ark"
+	"github.com/koupleless/arkctl/common/cmdutil"
+	"github.com/koupleless/arkctl/common/runtime"
+	"github.com/koupleless/arkctl/v1/cmd/root"
+	"github.com/koupleless/arkctl/v1/service/ark"
 
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"

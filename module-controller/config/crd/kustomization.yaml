@@ -2,9 +2,9 @@
 # since it depends on service name and namespace that are out of this kustomize package.
 # It should be run by config/default
 resources:
-- bases/serverless.alipay.com_moduledeployments.yaml
-- bases/serverless.alipay.com_modules.yaml
-- bases/serverless.alipay.com_modulereplicasets.yaml
+- bases/koupleless.io_moduledeployments.yaml
+- bases/koupleless.io_modules.yaml
+- bases/koupleless.io_modulereplicasets.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
 patches:

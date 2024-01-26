@@ -18,9 +18,9 @@
 package main
 
 import (
-	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
-	_ "serverless.alipay.com/sofa-serverless/arkctl/v1/cmd"
-	"serverless.alipay.com/sofa-serverless/arkctl/v1/cmd/root"
+	"github.com/koupleless/arkctl/common/contextutil"
+	_ "github.com/koupleless/arkctl/v1/cmd"
+	"github.com/koupleless/arkctl/v1/cmd/root"
 )
 
 func main() {

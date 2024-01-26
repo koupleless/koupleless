@@ -14,31 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.alipay.sofa.koupleless.common.util;
 
-package version
+/**
+ * @author CodeNoobKing
+ * @data 2024/1/22
+ */
+public class OSUtils {
 
-import (
-	"fmt"
-	"github.com/koupleless/arkctl/v1/cmd/root"
-	"github.com/koupleless/arkctl/v1/constant"
-)
+    static String OS_NAME_KEY = "os.name"; // 操作系统名称。
 
-import (
-	"github.com/spf13/cobra"
-)
-
-// versionCmd represents the version command
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "show version",
-	Long:  ``,
-	Run:   versionFunc,
-}
-
-func init() {
-	root.RootCmd.AddCommand(versionCmd)
-}
-
-func versionFunc(cmd *cobra.Command, _ []string) {
-	fmt.Printf("arkctl Version: %s\n", constant.Version)
+    /**
+     * 获取本地文件协议前缀。
+     *
+     * @return 本地文件协议前缀。
+     */
+    public static String getLocalFileProtocolPrefix() {
+        String os = System.getProperty(OS_NAME_KEY);
+        if (os.toLowerCase().startsWith("win")) {
+            return "file:///";
+        } else {
+            return "file://";
+        }
+    }
 }

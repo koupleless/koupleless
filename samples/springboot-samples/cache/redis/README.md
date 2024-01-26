@@ -222,7 +222,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/xxxx/xxxx/Code/sofa-serverless/samples/springboot-samples/redis/sample-redis-biz/redis-biz-bootstrap/target/redis-biz-bootstrap-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/xxxx/xxxx/Code/koupleless/samples/springboot-samples/redis/sample-redis-biz/redis-biz-bootstrap/target/redis-biz-bootstrap-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 

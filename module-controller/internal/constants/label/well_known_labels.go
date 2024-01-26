@@ -1,21 +1,21 @@
 package label
 
 const (
-	DeploymentNameLabel = "serverless.alipay.com/deployment-name"
+	DeploymentNameLabel = "koupleless.io/deployment-name"
 
-	ModuleNameLabel = "serverless.alipay.com/module-name"
+	ModuleNameLabel = "koupleless.io/module-name"
 
-	ModuleVersionLabel = "serverless.alipay.com/module-version"
+	ModuleVersionLabel = "koupleless.io/module-version"
 
-	BaseInstanceIpLabel = "serverless.alipay.com/base-instance-ip"
+	BaseInstanceIpLabel = "koupleless.io/base-instance-ip"
 
-	BaseInstanceNameLabel = "serverless.alipay.com/base-instance-name"
+	BaseInstanceNameLabel = "koupleless.io/base-instance-name"
 
-	ModuleReplicasetLabel = "serverless.alipay.com/module-replicaset"
+	ModuleReplicasetLabel = "koupleless.io/module-replicaset"
 
-	ModuleDeploymentLabel = "serverless.alipay.com/module-deployment"
+	ModuleDeploymentLabel = "koupleless.io/module-deployment"
 
-	ModuleReplicasetRevisionLabel = "serverless.alipay.com/module-replicaset-revision"
+	ModuleReplicasetRevisionLabel = "koupleless.io/module-replicaset-revision"
 
 	DeleteModuleLabel = "serverless.alipay.com/delete-module"
 

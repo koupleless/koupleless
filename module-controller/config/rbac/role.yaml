@@ -37,7 +37,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - moduledeployments
   verbs:
@@ -49,13 +49,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - moduledeployments/finalizers
   verbs:
   - update
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - moduledeployments/status
   verbs:
@@ -63,7 +63,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - modulereplicasets
   verbs:
@@ -75,13 +75,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - modulereplicasets/finalizers
   verbs:
   - update
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - modulereplicasets/status
   verbs:
@@ -89,7 +89,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - modules
   verbs:
@@ -101,13 +101,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - modules/finalizers
   verbs:
   - update
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - modules/status
   verbs:
@@ -115,7 +115,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - pods
   verbs:
@@ -127,13 +127,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - pods/finalizers
   verbs:
   - update
 - apiGroups:
-  - serverless.alipay.com
+  - koupleless.io
   resources:
   - pods/status
   verbs:
