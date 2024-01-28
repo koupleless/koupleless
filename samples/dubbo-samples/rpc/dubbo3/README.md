@@ -92,7 +92,6 @@ This is a module application that is dynamically installed to the base, and it i
 </plugin>
 ```
 ### Reuse base dependencies
-另外模块还额外将基座里有的依赖，设置为了 provided，这样可以尽可能的服用基座的model、dubbo 等。
 Furthermore, the module also sets the dependencies as provided scope which is imported in base, so that the biz can reused the libs like model, dubbo etc in the base as much as possible.
 
 ```xml
@@ -151,7 +150,7 @@ Furthermore, the module also sets the dependencies as provided scope which is im
 </dependency>
 ```
 
-### Test code
+### Testing code
 
 Here the module RPCController references the RPC/JVM service defined in the module or base.
 
