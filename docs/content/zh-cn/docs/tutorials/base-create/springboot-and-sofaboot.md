@@ -1,5 +1,7 @@
 ---
 title: SpringBoot 或 SOFABoot 升级为基座
+date: 2024-01-25T10:28:32+08:00
+description: SpringBoot 或 SOFABoot 升级为 Koupleless 基座
 weight: 100
 ---
 

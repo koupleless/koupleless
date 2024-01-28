@@ -1,5 +1,7 @@
 ---
 title: 如果模块独立引入 SpringBoot 框架部分会怎样？
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless 模块独立引入 SpringBoot 框架部分会怎样？
 weight: 100
 ---
 

@@ -1,5 +1,7 @@
 ---
 title: 模块与模块、模块与基座通信
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless 模块与模块、模块与基座通信
 weight: 300
 ---
 
