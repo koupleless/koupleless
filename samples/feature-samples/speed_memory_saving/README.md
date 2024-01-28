@@ -1,3 +1,8 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
 
 ## 实验源码地址
 后端地址： https://github.com/lvjing2/eladmin

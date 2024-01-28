@@ -1,3 +1,9 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
 # tomcat 单 host 模式，动态 / 静态部署多个 web 应用
 
 tomcat 单host

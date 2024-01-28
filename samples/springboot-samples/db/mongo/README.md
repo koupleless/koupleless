@@ -1,3 +1,9 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
 # 基座与模块使用 mongodb
 
 ## 实验内容

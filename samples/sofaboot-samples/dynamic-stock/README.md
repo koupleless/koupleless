@@ -1,3 +1,9 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
 
 # 实验内容
 基于 SOFABoot 完成模块动态安装，动态更新。
