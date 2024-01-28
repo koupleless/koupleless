@@ -1,3 +1,8 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
 
 # 实验内容：基座、模块使用 webflux
 

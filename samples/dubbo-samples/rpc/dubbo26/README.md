@@ -1,3 +1,9 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
 # Dubbo 2.6.x 在模块中使用
 ## 基座新增依赖
 base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加如下依赖

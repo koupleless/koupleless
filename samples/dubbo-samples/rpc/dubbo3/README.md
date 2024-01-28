@@ -1,17 +1,24 @@
-# Dubbo 3.x 在模块中使用
-## 当前支持情况
-| provider/consumer | protocol |                         序列化                          | 是否支持 |
-|:-----------------:|:--------:|:----------------------------------------------------:|:----:|
-|     provider      |   tri    |                       hessian2                       |  支持  |
-|     consumer      |   tri    |                       hessian2                       |  支持  |
-|     provider      |   tri    |                      fastjson2                       |  支持  |
-|     consumer      |   tri    |                      fastjson2                       | 不支持  |
-|     provider      |   tri    |            java/compactedjava/nativejava             |  不支持  |
-|     consumer      |   tri    |            java/compactedjava/nativejava             | 不支持  |
+<div align="center">
 
-## 启动基座
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+# Use Dubbo 3.x in module
+## Supported features
+| provider/consumer | protocol |           serialize           | support or not? |
+|:-----------------:|:--------:|:-----------------------------:|:---------------:|
+|     provider      |   tri    |           hessian2            |       yes       |
+|     consumer      |   tri    |           hessian2            |       yes       |
+|     provider      |   tri    |           fastjson2           |       yes       |
+|     consumer      |   tri    |           fastjson2           |       no        |
+|     provider      |   tri    | java/compactedjava/nativejava |       no        |
+|     consumer      |   tri    | java/compactedjava/nativejava |       no        |
+
+## Start base
 base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加如下依赖
-```
+Base is build from a normal dubbo application, the only thing you need to do is add the following dependencies in the main pom.xml
+```xml
 <!-- 这里添加动态模块相关依赖 -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
@@ -19,7 +26,8 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
 </dependency>
 <!-- end 动态模块相关依赖 -->
 ```
-如果是 web 应用，并且希望后面模块部署与基座使用同一个 tomcat host，则引入如下依赖。详细查看[这里](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)
+
+If the module is a web application and you want to deploy the module in the same tomcat host with base, add the following dependency. For more details, please refer to [here](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)
 ```xml
 <!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖, 非 web 应用可忽略 -->
 <dependency>
@@ -29,11 +37,14 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
         <!-- end 单 host 部署的依赖 -->
 ```
 
-这里基座发布了 RPC 服务
+Here base publish a RPC service
 ```shell
 base/com.alipay.sofa.rpc.dubbo3.model.CommonService
 ```
+
 引用了模块的RPC，JVM服务
+and reference a RPC service and a JVM service from module
+
 ```java
  /**
      * 通过远程rpc调用模块triplebiz的CommonService服务
@@ -51,9 +62,10 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
 
 ```
 
-## 模块中使用tri协议示例：triplebiz模块
-### 修改模块打包插件
-这是动态安装到基座的模块应用，也是普通 dubbo 应用，只需修改打包插件方式即可变成可合并部署的 ark biz 模块
+## How to use tri protocol in module: triplebiz
+### Add module packaging plugin
+
+This is a module application that is dynamically installed to the base, and it is also a normal dubbo application. You only need to modify the packaging plugin to make it a ark biz module that can be merged and deployed.
 ```xml
 <plugin>
     <groupId>com.alipay.sofa</groupId>
@@ -79,8 +91,10 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
     </configuration>
 </plugin>
 ```
-### 复用基座依赖
+### Reuse base dependencies
 另外模块还额外将基座里有的依赖，设置为了 provided，这样可以尽可能的服用基座的model、dubbo 等。
+Furthermore, the module also sets the dependencies as provided scope which is imported in base, so that the biz can reused the libs like model, dubbo etc in the base as much as possible.
+
 ```xml
 <!--和基座通信-->
 <dependency>
@@ -126,9 +140,8 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
     <scope>provided</scope>
 </dependency>
 ```
-### 模块日志路径和基座隔离
-- 为了让基座和模块日志打印到不同的目录下，基座和模块还额外引入了 log4j2 adapter。
-- 如果不关心基座和模块日志是否打印在一起还是分开打印，那么这个依赖可以不加。
+### Isolate module log path from base
+- To make the base and module log print to different directories, the base and module also introduce log4j2 adapter.
 ```xml
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
@@ -138,8 +151,10 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
 </dependency>
 ```
 
-### 测试调用代码
-这里模块在 RPCController 里引用了模块/基座里定义的 RPC/JVM 服务。
+### Test code
+
+Here the module RPCController references the RPC/JVM service defined in the module or base.
+
 ```java
  /**
      * tri协议，远程调用，默认走hessian序列化
@@ -154,16 +169,16 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
     private CommonService commonServiceInJvm;
 ```
 
-### 运行代码
-1. 进入目录 `koupleless/samples/dubbo-samples/rpc/dubbo3/`
-2. 执行 `mvn clean install -DskipTests`
-3. 启动 zookeeper（用于Dubbo服务注册）
+### Run the code
+1. cd into `koupleless/samples/dubbo-samples/rpc/dubbo3/`
+2. run `mvn clean install -DskipTests`
+3. start zookeeper (for Dubbo service registration)
 ```shell
 docker run -p 2181:2181 -it --name zookeeper --restart always -d zookeeper:3.9.0
 ```
-4. 启动基座应用Dubbo3BaseApplication.java，确保基座启动成功
-5. 执行 curl 命令安装 triplebiz
-本地 path 以 file://开始, 也支持远程url下载
+4. start base application Dubbo3BaseApplication.java
+5. run curl command to install triplebiz, the bizUrl support local file by `file://` and also remote url
+
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
@@ -174,7 +189,8 @@ curl --location --request POST 'localhost:1238/installBiz' \
 }'
 ```
 
-如果要验证热部署的能力，也可以通过卸载命令卸载模块，然后重新安装模块，发起多次模块安装
+If you want to verify the hot deployment capability, you can also uninstall the module through the uninstall command, and then reinstall the module many times.
+
 ```shell
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
@@ -184,43 +200,43 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
 }'
 ```
 
-5. 查看模块安装是否成功
+5. check if the module is installed successfully
 ```shell
 curl --location --request POST 'localhost:1238/queryAllBiz'
 ```
-可以查看到所有安装好的模块列表
+You can see the list of all installed modules
 
-6. 验证模块的 RPC/JVM调用
-模块远程调用自己发布的tri服务
+6. verify the RPC/JVM call of the module
+Remoting calling the tri service published by the module itself
 ```shell
 curl localhost:8080/triplebiz/remote
 ```
-返回
+return
 ```shell
 com.alipay.sofa.rpc.dubbo3.triplebiz.service.DemoServiceImpl: Hello,trpilebiz
 ```
-模块injvm调用基座发布的服务
+Injvm calling the tri service published by the base
 ```shell
 curl localhost:8080/triplebiz/local
 ```
-返回
+return
 ```shell
 com.alipay.sofa.rpc.dubbo3.base.service.BaseCommonService: Hello,triplebiz
 ```
-7. 验证基座的 RPC/JVM调用
-基座调用triplebiz模块发布的injvm服务
+7. verify the RPC/JVM call of the base
+The base calls the injvm service published by the triplebiz module
 ```shell
 curl http://localhost:8080/base/triplebiz/injvm
 ```
-返回
+return
 ```shell
 com.alipay.sofa.rpc.dubbo3.triplebiz.service.TripleBizCommonService: Hello,base
 ```
-基座调用triplebiz模块发布的rpc服务
+The base calls the rpc service published by the triplebiz module
 ```shell
 curl http://localhost:8080/base/triplebiz/remote
 ```
-返回
+return
 ```shell
 com.alipay.sofa.rpc.dubbo3.triplebiz.service.TripleBizCommonService: Hello,base
 ```

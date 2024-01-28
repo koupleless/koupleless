@@ -1,5 +1,10 @@
-# 实验内容
+<div align="center">
 
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+# 实验内容
 
 1. 不同模块注册并读取不同的 dataId
 2. 不同模块使用相同 dataId
