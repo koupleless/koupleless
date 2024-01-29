@@ -1,5 +1,7 @@
 ---
 title: 基座与模块间类委托加载原理介绍
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless 基座与模块间类委托加载原理介绍
 weight: 200
 ---
 

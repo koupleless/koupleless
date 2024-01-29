@@ -1,5 +1,7 @@
 ---
 title: 复用基座拦截器
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless 模块复用基座拦截器
 weight: 500
 ---
 

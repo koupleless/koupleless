@@ -1,3 +1,7 @@
+<meta name="google-site-verification" content="iznGJXncH7YgD6J5kSrqbWh9GoPi5Zfzu1qJ9iDuID8" />
+{{ if .IsHome }}
+<meta http-equiv="refresh" content="0; url=/home/">
+{{ end }}
 <link href="/img/logo.svg" rel="icon" type="image/svg">
 <link href="/search/pagefind-ui.css" rel="stylesheet">
 <script src="/search/pagefind-ui.js" type="text/javascript"></script>
@@ -7,5 +11,3 @@
         new PagefindUI({ element: ".td-search" });
     });
 </script>
-
-{{ template "_internal/google_analytics_async.html" . }}
