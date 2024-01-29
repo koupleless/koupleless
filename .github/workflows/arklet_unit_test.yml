@@ -1,4 +1,4 @@
-name: SOFAServerless Runtime Unit Test
+name: Koupleless Runtime Unit Test
 run-name: ${{ github.actor }} pushed code
 
 on:

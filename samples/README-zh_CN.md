@@ -4,7 +4,7 @@
 
 </div>
 
-## SOFAServerless 模块中间件使用样例清单
+## Koupleless 模块中间件使用样例清单
 
 | 框架          | 中间件                    | 说明                                          | 代码样例                                                                                                                                                     |
 |-------------|------------------------|---------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -14,8 +14,8 @@
 | springboot  | log4j2                 | 基座与模块独立日志目录                                 | [samples/springboot-samples/logging/log4j2](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/logging/log4j2)                |
 | springboot  | logback                | 基座与模块独立日志目录                                 | [samples/springboot-samples/logging/logback](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/logging/logback)              |  
 | springboot  | kafka                  | 模块独立使用 kafka                                | [samples/springboot-samples/msg/kafka](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/msg/kafka/)                         |
-| springboot  | rocketmq               | 模块与基座可以共存生产和消费消息                            | [samples/springboot-samples/msg/rocketmq](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/msg/rocketmq/)                   |
-| springboot  | mybatis                | 模块使用独立数据源                                   | [samples/springboot-samples/db/mybatis](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/db/mybatis)                        |
+| springboot  | rocketmq               | 模块与基座可以共同生产和消费消息                            | [samples/springboot-samples/msg/rocketmq](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/msg/rocketmq/)                   |
+| springboot  | mybatis                | 1. 模块使用独立数据源 2. 模块复用基座数据源                   | [samples/springboot-samples/db/mybatis](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/db/mybatis)                        |
 | springboot  | mongo                  | 1. 模块独立使用数据源， 2. 模块复用基座数据源                  | [samples/springboot-samples/db/mongo](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/db/mongo)                            |
 | springboot  | apollo 1.x             | 1. 模块独立使用不同 appId 的配置， 2. 模块与基座共用 appId 的配置 | [samples/springboot-samples/config/apollo](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/config/apollo)                  |
 | springboot  | slimming               | 模块瘦身                                        | [samples/springboot-samples/slimming/log4j2](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/slimming/log4j2)              |

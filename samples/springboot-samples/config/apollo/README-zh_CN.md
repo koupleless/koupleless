@@ -54,5 +54,5 @@ docker-compose up
 7. 执行 `curl http://localhost:8081/biz1/getValue` 获取到 biz2 的配置值，修改 biz2 的 data.name，再次执行 `curl http://localhost:8081/biz2/getValue` 能获取到新的 biz2 的配置值，也不会影响 biz1 或基座的配置值
 
 ### 不同模块使用相同 app id，独立配置默认就已经支持
-模块统一使用[自动排包能力](https://sofaserverless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB)，在 rules.txt 文件里确保有这个配置 `excludeGroupIds=com.ctrip.framework.apollo*`，将 apollo client 委托给基座加载即可达到效果。
+模块统一使用[自动排包能力](https://koupleless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB)，在 rules.txt 文件里确保有这个配置 `excludeGroupIds=com.ctrip.framework.apollo*`，将 apollo client 委托给基座加载即可达到效果。
 注意 application.properties 里增加 `spring.jmx.default-domain=${spring.application.name}`

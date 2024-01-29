@@ -19,7 +19,7 @@ Base is built from a normal SOFABoot application, the only thing you need to do 
 ```xml
 
 
-<!-- 引入 基于 SOFAServerless 动态模块基础依赖 -->
+<!-- 引入 基于 Koupleless 动态模块基础依赖 -->
 <dependency>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>runtime-sofa-boot-plugin</artifactId>

@@ -112,7 +112,6 @@ curl http://localhost:8080/biz2
 ```
 return `hello to /biz2 deploy`
 
-说明，单host模式应用多次热部署正常。
 This means that the hot deployment of single host mode application succeed.
 
 ## Precautions

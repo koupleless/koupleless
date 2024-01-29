@@ -10,7 +10,7 @@
 base 为普通 springboot cloud改造成的基座，改造内容为在 pom 里增加如下依赖
 ```xml
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+    原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
@@ -62,7 +62,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot cloud�
 
 #### 启动基座应用 base，确保基座启动成功
 #### 执行 curl 命令安装 biz1 和 biz2
-到 gateway 目录
+cd 进入 gateway 目录
 ```shell
 cd samples/springboot-samples/springcloud/gateway
 ```

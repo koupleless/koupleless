@@ -4,14 +4,14 @@ English | [简体中文](./README-zh_CN.md)
 
 </div>
 
-# 基座与模块使用 mongodb
+# Using mongobd in base and module
 
-## 实验内容
-1. 模块独立使用不同的 mongodb collection
-2. 模块复用基座的 mongodb collection
+## Experiment
+1. using different mongodb collection in different modules
+2. using the same mongodb collection from base in different modules
 
-## 实验应用
-### 配置 mongo db 环境
+## Experiment Application
+### config mongo db environment
 
 ```shell
 docker pull mongo:7.0.2-jammy
@@ -19,33 +19,33 @@ docker run --name mongodb -d -p 27017:27017 -v $(pwd)/data:/data/db ${mongodb_im
 ```
 
 ### base
-base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
+The base is built from regular SpringBoot application. The only change you need to do is to add the following dependencies in pom
+
 ```xml
-<!-- 这里添加动态模块相关依赖 -->
-<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+<!-- Add dynamic module related dependencies here -->
+<!--    Be sure to put this dependency as the first dependency in the build pom, and set type= pom,
+    The principle can be found here https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
-<!-- end 动态模块相关依赖 -->
-
-<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
+<!-- end of dynamic module related dependencies -->
+        
+<!-- Add dependencies for deploying multiple web applications in tomcat single host mode here -->
 <dependency>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>web-ark-plugin</artifactId>
+<groupId>com.alipay.sofa</groupId>
+<artifactId>web-ark-plugin</artifactId>
 </dependency>
-<!-- end 单 host 部署的依赖 -->
+<!-- end of dependencies for single host deployment -->
 
-<!-- log4j2 相关依赖 -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-log4j2</artifactId>
 </dependency>
 
-<!-- mongo 相关，通信包和springboot starter -->
+<!-- add mongo and facade dependencies here -->
 <dependency>
     <groupId>com.alipay.sofa.db.mongo</groupId>
     <artifactId>base-mongo-facade</artifactId>
@@ -58,30 +58,31 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 ```
 
 ### biz
-biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
+The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
+
 ```xml
-<!-- 引入 mongodb 依赖，通过设置 scope=provided 委托给基座 -->
+<!-- add mongodb dependency, and set scope=provided to delegate to base -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-mongodb</artifactId>
     <scope>provided</scope>
 </dependency>
 
-<!-- 引入模块 starter，主要用于和基座通信 -->
+<!-- add koupleless app starter for communication with base -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-app-starter</artifactId>
     <scope>provided</scope>
 </dependency>
 
-<!-- 引入和基座通信的通信包 -->
+<!-- add communication package for communication with base -->
 <dependency>
     <groupId>com.alipay.sofa.db.mongo</groupId>
     <artifactId>base-mongo-facade</artifactId>
     <scope>provided</scope>
 </dependency>
 
-<!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
+<!-- change the packaging plugin to sofa-ark biz packaging plugin, packaged as ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
@@ -98,22 +99,22 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
         <skipArkExecutable>true</skipArkExecutable>
         <outputDirectory>./target</outputDirectory>
         <bizName>${bizName}</bizName>
-        <!-- 单host下需更换 web context path -->
+        <!-- single host mode, need to change web context path -->
         <webContextPath>${bizName}</webContextPath>
         <declaredMode>true</declaredMode>
     </configuration>
 </plugin>
 ```
-注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
+Note that the web context path of different biz is changed to different values, so that multiple web applications can be successfully installed in a tomcat host.
 
+## Experiment Task
+### run `mvn clean package -DskipTests`
+we can check the ark-biz jar package in target directory of each bundle
 
+### start base application, and make sure base is started successfully
+start base application in idea as a regular springboot application
+### execute curl command to install biz1 and biz2
 
-## 实验任务
-### 执行 mvn clean package -DskipTests
-可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
-### 启动基座应用 base，确保基座启动成功
-idea 里正常启动即可
-### 执行 curl 命令安装 biz1 和 biz2
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
@@ -136,7 +137,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 }'
 ```
 
-如果想验证卸载也可以执行
+If you want to verify hot deployment, you can uninstall and deploy multiple times
 ```shell
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
@@ -145,8 +146,8 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
     "bizVersion": "0.0.1-SNAPSHOT"
 }'
 ```
-### 模块独立使用 mongo db
-1. 模块1 插入数据到 collection order
+### using mongo db in module
+1. insert data to collection order in module1
 ```shell
 curl --location --request POST 'localhost:8080/biz1/add' \
 --header 'Content-Type: application/json' \
@@ -155,11 +156,11 @@ curl --location --request POST 'localhost:8080/biz1/add' \
     "content": "dafdfadaf"
 }'
 ```
-2. 查询模块1 插入的数据
+2. query data from collection order in module1
 ```shell
 curl --location --request GET 'localhost:8080/biz1/listOrders'
 ```
-返回
+return 
 ```json
 [
     {
@@ -185,8 +186,7 @@ curl --location --request GET 'localhost:8080/biz1/listOrders'
 ]
 ```
 
-
-3. 模块2 插入数据到 collection user
+3. insert data to collection user in module2
 ```shell
 curl --location --request POST 'localhost:8080/biz2/add' \
 --header 'Content-Type: application/json' \
@@ -197,12 +197,12 @@ curl --location --request POST 'localhost:8080/biz2/add' \
 }'
 ```
 
-4. 查询模块2 插入的数据
+4. query data from collection user in module2
 ```shell
 curl --location --request GET 'localhost:8080/biz2/listUsers'
 ```
 
-返回
+return
 ```json
 [
     {
@@ -220,8 +220,8 @@ curl --location --request GET 'localhost:8080/biz2/listUsers'
 ]
 ```
 
-### 模块复用基座数据源
-1. 从基座插入几条 commonModule
+### reuse base mongodb collection in module
+1. insert some commonModule from base
 ```shell
 curl --location --request POST 'localhost:8080/add' \
 --header 'Content-Type: application/json' \
@@ -238,11 +238,11 @@ curl --location --request POST 'localhost:8080/add' \
 }'
 ```
 
-2. 从模块1 里复用基座数据源
+2. query data from collection user in module1
 ```shell
 curl --location --request GET 'localhost:8080/biz1/listCommons'
 ```
-返回
+return
 ```json
 [
     {
@@ -256,11 +256,11 @@ curl --location --request GET 'localhost:8080/biz1/listCommons'
 ]
 ```
 
-3. 从模块2 里复用基座数据源
+3. query data from collection user in module2
 ```shell
 curl --location --request GET 'localhost:8080/biz2/listCommons'
 ```
-返回
+return
 ```json
 [
     {
@@ -274,5 +274,5 @@ curl --location --request GET 'localhost:8080/biz2/listCommons'
 ]
 ```
 
-## 注意事项
-这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
+## Precautions
+Here mainly use simple applications for verification, if complex applications, need to pay attention to the module to do a good job of slimming, the base has dependencies, the module as much as possible set to provided, as much as possible to use the base dependencies.

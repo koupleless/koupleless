@@ -27,7 +27,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 
 <!-- begin koupleless相关依赖 -->
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+    原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
@@ -184,5 +184,5 @@ curl http://localhost:8080/biz/biz
 
 ## 注意事项
 1. 支持基座、模块合并部署时采用单host多context path需要 netty-ark-plugin 依赖版本 >= 2.2.5
-2. 支持模块多次安装、多次卸载
-3. 支持模块先卸后装，不支持先装后卸
+2. 支持模块先卸后装，不支持先装后卸
+3. 支持模块多次安装、多次卸载
