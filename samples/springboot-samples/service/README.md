@@ -1,3 +1,8 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
 
 # 实验内容  模块与基座相互调用
 ## 实验应用

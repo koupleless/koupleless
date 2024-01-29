@@ -2,9 +2,13 @@
 ![license](https://img.shields.io/badge/license-Apache--2.0-green.svg)
 ![Maven Central](https://img.shields.io/maven-central/v/com.alipay.sofa.koupleless/koupleless-runtime)
 
-<h1 align="center">Koupleless</h1>
-<p align="center">A development framework and ops system to enable app architecture evolve from monolithic to microservices smoothly by involving modular and macroservices architecture.</p>
+<h1 align="center">Koupleless: Modular Development Framework and Ops Platform</h1>
+
+<div align="center">
+
 English | [简体中文](./README-zh_CN.md)
+
+</div>
 
 Would you like your application to start in just 10 seconds, consuming only 20MB of memory? Have you encountered issues with large applications causing collaboration bottlenecks and low release efficiency? Are you struggling with the high resource and maintenance costs associated with numerous small applications? If you're facing these challenges, then Koupleless might be the solution you're looking for. Koupleless approaches application architecture from a modular perspective, offering an extremely low-cost solution to address pain points encountered throughout the entire lifecycle of application development, operation, and execution:
 

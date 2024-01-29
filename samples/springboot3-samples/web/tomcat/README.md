@@ -1,3 +1,9 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
 # tomcat 单 host 模式，动态部署多个 web 应用
 tomcat 单host 模式原理介绍详看[这里](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)
 

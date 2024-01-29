@@ -1,15 +1,24 @@
-# apollo support
+<div align="center">
 
-## apollo支持
-# 参考
-[Appollo初始化时，使用的引用项目的app.id · Issue #2659 · apolloconfig/apollo](https://github.com/apolloconfig/apollo/issues/2659)
-[一个tomcat下部署多个war，导致app.id相同 · Issue #2921 · apolloconfig/apollo](https://github.com/apolloconfig/apollo/issues/2921)
-当前版本apollo-java 1.6.0
-# 问题现象
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+# apollo support
+## Problem Description
+1. [Appollo初始化时，使用的引用项目的app.id · Issue #2659 · apolloconfig/apollo](https://github.com/apolloconfig/apollo/issues/2659)
+
+2. [一个tomcat下部署多个war，导致app.id相同 · Issue #2921 · apolloconfig/apollo](https://github.com/apolloconfig/apollo/issues/2921)
+
+current version apollo-java 1.6.0
+
+## Problem effection
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698390945071-ec3a6262-d337-4753-a467-aeb19547b142.png#averageHue=%230d0b0b&clientId=u5805e92a-6b59-4&from=paste&height=885&id=u7a23fc45&originHeight=885&originWidth=1393&originalType=binary&ratio=1&rotation=0&showTitle=false&size=232072&status=done&style=none&taskId=u1f644099-5b91-41a7-8393-421eab0da76&title=&width=1393)
-出现了不同biz的配置无法获取的情况
+
+can't get config for biz
+
 # 问题探究
-其代码实现ApolloApplicationContextInitializer�
+1. The problem is in `ApolloApplicationContextInitializer`
 ```
 
  private static final String[] APOLLO_SYSTEM_PROPERTIES = {"app.id", ConfigConsts.APOLLO_CLUSTER_KEY,
@@ -38,10 +47,10 @@
   }
 
 ```
-导致一旦加载过一次apollo 其本质上会发生app.id会被强行覆盖 这样的话实际上会出现哪怕第二个biz出现也只能加载到第一个配置
+We can see that the `app.id` will be override by the first time setting `app.id`, then biz2 can't get it owner `app.id`. So we should not set `app.id` in the system properties.
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698397563993-24dcd90c-0569-401b-9732-cfb62dd8f232.png#averageHue=%23516340&clientId=u5805e92a-6b59-4&from=paste&height=430&id=u8b49a995&originHeight=430&originWidth=1692&originalType=binary&ratio=1&rotation=0&showTitle=false&size=143102&status=done&style=none&taskId=ucf032262-798c-4124-b91f-e9a6b1dc3ea&title=&width=1692)
-但是起始apollo加载还有问题
-DefaultApplicationProvider 我们可以看到
+
+2. But how `app.id` should be inited now, then we check `DefaultApplicationProvider`
 ```
 package com.ctrip.framework.foundation.internals.provider;
 
@@ -205,14 +214,13 @@ public class DefaultApplicationProvider implements ApplicationProvider {
         + " (DefaultApplicationProvider)";
   }
 }
-
 ```
-其默认还是依靠System.getProperty("app.id")�
-我们知道既然是多biz加载 相当于System这些的共享配置不能进行修改共享的 会造成污染 而且上文中我们已经注释
-因此需要按照他的逻辑去加载META-INF/app.properties�
-所以需要在每个biz项目创建如下配置
+
+We found that it will try to load from `META-INF/app.properties`, so we can change to using config `META-INF/app.properties`.
+
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698397772989-57c7bf84-1acc-4315-a979-57eb3e632a54.png#averageHue=%23547047&clientId=u5805e92a-6b59-4&from=paste&height=207&id=u5df59b62&originHeight=207&originWidth=977&originalType=binary&ratio=1&rotation=0&showTitle=false&size=30963&status=done&style=none&taskId=u72a7f7ca-c152-45e5-918c-8d70929e304&title=&width=977)
-除此之外我们还发现 这个都是guice一次性单实例注入 所以无法按照不同biz初始化不同的实例
+
+3. Further more, we found that this is a guice singleton instance, so we can't init different instance for different biz.
 ```
 package com.ctrip.framework.foundation;
 
@@ -293,20 +301,22 @@ public abstract class Foundation {
 }
 
 ```
-大量的静态化处理使得无法正常启动多个实例
-关于此 我们还发现其apollo拉取配置的时候longpoll也是单个ExecutorService
-![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699414406192-03c5207c-912a-4137-b4b4-b27007c0d0f0.png#averageHue=%23232427&clientId=u1275a813-6484-4&from=paste&height=360&id=udcf16b77&originHeight=360&originWidth=1448&originalType=binary&ratio=1&rotation=0&showTitle=false&size=137407&status=done&style=none&taskId=uba1ce80d-0bf8-4a89-ad70-63721503ec8&title=&width=1448)
-发现polling出现问题 即只有一个线程 无法处理拉取多个config 同时由于该线程绑定的classLoader 导致无法获取其他config更新
-综上看来 整个apollo基本上是构建在单一应用上的 因此很难服用到多模块中
-为此 我们考虑了是否还是要讲apollo放入到biz 利用classLoader的隔离确保整个static这些都是隔离的
-但是由此产生了新的问题 我们需要hack原先apollo的实现 这个代码要如何维护呢？？？
-我们肯定不希望是要给每个biz都要去改 都要去维护啊
-因此产生了一个需求
-我们期望在base维护或者说依赖sdk 同时加载的class要通过biz的classsLoader
-其实这就是一个典型的针对中间件进行patch的流程
-此处暂时不展开 我们先讲apollo的改动同步
-![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699415826741-e76c01fd-439c-417f-acfd-b7730847b845.png#averageHue=%2322252b&clientId=u1275a813-6484-4&from=paste&height=119&id=uf69f19df&originHeight=119&originWidth=712&originalType=binary&ratio=1&rotation=0&showTitle=false&size=22732&status=done&style=none&taskId=u763742d1-dd2a-456b-a748-f11376274a5&title=&width=712)
-修改为provided 同时注意idea的配置
-![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699415889843-36f81660-5b9c-4531-82f8-eaa08b7ecb10.png#averageHue=%232a2d30&clientId=u1275a813-6484-4&from=paste&height=881&id=uba66bed8&originHeight=881&originWidth=1316&originalType=binary&ratio=1&rotation=0&showTitle=false&size=248332&status=done&style=none&taskId=uae4c252d-d50d-4559-80dc-420e753f86c&title=&width=1316)
+There are a lot of static instance in the code, so we using the same apollo instance for different biz. And also, The `ExecutorService` is also a singleton instance for long pulling config, so we can't use different `ExecutorService` for different biz to pulling cofig for multi biz. 
 
-springboot默认勾选了包含provided依赖 要关闭掉该选项 确保classpath不包含apollo【提供provided是因为需要编译】
+![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699414406192-03c5207c-912a-4137-b4b4-b27007c0d0f0.png#averageHue=%23232427&clientId=u1275a813-6484-4&from=paste&height=360&id=udcf16b77&originHeight=360&originWidth=1448&originalType=binary&ratio=1&rotation=0&showTitle=false&size=137407&status=done&style=none&taskId=uba1ce80d-0bf8-4a89-ad70-63721503ec8&title=&width=1448)
+
+Finally, we found that we can't use one apollo instance in multi biz in the same jvm, we need to create each apollo instance for each biz. So we need to import apollo in each biz with compile scope which will create isolated apollo instance in each biz classLoader.
+
+But there comes a new problem, we need to hack the apollo code to make it can be loaded by biz classLoader without System properties pollution. How to maintain this code? We don't want to change the code in each biz. So we need to patch the code in the base. We will not talk about this in this article.
+
+## Problem solution
+1. add this adapter in base.
+2. import apollo with compile scope in each biz.
+```xml
+ <dependency>
+    <groupId>com.ctrip.framework.apollo</groupId>
+    <artifactId>apollo-client</artifactId>
+    <version>1.8.0</version>
+</dependency>
+```
+3. add config in `META-INF/app.properties` in each biz

@@ -1,3 +1,9 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
 # log4j2 多应用分别打印不同目录
 原理详看[这里](https://github.com/koupleless/koupleless/blob/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/logj42.md)
 

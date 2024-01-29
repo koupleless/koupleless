@@ -1,3 +1,9 @@
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
 # 实验内容
 ## 实验应用
 ### base
