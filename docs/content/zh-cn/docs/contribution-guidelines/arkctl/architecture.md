@@ -1,7 +1,7 @@
 ---
-title: Arkctl 技术文档
+title: Arkctl 架构设计
 date: 2024-01-25T10:28:32+08:00
-description: Koupleless Arkctl 技术文档
+description: Koupleless Arkctl 架构设计
 weight: 100
 ---
 
