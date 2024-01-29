@@ -123,7 +123,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
 --data '{
-    "bizName": "biz1",
+    "bizName": "biz1-log4j2",
     "bizVersion": "0.0.1-SNAPSHOT"
 }'
 ```
