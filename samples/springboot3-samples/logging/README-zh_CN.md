@@ -5,7 +5,7 @@
 </div>
 
 # log4j2 多应用分别打印不同目录
-原理详看[这里]()
+原理详看[这里](https://koupleless.gitee.io/docs/contribution-guidelines/runtime/logj42/)
 
 # 实验内容
 ## 实验应用

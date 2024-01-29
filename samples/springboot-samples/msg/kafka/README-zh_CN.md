@@ -13,7 +13,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 
 <!-- 这里添加动态模块相关依赖 -->
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+    原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
@@ -102,14 +102,14 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 
 ## 实验步骤
 
-### 构建与启动 kafka 服务段
+### 构建与启动 kafka 服务端
 #### 
 进入到 config 目录，执行如下命令，网络如果不通，需要开代理
 ```shell
 docker build .
 ```
 
-如果网络还是连不通，可以按照 Dockfile 里的命令，本地执行，也可以启动 kafka 服务段
+如果网络还是连不通，可以按照 Dockerfile 里的命令，本地执行，也可以启动 kafka 服务段
 
 #### 运行镜像
 ```shell

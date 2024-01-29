@@ -4,11 +4,11 @@ English | [简体中文](./README-zh_CN.md)
 
 </div>
 
-# 基座与模块使用 rocketmqdb
+# Using rocketmqdb in base and module
 
-## 实验内容
-1. 模块独立使用不同的 rocketmq 生产和消费
-2. 模块复用基座的 rocketmq 生产和消费
+## Experiment 
+1. using different rocketmq producer and consumer in different modules
+2. using the same rocketmq producer and consumer from base in different modules
 
 ## 实验应用
 ### 配置 rocketmq db 环境
@@ -19,38 +19,33 @@ docker pull apache/rocketmq:4.9.7
 
 ```shell
 ## ref https://juejin.cn/post/7109082879589613575
-# start nameServer, 默认端口为 -p 9876:9876
+# start nameServer, default server port 为 -p 9876:9876
 docker run -d -p 9876:9876 -p 10909:10909 -p 10910:10910 -p 10911:10911 -p 10912:10912 -v $(pwd)/config/start.sh:/home/rocketmq/rocketmq-4.9.7/bin/start.sh -v $(pwd)/config/broker.conf:/home/rocketmq/rocketmq-4.9.7/bin/broker.conf apache/rocketmq:4.9.7 sh /home/rocketmq/rocketmq-4.9.7/bin/start.sh
 ```
 
 ### base
-base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
+The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
+
 ```xml
-<!-- 这里添加动态模块相关依赖 -->
-<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+<!-- Add dynamic module related dependencies here -->
+<!--    Be sure to put this dependency as the first dependency in the build pom, and set type= pom,
+    The principle can be found here https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
-<!-- end 动态模块相关依赖 -->
+<!-- end of dynamic module related dependencies -->
 
-<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
+<!-- Add dependencies for deploying multiple web applications in tomcat single host mode here -->
 <dependency>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>web-ark-plugin</artifactId>
+<groupId>com.alipay.sofa</groupId>
+<artifactId>web-ark-plugin</artifactId>
 </dependency>
-<!-- end 单 host 部署的依赖 -->
+<!-- end of dependencies for single host deployment -->
 
-<!-- log4j2 相关依赖 -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-log4j2</artifactId>
-</dependency>
-
-<!-- rocketmq 相关，通信包和springboot starter -->
+<!-- add rocketmq and facade dependencies here -->
 <dependency>
     <groupId>com.alipay.sofa.db.rocketmq</groupId>
     <artifactId>base-rocketmq-facade</artifactId>
@@ -64,9 +59,9 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 ```
 
 ### biz
-biz1 是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
+biz1 is built from regular SpringBoot application. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
 ```xml
-<!-- 引入 rocketmqdb 依赖，通过设置 scope=provided 委托给基座 -->
+<!-- add rocketmqdb dependency, and set scope=provided to delegate to base -->
 <dependency>
     <groupId>org.apache.rocketmq</groupId>
     <artifactId>rocketmq-spring-boot-starter</artifactId>
@@ -74,14 +69,14 @@ biz1 是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包
     <scope>provided</scope>
 </dependency>
 
-<!-- 引入和基座通信的通信包 -->
+<!-- add facade dependencies for communication with base -->
 <dependency>
     <groupId>com.alipay.sofa.db.rocketmq</groupId>
     <artifactId>base-rocketmq-facade</artifactId>
     <scope>provided</scope>
 </dependency>
 
-<!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
+<!-- change the packaging plugin to sofa-ark biz packaging plugin, packaged as ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
@@ -98,22 +93,20 @@ biz1 是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包
         <skipArkExecutable>true</skipArkExecutable>
         <outputDirectory>./target</outputDirectory>
         <bizName>${bizName}</bizName>
-        <!-- 单host下需更换 web context path -->
+        <!-- single host mode, need to change web context path -->
         <webContextPath>${bizName}</webContextPath>
         <declaredMode>true</declaredMode>
     </configuration>
 </plugin>
 ```
-注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
+Note that the web context path of different biz is changed to different values, so that multiple web applications can be successfully installed in a tomcat host.
 
-
-
-## 实验任务
-### 执行 mvn clean package -DskipTests
-可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
-### 启动基座应用 base，确保基座启动成功
-idea 里正常启动即可
-### 执行 curl 命令安装 biz1 和 biz2
+## Experiment task
+### run `mvn clean package -DskipTests`
+we can check the ark-biz jar package in target directory of each bundle
+### start base application, and make sure base start successfully
+just start in idea like a regular springboot application
+### execute curl command to install biz1 and biz2
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
@@ -125,7 +118,8 @@ curl --location --request POST 'localhost:1238/installBiz' \
 }'
 ```
 
-如果想验证卸载也可以执行
+If you want to verify hot deployment, you can uninstall and deploy multiple times
+
 ```shell
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
@@ -134,13 +128,13 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
     "bizVersion": "0.0.1-SNAPSHOT"
 }'
 ```
-### 基座生产消息，基座与模块同时消费
-1. 基座生产消息
+### produce message in the base, and base and module consume message at the same time
+1. produce message in the base
 ```shell
 curl http://localhost:8080/send/dfadfsdfa
 ```
 
-可以看到基座和模块都消费到了消息
+we can check that both base and module consume the message
 ```text
 INFO  service.SampleProducer - base producer: dfadfsdfa
 INFO  service.SampleConsumer - =================================
@@ -149,11 +143,11 @@ INFO  service.SampleConsumer - =================================
 INFO  service.SampleConsumer - biz1 receive a message: Greeting(message=base send: dfadfsdfa)
 ```
 
-2. 模块生产消息，基座和模块同时消费
+2. produce message in the module, and base and module consume message at the same time
 ```shell
 curl http://localhost:8080/biz1/send/dfadfsdfa
 ```
-可以看到基座和模块都消费了消息
+we can check that both base and module consume the message
 
 ```text
 INFO  service.SampleProducer - biz1 producer: dfadfsdfa
@@ -163,5 +157,5 @@ INFO  service.SampleConsumer - =================================
 INFO  service.SampleConsumer - base receive a message: Greeting(message=biz1 send: dfadfsdfa)
 ```
 
-## 注意事项
-这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
+## Precautions
+Here mainly use simple applications for verification, if complex applications, need to pay attention to the module to do a good job of slimming, the base has dependencies, the module as much as possible set to provided, as much as possible to use the base dependencies.

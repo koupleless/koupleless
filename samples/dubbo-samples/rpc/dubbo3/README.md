@@ -16,7 +16,6 @@ English | [简体中文](./README-zh_CN.md)
 |     consumer      |   tri    | java/compactedjava/nativejava |       no        |
 
 ## Start base
-base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加如下依赖
 Base is build from a normal dubbo application, the only thing you need to do is add the following dependencies in the main pom.xml
 ```xml
 <!-- 这里添加动态模块相关依赖 -->
