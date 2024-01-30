@@ -53,8 +53,8 @@ type ModuleReconciler struct {
 }
 
 //+kubebuilder:rbac:groups=koupleless.io,resources=modules,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=serverless.alipay.com,resources=modules/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=serverless.alipay.com,resources=modules/finalizers,verbs=update
+//+kubebuilder:rbac:groups=koupleless.io,resources=modules/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=koupleless.io,resources=modules/finalizers,verbs=update
 
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
 //+kubebuilder:rbac:groups="",resources=pods,verbs=create;delete;get;list;patch;update;watch
