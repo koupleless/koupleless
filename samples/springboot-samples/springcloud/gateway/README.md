@@ -67,7 +67,7 @@ we can check the ark-biz jar package in the target directory of each bundle
 
 #### start base application, make sure base is started successfully
 ```shell
-# 添加启动参数
+# add start params
 -Dspring.jmx.default-domain=${spring.application.name}
 ```
 #### execute curl command to install biz1 and biz2
