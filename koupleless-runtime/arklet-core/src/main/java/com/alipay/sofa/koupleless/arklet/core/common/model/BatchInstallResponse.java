@@ -27,8 +27,8 @@ import java.util.Map;
 
 /**
  * 合并部署响应。
- * @author gouzhendong.gzd
- * @version $Id: BatchInstallResponse, v 0.1 2023-11-20 15:19 gouzhendong.gzd Exp $
+ * @author CodeNoobKingKc2
+ * @version $Id: BatchInstallResponse, v 0.1 2023-11-20 15:19 CodeNoobKingKc2 Exp $
  */
 @NoArgsConstructor
 @AllArgsConstructor

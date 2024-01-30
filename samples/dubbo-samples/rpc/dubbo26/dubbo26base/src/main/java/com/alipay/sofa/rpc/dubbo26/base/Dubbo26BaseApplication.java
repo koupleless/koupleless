@@ -52,7 +52,7 @@ public class Dubbo26BaseApplication implements CommandLineRunner {
     }
 
     protected void installBiz(String bizDir) throws Throwable {
-        String pathRoot = "rpc/dubbo26/";
+        String pathRoot = "samples/dubbo-samples/rpc/dubbo26/";
         File bizFile = new File(pathRoot + bizDir);
         if (bizFile.exists()) {
             File tmpFile = new File(pathRoot + "target/" + bizFile.getName());

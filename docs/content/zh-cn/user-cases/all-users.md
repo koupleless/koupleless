@@ -14,7 +14,7 @@ type: docs
 
 <img alt="阿里巴巴国际" src="/img/user-logos/aliguoji.png" width="250px" class="all-user-cases-logo" />
 
-**使用场景**：通用基座实现普通应用秒级构建发布、SDK 无感升级。[详细案例](/docs/user-cases/alibaba-aidc/)
+**使用场景**：通用基座实现普通应用秒级构建发布、SDK 无感升级。[详细案例](/user-cases/alibaba-aidc/)
 
 <br/>
 <br/>
