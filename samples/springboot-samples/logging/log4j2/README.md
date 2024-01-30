@@ -109,7 +109,7 @@ If you want to verify hot deployment, you can uninstall and deploy multiple time
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
 --data '{
-    "bizName": "biz1",
+    "bizName": "biz1-log4j2",
     "bizVersion": "0.0.1-SNAPSHOT"
 }'
 ```

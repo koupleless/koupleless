@@ -61,6 +61,10 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot cloud�
 可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
 
 #### 启动基座应用 base，确保基座启动成功
+```shell
+# 添加启动参数
+-Dspring.jmx.default-domain=${spring.application.name}
+```
 #### 执行 curl 命令安装 biz1 和 biz2
 cd 进入 gateway 目录
 ```shell

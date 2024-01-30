@@ -135,7 +135,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 # 1. cd 进入 config 目录
 cd config
 # 2. 给脚本添加执行权限
-chmod +x ./init_mysql.s
+chmod +x ./init_mysql.sh
 # 3. 执行 init_mysql.sh
 ./init_mysql.sh
 ```
