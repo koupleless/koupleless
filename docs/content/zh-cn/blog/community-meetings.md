@@ -5,7 +5,10 @@ weight: 300
 description: Koupleless 社区会议纪要
 ---
 
-### Koupleless (SOFAServerless) 23.01.09 社区会议
+### Koupleless (SOFAServerless) 24.01.23 社区会议
+会议纪要详见：[https://github.com/koupleless/koupleless/issues/12](https://github.com/koupleless/koupleless/issues/12)     <br/>
+
+### Koupleless (SOFAServerless) 24.01.09 社区会议
 会议纪要详见：[https://github.com/sofastack/sofa-serverless/issues/445](https://github.com/sofastack/sofa-serverless/issues/445)     <br/>
 
 ### Koupleless (SOFAServerless) 23.12.26 社区会议
