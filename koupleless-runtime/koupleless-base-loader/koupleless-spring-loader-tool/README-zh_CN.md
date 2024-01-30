@@ -45,5 +45,5 @@ java -classpath  xxx-executable-unpack com.alipay.sofa.koupleless.spring.loader.
 
 # 维护说明
 
-如果改了 sofa-serverless-spring-loader 代码，需要先手动mvn打包，然后将koupleless-spring-loader/target/koupleless-spring-loader-xxx.jar复制到koupleless-spring-loader-tool/src/main/resources/META-INF/loader
+如果改了 koupleless-spring-loader 代码，需要先手动mvn打包，然后将 koupleless-spring-loader/target/koupleless-spring-loader-xxx.jar复制到 koupleless-spring-loader-tool/src/main/resources/META-INF/loader
 

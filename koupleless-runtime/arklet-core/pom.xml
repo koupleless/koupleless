@@ -18,8 +18,8 @@
             <artifactId>sofa-ark-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
-            <artifactId>sofa-serverless-common</artifactId>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-common</artifactId>
             <version>${revision}</version>
         </dependency>
 

@@ -4,14 +4,14 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
 ```xml
 <!--覆盖dubbo 2.7同名类,一定要放在dubbo的依赖前面-->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-adapter-dubbo2.7</artifactId>
-    <version>0.5.6-SNAPSHOT</version>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-adapter-dubbo2.7</artifactId>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
-<!--sofa serverless 依赖-->
+<!-- koupleless 依赖-->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-base-starter</artifactId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-base-starter</artifactId>
 </dependency>
 <!--如果是 web 应用，并且希望后面模块部署与基座使用同一个 tomcat host，则引入如下依赖。详细查看[这里](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)-->
 <dependency>
@@ -65,16 +65,16 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
 ```xml
 <!--提供 log4j2 适配，提供基座、模块日志隔离，不需要可以不添加-->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-adapter-log4j2</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-adapter-log4j2</artifactId>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
 <!--提供 dubbo2.7 适配-->
 <dependency>
-    <groupId>com.alipay.sofa.serverless</groupId>
-    <artifactId>sofa-serverless-adapter-dubbo2.7</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-adapter-dubbo2.7</artifactId>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
 <!-- 通信类-->

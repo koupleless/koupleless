@@ -12,9 +12,9 @@ weight: 1
 dubbo2.7多模块适配SDK
 ```xml
 <dependency>
-   <groupId>com.alipay.sofa.serverless</groupId>
-   <artifactId>sofa-serverless-adapter-dubbo2.7</artifactId>
-   <version>0.5.7-SNAPSHOT</version>
+   <groupId>com.alipay.sofa.koupleless</groupId>
+   <artifactId>koupleless-adapter-dubbo2.7</artifactId>
+   <version>${koupleless.runtime.version}</version>
 </dependency>
 ```
 
@@ -45,7 +45,7 @@ public static boolean isPresentBean(BeanDefinitionRegistry registry, Class<?> an
 ```
 
 ### 2. 模块维度的服务、配置资源管理
-1. com.alipay.sofa.serverless.support.dubbo.ServerlessServiceRepository 替代原生 org.apache.dubbo.rpc.model.ServiceRepository
+1. com.alipay.sofa.koupleless.support.dubbo.ServerlessServiceRepository 替代原生 org.apache.dubbo.rpc.model.ServiceRepository
    
 原生service采用interfaceName作为缓存，在基座、模块发布同样interface，不同group服务时，无法区分，替代原生service缓存模型，采用Interface Class类型作为key，同时采用包含有group的path作为key，支持基座、模块发布同interface不同group的场景
 ```java
@@ -54,7 +54,7 @@ private static ConcurrentMap<Class<?>, ServiceDescriptor> globalClassServices = 
 private static ConcurrentMap<String, ServiceDescriptor>   globalPathServices  = new ConcurrentHashMap<>();
 ```
   
-2. com.alipay.sofa.serverless.support.dubbo.ServerlessConfigManager 替代原生 org.apache.dubbo.config.context.ConfigManager 
+2. com.alipay.sofa.koupleless.support.dubbo.ServerlessConfigManager 替代原生 org.apache.dubbo.config.context.ConfigManager 
     
     为原生config添加classloader维度的key，不同模块根据classloader隔离不同的配置
     
@@ -80,7 +80,7 @@ ServerlessServiceRepository 和 ServerlessConfigManager 都依赖 dubbo Extensio
 ### 3. 模块维度服务发布、服务卸载
 override DubboBootstrapApplicationListener 禁止原生dubbo模块启动、卸载时发布、卸载服务
 
-- com.alipay.sofa.serverless.support.dubbo.BizDubboBootstrapListener
+- com.alipay.sofa.koupleless.support.dubbo.BizDubboBootstrapListener
 
 原生dubbo2.7只在基座启动完成后发布dubbo服务，在多模块时，无法支持模块的服务发布，Ark采用监听器监听模块启动事件，并手动调用dubbo进行模块维度的服务发布
 
@@ -121,7 +121,7 @@ private void onContextClosedEvent(ContextClosedEvent event) {
 ```
 
 ### 4. 服务路由
-- com.alipay.sofa.serverless.support.dubbo.ConsumerRedefinePathFilter
+- com.alipay.sofa.koupleless.support.dubbo.ConsumerRedefinePathFilter
 
 dubbo服务调用时通过path从ServiceRepository中获取正确的服务端服务模型（包括interface、param、return类型等）进行服务调用、参数、返回值的序列化，原生dubbo2.7采用interfaceName作为path查找service model，无法支持多模块下基座模块发布同interface的场景，Ark自定义consumer端filter添加group信息到path中，以便provider端进行正确的服务路由
 
@@ -188,7 +188,7 @@ if (in instanceof ClassLoaderJavaObjectInput) {
 
 ## 多模块 dubbo2.7 使用样例
 
-[多模块 dubbo2.7 使用样例](https://github.com/sofastack/sofa-serverless/tree/master/samples/dubbo-samples/rpc/dubbo27/README.md)
+[多模块 dubbo2.7 使用样例](https://github.com/koupleless/koupleless/tree/main/samples/dubbo-samples/rpc/dubbo27/README.md)
 
-[dubbo2.7多模块适配sdk源码](https://github.com/sofastack/sofa-serverless/tree/master/sofa-serverless-runtime/sofa-serverless-adapter-ext/sofa-serverless-adapter-dubbo2.7)
+[dubbo2.7多模块适配sdk源码](https://github.com/koupleless/koupleless/tree/main/koupleless-runtime/koupleless-adapter-ext/koupleless-adapter-dubbo2.7)
 

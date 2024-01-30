@@ -45,5 +45,5 @@ java -classpath  xxx-executable-unpack com.alipay.sofa.koupleless.spring.loader.
 
 # How to maintain
 
-If the code of sofa-serverless-spring-loader changed, you need to manually mvn package first, and then copy the `koupleless-spring-loader/target/koupleless-spring-loader-xxx.jar` to `koupleless-spring-loader-tool/src/main/resources/META-INF/loader`
+If the code of koupleless-spring-loader changed, you need to manually mvn package first, and then copy the `koupleless-spring-loader/target/koupleless-spring-loader-xxx.jar` to `koupleless-spring-loader-tool/src/main/resources/META-INF/loader`
 
