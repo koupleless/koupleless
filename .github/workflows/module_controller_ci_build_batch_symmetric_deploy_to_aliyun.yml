@@ -4,13 +4,13 @@ run-name: ${{ github.actor }} pushed module-controller code
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'module-controller/**'
 
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - 'module-controller/**'
 
