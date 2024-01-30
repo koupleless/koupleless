@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.support.dubbo;
+package com.alipay.sofa.koupleless.support.dubbo;
 
 import org.apache.dubbo.common.context.FrameworkExt;
 import org.apache.dubbo.common.extension.Wrapper;
@@ -44,7 +44,7 @@ import static org.apache.dubbo.config.AbstractConfig.getTagName;
  * @date: 2023/12/22 8:02 下午
  */
 @Wrapper(matches = { "config" })
-public class ServerlessConfigManager extends ConfigManager {
+public class KouplelessConfigManager extends ConfigManager {
 
     private static final Logger                                      logger             = LoggerFactory
                                                                                             .getLogger(ConfigManager.class);
@@ -55,7 +55,7 @@ public class ServerlessConfigManager extends ConfigManager {
 
     private ConfigManager                                            source;
 
-    public ServerlessConfigManager(FrameworkExt frameworkExt) {
+    public KouplelessConfigManager(FrameworkExt frameworkExt) {
         if (frameworkExt instanceof ConfigManager) {
             this.source = (ConfigManager) frameworkExt;
         }

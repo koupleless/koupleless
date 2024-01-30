@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.serverless.support.dubbo;
+package com.alipay.sofa.koupleless.support.dubbo;
 
 import org.apache.dubbo.common.context.FrameworkExt;
 import org.apache.dubbo.common.extension.Wrapper;
@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentMap;
  * @date: 2023/12/25 9:07 下午
  */
 @Wrapper(matches = { "repository" })
-public class ServerlessServiceRepository extends ServiceRepository {
+public class KouplelessServiceRepository extends ServiceRepository {
 
     // services
     private static ConcurrentMap<Class<?>, ServiceDescriptor> globalClassServices = new ConcurrentHashMap<>();
@@ -41,7 +41,7 @@ public class ServerlessServiceRepository extends ServiceRepository {
 
     private ServiceRepository                                 source;
 
-    public ServerlessServiceRepository(FrameworkExt frameworkExt) {
+    public KouplelessServiceRepository(FrameworkExt frameworkExt) {
         if (frameworkExt instanceof ServiceRepository) {
             this.source = (ServiceRepository) frameworkExt;
         }
