@@ -14,7 +14,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 
 <!-- 这里添加动态模块相关依赖 -->
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+    原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
@@ -235,7 +235,9 @@ curl --location --request POST 'localhost:1238/installBiz' \
 模块中发布了 web 服务，可通过访问 web 服务，触发 redis 操作。
 
 模块 web 服务访问成功
-
+```shell
+curl -v http://localhost:8080/biz/
+```
 ![img_1.png](img_1.png)
 
 查看 console 控制台输出说明 redis 返回符合预期
@@ -243,7 +245,10 @@ curl --location --request POST 'localhost:1238/installBiz' \
 ![img_3.png](img_3.png)
 
 检查 redis 数据库可以发现，数据也成功写入
-
+```shell
+redis-cli
+get name
+```
 ![img_2.png](img_2.png)
 
 ## 注意事项

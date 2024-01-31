@@ -11,7 +11,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 ```xml
 <!-- 这里添加动态模块相关依赖 -->
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+    原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
@@ -135,7 +135,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 # 1. cd 进入 config 目录
 cd config
 # 2. 给脚本添加执行权限
-chmod +x ./init_mysql.s
+chmod +x ./init_mysql.sh
 # 3. 执行 init_mysql.sh
 ./init_mysql.sh
 ```

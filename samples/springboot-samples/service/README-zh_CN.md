@@ -12,7 +12,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 
 <!-- 这里添加动态模块相关依赖 -->
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+    原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
@@ -136,6 +136,7 @@ curl http://localhost:8080/biz2/
 且日志里能看到对模块biz的调用都是成功的，证明模块通过 @AutowiredFromBiz 或者 SpringServiceFinder.getModuleService 方式调用模块biz是成功的
 
 ## 注意事项
-这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
-这里验证模块功能时，web接口后需要加上斜号，例如curl http://localhost:8080/biz1/ ，而不是 http://localhost:8080/biz1
+
+1. 这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
+2. 这里验证模块功能时，web接口后需要加上斜号，例如curl http://localhost:8080/biz1/ ，而不是 http://localhost:8080/biz1
 

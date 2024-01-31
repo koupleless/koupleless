@@ -20,7 +20,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 
 <!-- 这里添加动态模块相关依赖 -->
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+    原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
    <groupId>com.alipay.sofa.koupleless</groupId>
    <artifactId>koupleless-base-starter</artifactId>
@@ -68,7 +68,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 
 注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
 
-# 实验内容(动态部署)
+# 实验内容1: 动态部署
 
 ## 实验任务
 
@@ -145,12 +145,12 @@ curl http://localhost:8080/order2
 
 这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
 
-# 实验内容(静态合并部署)
+# 实验内容2: 静态合并部署
 
 ## 实验任务
 
 1. cd 到 static-deploy-demo 目录下。
-2. 执行 run_static_deploy_on_unix_like.sh 脚本。
+2. 执行 run_static_deploy_on_unix_like.sh 脚本, 该脚本会做如下几件事情：
    1. 构建 web/tomcat 项目。
    2. 把 biz1 和 biz2 的构建产物移动到 ./biz 目录下。
    3. 在基座启动时扫描该上述目录，完成静态合并部署。

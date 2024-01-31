@@ -14,7 +14,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 ```xml
 <!-- koupleless 相关依赖 -->
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+    原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
    <groupId>com.alipay.sofa.koupleless</groupId>
    <artifactId>koupleless-base-starter</artifactId>
@@ -197,7 +197,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 3. 发起请求验证模块web服务
 
 ```shell
-curl http://localhost:8080/biz2
+curl http://localhost:8080/biz1
 ```
 返回 `hello to /biz1 deploy`，同时查看控制台日志输出，满足我们日志配置中的pattern
 ```log

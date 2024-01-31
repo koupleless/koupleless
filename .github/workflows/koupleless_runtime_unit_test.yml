@@ -1,16 +1,16 @@
-name: SOFAServerless Runtime Unit Test
+name: Koupleless Runtime Unit Test
 run-name: ${{ github.actor }} pushed code
 
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'koupleless-runtime/**'
 
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - 'koupleless-runtime/**'
 

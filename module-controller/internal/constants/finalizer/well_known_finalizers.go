@@ -7,5 +7,5 @@ const (
 
 	ModuleExistedFinalizer = "koupleless.io/module-existed"
 
-	ModuleNameFinalizer = "serverless.alipay.com/module-name"
+	ModuleNameFinalizer = "koupleless.io/module-name"
 )
