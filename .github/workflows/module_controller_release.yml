@@ -13,33 +13,15 @@ env:
   GOOS: linux
   WORK_DIR: module-controller
   DOCKERHUB_REGISTRY: serverless-registry.cn-shanghai.cr.aliyuncs.com
-  MODULE_CONTROLLER_IMAGE_PATH: release/module-controller
+  MODULE_CONTROLLER_IMAGE_PATH: opensource/release/module-controller
 
 defaults:
   run:
     working-directory: module-controller
 
 jobs:
-  golangci-lint:
-    name: "Go CI Linter"
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix: ${{ fromJson(needs.resolve-modules.outputs.matrix) }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
-      - name: Go Lint Test
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: v1.46.2
-          working-directory: ${{ matrix.workdir }}
-          args: "--out-${NO_FUTURE}format colored-line-number"
-
   build-push-linux-amd64-image:
-    name: "Linux AMD64 Image"
+    name: "Build and push module-controller Docker images"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
