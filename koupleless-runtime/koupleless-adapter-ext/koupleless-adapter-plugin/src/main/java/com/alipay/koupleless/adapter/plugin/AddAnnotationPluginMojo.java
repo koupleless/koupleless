@@ -19,8 +19,11 @@ package com.alipay.koupleless.adapter.plugin;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.google.common.base.Preconditions;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -48,17 +51,33 @@ public class AddAnnotationPluginMojo extends AbstractMojo {
     @Parameter(property = "revision", defaultValue = "1.0.0")
     private String       revision;
 
-    private void addAnnotation(CompilationUnit cu) {
+    private boolean addAnnotation(CompilationUnit cu) {
+        boolean hasAnyTypeAdded = false;
         for (TypeDeclaration<?> type : cu.getTypes()) {
             if (!type.isNestedType() && type.isClassOrInterfaceDeclaration()) {
                 getLog().debug("Found class: " + type.getName());
+
+                NodeList<AnnotationExpr> annotations = type.getAnnotations();
+                boolean added = false;
+                for (AnnotationExpr annotation : annotations) {
+                    added = added || annotation.getNameAsString().endsWith("KouplelessPatch");
+                }
+
+                if (added) {
+                    continue;
+                }
+
+                hasAnyTypeAdded = true;
+
                 NormalAnnotationExpr patchAnnotation = new NormalAnnotationExpr();
                 patchAnnotation.setName("com.alipay.sofa.koupleless.adapter.KouplelessPatch");
-                patchAnnotation.addPair("dependencyId",
-                    "com.alipay.sofa.koupleless:koupleless-runtime:" + revision);
+                patchAnnotation.addPair("dependencyId", new StringLiteralExpr(
+                    "com.alipay.sofa.koupleless:koupleless-runtime:" + revision));
                 getLog().debug("Add annotation: " + patchAnnotation.toString());
+                type.addAnnotation(patchAnnotation);
             }
         }
+        return hasAnyTypeAdded;
     }
 
     @Override
@@ -78,9 +97,11 @@ public class AddAnnotationPluginMojo extends AbstractMojo {
 
                 Preconditions.checkState(result.isSuccessful(), "Parse failed: " + javaSourceFile.toString());
                 CompilationUnit cu = result.getResult().get();
-                addAnnotation(cu);
+                boolean codeChanged = addAnnotation(cu);
 
-                Files.write(javaSourceFile.toPath(), cu.toString().getBytes(), TRUNCATE_EXISTING);
+                if (codeChanged) {
+                    Files.write(javaSourceFile.toPath(), cu.toString().getBytes(), TRUNCATE_EXISTING);
+                }
             }
         } catch (Throwable t) {
             getLog().error(t);
