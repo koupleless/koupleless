@@ -22,7 +22,6 @@ defaults:
 jobs:
   golangci-lint:
     name: "Go CI Linter"
-    needs: [ style-check,resolve-modules ]
     runs-on: ubuntu-20.04
     strategy:
       matrix: ${{ fromJson(needs.resolve-modules.outputs.matrix) }}
@@ -39,12 +38,8 @@ jobs:
           working-directory: ${{ matrix.workdir }}
           args: "--out-${NO_FUTURE}format colored-line-number"
 
-
-
-
   build-push-linux-amd64-image:
     name: "Linux AMD64 Image"
-
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -58,7 +53,7 @@ jobs:
         with:
           registry: ${{ env.DOCKERHUB_REGISTRY }}
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
