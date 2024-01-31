@@ -27,13 +27,22 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
-            <version>1.5.8.RELEASE</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.alipay.sofa</groupId>
             <artifactId>sofa-ark-spi</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-common</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -55,12 +64,6 @@
                             <activator>
                                 com.alipay.sofa.koupleless.adapter.ApolloAdapterActivator
                             </activator>
-                            <exported>
-                                <mode>override</mode>
-                                <classes>
-                                    <class>com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer</class>
-                                </classes>
-                            </exported>
                             <excludes>
                                 <exclude>*:*:*</exclude>
                                 <exclude>com.alipay.sofa.koupleless:koupleless-adapter-apollo</exclude>

@@ -22,6 +22,12 @@
             <groupId>com.alipay.sofa.koupleless</groupId>
             <artifactId>koupleless-common</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-adapter-apollo</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
 </project>
