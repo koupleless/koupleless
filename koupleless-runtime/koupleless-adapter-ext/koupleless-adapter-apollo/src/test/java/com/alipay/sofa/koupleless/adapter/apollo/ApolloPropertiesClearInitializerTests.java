@@ -28,13 +28,10 @@ import java.util.Map;
 import java.util.Properties;
 
 public class ApolloPropertiesClearInitializerTests {
-    private ApolloPropertiesClearInitializer initializer           = new ApolloPropertiesClearInitializer();
+    private ApolloPropertiesClearInitializer initializer   = new ApolloPropertiesClearInitializer();
     private ConfigurableEnvironment          environment;
 
-    private Properties                       bizProperties         = new Properties();
-
-    private static final String[]            NEED_CLEAR_PROPERTIES = { "app.id", "apollo.cacheDir",
-            "apollo.accesskey.secret", "apollo.property.order.enable" };
+    private Properties                       bizProperties = new Properties();
 
     @Before
     public void before() {
