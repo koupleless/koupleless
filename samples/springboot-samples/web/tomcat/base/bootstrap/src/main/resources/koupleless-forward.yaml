@@ -1,0 +1,12 @@
+#a.xxx b.xxx c.xxx域名的请求，路由到biz1
+- contextPath: biz1
+  hosts:
+    - a
+    - b
+    - c
+# /a /b /c 的请求，将路由到biz2
+- contextPath: biz2
+  paths:
+    - /a
+    - /b
+    - /c
