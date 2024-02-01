@@ -8,6 +8,8 @@ dubbo:
     name: tri
     port: 50051
 
+server:
+  port: 8089
 
 spring:
   application:

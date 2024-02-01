@@ -11,6 +11,7 @@ excludeGroupIds=com.alibaba.tbase*
 excludeGroupIds=com.alipay*
 excludeGroupIds=com.antcloud.antvip*
 excludeGroupIds=com.caucho.hessian*
+excludeGroupIds=com.caucho*
 excludeGroupIds=com.ctc.wstx*
 excludeGroupIds=com.fasterxml*
 excludeGroupIds=com.google.code*

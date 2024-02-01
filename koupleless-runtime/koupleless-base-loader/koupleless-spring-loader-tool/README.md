@@ -1,6 +1,12 @@
-# 使用说明
+<div align="center">
 
-1. 引入打包依赖
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+# How to use
+
+1. import the packaging dependency
 ```xml
 <plugin>
     <groupId>org.springframework.boot</groupId>
@@ -28,16 +34,16 @@
     </dependencies>
 </plugin>
 ```
-2. fat jar启动方式不变，会默认使用koupleless-spring-loader的JarLauncher启动
+2. The launch method of fat jar remains unchanged, and the Jar Launcher of koupleless-spring-loader will be used by default
 ```shell
 java -jar xxx-executable.jar
 ```
-3. 解压启动方式，Launcher需要改成com.alipay.sofa.koupleless.spring.loader.JarLauncher
+3. The launch method of unpacking is as follows, and the Launcher needs to be changed to `com.alipay.sofa.koupleless.spring.loader.JarLauncher`
 ```shell
 java -classpath  xxx-executable-unpack com.alipay.sofa.koupleless.spring.loader.JarLauncher
 ```
 
-# 维护说明
+# How to maintain
 
-如果改了ofa-serverless-spring-loader代码，需要先手动mvn打包，然后将koupleless-spring-loader/target/koupleless-spring-loader-xxx.jar复制到koupleless-spring-loader-tool/src/main/resources/META-INF/loader
+If the code of koupleless-spring-loader changed, you need to manually mvn package first, and then copy the `koupleless-spring-loader/target/koupleless-spring-loader-xxx.jar` to `koupleless-spring-loader-tool/src/main/resources/META-INF/loader`
 

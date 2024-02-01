@@ -1,5 +1,7 @@
 ---
 title: SpringBoot 或 SOFABoot 一键升级为模块
+date: 2024-01-25T10:28:32+08:00
+description: SpringBoot 或 SOFABoot 一键升级为 Koupleless 模块
 weight: 100
 ---
 

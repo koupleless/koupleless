@@ -1,63 +1,69 @@
+<div align="center">
 
-## 实验源码地址
-后端地址： https://github.com/lvjing2/eladmin
+English | [简体中文](./README-zh_CN.md)
 
-前端地址： https://github.com/lvjing2/eladmin-web
+</div>
 
-注：该实验项目源自于 https://eladmin.vip/ ，本项为了验证模块化功能，对其进行了一些修改。
+## Source code of this experiment
+Backend： https://github.com/lvjing2/eladmin
 
-### 后端修改内容
-1. 将原来 eladmin-system 里的代码拆分到了 eladmin-biz-mng、eladmin-biz-quartz、eladmin-biz-system 三个模块中
-2. 修改打包方式，将原来的打包方式改为了模块化打包方式
-3. 内部逻辑没有修改任何地方，只是将原来的代码拆分到了三个模块中
+Frontend： https://github.com/lvjing2/eladmin-web
 
-### 前端修改内容
-由于模块 http 服务，统一增加了 web context path，所以需要修改前端的路由到后端的 url 地址，增加 web context path。
+> This experiment project is derived from https://eladmin.vip/, and has been modified to verify the modular function.
 
-## 实验步骤
-### 启动后端基础服务和初始化
-1. 下载后端代码
+
+### Backend modification content
+1. We split the code in eladmin-system into three modules: eladmin-biz-mng, eladmin-biz-quartz, and eladmin-biz-system.
+2. Modify the packaging method, change the original packaging method to modular packaging method
+3. The internal logic has not been modified, just split the original code into three modules
+
+### Frontend modification content
+Cause the module used http service and add web context path, so need to modify the front-end routing to the back-end url address, add web context path.
+
+## Experiment steps
+### Start the backend base service and initialize
+1. Download the backend code
 ```shell
 git clone https://github.com/lvjing2/eladmin
 ```
 
-2. 启动 mysql
+2. Start mysql
 ```shell
 docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 --privileged=true --restart=always --name mariadb -d mariadb:10.6.16 --lower_case_table_names=1
 ```
-3. 启动 redis
+3. Start redis
 ```shell
 docker run -itd --name redis --restart=always -p 6379:6379 redis
 ```
-4. 初始化 sql 脚本
+4. Initialize the sql script
 https://github.com/lvjing2/eladmin/blob/master/sql/eladmin.sql
 
-5. 启动基座
-带上启动参数 `-Dspring.jmx.default-domain=${spring.application.name}`，点击 me.zhengjie.BaseAppRun#main 方法启动基座即可
+5. Start the base
+add startup parameter `-Dspring.jmx.default-domain=${spring.application.name}`, click me.zhengjie.BaseAppRun#main to start the base
 
-6. 部署3个模块
+6. Deploy 3 modules
 ```shell
 arkctl deploy --sub modules/eladmin-biz-mng
 arkctl deploy --sub modules/eladmin-biz-quartz
 arkctl deploy --sub modules/eladmin-biz-system
 ```
 
-### 启动前端服务
-1. 下载前端代码
+### Start the frontend service
+1. Download the frontend code
 ```shell
 git clone https://github.com/lvjing2/eladmin-web
 ```
 
-2. 启动前端代码
+2. Start the frontend code
 ```shell
 npm run dev
 ```
 
-### 访问验证
-打开 localhost:8013，访问页面功能都正常
+### Access verification
+Open localhost:8013, all page functions are normal
 
 
-## 实验 benchmark 
+## Experiment benchmark
 ||||
 |-|-|-|
 

@@ -1,5 +1,7 @@
 ---
-title: 静态合并部署 
+title: 静态合并部署
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless 模块静态合并部署
 weight: 700
 ---
 

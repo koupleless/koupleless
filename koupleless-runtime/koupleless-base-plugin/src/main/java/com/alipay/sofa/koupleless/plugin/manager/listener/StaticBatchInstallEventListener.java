@@ -37,8 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
- * @author gouzhendong.gzd
- * @version $Id: ApplicationContextEventListener, v 0.1 2023-11-21 11:26 gouzhendong.gzd Exp $
+ * @author CodeNoobKingKc2
+ * @version $Id: ApplicationContextEventListener, v 0.1 2023-11-21 11:26 CodeNoobKingKc2 Exp $
  */
 public class StaticBatchInstallEventListener implements
                                             ApplicationListener<ApplicationContextEvent> {

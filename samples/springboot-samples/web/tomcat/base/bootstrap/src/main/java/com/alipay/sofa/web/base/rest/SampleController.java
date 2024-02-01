@@ -33,7 +33,7 @@ public class SampleController {
     public String biz1(Model model) {
         StrategyService strategyService;
         try {
-            strategyService = SpringServiceFinder.getModuleService("biz1",
+            strategyService = SpringServiceFinder.getModuleService("biz1-web-single-host",
                     "0.0.1-SNAPSHOT", "strategyServiceImpl", StrategyService.class);
         } catch (BizRuntimeException e) {
             model.addAttribute("appName", applicationContext.getId());
@@ -49,7 +49,7 @@ public class SampleController {
     public String biz2(Model model) {
         StrategyService strategyService;
         try {
-            strategyService = SpringServiceFinder.getModuleService("biz2",
+            strategyService = SpringServiceFinder.getModuleService("biz2-web-single-host",
                     "0.0.1-SNAPSHOT", "strategyServiceImpl", StrategyService.class);
         } catch (BizRuntimeException e) {
             model.addAttribute("appName", applicationContext.getId());

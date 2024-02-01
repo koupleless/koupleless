@@ -1,7 +1,14 @@
-# Dubbo 2.6.x 在模块中使用
-## 基座新增依赖
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+# Dubbo 2.6.x in module
+## Add dependencies in the base
 base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加如下依赖
-```
+The base is build from a normal dubbo application, the only thing you need to do is add the following dependencies in the build pom.xml
+```xml
 <!--覆盖dubbo 2.6同名类,一定要放在dubbo的依赖前面-->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
@@ -13,7 +20,7 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
     <artifactId>koupleless-base-starter</artifactId>
 </dependency>
 ```
-如果是 web 应用，并且希望后面模块部署与基座使用同一个 tomcat host，则引入如下依赖。详细查看[这里](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)
+If the module is a web application and you want to deploy the module in the same tomcat host with base, add the following dependency. For more details, please refer to [here](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)
 ```xml
 <!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖, 非 web 应用可忽略 -->
 <dependency>
@@ -23,14 +30,14 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
         <!-- end 单 host 部署的依赖 -->
 ```
 
-这里基座发布了 RPC 服务（包括一个injvm服务）
+Here the base published a RPC service and also a Injvm service
 ```shell
 base/com.alipay.sofa.rpc.dubbo26.model.DemoService
 ```
 
-## 模块中使用
-### 修改模块打包插件
-这是动态安装到基座的模块应用，也是普通 dubbo 应用，只需修改打包插件方式即可变成可合并部署的 ark biz 模块
+## How to use in the modules
+### Add the module packaging plugin
+This is a module application that is dynamically installed to the base, and it is also a normal dubbo application. It only needs to modify the packaging plugin to become an ark biz module that can be merged and deployed.
 ```xml
 <plugin>
     <groupId>com.alipay.sofa</groupId>
@@ -56,8 +63,10 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
     </configuration>
 </plugin>
 ```
-### 复用基座依赖
-另外模块还额外将基座里有的依赖，设置为了 provided，这样可以尽可能的复用基座的model、dubbo 等。
+### Reuse dependencies in the base
+Furthermore, the module also sets the dependencies as provided scope which is imported in base, so that the biz can reused the libs like model, dubbo etc in the base as much as possible.
+
+
 ```xml
 <dependency>
 	<groupId>org.springframework.boot</groupId>
@@ -77,7 +86,7 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
     <scope>provided</scope>
 </dependency>
 ```
-如果需要基座和模块间通信，用于通信的模块需要委托给基座去加载（基座compile引入，模块provided引入），否则会报ClassCastException
+If you need to communicate between the base and the module, the module classes that is used for communication needs to be delegated to the base for loading (base compile import, module provided import), otherwise ClassCastException will be reported
 ```xml
 <!-- 模块和基座通信，需要共享一个类-->
 <dependency>
@@ -87,9 +96,9 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
     <scope>provided</scope>
 </dependency>
 ```
-### 模块日志路径和基座隔离
-- 为了让基座和模块日志打印到不同的目录下，基座和模块还额外引入了 log4j2 adapter。
-- 如果不关心基座和模块日志是否打印在一起还是分开打印，那么这个依赖可以不加。
+### Module and Base log path isolation
+- To make the base and module log print to different directories, the base and module also introduce log4j2 adapter.
+
 ```xml
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
@@ -99,8 +108,8 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
 </dependency>
 ```
 
-### 测试调用代码
-发布一个服务
+### Testing code
+publish a service
 ``` xml
 <!-- 和本地bean一样实现服务 -->
 <bean id="demoService" class="com.alipay.sofa.rpc.dubbo26.biz.service.BizDemoServiceImpl"/>
@@ -108,15 +117,16 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
 <dubbo:service interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" ref="demoService" group="biz"/>    <!-- 和本地bean一样实现服务 -->
 ```
 
-在 BizController 里引用了模块自己发布的RPC，基座发布的injvm服务。
+BizController referenced the RPC published by the module itself and the injvm service published by the base.
+
 ``` xml
 <!-- 生成服务代理，调用基座的injvm服务-->
 <dubbo:reference id="baseDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="local" group="base" check="false"/>
 <!-- 生成远程服务代理，调用服务biz1/com.alipay.sofa.rpc.dubbo26.model.DemoService-->
 <dubbo:reference id="selfDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo26.model.DemoService" scope="remote" group="biz" check="false"/>
 ```
-### 基座启动时默认安装模块（仅本地测试），以下两种方式可以二选一
-为了方便本地测试用，启动基座时，默认也启动模块(静态合并部署)
+### Install the module when the base is started (only for local test), you can choose one of the following two methods
+1. We use static merge deployment here, so the module is installed when the base is started
 ```java 
 /**
      * 方便本地测试用，启动基座时，默认也启动模块
@@ -133,71 +143,75 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
         }
     }
 ```
-也可以用curl命令安装，本地 path 以 file://开始, 也支持远程url下载
+2. You can also install the module by curl command, the bizUrl support local file by `file://` and also remote url
+
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
 --data '{
     "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
-    "bizUrl": "file:////path/to/project/sofa-serverless/samples/dubbo-samples/rpc/dubbo3/dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:////path/to/project/koupleless/samples/dubbo-samples/rpc/dubbo3/dubbo26biz/target/dubbo26biz-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 
 ### 运行代码
-1. 【重要】首次运行，先编译安装下用于基座模块间通信的包
+### Run the code
+1. [Important] For the first run, compile and install the package used for communication between the base and the module
 ```shell
 cd samples/dubbo-samples/rpc/dubbo26/dubbo26model
 mvn clean install
 ```
 
-2. 进入目录`samples/dubbo-samples/rpc/dubbo26/` 编译打包模块的代码
+2. cd into `samples/dubbo-samples/rpc/dubbo26/` and compile and package the module code
 ```shell
 cd ../
 mvn clean package
 ```
-3. 启动基座应用Dubbo26BaseApplication.java，确保基座和模块启动成功
-4. 查看模块安装是否成功
+3. start base application Dubbo26BaseApplication.java, make sure the base and module started successfully
+
+4. check if the module is installed successfully
+
 ```shell
 curl --location --request POST 'localhost:1238/queryAllBiz'
 ```
-可以查看到所有安装好的模块列表
+you can see the list of all installed modules
 
-5. 验证模块的 RPC/JVM调用
-模块远程调用自己发布的dubbo服务（因为有dubbo网络调用，执行前请关闭vpn，否则可能出现调用超时）
+5. verify the RPC/JVM call of the module
+Remoting calling the dubbo service published by the module itself, because there is dubbo network call, please close vpn before execution, otherwise there may be call timeout
 ```shell
 curl localhost:8080/biz/selfRemote
 ```
-返回
+return
 ```shell
 {
   "result": "biz->com.alipay.sofa.rpc.dubbo26.biz.service.BizDemoServiceImpl"
 }
 ```
-模块injvm调用基座发布的服务
+Injvm calling the dubbo service published by the base
 ```shell
 curl localhost:8080/biz/baseInJvm
 ```
-返回
+return
 ```json
 {
   "result": "biz->com.alipay.sofa.rpc.dubbo26.base.service.BaseDemoService"
 }
 ```
-6. 验证基座的 RPC/JVM调用
-基座调用biz模块发布的injvm服务
+6. verify the RPC/JVM call of the base
+The base calling injvm service published by the biz module
 ```shell
 curl http://localhost:8080/bizInJvm
 ```
-返回
+return
 ```shell
 {
   "result": "base->com.alipay.sofa.rpc.dubbo26.biz.service.BizDemoServiceImpl"
 }
 ```
 
-### 说明
-因为有dubbo网络调用，执行前请关闭vpn，否则可能出现调用超时。
+### Description
+Because there is dubbo network call, please close vpn before execution, otherwise there may be call timeout.
 
-dubbo2.6 暂时只支持java序列化，不支持热部署能力，如有需要请提一个issue告诉我们。
+dubbo2.6 only supports java serialization and does not support hot deployment capability. If you need it, please submit an issue to tell us.
 

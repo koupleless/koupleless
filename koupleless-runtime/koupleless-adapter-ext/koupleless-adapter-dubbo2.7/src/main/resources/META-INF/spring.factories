@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationListener=\
+  com.alipay.sofa.koupleless.support.dubbo.BizDubboBootstrapListener
