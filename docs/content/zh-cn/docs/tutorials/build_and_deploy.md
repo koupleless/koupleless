@@ -12,10 +12,10 @@ weight: 500
 这里也提供了视频教程，[可点击此处查看](/docs/video-training/)。
 
 ## 基座接入
-[可参考此处](/docs/tutorials/base-create/springboot-and-sofaboot.md)
+[可参考此处](/docs/tutorials/base-create/springboot-and-sofaboot)
 
 ## 模块接入
-[可参考此处](/docs/tutorials/module-create/springboot-and-sofaboot.md)
+[可参考此处](/docs/tutorials/module-create/springboot-and-sofaboot)
 
 ## 模块开发验证
 可以有两种开发验证方式：
