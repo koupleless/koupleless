@@ -1,8 +1,8 @@
 ---
-title: Koupelelss - 让普通应用低成本享受 Serverless 体验，帮助企业降本增效
+title: Koupelelss: 让普通应用低成本享受 Serverless 体验，帮助企业降本增效
 linkTitle: 首页
 date: 2024-01-25T10:28:32+08:00
-description: Koupelelss - 让普通应用低成本享受 Serverless 体验，帮助企业降本增效！
+description: Koupelelss: 让普通应用低成本享受 Serverless 体验，帮助企业降本增效！
 menu: {main: {weight: 10}}
 url: "/home/"
 ---
@@ -188,7 +188,7 @@ url: "/home/"
     <defs>
         <linearGradient x1="2.51195109%" y1="27.2282896%" x2="100%" y2="74.7394273%" id="linearGradient-dang0lxlx1-1">
             <stop stop-color="#FFFFFF" stop-opacity="0.06" offset="0%"></stop>
-            <stop stop-color="#FFFFFF" stop-opacity="0.04" offset="100%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.04" offset="100%"></stop>git a
         </linearGradient>
         <circle id="path-dang0lxlx1-2" cx="36" cy="36" r="36"></circle>
         <filter x="-4.9%" y="-4.9%" width="109.7%" height="109.7%" filterUnits="objectBoundingBox" id="filter-dang0lxlx1-3">
