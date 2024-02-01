@@ -20,7 +20,7 @@ weight: 200
 
 ### 步骤一
 
-在「模块项目根目录/conf/ark/文件名.txt」中（比如：my-module/conf/ark/rules.txt），按照如下格式配置需要下沉到基座的框架和中间件常用包。您也可以直接复制[默认的 rules.txt 文件内容](https://github.com/koupleless/koupleless/blob/module-slimming/samples/springboot-samples/slimming/log4j2/biz1/conf/ark/rules.txt)到您的项目中。
+在「模块项目根目录/conf/ark/文件名.txt」中（比如：my-module/conf/ark/rules.txt），按照如下格式配置需要下沉到基座的框架和中间件常用包。您也可以直接复制[默认的 rules.txt 文件内容](https://github.com/koupleless/koupleless/blob/main/samples/springboot-samples/slimming/log4j2/biz1/conf/ark/rules.txt)到您的项目中。
 
 ```xml
 excludeGroupIds=org.apache*
