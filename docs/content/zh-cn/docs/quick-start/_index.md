@@ -52,4 +52,4 @@ kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_prov
 
 # 欢迎大家学习 Koupleless 视频教程
 
-[点击此处](/docs/tutorials/video-training)查看 Koupleless 平台与研发框架视频培训教程。
+[点击此处](../../../../public/docs/video-training/index.html)查看 Koupleless 平台与研发框架视频培训教程。
