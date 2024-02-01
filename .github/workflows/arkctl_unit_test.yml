@@ -4,13 +4,13 @@ run-name: ${{ github.actor }} pushed arkctl code
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'arkctl/**'
 
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - 'arkctl/**'
 

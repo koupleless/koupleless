@@ -43,8 +43,8 @@ import static org.mockito.Mockito.*;
 
 /**
  *
- * @author gouzhendong.gzd
- * @version $Id: BatchInstallHelper, v 0.1 2023-11-22 10:59 gouzhendong.gzd Exp $
+ * @author CodeNoobKingKc2
+ * @version $Id: BatchInstallHelper, v 0.1 2023-11-22 10:59 CodeNoobKingKc2 Exp $
  */
 @RunWith(MockitoJUnitRunner.class)
 public class BatchInstallHelperTest {
