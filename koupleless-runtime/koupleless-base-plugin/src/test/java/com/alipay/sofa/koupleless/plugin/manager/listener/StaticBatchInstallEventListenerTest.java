@@ -42,8 +42,8 @@ import static org.mockito.Mockito.times;
 
 /**
  *
- * @author gouzhendong.gzd
- * @version $Id: ApplicationContextEventListenerTest, v 0.1 2023-11-21 11:32 gouzhendong.gzd Exp $
+ * @author CodeNoobKingKc2
+ * @version $Id: ApplicationContextEventListenerTest, v 0.1 2023-11-21 11:32 CodeNoobKingKc2 Exp $
  */
 @RunWith(MockitoJUnitRunner.class)
 public class StaticBatchInstallEventListenerTest {

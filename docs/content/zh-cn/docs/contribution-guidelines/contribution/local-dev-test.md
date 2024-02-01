@@ -24,7 +24,7 @@ module-controller 开发方式和标准 K8S Operator 开发方式完全一样，
 
 ## Arkctl
 Arkctl 是一个普通 Golang 项目，他是一个命令行工具集，包含了用户在本地开发和运维模块过程中的常用工具。
-[可参考此处](/docs/tutorials/build_and_deploy.md)
+[可参考此处](/docs/tutorials/build_and_deploy)
 
 
 <br/>

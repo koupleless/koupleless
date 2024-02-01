@@ -1,28 +1,39 @@
-# 实验内容
-## 实验应用
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+# Experiment
+## Experiment application
 ### base
-base 为普通 springboot cloud改造成的基座，改造内容为在 pom 里增加如下依赖
+The base is built from regular SpringBoot application. The only change you need to do is to add the following dependencies in pom
+
 ```xml
-<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+<!-- Add dynamic module related dependencies here -->
+<!--    Be sure to put this dependency as the first dependency in the build pom, and set type= pom,
+    The principle can be found here https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
+<!-- end of dynamic module related dependencies -->
 
+<!-- Add dependencies for deploying multiple web applications in tomcat single host mode here -->
 <dependency>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>netty-ark-plugin</artifactId>
 </dependency>
+<!-- end of dependencies for single host deployment -->
 ```
 
 ### biz
-biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot cloud，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
+The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
 
 ```xml
-<!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
+<!-- change the packaging plugin to sofa-ark biz packaging plugin, packaged as ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
@@ -39,53 +50,57 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot cloud�
         <skipArkExecutable>true</skipArkExecutable>
         <outputDirectory>./target</outputDirectory>
         <bizName>${bizName}</bizName>
-        <!-- 单host下需更换 web context path -->
+        <!-- single host mode, need to change web context path -->
         <webContextPath>${bizName}</webContextPath>
         <declaredMode>true</declaredMode>
         <packExcludesConfig>rules.txt</packExcludesConfig>
     </configuration>
 </plugin>
 ```
-注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 netty host 里安装多个 web 应用。
+Note that the web context path of different biz is changed to different values, so that multiple web applications can be successfully installed in a tomcat host.
 
-## 实验步骤
+## Experiment steps
 
-### 基座启动与模块部署
-#### 执行 mvn clean package -DskipTests
-可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
+### start base and deploy bizs
+#### run `mvn clean package -DskipTests`
+we can check the ark-biz jar package in the target directory of each bundle
 
-#### 启动基座应用 base，确保基座启动成功
-#### 执行 curl 命令安装 biz1 和 biz2
-到 gateway 目录
+#### start base application, make sure base is started successfully
+```shell
+# add start params
+-Dspring.jmx.default-domain=${spring.application.name}
+```
+#### execute curl command to install biz1 and biz2
+cd into gateway directory
 ```shell
 cd samples/springboot-samples/springcloud/gateway
 ```
-通过 arkctl 部署模块 1 和模块 2
+install biz1 and biz2 by arkctl
 ```shell
 arkctl deploy biz1/target/biz1-cloud-gateway-0.0.1-SNAPSHOT-ark-biz.jar
 arkctl deploy biz2/target/biz2-cloud-gateway-0.0.1-SNAPSHOT-ark-biz.jar
 ```
 
-#### WebSocket 测试
-1. 启动 3个不同端口的 webSocket 服务端
+#### WebSocket testing
+1. start 3 different port webSocket server
 ```shell
 npm install -g wscat
 wscat --listen 9000 # 基座 websocket 端口
 wscat --listen 9001 # biz1 websocket 端口
 wscat --listen 9002 # biz2 websocket 端口
 ```
-2. 启动 webSocket 客户端链接测试
+2. start webSocket client to test
 ```shell
 wscat --connect ws://localhost:8080/echo
 ```
-输入任意字符， 只有属于基座的 webSocket 服务终端能 echo 出相同字符
+input any character, only the webSocket server belongs to base can echo the same character
 
 ```shell
 wscat --connect ws://localhost:8080/biz1/echo
 ```
-输入任意字符，只有属于 biz1 9001 端口的 webSocket 服务终端能 echo 出相同字符
+input any character, only the webSocket server belongs to biz1 9001 port can echo the same character
 
 ```shell
 wscat --connect ws://localhost:8080/biz2/echo
 ```
-输入任意字符，只有属于 biz2 9002 端口的 webSocket 服务终端能 echo 出相同字符
+input any character, only the webSocket server belongs to biz2 9002 port can echo the same character

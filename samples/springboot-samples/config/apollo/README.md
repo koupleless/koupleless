@@ -1,52 +1,56 @@
-# 实验内容
+<div align="center">
 
+English | [简体中文](./README-zh_CN.md)
 
-1. 不同模块使用不同的 app id, 独立配置
-2. 不同模块使用相同 app id，独立配置默认就已经支持
+</div>
 
-## 实验任务
-### 不同模块使用不同的 app id, 独立配置
-#### base 代码改造
-1. application.properties 里增加如下配置，用来解决 jmx 注册 bean 冲突问题
+# Experiment
+1. using different app id for different modules, independent configuration
+2. using same app id for different modules, independent configuration
+
+## Experiment tasks
+### using different app id for different modules, independent configuration
+#### base 
+1. add the following configuration in application.properties to solve the conflict of jmx registration bean
 ```properties
 spring.jmx.default-domain=${spring.application.name}
 ```
-2. 配置 apollo 服务端地址
+2. add apollo configuration
 ```java
-// 默认 apollo 使用 Eureka 获取服务地址，由于本地 docker 采用 bridge 网络模式，通过 Eureka 获取到的是虚拟子网服务地址
-// 在本地无法直接调用，所以这里直接通过自定义配置 `apollo.configService` 指定为 localhost
+// using Eureka to get service address by default, but in docker bridge network mode, the service address is virtual subnet address
+// so we need to use `apollo.configService` to specify the apollo service address as localhost
 
 System.setProperty("apollo.configService", "http://localhost:8080");
 System.setProperty("apollo.config-service", "http://localhost:8080");
 System.setProperty("env", "DEV");
 ```
-3. pom 里引入 apollo 依赖
+3. add apollo dependency in pom
 
-4. 基座和模块代码里都添加 apollo 多应用治理类 `com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer`
-引入覆盖 apollo 原有逻辑的治理类，与原生的类实现的区别在于如下一行
+4. add override class `com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer` to override apollo original logic, the difference between the original class and the override class is as follows
 ![diff.png](imgs/diff.png)
 
-5. 基座和模块里都添加 apollo 配置文件 `/META-INF/app.properties`
-由于注释了 initializeSystemProperty 方法，导致无法通过 application.properties 对 apollo 进行配置， 初始化 `app.id`。所以模块里需要使用 `/META-INF/app.properties` 进行配置。
+5. add apollo config in `/META-INF/app.properties` for both base and module
+Cause the initializeSystemProperty method is commented out, it is not possible to configure apollo through application.properties to initialize `app.id`. So the module needs to use `/META-INF/app.properties` for configuration.
 ![init.png](imgs/init.png)
 
-#### 实验步骤
-1. cd 进入 config 目录，执行如下命令启动 apollo 服务端
+#### Experiment steps
+1. cd into config directory, execute the following command to start apollo server
 ```shell
 docker-compose up
 ```
-2. 登录 apollo 管理后台 `localhost:8080`，创建 app id 为 `biz1` 的项目和 key=data.name 的配置，创建 app id 为 `biz2` 的项目和 key=data.name 的配置，具体查看 https://www.apolloconfig.com/#/zh/deployment/quick-start
+2. login apollo management background `localhost:8080`, create project with app id `biz1` and key=data.name, create project with app id `biz2` and key=data.name, see details https://www.apolloconfig.com/#/zh/deployment/quick-start
 
 ![apps.png](imgs/apps.png)
 
 ![app-data-name.png](imgs/app-data-name.png)
 
-3. 执行 `mvn clean package -DskipTests`，然后启动基座
-4. 进入 apollo 目录，执行 `arkctl deploy biz1/target/biz1-apollo-0.0.1-SNAPSHOT-ark-biz.jar`, 安装 biz1 模块
-5. 进入 apollo 目录，执行 `arkctl deploy biz2/target/biz2-apollo-0.0.1-SNAPSHOT-ark-biz.jar`, 安装 biz2 模块
-6. 执行 `curl http://localhost:8081/biz1/getValue` 获取到 biz1 的配置值，修改 biz1 的 data.name，再次执行 `curl http://localhost:8081/biz1/getValue` 能获取到新的 biz1 的配置值
-7. 执行 `curl http://localhost:8081/biz1/getValue` 获取到 biz2 的配置值，修改 biz2 的 data.name，再次执行 `curl http://localhost:8081/biz2/getValue` 能获取到新的 biz2 的配置值，也不会影响 biz1 或基座的配置值
+3. run `mvn clean package -DskipTests`, then start base
+4. cd info apollo, run `arkctl deploy biz1/target/biz1-apollo-0.0.1-SNAPSHOT-ark-biz.jar`, install biz1 module
+5. cd info apollo, run `arkctl deploy biz2/target/biz2-apollo-0.0.1-SNAPSHOT-ark-biz.jar`, install biz2 module
+6. run `curl http://localhost:8081/biz1/getValue` to get biz1 config value, modify biz1 data.name, and run `curl http://localhost:8081/biz1/getValue` again to get new biz1 config value
+7. run `curl http://localhost:8081/biz2/getValue` to get biz2 config value, modify biz2 data.name, and run `curl http://localhost:8081/biz2/getValue` again to get new biz2 config value
 
-### 不同模块使用相同 app id，独立配置默认就已经支持
-模块统一使用[自动排包能力](https://sofaserverless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB)，在 rules.txt 文件里确保有这个配置 `excludeGroupIds=com.ctrip.framework.apollo*`，将 apollo client 委托给基座加载即可达到效果。
-注意 application.properties 里增加 `spring.jmx.default-domain=${spring.application.name}`
+### using same app id for different modules, independent configuration
+using [automatic slimming](https://koupleless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB) to delegate apollo client to base, add `excludeGroupIds=com.ctrip.framework.apollo*` in rules.txt to make sure apollo client is delegated to base.
+
+Please notice that add `spring.jmx.default-domain=${spring.application.name}` in application.properties

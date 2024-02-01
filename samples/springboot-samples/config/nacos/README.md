@@ -1,41 +1,45 @@
-# 实验内容
+<div align="center">
 
+English | [简体中文](./README-zh_CN.md)
 
-1. 不同模块注册并读取不同的 dataId
-2. 不同模块使用相同 dataId
+</div>
 
-## 实验任务
+# Experiment
 
-### 前置准备
-nacos采用标准的 CS 分布式架构, 在实验前需要先将 server 端启动。
-启动步骤参考: [Nacos 快速开始](https://nacos.io/zh-cn/docs/quick-start.html)
+1. Read different dataId in different modules
+2. Read the same dataId in different modules
 
-下面我们将启动一个基座 base 和两个模块 biz1 和 biz2, 模块与其对应的 dataId 映射如下
-- base模块: base
-- biz1模块: biz
-- biz2模块: biz
+## Experiment task
 
-> 由于 nacos 依赖 prometheus 做指标采集, 由于其内部机制, io.prometheus:simpleclient 该 GA 不能做包与类下沉基座, 否则模块会启动不了
+### Preparations
+nacos is based on the standard CS distributed architecture, and the server side needs to be started before the experiment.
+how to start nacos server: [Nacos Quick Start](https://nacos.io/en-us/docs/quick-start.html)
 
+now we will start a base and two modules biz1 and biz2, the mapping between module and dataId is as follows
+- base: base
+- biz1 module: biz
+- biz2 module: biz
 
-### 不同模块注册并读取不同的 dataId
+> Nacos using prometheus for metrics collection, due to its internal mechanism, io.prometheus:simpleclient cannot be delegated to base, otherwise the module will not start
 
-启动 base、biz1、biz2 模块后, 验证 dataId的读取逻辑
-- base: 调用 *curl http://localhost:8090/config/get* 返回false
-- biz1: 调用 *curl http://localhost:8090/biz1/config/get* 返回false
-- biz2: 调用 *curl http://localhost:8090/biz2/config/get* 返回false
+### Writing and reading different dataId in different modules
 
-执行 *curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=base&group=DEFAULT_GROUP&content=useLocalCache=true"* 将 dataId base 的值修改为 true
+start base, biz1 and biz2 modules, verify the logic of reading dataId
+- base: `curl http://localhost:8090/config/get` return false
+- biz1: `curl http://localhost:8090/biz1/config/get` return false
+- biz2: `curl http://localhost:8090/biz2/config/get` return false
 
-再次调用 *curl http://localhost:8090/config/get* 发现值已经范围 true, 说明基座的 dataId已经修改成功且生效。而调用 biz 查询依旧是 false
+run *curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=base&group=DEFAULT_GROUP&content=useLocalCache=true"* to set the value of dataId base to true
 
-### 不同模块使用相同 dataId
+run `curl http://localhost:8090/config/get` again, we can see the value is true, which means the dataId of base has been modified successfully and take effect. But the value of biz is still false
 
-在上述基础上, 由于模块 biz1 和 biz2 都使用 "biz" 作为 dataId, 期望修改该 dataId 的值后, biz1 和 biz2 读取的值同时发生变化。
+### using the same dataId in different modules
 
-执行 *curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=biz&group=DEFAULT_GROUP&content=useLocalCache=true"* 将 dataId biz 的值修改为 true
+based on the above, because the modules biz1 and biz2 both use "biz" as dataId, it is expected that after modifying the value of dataId, the values read by biz1 and biz2 will change at the same time.
 
-- biz1: 调用 *curl http://localhost:8090/biz1/config/get* 返回 true
-- biz2: 调用 *curl http://localhost:8090/biz2/config/get* 返回 true
+run `curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=biz&group=DEFAULT_GROUP&content=useLocalCache=true"` to set the value of dataId biz to true
 
-发现, 共享同 dataId 的两个模块都读取到了修改的值。
+- biz1: `curl http://localhost:8090/biz1/config/get` return true
+- biz2: `curl http://localhost:8090/biz2/config/get` return true
+
+we can found that the two modules sharing the same dataId have read the modified value.
