@@ -405,12 +405,23 @@ public class MultiBizProperties extends Properties {
     private ClassLoader getBizClassLoader(ClassLoader invokeClassLoader) {
         for (ClassLoader classLoader = invokeClassLoader; classLoader != null; classLoader = classLoader
             .getParent()) {
-            String name = classLoader.getClass().getName();
-            if (Objects.equals(name, bizClassLoaderName)) {
+            Class clazz = classLoader.getClass();
+            if (isBizClassLoader(clazz)) {
                 return classLoader;
             }
         }
         return null;
+    }
+
+    private boolean isBizClassLoader(Class clazz) {
+        if (!ClassLoader.class.isAssignableFrom(clazz)) {
+            return false;
+        }
+        String name = clazz.getName();
+        if (Objects.equals(name, bizClassLoaderName)) {
+            return true;
+        }
+        return isBizClassLoader(clazz.getSuperclass());
     }
 
     private synchronized Properties getWriteProperties() {
