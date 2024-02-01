@@ -10,7 +10,7 @@ weight: 10
 java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.koupleless.common.spring.KouplelessApplicationListener
 ```
 ##### 解决方式
-模块需要做好瘦身，参考这里：[模块瘦身](/docs/tutorials/module-development/module-slimming.md)
+模块需要做好瘦身，参考这里：[模块瘦身](/docs/tutorials/module-development/module-slimming)
 
 #### 问题 1-2：模块安装找不到 `KouplelessApplicationListener`
 报错信息如下：
