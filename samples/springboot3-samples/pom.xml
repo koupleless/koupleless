@@ -20,7 +20,7 @@
     <properties>
         <spring.boot.version>3.2.1</spring.boot.version>
         <java.version>17</java.version>
-        <sofa.ark.version>3.0.1</sofa.ark.version>
+        <sofa.ark.version>3.0.2-SNAPSHOT</sofa.ark.version>
         <koupleless.runtime.version>0.5.7-jdk17-SNAPSHOT</koupleless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
@@ -60,7 +60,7 @@
             <dependency>
                 <groupId>com.alipay.sofa.koupleless</groupId>
                 <artifactId>koupleless-base-starter</artifactId>
-                <version>${sofa.serverless.runtime.version}</version>
+                <version>${koupleless.runtime.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
@@ -101,7 +101,7 @@
             <dependency>
                 <groupId>com.alipay.sofa.koupleless</groupId>
                 <artifactId>koupleless-app-starter</artifactId>
-                <version>${sofa.serverless.runtime.version}</version>
+                <version>${koupleless.runtime.version}</version>
             </dependency>
 
             <dependency>

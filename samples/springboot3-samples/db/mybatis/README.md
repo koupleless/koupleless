@@ -78,7 +78,7 @@ The biz contains module biz1, which are regular SpringBoot. The packaging plugin
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-log4j2</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
         <!--Database dependency-->
