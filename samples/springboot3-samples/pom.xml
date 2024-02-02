@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>com.alipay.sofa</groupId>
-    <artifactId>springboot-samples</artifactId>
+    <artifactId>springboot3-samples</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springboot-samples</name>
-    <description>Demo project for Spring Boot</description>
+    <name>springboot3-samples</name>
+    <description>Demo project for Spring Boot3</description>
     <packaging>pom</packaging>
 
     <properties>
