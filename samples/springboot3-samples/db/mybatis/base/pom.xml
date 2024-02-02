@@ -103,7 +103,7 @@
 		<dependency>
 			<groupId>com.alipay.sofa.koupleless</groupId>
 			<artifactId>koupleless-adapter-log4j2</artifactId>
-			<version>${sofa.serverless.runtime.version}</version>
+			<version>${koupleless.runtime.version}</version>
 			<exclusions>
 				<!-- 排除 sofa-boot-alipay-autoconfigure -->
 				<exclusion>

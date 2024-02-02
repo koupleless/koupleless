@@ -291,7 +291,7 @@ jobs:
       - name: random delete module then wait module available and delete base pod clean logs
         run: |
           resource_name=$(kubectl get module -o name | sort -R | head -n 1)
-          base_instance_name=$(kubectl get $resource_name -o jsonpath='{.metadata.labels.serverless\.alipay\.com/base-instance-name}')
+          base_instance_name=$(kubectl get $resource_name -o jsonpath='{.metadata.labels.koupleless\.io/base-instance-name}')
           echo "要删除的资源名称: $resource_name"
           echo "base-instance-name 的值: $base_instance_name"
           kubectl delete $resource_name
@@ -436,7 +436,7 @@ jobs:
       - name: random delete pod
         run: |
           resource_name=$(kubectl get module -o name | sort -R | head -n 1)
-          base_instance_name=$(kubectl get $resource_name -o jsonpath='{.metadata.labels.serverless\.alipay\.com/base-instance-name}')
+          base_instance_name=$(kubectl get $resource_name -o jsonpath='{.metadata.labels.koupleless\.io/base-instance-name}')
           echo "要删除的资源名称: $resource_name"
           echo "base-instance-name 的值: $base_instance_name"
           
