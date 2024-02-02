@@ -66,7 +66,7 @@ The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The pa
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-log4j2</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
 <!-- add kafka dependency -->
