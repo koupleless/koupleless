@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>1.0.0-SNAPSHOT</revision>
+        <revision>2.0.0-SNAPSHOT</revision>
         <sofa.ark.version>3.0.2-SNAPSHOT</sofa.ark.version>
         <spring.boot.version>3.0.9</spring.boot.version>
         <project.encoding>UTF-8</project.encoding>
