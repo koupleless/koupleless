@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.adapter.apollo;
+package com.alipay.sofa.koupleless.apollo;
 
 import com.alipay.sofa.ark.container.service.classloader.BizClassLoader;
 import org.junit.Assert;

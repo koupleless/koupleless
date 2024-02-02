@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.adapter.apollo;
+package com.alipay.sofa.koupleless.apollo;
 
 import com.alipay.sofa.koupleless.common.util.MultiBizProperties;
-import com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -28,9 +27,10 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.StandardEnvironment;
 
-@ConditionalOnBean(ApolloApplicationContextInitializer.class)
-@ConditionalOnClass(ApolloApplicationContextInitializer.class)
+@ConditionalOnBean(type = "com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer")
+@ConditionalOnClass(name = "com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer")
 public class ApolloPropertiesClearInitializer implements EnvironmentPostProcessor, Ordered {
+
     private int                   order                 = -1;
 
     private static final String[] NEED_CLEAR_PROPERTIES = { "app.id", "apollo.cacheDir",
