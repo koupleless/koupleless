@@ -207,7 +207,7 @@ You can see the list of all installed modules
 6. verify the RPC/JVM call of the module
 Remoting calling the tri service published by the module itself
 ```shell
-curl localhost:8080/triplebiz/remote
+curl localhost:8089/triplebiz/remote
 ```
 return
 ```shell
@@ -215,7 +215,7 @@ com.alipay.sofa.rpc.dubbo3.triplebiz.service.DemoServiceImpl: Hello,trpilebiz
 ```
 Injvm calling the tri service published by the base
 ```shell
-curl localhost:8080/triplebiz/local
+curl localhost:8089/triplebiz/injvm
 ```
 return
 ```shell
@@ -224,7 +224,7 @@ com.alipay.sofa.rpc.dubbo3.base.service.BaseCommonService: Hello,triplebiz
 7. verify the RPC/JVM call of the base
 The base calls the injvm service published by the triplebiz module
 ```shell
-curl http://localhost:8080/base/triplebiz/injvm
+curl http://localhost:8089/base/triplebiz/injvm
 ```
 return
 ```shell
@@ -232,7 +232,7 @@ com.alipay.sofa.rpc.dubbo3.triplebiz.service.TripleBizCommonService: Hello,base
 ```
 The base calls the rpc service published by the triplebiz module
 ```shell
-curl http://localhost:8080/base/triplebiz/remote
+curl http://localhost:8089/base/triplebiz/remote
 ```
 return
 ```shell
