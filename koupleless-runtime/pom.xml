@@ -24,8 +24,8 @@
         <maven.gpg.pluign>1.6</maven.gpg.pluign>
         <jacoco.maven.plugin>0.8.11</jacoco.maven.plugin>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <oshi.version>6.4.5</oshi.version>
         <guice.version>6.0.0</guice.version>
