@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @ConditionalOnProperty(name = "koupleless.forward.conf.path")
 @ComponentScan(basePackages = "com.alipay.sofa.koupleless.base.forward")
@@ -83,19 +82,34 @@ public class ForwardAutoConfiguration implements ApplicationContextAware {
         if (!contextPath.startsWith(CONTEXT_PATH_PREFIX)) {
             contextPath = CONTEXT_PATH_PREFIX + contextPath;
         }
-        Set<String> paths = forward.getPaths();
+        Set<ForwardPath> paths = forward.getPaths();
         if (CollectionUtils.isEmpty(paths)) {
-            paths = Collections.singleton(PATH_PREFIX);
+            ForwardPath path = new ForwardPath();
+            path.setFrom(PATH_PREFIX);
+            path.setTo(PATH_PREFIX);
+            paths = Collections.singleton(path);
         } else {
-            paths = paths.stream()
-                    .map(path -> path.startsWith(CONTEXT_PATH_PREFIX) ? path : CONTEXT_PATH_PREFIX + path)
-                    .collect(Collectors.toSet());
+            for (ForwardPath path : paths) {
+                String from = path.getFrom();
+                if (!from.startsWith(CONTEXT_PATH_PREFIX)) {
+                    path.setFrom(CONTEXT_PATH_PREFIX + from);
+                }
+                String to = path.getTo();
+                if (to == null) {
+                    path.setTo(path.getFrom());
+                    continue;
+                }
+                if (!to.startsWith(CONTEXT_PATH_PREFIX)) {
+                    path.setTo(CONTEXT_PATH_PREFIX + to);
+                }
+            }
         }
         List<ForwardItem> items = new LinkedList<>();
         int index = startIndex;
         for (String host : hosts) {
-            for (String path : paths) {
-                ForwardItem item = new ForwardItem(index++, contextPath, host, path);
+            for (ForwardPath path : paths) {
+                ForwardItem item = new ForwardItem(index++, contextPath, host, path.getFrom(),
+                    path.getTo());
                 items.add(item);
             }
         }

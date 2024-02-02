@@ -2,12 +2,12 @@
   hosts:
     - test1
   paths:
-    - /test1
+    - from: /test1
 - contextPath: test2
   paths:
-    - /test2
-    - /api/test2
-    - /api-test2
+    - from: /test2
+    - from: /api/test2
+    - from: /api-test2
 - contextPath: test3
   hosts:
     - test3

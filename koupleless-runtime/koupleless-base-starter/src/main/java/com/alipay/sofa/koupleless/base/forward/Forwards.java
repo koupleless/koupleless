@@ -18,33 +18,31 @@ package com.alipay.sofa.koupleless.base.forward;
 
 import org.springframework.util.StringUtils;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Forwards {
-    private final List<ForwardItem>   items;
-    private final Map<String, String> contextPathMap = new ConcurrentHashMap<>();
+    public static final String             ROOT_PATH      = "/";
+    private final List<ForwardItem>        items;
+    private final Map<String, ForwardItem> contextPathMap = new ConcurrentHashMap<>();
 
     public Forwards(List<ForwardItem> items) {
         this.items = items;
     }
 
-    public String getContextPath(URI uri) {
-        String host = uri.getHost();
-        String path = uri.getPath();
+    public ForwardItem getForwardItem(String host, String path) {
         String key = host + path;
-        return contextPathMap.computeIfAbsent(key, k -> parseContextPath(host, path));
+        return contextPathMap.computeIfAbsent(key, k -> doGetForwardItem(host, path));
     }
 
-    private String parseContextPath(String host, String path) {
+    private ForwardItem doGetForwardItem(String host, String path) {
         for (ForwardItem item : items) {
             boolean matchHost = !StringUtils.hasLength(item.getHost())
                                 || host.startsWith(item.getHost());
-            boolean matchPath = path.startsWith(item.getPath());
+            boolean matchPath = path.startsWith(item.getFrom());
             if (matchHost && matchPath) {
-                return item.getContextPath();
+                return item;
             }
         }
         throw new IllegalArgumentException("Not found context path by the path:" + host + path);

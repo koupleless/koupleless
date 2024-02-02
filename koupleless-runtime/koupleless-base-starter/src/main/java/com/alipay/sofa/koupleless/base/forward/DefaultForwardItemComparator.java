@@ -52,7 +52,7 @@ public class DefaultForwardItemComparator implements ForwardItemComparator {
             return -1;
         }
         // Compare path lengths; use Integer.compare for a cleaner comparison
-        int num = Integer.compare(item2.getPath().length(), item1.getPath().length());
+        int num = Integer.compare(item2.getFrom().length(), item1.getFrom().length());
         if (num == 0) {
             num = Integer.compare(item2.getHost().length(), item1.getHost().length());
         }

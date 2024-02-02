@@ -4,9 +4,17 @@
     - a
     - b
     - c
-# /a /b /c 的请求，将路由到biz2
+# /idx2** -> /biz2/**, /t2** -> /biz2/timestamp**
 - contextPath: biz2
   paths:
-    - /a
-    - /b
-    - /c
+    - from: /idx2
+      to: /
+    - from: /t2
+      to: /timestamp
+# /idx1** -> /biz1/**, /t1** -> /biz1/timestamp**
+- contextPath: biz1
+  paths:
+    - from: /idx1
+      to: /
+    - from: /t1
+      to: /timestamp

@@ -18,11 +18,8 @@ package com.alipay.sofa.koupleless.base.forward;
 
 import lombok.Data;
 
-import java.util.Set;
-
 @Data
-public class Forward {
-    private String           contextPath;
-    private Set<String>      hosts;
-    private Set<ForwardPath> paths;
+public class ForwardPath {
+    private String from;
+    private String to;
 }

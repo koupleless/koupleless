@@ -94,25 +94,21 @@ public class ForwardControllerTests {
 
 
         Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://test1.xxx.com/test2"));
-        Mockito.when(request.getServletPath()).thenReturn("/test2");
         controller.redirect(request, response);
         Mockito.verify(dispatcher2, Mockito.times(1)).forward(request, response);
 
 
         Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://test1.xxx.com/test1/xx"));
-        Mockito.when(request.getServletPath()).thenReturn("/test1/xx");
         controller.redirect(request, response);
         Mockito.verify(dispatcher1, Mockito.times(1)).forward(request, response);
 
 
         Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://test3.xxx.com/test1/xx"));
-        Mockito.when(request.getServletPath()).thenReturn("/test1/xx");
         controller.redirect(request, response);
         Mockito.verify(dispatcher3, Mockito.times(1)).forward(request, response);
 
 
         Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://test4.xxx.com/test1/xx"));
-        Mockito.when(request.getServletPath()).thenReturn("/test1/xx");
         Assert.assertThrows(IllegalArgumentException.class, () -> controller.redirect(request, response));
     }
 }

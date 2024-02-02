@@ -18,6 +18,7 @@ package com.alipay.sofa.koupleless.base.forward;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.RequestDispatcher;
@@ -32,21 +33,36 @@ import java.net.URI;
 @RequestMapping
 public class ForwardController {
     @Autowired
-    private Forwards forwards;
+    private Forwards            forwards;
+
+    private static final String SEPARATOR         = "/";
+    private static final String DOUBLE_SEPARATORS = SEPARATOR + SEPARATOR;
 
     @RequestMapping("/**")
     public void redirect(HttpServletRequest request, HttpServletResponse response)
                                                                                   throws ServletException,
                                                                                   IOException {
-        String path = request.getServletPath();
+        //定位forward信息
         URI uri = URI.create(request.getRequestURL().toString());
-        String contextPath = forwards.getContextPath(uri);
-        ServletContext currentContext = request.getServletContext();
-        ServletContext nextContext = currentContext.getContext(contextPath + path);
-        if (currentContext == nextContext) {
-            throw new IllegalArgumentException("No match biz for path:" + path);
+        String host = uri.getHost();
+        String sourcePath = uri.getPath();
+        if (!StringUtils.hasLength(sourcePath)) {
+            sourcePath = Forwards.ROOT_PATH;
         }
-        RequestDispatcher dispatcher = nextContext.getRequestDispatcher(path);
+        ForwardItem forwardItem = forwards.getForwardItem(host, sourcePath);
+        //计算要跳转的路径
+        String contextPath = forwardItem.getContextPath();
+        String targetPath = forwardItem.getTo()
+                            + sourcePath.substring(forwardItem.getFrom().length());
+        if (targetPath.startsWith(DOUBLE_SEPARATORS)) {
+            targetPath = targetPath.substring(1);
+        }
+        ServletContext currentContext = request.getServletContext();
+        ServletContext nextContext = currentContext.getContext(contextPath + targetPath);
+        if (currentContext == nextContext) {
+            throw new IllegalArgumentException("No match biz for uri:" + uri);
+        }
+        RequestDispatcher dispatcher = nextContext.getRequestDispatcher(targetPath);
         dispatcher.forward(request, response);
     }
 }

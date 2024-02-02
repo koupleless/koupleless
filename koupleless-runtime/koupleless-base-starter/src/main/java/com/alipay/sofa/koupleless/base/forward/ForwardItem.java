@@ -19,20 +19,24 @@ package com.alipay.sofa.koupleless.base.forward;
 import lombok.Getter;
 
 public class ForwardItem {
+
+    @Getter
+    private final int    index;
     @Getter
     private final String contextPath;
     @Getter
     private final String host;
     @Getter
-    private final String path;
+    private final String from;
 
     @Getter
-    private final int    index;
+    private final String to;
 
-    public ForwardItem(int index, String contextPath, String host, String path) {
+    public ForwardItem(int index, String contextPath, String host, String from, String to) {
+        this.index = index;
         this.contextPath = contextPath;
         this.host = host;
-        this.path = path;
-        this.index = index;
+        this.from = from;
+        this.to = to;
     }
 }
