@@ -1,8 +1,8 @@
 ---
-title: "Koupelelss: 让普通应用低成本享受 Serverless 体验，帮助企业降本增效"
+title: "Koupleless: 让普通应用低成本享受 Serverless 体验，帮助企业降本增效"
 linkTitle: 首页
 date: 2024-01-25T10:28:32+08:00
-description: "Koupelelss: 让普通应用低成本享受 Serverless 体验，帮助企业降本增效！"
+description: "Koupleless: 让普通应用低成本享受 Serverless 和绿色计算体验，帮助企业降本增效！"
 menu: {main: {weight: 10}}
 url: "/home/"
 ---
