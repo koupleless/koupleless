@@ -199,7 +199,7 @@ curl --location --request POST 'localhost:1238/queryAllBiz'
 6. 验证模块的 RPC/JVM调用
 模块远程调用自己发布的tri服务
 ```shell
-curl localhost:8080/triplebiz/remote
+curl localhost:8089/triplebiz/remote
 ```
 返回
 ```shell
@@ -207,7 +207,7 @@ com.alipay.sofa.rpc.dubbo3.triplebiz.service.DemoServiceImpl: Hello,trpilebiz
 ```
 模块injvm调用基座发布的服务
 ```shell
-curl localhost:8080/triplebiz/local
+curl localhost:8089/triplebiz/injvm
 ```
 返回
 ```shell
@@ -216,7 +216,7 @@ com.alipay.sofa.rpc.dubbo3.base.service.BaseCommonService: Hello,triplebiz
 7. 验证基座的 RPC/JVM调用
 基座调用triplebiz模块发布的injvm服务
 ```shell
-curl http://localhost:8080/base/triplebiz/injvm
+curl http://localhost:8089/base/triplebiz/injvm
 ```
 返回
 ```shell
@@ -224,7 +224,7 @@ com.alipay.sofa.rpc.dubbo3.triplebiz.service.TripleBizCommonService: Hello,base
 ```
 基座调用triplebiz模块发布的rpc服务
 ```shell
-curl http://localhost:8080/base/triplebiz/remote
+curl http://localhost:8089/base/triplebiz/remote
 ```
 返回
 ```shell
