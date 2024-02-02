@@ -4,13 +4,13 @@ run-name: ${{ github.actor }} pushed code
 on:
   push:
     branches:
-      - main
+      - springboot3-main
     paths:
       - 'koupleless-runtime/**'
 
   pull_request:
     branches:
-      - main
+      - springboot3-main
     paths:
       - 'koupleless-runtime/**'
 
@@ -25,7 +25,7 @@ defaults:
     working-directory: koupleless-runtime
 
 jobs:
-  unit-test-for-jdk8:
+  unit-test-for-jdk17:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: adopt
-          java-version: 8
+          java-version: 17
           cache: maven
 
       - name: Test
