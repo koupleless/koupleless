@@ -200,7 +200,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 3. start verification request
 
 ```shell
-curl http://localhost:8080/biz1
+curl http://localhost:8080/biz1/
 ```
 return `hello to /biz1 deploy`, and check console log, which is satisfied with our log pattern
 

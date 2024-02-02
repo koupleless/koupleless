@@ -135,13 +135,13 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
 
 ### 发起请求验证
 ```shell
-curl http://localhost:8080/biz1
+curl http://localhost:8080/biz1/
 ```
 返回 `hello to /biz1 deploy`
 
 
 ```shell
-curl http://localhost:8080/biz2
+curl http://localhost:8080/biz2/
 ```
 返回 `hello to /biz2 deploy`
 

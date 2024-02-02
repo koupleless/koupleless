@@ -133,7 +133,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 
 ### 发起请求验证
 ```shell
-curl http://localhost:8080/biz1
+curl http://localhost:8080/biz1/
 ```
 返回 `hello to /biz1 deploy`
 
