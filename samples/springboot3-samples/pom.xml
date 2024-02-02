@@ -6,22 +6,22 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.0.9</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.alipay.sofa</groupId>
-    <artifactId>springboot-samples</artifactId>
+    <artifactId>springboot3-samples</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springboot-samples</name>
-    <description>Demo project for Spring Boot</description>
+    <name>springboot3-samples</name>
+    <description>Demo project for Spring Boot3</description>
     <packaging>pom</packaging>
 
     <properties>
-        <spring.boot.version>3.2.1</spring.boot.version>
+        <spring.boot.version>3.0.9</spring.boot.version>
         <java.version>17</java.version>
         <sofa.ark.version>3.0.2-SNAPSHOT</sofa.ark.version>
-        <koupleless.runtime.version>0.5.7-jdk17-SNAPSHOT</koupleless.runtime.version>
+        <koupleless.runtime.version>2.0.0-SNAPSHOT</koupleless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
@@ -32,6 +32,7 @@
         <module>logging/log4j2/base</module>
         <module>logging/log4j2/biz1</module>
         <module>logging/log4j2/biz2</module>
+        <module>logging/logback</module>
         <module>web/tomcat/base</module>
         <module>web/tomcat/biz1</module>
         <module>web/tomcat/biz2</module>
