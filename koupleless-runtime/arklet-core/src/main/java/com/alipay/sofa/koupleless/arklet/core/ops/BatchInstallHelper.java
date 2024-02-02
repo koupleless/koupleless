@@ -32,8 +32,8 @@ import java.util.jar.Manifest;
 
 /**
  * 合并部署帮助类。
- * @author gouzhendong.gzd
- * @version $Id: BatchInstallService, v 0.1 2023-11-20 15:35 gouzhendong.gzd Exp $
+ * @author CodeNoobKingKc2
+ * @version $Id: BatchInstallService, v 0.1 2023-11-20 15:35 CodeNoobKingKc2 Exp $
  */
 public class BatchInstallHelper {
 

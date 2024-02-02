@@ -2,9 +2,13 @@
 ![license](https://img.shields.io/badge/license-Apache--2.0-green.svg)
 ![Maven Central](https://img.shields.io/maven-central/v/com.alipay.sofa.koupleless/koupleless-runtime)
 
-<h1 align="center">Koupleless</h1>
-<p align="center">通过引入模块化架构，使应用在单体与微服务架构间平稳过渡和演进的研发框架和运维调度系统。</p>
-[English](./README.md) | 简体中文
+# Koupleless: 模块化研发框架与运维调度平台
+
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
 
 你想让你的应用 10 秒启动，只占 20MB 内存吗？你是否遇到大应用多人协作互相阻塞、发布效率不高的问题？你是否遇到小应用太多，资源成本和长期维护成本太高的问题呢？如果你也是被这些问题困扰着的，那么 Koupleless 会是你想要的解决方案。Koupleless 从应用架构角度出发，采用模块化架构，以 **极低接入成本** 的方式，解决应用在研发、运维、运行等完整生命周期遇到的痛点问题：
 

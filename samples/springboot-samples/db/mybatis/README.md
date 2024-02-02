@@ -1,34 +1,41 @@
+<div align="center">
 
-# 实验内容：基座、模块使用 mybatis、mysql、druid
-## 实验应用
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+
+# Experiment: Base and Module use mybatis、mysql、druid
+## Experiment application
 ### base
-base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
+The base is built from regular SpringBoot application. The only change you need to do is to add the following dependencies in pom
+
 ```xml
-<!-- 这里添加动态模块相关依赖 -->
-<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+<!-- Add dynamic module related dependencies here -->
+<!--    Be sure to put this dependency as the first dependency in the build pom, and set type= pom,
+    The principle can be found here https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
-<!-- end 动态模块相关依赖 -->
+<!-- end of dynamic module related dependencies -->
 
-<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
+<!-- Add dependencies for deploying multiple web applications in tomcat single host mode here -->
 <dependency>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>web-ark-plugin</artifactId>
+<groupId>com.alipay.sofa</groupId>
+<artifactId>web-ark-plugin</artifactId>
 </dependency>
-<!-- end 单 host 部署的依赖 -->
+<!-- end of dependencies for single host deployment -->
 
-<!-- log4j2 相关依赖 -->
+<!-- add log4j2 dependencies -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-log4j2</artifactId>
 </dependency>
 
-<!-- log4j2 异步队列 -->
+<!-- add log4j2 async queue dependencies -->
 <dependency>
     <groupId>com.lmax</groupId>
     <artifactId>disruptor</artifactId>
@@ -39,62 +46,54 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <artifactId>koupleless-log4j2-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
 </dependency>
-<!-- end log4j2 依赖引入 -->
+<!-- end of log4j2 -->
 
-        <!--数据库依赖-->
+<!-- add db dependencies -->
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
     <version>8.0.31</version>
     <scope>runtime</scope>
 </dependency>
-            <!--mybatis依赖-->
 <dependency>
     <groupId>org.mybatis.spring.boot</groupId>
     <artifactId>mybatis-spring-boot-starter</artifactId>
     <version>2.3.1</version>
 </dependency>
-            <!--druid依赖-->
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>druid-spring-boot-starter</artifactId>
     <version>1.2.9</version>
 </dependency>
+<!-- end of db dependencies -->
 ```
 
 ### biz
-biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
+The biz contains module biz1, which is regular SpringBoot. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
 ```xml
-<!-- 模块需要引入专门的 log4j2 adapter -->
-<dependency>
-    <groupId>com.alipay.sofa.koupleless</groupId>
-    <artifactId>koupleless-adapter-log4j2</artifactId>
-    <version>${koupleless.runtime.version}</version>
-    <scope>provided</scope>
-</dependency>
-        <!--数据库依赖-->
+
+<!-- add db dependencies -->
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
     <version>8.0.31</version>
     <scope>provided</scope>
 </dependency>
-        <!--mybatis依赖-->
 <dependency>
     <groupId>org.mybatis.spring.boot</groupId>
     <artifactId>mybatis-spring-boot-starter</artifactId>
     <version>2.3.1</version>
     <scope>provided</scope>
 </dependency>
-        <!--druid依赖-->
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>druid-spring-boot-starter</artifactId>
     <version>1.2.9</version>
     <scope>provided</scope>
 </dependency>
+<!-- end of db dependencies -->
 
-<!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
+<!-- change the packaging plugin to sofa-ark biz packaging plugin, packaged as ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
@@ -111,72 +110,71 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
         <skipArkExecutable>true</skipArkExecutable>
         <outputDirectory>./target</outputDirectory>
         <bizName>${bizName}</bizName>
-        <!-- 单host下需更换 web context path -->
+        <!-- single host mode, need to change web context path -->
         <webContextPath>${bizName}</webContextPath>
         <declaredMode>true</declaredMode>
     </configuration>
 </plugin>
 ```
-注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
+Note that the web context path of different biz is changed to different values, so that multiple web applications can be successfully installed in a tomcat host.
 
+## Define data source separately for base and module
 
-## 基座、模块各自定义数据源
+### Start mysql locally
 
-### 本地部署 mysql 并启动
-
-请提前创建代码所需要的库、表等
+please create the database, table, etc. required by the code in advance
 
 ```shell
-# 1. cd 进入 config 目录
+# 1. cd into config directory
 cd config
-# 2. 给脚本添加执行权限
+# 2. add execution permission to init_mysql.sh
 chmod +x ./init_mysql.s
-# 3. 执行 init_mysql.sh
+# 3. run init_mysql.sh
 ./init_mysql.sh
 ```
 
-### 启动基座应用 base
+### start base application
 
-1. 请修改 samples/springboot-samples/db/mybatis/base/src/main/resources/application.properties 中的 datasource 配置，确保链接到正确的本地数据库
+1. please modify the datasource configuration in samples/springboot-samples/db/mybatis/base/src/main/resources/application.properties, and ensure that it is connected to the correct local database
 
-2. 启动基座应用
+2. start base application
 
-### 打包模块应用 biz1
+### package module application biz1
 
-1. 请提前修改 samples/springboot-samples/db/mybatis/biz1/src/main/resources/application.properties 中的 datasource 配置，确保链接到正确的本地数据库
+1. please modify the datasource configuration in samples/springboot-samples/db/mybatis/biz1/src/main/resources/application.properties, and ensure that it is connected to the correct local database
 
-2. 执行 mvn clean package -Dmaven.test.skip=true 进行模块打包， 打包完成后可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
+2. execute mvn clean package -Dmaven.test.skip=true to package the module. After the packaging is completed, you can see the ark-biz jar package generated in the target directory of each bundle
 
-### 安装模块应用 biz1
+### Install module application biz1
 ```shell
 telnet localhost 1234
-biz -i file://${你的项目目录}/samples/springboot-samples/db/mybatis/biz1/target/biz1-mybatis-0.0.1-SNAPSHOT-ark-biz.jar
+biz -i file://${your project directory}/samples/springboot-samples/db/mybatis/biz1/target/biz1-mybatis-0.0.1-SNAPSHOT-ark-biz.jar
 ```
 
-如果想验证卸载也可以执行
+If you want to verify hot deployment, you can uninstall and deploy multiple times
 ```shell
 biz -u biz1-mybatis:0.0.1-SNAPSHOT
 ```
 
-### 发起请求验证
+### Start verify request
 
-#### 验证基座 mybatis 和 druid
+#### Verify base mybatis and druid
 
-注解mapper 和 xml mapper的方式均支持
+support both annotation mapper and xml mapper
 
 ```shell
 curl http://localhost:8080/hello/haha
 ```
-返回 "hello haha to base-mybatis deploy"
+return "hello haha to base-mybatis deploy"
 
 ```shell
 curl http://localhost:8080/mybatis
 ```
-返回 user 表中的内容，且可以发现使用的数据源已经变为 DruidDataSource
+return the content of user table, and you can see that the data source used has changed to DruidDataSource
 
-#### 验证模块 mybatis 和 druid
+#### verify mybatis and druid in module
 
-模块支持多样 druid 配置
+support various druid configuration in module
 ```shell
 spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
 spring.datasource.druid.initial-size=5
@@ -192,25 +190,25 @@ spring.datasource.druid.pool-prepared-statements=false
 spring.datasource.druid.filters=stat,wall,slf4j
 ```
 
-注解 mapper 和 xml mapper的方式均支持
+support both annotation mapper and xml mapper
 
 ```shell
 curl http://localhost:8080/biz1mybatis/hi
 ```
-返回 "hello to biz1-mybatis deploy"
+return "hello to biz1-mybatis deploy"
 
 ```shell
 curl http://localhost:8080/biz1mybatis/testmybatis
 ```
-返回 student 表中的内容，且可以发现使用的数据源已经变为 DruidDataSource
+return the content of student table, and you can see that the data source used has changed to DruidDataSource
 
-## 模块复用基座数据源
+## Module reuse base data source
 
-### 修改模块配置
+### Modify module configuration
 
-在上一节「基座、模块各自定义数据源」的基础上
+based on the previous section "base and module define data source separately"
 
-1. 移除模块数据源配置，在biz的application.properties文件中注释掉数据源datasource相关配置项
+1. remove module data source configuration, comment out the data source datasource related configuration in the application.properties
 ```properties
 #spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 #spring.datasource.username=root
@@ -233,14 +231,14 @@ curl http://localhost:8080/biz1mybatis/testmybatis
 #spring.datasource.druid.filters=stat,wall,slf4j
 ```
    
-2. 添加模块MybatisConfig
+2. add module MybatisConfig
 ```java
 @Configuration
 @MapperScan(basePackages = "com.alipay.sofa.biz1.mapper", sqlSessionFactoryRef = "mysqlSqlFactory")
 @EnableTransactionManagement
 public class MybatisConfig {
 
-    //tips:不要初始化一个基座的DataSource，当模块被卸载的是，基座数据源会被销毁，transactionManager，transactionTemplate，mysqlSqlFactory被销毁没有问题
+    // tips: Do not initialize a base DataSource. When the module is unloaded, the base data source will be destroyed. There is no problem that transactionManager, transactionTemplate, mysqlSqlFactory are destroyed
 
     @Bean(name = "transactionManager")
     public PlatformTransactionManager platformTransactionManager() {
@@ -254,8 +252,7 @@ public class MybatisConfig {
 
     @Bean(name = "mysqlSqlFactory")
     public SqlSessionFactoryBean mysqlSqlFactory() throws IOException {
-        //数据源不能申明成模块spring上下文中的bean，因为模块卸载时会触发close方法
-
+        // datasource cannot be declared as a bean in the spring context of the module, because the close method of datasource will be triggered when the module is unloaded
         DataSource dataSource = (DataSource) getBaseBean("dataSource");
         SqlSessionFactoryBean mysqlSqlFactory = new SqlSessionFactoryBean();
         mysqlSqlFactory.setDataSource(dataSource);
@@ -266,9 +263,7 @@ public class MybatisConfig {
 }
 ```
 
-同上一节「基座、模块各自定义数据源」启动基座、部署模块、发起验证即可。
+same as the previous section "base and module define data source separately" start the base, deploy the module, and start the verification.
 
-
-## 注意事项
-这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
-
+## Precautions
+Here mainly use simple applications for verification, if complex applications, need to pay attention to the module to do a good job of slimming, the base has dependencies, the module as much as possible set to provided, as much as possible to use the base dependencies.

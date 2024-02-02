@@ -9,7 +9,7 @@
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>6</artifactId>
+    <artifactId>koupleless-adapter-dubbo2.6</artifactId>
     <version>${revision}</version>
 
     <dependencies>

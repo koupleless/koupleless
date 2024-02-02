@@ -10,7 +10,7 @@ weight: 10
 java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.koupleless.common.spring.KouplelessApplicationListener
 ```
 ##### 解决方式
-模块需要做好瘦身，参考这里：[模块瘦身](/docs/tutorials/module-development/module-slimming.md)
+模块需要做好瘦身，参考这里：[模块瘦身](/docs/tutorials/module-development/module-slimming)
 
 #### 问题 1-2：模块安装找不到 `KouplelessApplicationListener`
 报错信息如下：
@@ -82,3 +82,8 @@ Caused by: java.Lang.ClassNotFoundException: com.google.inject.multibindings.Mul
 ##### 解决方式
 1. 确保模块可以独立构建，也就是可以在模块的目录里执行 `mvn clean package`，并且不会报错
 2. 升级 koupleless 版本到最新版本 0.5.7
+
+#### 问题 1-8: SOFABoot 基座或模块启动报 `The following classes could not be excluded because they are not auto-configuration classes: org.springframework.boot.actuate.autoconfigure.startup.StartupEndpointAutoConfiguration`
+SOFABoot 正确引入需要同时引入 spring-boot-actuator-autoconfiguration，因为 [sofa-boot 里通过代码定义](https://github.com/sofastack/sofa-boot/blob/82d0ca388b433ac18fb44704e2f2b280fda1b760/sofa-boot-project/sofa-boot/src/main/java/com/alipay/sofa/boot/env/SofaBootEnvironmentPostProcessor.java#L88)了 spring.exclude.autoconfiguration = `org.springframework.boot.actuate.autoconfigure.startup.StartupEndpointAutoConfiguration`, 当启动时找不到该类时就会报错。
+##### 解决方式
+基座或模块里引入 sprign-boot-actuator-autoconfiguration

@@ -16,13 +16,13 @@
 	<dubbo:service interface="com.alipay.sofa.rpc.dubbo27.model.DemoService" ref="demoService" group="biz1"/>    <!-- 和本地bean一样实现服务 -->
 	<bean id="secondDemoService" class="com.alipay.sofa.rpc.dubbo27.biz.service.SecondDemoServiceImpl"/>
 	<!-- 声明需要暴露的服务接口 -->
-	<dubbo:service interface="com.alipay.sofa.rpc.dubbo27.model.DemoService" ref="secondDemoService" group="biz2Second"/>
+	<dubbo:service interface="com.alipay.sofa.rpc.dubbo27.model.DemoService" ref="secondDemoService" group="biz1Second"/>
 
 	<bean id="helloService" class="com.alipay.sofa.rpc.dubbo27.biz.service.HelloServiceImpl"/>
 	<dubbo:service interface="com.alipay.sofa.rpc.dubbo27.model.HelloService" ref="helloService" group="biz1"/>
 
 	<!-- 生成远程服务代理，可以和本地bean一样使用demoService -->
 	<dubbo:reference id="demoServiceRef" interface="com.alipay.sofa.rpc.dubbo27.model.DemoService" scope="remote" group="biz2" check="false"/>
-	<dubbo:reference id="secondDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo27.model.DemoService" scope="remote" group="biz2" check="false"/>
+	<dubbo:reference id="secondDemoServiceRef" interface="com.alipay.sofa.rpc.dubbo27.model.DemoService" scope="remote" group="biz2Second" check="false"/>
 	<dubbo:reference id="helloServiceRef" interface="com.alipay.sofa.rpc.dubbo27.model.HelloService" scope="remote" group="biz2" check="false"/>
 </beans>

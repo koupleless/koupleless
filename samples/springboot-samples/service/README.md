@@ -1,32 +1,37 @@
+<div align="center">
 
-# 实验内容  模块与基座相互调用
-## 实验应用
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+# Experiment: Base and Module call each other
+## Experiment application
 ### base
-base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
-```xml
+The base is built from regular SpringBoot application. The only change you need to do is to add the following dependencies in pom
 
-<!-- 这里添加动态模块相关依赖 -->
-<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+```xml
+<!-- Add dynamic module related dependencies here -->
+<!--    Be sure to put this dependency as the first dependency in the build pom, and set type= pom,
+    The principle can be found here https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
-<!-- end 动态模块相关依赖 -->
+<!-- end of dynamic module related dependencies -->
 
-<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
+<!-- Add dependencies for deploying multiple web applications in tomcat single host mode here -->
 <dependency>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>web-ark-plugin</artifactId>
 </dependency>
-<!-- end 单 host 部署的依赖 -->
-
+<!-- end of dependencies for single host deployment -->
 ```
 
 ### biz
-biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
+The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
+
 ```xml
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
@@ -34,7 +39,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
     <scope>provided</scope>
 </dependency>
 
-<!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
+<!-- change the packaging plugin to sofa-ark biz packaging plugin, packaged as ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
@@ -51,28 +56,26 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
         <skipArkExecutable>true</skipArkExecutable>
         <outputDirectory>./target</outputDirectory>
         <bizName>${bizName}</bizName>
-        <!-- 单host下需更换 web context path -->
+        <!-- single host mode, need to change web context path -->
         <webContextPath>${bizName}</webContextPath>
         <declaredMode>true</declaredMode>
     </configuration>
 </plugin>
 ```
-注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
+Note that the web context path of different biz is changed to different values, so that multiple web applications can be successfully installed in a tomcat host.
 
+## Experiment steps
 
-## 实验步骤
+### start base application, and make sure it is started successfully
+just start in idea like a regular springboot application
 
-### 启动基座应用 base
+### package module application biz1、biz2
 
-可以使用 IDEA run 启动基座应用
+packaging in `samples/springboot-samples/service/sample-service-biz` and `samples/springboot-samples/service/sample-service-biz2` directory by executing `mvn clean package -Dmaven.test.skip=true`, then we can check the generated ark-biz jar in each bundle target
 
-### 打包模块应用 biz1、biz2
+### install module application biz1、biz2
 
-在samples/springboot-samples/service/sample-service-biz 和 samples/springboot-samples/service/sample-service-biz2 目录下分别执行 mvn clean package -Dmaven.test.skip=true 进行模块打包， 打包完成后可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
-
-### 安装模块应用 biz1、biz2
-
-#### 执行 curl 命令安装 biz1
+#### execute curl command to install biz1
 
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
@@ -85,7 +88,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 }'
 ```
 
-#### 执行 curl 命令安装 biz2
+#### execute curl command to install biz2
 
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
@@ -98,39 +101,42 @@ curl --location --request POST 'localhost:1238/installBiz' \
 }'
 ```
 
-### 发起请求验证
+### start verification request
 
-#### 验证基座调用模块
+#### verify call module from base
 
-访问基座 base 的 web 服务
+access web service of base
 ```shell
 curl http://localhost:8080
 ```
-返回 `hello to ark master biz`
+return `hello to ark master biz`
 
-且日志里能看到对模块biz的调用都是成功的，证明基座通过 SpringServiceFinder.getModuleService 方式调用模块是成功的
+we can check that the call to module biz is successful in the log, which proves that the base calls the module successfully through SpringServiceFinder.getModuleService
 
-#### 验证模块调用基座
+#### verify call base from module
 
-访问 biz1 的 web 服务
+access web service of biz1
 ```shell
 curl http://localhost:8080/biz1/
 ```
-返回 `hello to ark biz1 dynamic deploy`
+return `hello to ark biz1 dynamic deploy`
 
-且日志里能看到对基座base的调用都是成功的，证明模块通过 @AutowiredFromBase 或者 SpringServiceFinder.getBaseService() 方式调用基座是成功的
+we can check that the call to base is successful in the log, which proves that the module calls the base successfully through @AutowiredFromBase or SpringServiceFinder.getBaseService()
 
-#### 验证模块调用模块
+#### verify call module from module
 
-访问 biz2 的 web 服务
+access web service of biz2
 ```shell
 curl http://localhost:8080/biz2/
 ```
-返回 `hello to ark biz2 dynamic deploy`
+return `hello to ark biz2 dynamic deploy`
 
-且日志里能看到对模块biz的调用都是成功的，证明模块通过 @AutowiredFromBiz 或者 SpringServiceFinder.getModuleService 方式调用模块biz是成功的
+we can check that the call to module biz is successful in the log, which proves that the module calls the module biz successfully through @AutowiredFromBiz or SpringServiceFinder.getModuleService()
 
-## 注意事项
-这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
-这里验证模块功能时，web接口后需要加上斜号，例如curl http://localhost:8080/biz1/ ，而不是 http://localhost:8080/biz1
+## Precautions
+
+1. Here mainly use simple applications for verification, if complex applications, need to pay attention to the module to do a good job of slimming, the base has dependencies, the module as much as possible set to provided, as much as possible to use the base dependencies.
+
+
+2. When verifying the module function here, the web interface needs to be followed by a slash, for example, curl http://localhost:8080/biz1/, instead of http://localhost:8080/biz1
 
