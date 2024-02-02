@@ -20,6 +20,8 @@
     <properties>
         <spring.boot.version>3.0.9</spring.boot.version>
         <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <sofa.ark.version>3.0.2-SNAPSHOT</sofa.ark.version>
         <koupleless.runtime.version>2.0.0-SNAPSHOT</koupleless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
