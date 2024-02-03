@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.base;
 
 import com.alipay.sofa.base.mapper.UserMapper;
@@ -30,13 +46,13 @@ public class MybatisTest {
         userMapper.insert(User.builder().age(18).name("沉默王二").password("123456").build());
         userMapper.insert(User.builder().age(18).name("沉默王三").password("123456").build());
         userMapper.insert(User.builder().age(18).name("沉默王四").password("123456").build());
-        log.info("查询所有：{}",userMapper.getAll().stream().toArray());
+        log.info("查询所有：{}", userMapper.getAll().stream().toArray());
     }
 
     @Test
     void testQuery() {
         List<User> all = userMapper.getAll();
-        log.info("查询所有：{}",all.stream().toArray());
+        log.info("查询所有：{}", all.stream().toArray());
     }
 
     @Test
