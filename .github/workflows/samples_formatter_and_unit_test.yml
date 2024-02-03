@@ -35,7 +35,7 @@ jobs:
           java-version: 8
           cache: maven
 
-      - name: Set up Maven
+      - name: Update Maven version to 3.9.x to enable cross bundle without install
         env:
           MAVEN_VERSION: '3.9.5'
         run: |
@@ -63,6 +63,15 @@ jobs:
           java-version: 8
           cache: maven
 
+      - name: Update Maven version to 3.9.x to enable cross bundle without install
+        env:
+          MAVEN_VERSION: '3.9.5'
+        run: |
+          wget https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
+          tar xzvf apache-maven-${MAVEN_VERSION}-bin.tar.gz
+          echo "MAVEN_HOME=$GITHUB_WORKSPACE/apache-maven-${MAVEN_VERSION}" >> $GITHUB_ENV
+          echo "$GITHUB_WORKSPACE/apache-maven-${MAVEN_VERSION}/bin" >> $GITHUB_PATH
+
       - name: Test for sofaboot samples
         run: mvn -version && mvn clean install -DskipTests -Dmaven.javadoc.skip=true -am -B -U
         working-directory: samples/sofaboot-samples
@@ -82,7 +91,7 @@ jobs:
           java-version: 8
           cache: maven
 
-      - name: Set up Maven
+      - name: Update Maven version to 3.9.x to enable cross bundle without install
         env:
           MAVEN_VERSION: '3.9.5'
         run: |
@@ -109,6 +118,15 @@ jobs:
           distribution: adopt
           java-version: 17
           cache: maven
+
+      - name: Update Maven version to 3.9.x to enable cross bundle without install
+        env:
+          MAVEN_VERSION: '3.9.5'
+        run: |
+          wget https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
+          tar xzvf apache-maven-${MAVEN_VERSION}-bin.tar.gz
+          echo "MAVEN_HOME=$GITHUB_WORKSPACE/apache-maven-${MAVEN_VERSION}" >> $GITHUB_ENV
+          echo "$GITHUB_WORKSPACE/apache-maven-${MAVEN_VERSION}/bin" >> $GITHUB_PATH
 
       - name: Test for springboot3 samples
         run: mvn -version && mvn clean install -DskipTests -Dmaven.javadoc.skip=true -am -B -U
