@@ -12,8 +12,6 @@
 	<artifactId>common-model</artifactId>
 
 	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
 		<grpc.version>1.54.1</grpc.version>
 		<protobuf.version>3.18.3</protobuf.version>
 		<protoc.version>3.18.3</protoc.version>
