@@ -24,7 +24,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  unit-test-for-jdk8-samples:
+  unit-test-for-springboot-samples:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -36,25 +36,52 @@ jobs:
           cache: maven
 
       - name: Test for springboot samples
-        run: mvn clean package -DskipTests -Dmaven.javadoc.skip=true -B -U
-          && mvn test
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -am -B -U
         working-directory: samples/springboot-samples
 
+      - name: Check code formatter
+        run: sh ./check_format.sh
+        working-directory: koupleless-runtime
+
+  unit-test-for-sofaboot-samples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: 8
+          cache: maven
+
       - name: Test for sofaboot samples
-        run: mvn clean package -DskipTests -Dmaven.javadoc.skip=true -B -U
-          && mvn test
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -am -B -U
         working-directory: samples/sofaboot-samples
 
+      - name: Check code formatter
+        run: sh ./check_format.sh
+        working-directory: koupleless-runtime
+
+  unit-test-for-dubbo-samples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: 8
+          cache: maven
+
       - name: Test for dubbo samples
-        run: mvn clean package -DskipTests -Dmaven.javadoc.skip=true -B -U
-          && mvn test
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -am -B -U
         working-directory: samples/dubbo-samples
 
       - name: Check code formatter
-        run: ./check_format.sh
+        run: sh ./check_format.sh
         working-directory: koupleless-runtime
 
-  unit-test-for-jdk17-samples:
+  unit-test-for-springboot3-samples:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -66,10 +93,9 @@ jobs:
           cache: maven
 
       - name: Test for springboot3 samples
-        run: mvn clean package -DskipTests -Dmaven.javadoc.skip=true -B -U
-          && mvn test
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -am -B -U
         working-directory: samples/springboot3-samples
 
       - name: Check code formatter
-        run: ./check_format.sh
+        run: sh ./check_format.sh
         working-directory: koupleless-runtime
