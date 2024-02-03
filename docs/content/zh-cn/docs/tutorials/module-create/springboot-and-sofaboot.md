@@ -24,6 +24,14 @@ spring.application.name = ${替换为实际模块应用名}
 
 **特别注意**： sofa ark 插件定义顺序必须在 springboot 打包插件前;
 ```xml
+<!-- 模块需要引入的依赖，主要用户跨模块间通信 --> 
+<dependencies>
+    <dependency>
+        <groupId>com.alipay.sofa.koupleless</groupId>
+        <artifactId>koupleless-app-starter</artifactId>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
 
 <plugins>
     <!--这里添加ark 打包插件-->
