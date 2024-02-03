@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.biz2.rest;
 
 import com.alipay.sofa.base.facade.AppService;
@@ -19,28 +35,28 @@ import java.util.Map;
 public class SampleController {
 
     @AutowiredFromBase(name = "sampleServiceImplNew")
-    private SampleService sampleServiceImplNew;
+    private SampleService              sampleServiceImplNew;
 
     @AutowiredFromBase(name = "sampleServiceImpl")
-    private SampleService sampleServiceImpl;
+    private SampleService              sampleServiceImpl;
 
     @AutowiredFromBase
-    private List<SampleService> sampleServiceList;
+    private List<SampleService>        sampleServiceList;
 
     @AutowiredFromBase
     private Map<String, SampleService> sampleServiceMap;
 
     @AutowiredFromBase
-    private AppService appService;
+    private AppService                 appService;
 
     @AutowiredFromBiz(bizName = "biz1", bizVersion = "0.0.1-SNAPSHOT", name = "studentProvider")
-    private Provider studentProvider;
+    private Provider                   studentProvider;
 
     @AutowiredFromBiz(bizName = "biz1", name = "teacherProvider")
-    private Provider teacherProvider;
+    private Provider                   teacherProvider;
 
     @AutowiredFromBiz(bizName = "biz1", bizVersion = "0.0.1-SNAPSHOT")
-    private List<Provider> providers;
+    private List<Provider>             providers;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
@@ -59,11 +75,13 @@ public class SampleController {
 
         appService.getAppName();
 
-        SampleService sampleServiceImplFromFinder = SpringServiceFinder.getBaseService("sampleServiceImpl", SampleService.class);
+        SampleService sampleServiceImplFromFinder = SpringServiceFinder.getBaseService(
+            "sampleServiceImpl", SampleService.class);
         String result = sampleServiceImplFromFinder.service();
         System.out.println(result);
 
-        Map<String, SampleService> sampleServiceMapFromFinder = SpringServiceFinder.listBaseServices(SampleService.class);
+        Map<String, SampleService> sampleServiceMapFromFinder = SpringServiceFinder
+            .listBaseServices(SampleService.class);
         for (String beanName : sampleServiceMapFromFinder.keySet()) {
             String result1 = sampleServiceMapFromFinder.get(beanName).service();
             System.out.println(result1);
@@ -77,10 +95,12 @@ public class SampleController {
             Result provide2 = provider.provide(new Param());
         }
 
-        Provider teacherProvider1 = SpringServiceFinder.getModuleService("biz1", "0.0.1-SNAPSHOT", "teacherProvider", Provider.class);
+        Provider teacherProvider1 = SpringServiceFinder.getModuleService("biz1", "0.0.1-SNAPSHOT",
+            "teacherProvider", Provider.class);
         Result result1 = teacherProvider1.provide(new Param());
 
-        Map<String, Provider> providerMap = SpringServiceFinder.listModuleServices("biz1", "0.0.1-SNAPSHOT", Provider.class);
+        Map<String, Provider> providerMap = SpringServiceFinder.listModuleServices("biz1",
+            "0.0.1-SNAPSHOT", Provider.class);
         for (String beanName : providerMap.keySet()) {
             Result result2 = providerMap.get(beanName).provide(new Param());
         }
