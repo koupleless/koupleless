@@ -36,17 +36,17 @@ jobs:
           cache: maven
 
       - name: Test for springboot samples
-        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+        run: mvn clean package -DskipTests -Dmaven.javadoc.skip=true -B -U
           && mvn test
         working-directory: samples/springboot-samples
 
       - name: Test for sofaboot samples
-        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+        run: mvn clean package -DskipTests -Dmaven.javadoc.skip=true -B -U
           && mvn test
         working-directory: samples/sofaboot-samples
 
       - name: Test for dubbo samples
-        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+        run: mvn clean package -DskipTests -Dmaven.javadoc.skip=true -B -U
           && mvn test
         working-directory: samples/dubbo-samples
 
@@ -66,7 +66,7 @@ jobs:
           cache: maven
 
       - name: Test for springboot3 samples
-        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+        run: mvn clean package -DskipTests -Dmaven.javadoc.skip=true -B -U
           && mvn test
         working-directory: samples/springboot3-samples
 
