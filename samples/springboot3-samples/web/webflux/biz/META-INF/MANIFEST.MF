@@ -1,0 +1,56 @@
+Manifest-Version: 1.0
+Created-By: Maven JAR Plugin 3.3.0
+Build-Jdk-Spec: 17
+Implementation-Title: bizwebflux
+Implementation-Version: 0.0.1-SNAPSHOT
+Main-Class: com.example.yuan.bizwebflux.BizwebfluxApplication
+Ark-Biz-Name: biz
+Ark-Biz-Version: 0.0.1-SNAPSHOT
+priority: 100
+web-context-path: /biz
+deny-import-packages: 
+deny-import-classes: 
+deny-import-resources: 
+inject-plugin-dependencies: 
+inject-export-packages: 
+declared-libraries: listenablefuture,reactive-streams,hessian,jackson-an
+ notations,lz4-java,netty-handler-ssl-ocsp,jackson-databind,druid-spring
+ -boot-starter,mybatis-spring-boot-autoconfigure,HdrHistogram,netty-tran
+ sport-native-epoll,netty-handler,jsr305,plexus-utils,jackson-datatype-j
+ sr310,tomcat-embed-el,guice,reactor-netty-incubator-quic,netty-codec-me
+ mcache,lombok,netty-codec-stomp,netty-incubator-codec-classes-quic,java
+ x.inject,reactor-netty-core,spring-boot-loader,sofa-ark-springboot-star
+ ter,netty-transport-native-kqueue,arklet-core,spring-boot-autoconfigure
+ ,sofa-ark-exception,sofa-serverless-adapter-apollo,netty-codec-haproxy,
+ text-ui,spring-boot-starter-json,fastjson,netty-transport-native-unix-c
+ ommon,spring-boot-starter-actuator,spring-boot-starter-web,netty-resolv
+ er-dns-classes-macos,spring-context,spring-boot-actuator,reactor-netty,
+ netty-codec-dns,slf4j-api,spring-aop,jackson-module-parameter-names,spr
+ ing-boot-starter-jdbc,spring-kafka,tomcat-embed-websocket,netty-transpo
+ rt-sctp,j2objc-annotations,micrometer-core,netty-transport-classes-epol
+ l,maven-model,netty-codec,logback-core,log4j-api,sofa-ark-support-start
+ er,web-ark-plugin,spring-retry,byte-buddy-agent,HikariCP,netty-codec-ht
+ tp,spring-messaging,micrometer-observation,spring-boot-starter-tomcat,s
+ nakeyaml,snappy-java,spring-web,mybatis,sofa-ark-all,commons-io,reactor
+ -netty-http,netty-transport-rxtx,LatencyUtils,log4j-jul,spring-jcl,jul-
+ to-slf4j,spring-expression,netty-buffer,netty-codec-http2,log4j-core,ne
+ tty-handler-proxy,sofa-common-tools,netty-transport-udt,mysql-connector
+ -j,sofa-serverless-app-starter,sofa-serverless-base-starter,jna,log-sof
+ a-boot,netty-incubator-codec-native-quic,sofa-serverless-adapter-log4j2
+ ,netty-resolver-dns-native-macos,javax.annotation-api,netty-codec-redis
+ ,jackson-datatype-jdk8,logback-classic,sofa-ark-archive,netty-all,sprin
+ g-boot-actuator-autoconfigure,zstd-jni,spring-boot,micrometer-jakarta9,
+ spring-webmvc,netty-codec-xml,sofa-serverless-base-plugin,jakarta.annot
+ ation-api,kafka-clients,oshi-core,aopalliance,sofa-ark-container,sofa-s
+ erverless-common,netty-transport,druid,netty-codec-smtp,sofa-ark-common
+ ,arklet-springboot-starter,mybatis-spring,netty-codec-mqtt,netty-common
+ ,micrometer-commons,netty-codec-socks,failureaccess,sofa-ark-common-spr
+ ingboot,error_prone_annotations,netty-transport-classes-kqueue,mybatis-
+ spring-boot-starter,spring-jdbc,guava,checker-qual,sofa-serverless-adap
+ ter-logback,spring-boot-starter,sofa-ark-spi,jakarta.inject-api,spring-
+ beans,log-sofa-boot-starter,spring-boot-starter-logging,jackson-core,so
+ fa-ark-api,disruptor,tomcat-embed-core,reactor-core,spring-tx,netty-res
+ olver,log4j-slf4j2-impl,jna-platform,spring-core,spring-boot-starter-lo
+ g4j2,netty-resolver-dns,log4j-to-slf4j
+build-time: 2024-01-23T20:21:12+0800
+

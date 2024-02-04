@@ -41,6 +41,11 @@
         <module>web/tomcat/base</module>
         <module>web/tomcat/biz1</module>
         <module>web/tomcat/biz2</module>
+        <module>web/webflux/base</module>
+        <module>web/webflux/biz</module>
+        <module>config/apollo/base</module>
+        <module>config/apollo/biz1</module>
+        <module>config/apollo/biz2</module>
         <module>msg/kafka/base</module>
         <module>msg/kafka/biz1</module>
         <module>msg/kafka/biz2</module>
@@ -116,12 +121,6 @@
                 <groupId>com.alipay.sofa.koupleless</groupId>
                 <artifactId>koupleless-app-starter</artifactId>
                 <version>${koupleless.runtime.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alipay.sofa</groupId>
-                <artifactId>log-sofa-boot-starter</artifactId>
-                <version>3.9.1</version>
             </dependency>
 
             <dependency>
