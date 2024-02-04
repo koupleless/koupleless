@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.alipay.sofa</groupId>
             <artifactId>netty-ark-plugin</artifactId>
-            <version>3.0.2</version>
+            <version>${sofa.ark.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
