@@ -31,11 +31,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.1</version>  <!-- 或者适用的最新版本 -->
-        </dependency>
-        <dependency>
             <groupId>com.alipay.sofa</groupId>
             <artifactId>netty-ark-plugin</artifactId>
             <version>${sofa.ark.version}</version>
@@ -47,12 +42,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
-            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
         </dependency>
     </dependencies>
 

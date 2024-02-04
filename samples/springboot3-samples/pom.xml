@@ -80,6 +80,26 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>3.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>3.0.1</version>  <!-- 或者适用的最新版本 -->
+            </dependency>
+            <dependency>
+                <groupId>com.ctrip.framework.apollo</groupId>
+                <artifactId>apollo-client</artifactId>
+                <version>2.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.inject</groupId>
+                <artifactId>guice</artifactId>
+                <version>6.0.0</version>
+            </dependency>
+            <dependency>
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>sofa-ark-all</artifactId>
                 <version>${sofa.ark.version}</version>
