@@ -107,13 +107,13 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
 4. start verification request
 
 ```shell
-curl http://localhost:8080/biz1
+curl http://localhost:8080/biz1/
 ```
 
 return `hello to /biz1 deploy`
 
 ```shell
-curl http://localhost:8080/biz2
+curl http://localhost:8080/biz2/
 ```
 
 return `hello to /biz2 deploy`
@@ -165,6 +165,6 @@ if you see the following log, it means that the static merge deployment has succ
 
 and also we can verify the status of deployment by executing the following curl:
 ```shell
-curl http://localhost:8080/biz1
-curl http://localhost:8080/biz2
+curl http://localhost:8080/biz1/
+curl http://localhost:8080/biz2/
 ```

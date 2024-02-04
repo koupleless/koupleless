@@ -23,15 +23,17 @@ spring.application.name = ${替换为实际基座应用名}
 ```xml
 <properties>
     <sofa.ark.verion>2.2.7</sofa.ark.verion>
-    <koupleless.runtime.version>0.5.6</koupleless.runtime.version>
+    <koupleless.runtime.version>1.0.0</koupleless.runtime.version>
 </properties>
 ```
 
 ```xml
+<!-- 注意放在构建 pom 的第一个依赖位置 -->
 <dependency>
     <groupId>com.alipay.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
+    <type>pom</type>
 </dependency>
 
 <!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ -->
