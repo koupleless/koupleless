@@ -1,10 +1,7 @@
 package com.alipay.sofa.base.mapper;
 
 import com.alipay.sofa.base.model.User;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -12,6 +9,7 @@ import java.util.List;
  * @author: chaya
  * @date: 2023/10/18 4:50 下午
  */
+@Mapper
 public interface UserMapper {
 
     @Select("SELECT * FROM user")

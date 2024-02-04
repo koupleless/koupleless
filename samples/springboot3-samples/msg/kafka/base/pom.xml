@@ -44,10 +44,10 @@
 
 		<!-- 这里添加动态模块相关依赖 -->
 		<dependency>
-			<groupId>com.alipay.sofa.koupleless</groupId>
-			<artifactId>koupleless-base-starter</artifactId>
+			<groupId>com.alipay.sofa.serverless</groupId>
+			<artifactId>sofa-serverless-base-starter</artifactId>
 			<!-- 以上版本支持springboot3 -->
-			<version>${koupleless.runtime.version}</version>
+			<version>${sofa.serverless.runtime.version}</version>
 		</dependency>
 
 		<dependency>
@@ -62,34 +62,10 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>log-sofa-boot-starter</artifactId>
-			<version>3.9.1</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.alipay.sofa.common</groupId>
-					<artifactId>sofa-common-tools</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<!-- 增加适配 springboot3 的 sofa-common-tools 版本 -->
 			<groupId>com.alipay.sofa.common</groupId>
 			<artifactId>sofa-common-tools</artifactId>
 			<version>2.0.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alipay.sofa.koupleless</groupId>
-			<artifactId>koupleless-adapter-log4j2</artifactId>
-			<version>${koupleless.runtime.version}</version>
-			<exclusions>
-				<!-- 排除 sofa-boot-alipay-autoconfigure -->
-				<exclusion>
-					<groupId>com.alipay.sofa</groupId>
-					<artifactId>sofa-boot-alipay-autoconfigure</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 

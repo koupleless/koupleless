@@ -1,31 +1,27 @@
-<div align="center">
+# tomcat 单 host 模式，动态部署多个 web 应用
+tomcat 单host 模式原理介绍详看[这里](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)
 
-English | [简体中文](./README-zh_CN.md)
-
-</div>
-
-# single host mode of tomcat, deploy multiple web applications dynamically
-the principle of tomcat single host mode is introduced in detail [here](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)
-
-# Experiment Content
-## Experiment Application
+# 实验内容
+## 实验应用
 ### base
-The base is built from regular SpringBoot application. The only change you need to do is to add the following dependencies in pom
+base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
 ```xml
-<!-- add libs for dynamic module -->
+
+
+<!-- 这里添加动态模块相关依赖 -->
 <dependency>
-    <groupId>com.alipay.sofa.koupleless</groupId>
-    <artifactId>koupleless-base-starter</artifactId>
-    <!-- The above version supports springboot3 -->
+    <groupId>com.alipay.sofa.serverless</groupId>
+    <artifactId>sofa-serverless-base-starter</artifactId>
+    <!-- 以上版本支持springboot3 -->
     <version>0.5.5-jdk17</version>
 </dependency>
-<!-- end of dynamic module related dependencies -->
+<!-- end 动态模块相关依赖 -->
 
-<!-- add dependencies for deploying multiple web applications in single host mode of tomcat here -->
+<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
 <dependency>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>web-ark-plugin</artifactId>
-    <!-- Exclude log-sofa-boot-starter in web-ark-plugin -->
+<!-- 排除 web-ark-plugin 中 log-sofa-boot-starter -->
     <exclusions>
         <exclusion>
             <groupId>com.alipay.sofa</groupId>
@@ -33,13 +29,13 @@ The base is built from regular SpringBoot application. The only change you need 
         </exclusion>
     </exclusions>
 </dependency>
-<!-- end of dependencies for single host deployment -->
+<!-- end 单 host 部署的依赖 -->
 ```
 
 ### biz
-The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
+biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
 ```xml
-<!-- change the packaging plugin to sofa-ark biz packaging plugin, packaged as ark biz jar -->
+<!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
@@ -56,19 +52,20 @@ The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The pa
         <skipArkExecutable>true</skipArkExecutable>
         <outputDirectory>./target</outputDirectory>
         <bizName>${bizName}</bizName>
-        <!-- single host mode, need to change web context path -->
+        <!-- 单host下需更换 web context path -->
         <webContextPath>${bizName}</webContextPath>
         <declaredMode>true</declaredMode>
     </configuration>
 </plugin>
 ```
-Note that the web context path of different biz is changed to different values, so that multiple web applications can be successfully installed in a tomcat host.
+注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
+
+
 
 ## 实验任务
-##　Experiment Task
-1. Execute `mvn clean package -DskipTests`
-2. Start the base application and ensure that the base starts successfully
-3. Execute the curl command to install biz1 and biz2
+1. 执行 mvn clean package -DskipTests
+2. 启动基座应用 base，确保基座启动成功
+3. 执行 curl 命令安装 biz1 和 biz2
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
@@ -91,7 +88,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 }'
 ```
 
-If you want to verify hot deployment, you can uninstall and deploy multiple times, and then verify whether the request is normal
+如果想验证热部署，可以通过多次卸载多次部署，然后验证请求是否正常
 ```shell
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
@@ -101,18 +98,19 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
 }'
 ```
 
-4. Start a request to verify
+4. 发起请求验证
 ```shell
 curl http://localhost:8080/biz1
 ```
-return `hello to /biz1 deploy`
+返回 `hello to /biz1 deploy`
+
 
 ```shell
 curl http://localhost:8080/biz2
 ```
-return `hello to /biz2 deploy`
+返回 `hello to /biz2 deploy`
 
-This means that the hot deployment of single host mode application succeed.
+说明，单host模式应用多次热部署正常。
 
-## Precautions
-Here mainly use simple applications for verification, if complex applications, need to pay attention to the module to do a good job of slimming, the base has dependencies, the module as much as possible set to provided, as much as possible to use the base dependencies.
+## 注意事项
+这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。

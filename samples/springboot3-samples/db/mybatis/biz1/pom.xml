@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.3.1</version>
+            <version>3.0.3</version>
             <scope>provided</scope>
         </dependency>
         <!--druid依赖-->
@@ -49,15 +49,21 @@
         </dependency>
 
         <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-app-starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
 <!--        <dependency>-->
-<!--            <groupId>com.alipay.sofa.koupleless</groupId>-->
-<!--            <artifactId>koupleless-app-starter</artifactId>-->
-<!--            <version>${koupleless.runtime.version}</version>-->
+<!--            <groupId>com.alipay.sofa.serverless</groupId>-->
+<!--            <artifactId>sofa-serverless-app-starter</artifactId>-->
+<!--            <version>${sofa.serverless.runtime.version}</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        <dependency>-->
@@ -66,17 +72,20 @@
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
         <dependency>
-            <groupId>com.alipay.sofa.koupleless</groupId>
-            <artifactId>koupleless-adapter-log4j2</artifactId>
-            <version>${koupleless.runtime.version}</version>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-adapter-log4j2</artifactId>
+            <version>${sofa.serverless.runtime.version}</version>
             <scope>provided</scope>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-actuator-autoconfigure</artifactId>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
+        <!-- 这里添加动态模块相关依赖 -->
+        <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-base-starter</artifactId>
+            <!-- 以上版本支持springboot3 -->
+            <version>${sofa.serverless.runtime.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

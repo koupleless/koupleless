@@ -1,9 +1,10 @@
 package com.alipay.sofa.biz1.model;
-
+import lombok.Data;
 /**
  * @author: chaya.cy
  * @date: 2023/10/19 5:16 下午
  */
+@Data
 public class Song {
 
     private Integer id;

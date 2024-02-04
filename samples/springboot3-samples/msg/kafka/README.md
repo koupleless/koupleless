@@ -1,28 +1,25 @@
-<div align="center">
 
-English | [简体中文](./README-zh_CN.md)
-
-</div>
-
-# Experiment Content
-## Experiment Application
+# 实验内容
+## 实验应用
 ### base
-The base is built from regular SpringBoot application. The only change you need to do is to add the following dependencies in pom
+base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
 ```xml
-<!-- Add dependencies related to the dynamic module here -->
+
+
+<!-- 这里添加动态模块相关依赖 -->
 <dependency>
-    <groupId>com.alipay.sofa.koupleless</groupId>
-    <artifactId>koupleless-base-starter</artifactId>
-    <!-- The above version supports springboot3 -->
+    <groupId>com.alipay.sofa.serverless</groupId>
+    <artifactId>sofa-serverless-base-starter</artifactId>
+    <!-- 以上版本支持springboot3 -->
     <version>0.5.5-jdk17</version>
 </dependency>
-<!-- end dynamic module related dependencies -->
-        
-<!-- Add dependencies for deploying multiple web applications in single host mode of tomcat here -->
+<!-- end 动态模块相关依赖 -->
+
+<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
 <dependency>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>web-ark-plugin</artifactId>
-    <!-- Exclude log-sofa-boot-starter in web-ark-plugin -->
+    <!-- 排除 web-ark-plugin 中 log-sofa-boot-starter -->
     <exclusions>
         <exclusion>
             <groupId>com.alipay.sofa</groupId>
@@ -30,28 +27,28 @@ The base is built from regular SpringBoot application. The only change you need 
         </exclusion>
     </exclusions>
 </dependency>
-<!-- End of dependencies for single host deployment -->
+<!-- end 单 host 部署的依赖 -->
 
-<!-- log4j2 related dependencies -->
+<!-- log4j2 相关依赖 -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-log4j2</artifactId>
 </dependency>
 
-<!-- log4j2 asynchronous queue -->
+<!-- log4j2 异步队列 -->
 <dependency>
     <groupId>com.lmax</groupId>
     <artifactId>disruptor</artifactId>
     <version>${disruptor.version}</version>
 </dependency>
 <dependency>
-    <groupId>com.alipay.sofa.koupleless</groupId>
-    <artifactId>koupleless-log4j2-starter</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <groupId>com.alipay.sofa.serverless</groupId>
+    <artifactId>sofa-serverless-log4j2-starter</artifactId>
+    <version>${sofa.serverless.runtime.version}</version>
 </dependency>
-<!-- end log4j2 dependency introduction -->
+<!-- end log4j2 依赖引入 -->
 
-<!-- add kafka dependency -->
+<!-- 引入 kafka 依赖 -->
 <dependency>
     <groupId>org.springframework.kafka</groupId>
     <artifactId>spring-kafka</artifactId>
@@ -60,16 +57,16 @@ The base is built from regular SpringBoot application. The only change you need 
 ```
 
 ### biz
-The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
+biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
 ```xml
-<!-- The module needs to introduce a special log4j2 adapter -->
+<!-- 模块需要引入专门的 log4j2 adapter -->
 <dependency>
-    <groupId>com.alipay.sofa.koupleless</groupId>
-    <artifactId>koupleless-adapter-log4j2</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <groupId>com.alipay.sofa.serverless</groupId>
+    <artifactId>sofa-serverless-adapter-log4j2</artifactId>
+    <version>${sofa.serverless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
-<!-- add kafka dependency -->
+<!-- 引入 kafka 依赖 -->
 <dependency>
     <groupId>org.springframework.kafka</groupId>
     <artifactId>spring-kafka</artifactId>
@@ -77,7 +74,7 @@ The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The pa
 </dependency>
 <!-- end kafka -->
 
-<!-- Modify the packaging plugin to the sofa-ark biz packaging plugin, package into ark biz jar -->
+<!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
@@ -94,35 +91,36 @@ The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The pa
         <skipArkExecutable>true</skipArkExecutable>
         <outputDirectory>./target</outputDirectory>
         <bizName>${bizName}</bizName>
-        <!-- Change the web context path under a single host -->
+        <!-- 单host下需更换 web context path -->
         <webContextPath>${bizName}</webContextPath>
         <declaredMode>true</declaredMode>
     </configuration>
 </plugin>
 ```
-Note that the web context path of different biz is changed to different values, so that multiple web applications can be successfully installed in a tomcat host.
+注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
 
-## Experiment Steps
 
-### build and start kafka server
+## 实验步骤
+
+### 构建与启动 kafka 服务段
 #### 
-cd into config directory, execute the following command, if the network is not connected, you need to open the proxy
+进入到 config 目录，执行如下命令，网络如果不通，需要开代理
 ```shell
 docker build .
 ```
 
-If the network is still not connected, you can execute it locally according to the command in Dockerfile, or you can start the kafka server directly
+如果网络还是连不通，可以按照 Dockfile 里的命令，本地执行，也可以启动 kafka 服务段
 
-### Run the image
+#### 运行镜像
 ```shell
 docker run -p 2181:2181 -p 9092:9092 -e ADVERTISED_HOST=localhost serverless-registry.cn-shanghai.cr.aliyuncs.com/opensource/samples/kafka-zookeeper:0.1.1
 ```
 
+
 #### 执行 mvn clean package -DskipTests
-#### run `mvn clean package -DskipTests`
-You can see the ark-biz jar package generated by the package in the target directory of each bundle
-#### Start the base application, and make sure the base starts successfully
-####　Execute curl command to install biz1 and biz2
+可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
+#### 启动基座应用 base，确保基座启动成功
+#### 执行 curl 命令安装 biz1 和 biz2
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
@@ -145,7 +143,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 }'
 ```
 
-If you want to verify the uninstallation, you can also execute
+如果想验证卸载也可以执行
 ```shell
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
@@ -155,14 +153,14 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
 }'
 ```
 
-### Start a request to verify
+### 发起请求验证
 
 ```shell
 curl http://localhost:8080/biz1/send/fadsfasdfa
 ```
-return `hello to /biz1 deploy`
+返回 `hello to /biz1 deploy`
 
-You can see the log
+且日志里能看到 
 ```text
 INFO  rest.SampleController - =================================
 INFO  rest.SampleController - biz1 consumer input value: fadsfasdfa
@@ -172,14 +170,15 @@ INFO  rest.SampleController - =================================
 ```shell
 curl http://localhost:8080/biz2/send/fadsfasdfa
 ```
-return `hello to /biz2 deploy`
+返回 `hello to /biz2 deploy`
 
-You can see the log
+且日志里能看到
 ```text
 INFO  rest.SampleController - =================================
 INFO  rest.SampleController - biz2 consumer input value: fadsfasdfa
 INFO  rest.SampleController - =================================
 ```
 
-## Precautions
-Here mainly use simple applications for verification, if complex applications, need to pay attention to the module to do a good job of slimming, the base has dependencies, the module as much as possible set to provided, as much as possible to use the base dependencies.
+## 注意事项
+这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
+
