@@ -3,6 +3,7 @@
 if (window.location.pathname == "/")
 window.location="/home/";
 &lt;/script></description></item><item><title>Home: Koupleless: 让普通应用低成本享受 Serverless 体验，帮助企业降本增效</title><link>/home/</link><pubDate>Thu, 25 Jan 2024 10:28:32 +0800</pubDate><guid>/home/</guid><description>
+&lt;meta name="keywords" content="模块化, Monolith, Serverless, 绿色计算, Green Computing, Modular, Modular Monolith, Service Weaver" />
 &lt;section id="td-cover-block-0" class="row td-cover-block td-cover-block--height-min js-td-cover td-overlay td-overlay--dark -bg-dark">
 &lt;div class="col-12">
 &lt;div class="container td-overlay__inner">
