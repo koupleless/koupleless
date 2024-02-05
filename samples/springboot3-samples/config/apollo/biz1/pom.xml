@@ -11,11 +11,11 @@
     <artifactId>biz1-apollo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <dependencies>
-
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.10.1</version>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-base-starter</artifactId>
+            <version>${koupleless.runtime.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
