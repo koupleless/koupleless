@@ -17,6 +17,7 @@ package com.alipay.sofa.koupleless.maven.plugin;
  */
 
 import com.alipay.sofa.koupleless.maven.plugin.common.JarFileUtils;
+import com.alipay.sofa.koupleless.maven.plugin.model.KouplelessAdapterConfig;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 import org.apache.maven.execution.MavenSession;
@@ -63,6 +64,24 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
 
     @Component
     RepositorySystem repositorySystem;
+
+    private ObjectMapper
+
+    KouplelessAdapterConfig kouplelessAdapterConfig;
+
+    private void initKouplelessAdapterConfig() {
+        InputStream mappingConfig = this.getClass().getClassLoader().getResourceAsStream("adapter-mapping.yaml");
+        try {
+
+        } catch (Throwable t) {
+            getLog().error(t);
+            throw new RuntimeException(t);
+        }
+    }
+
+    private void lazyInit() {
+        InputStream mappingConfig = this.getClass().getClassLoader().getResourceAsStream("adapter-mapping.yaml");
+    }
 
     private Artifact downloadAdapterDependency(
             String groupId,
