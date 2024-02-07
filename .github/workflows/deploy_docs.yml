@@ -24,7 +24,7 @@ jobs:
           extended: true
 
       - name: Build
-        run: hugo --minify
+        run: npm install postcss-cli && hugo --minify
 
       - name: Setup aliyun oss
         run: wget http://gosspublic.alicdn.com/ossutil/1.7.18/ossutil64 && chmod +x ossutil64
