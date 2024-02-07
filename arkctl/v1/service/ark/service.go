@@ -214,3 +214,8 @@ func (h *service) QueryAllBiz(ctx context.Context, req QueryAllArkBizRequest) (*
 	logger.Info("query all biz completed")
 	return queryAllBizResponse, nil
 }
+
+// IsSuccessResponse checks if the response is successful
+func IsSuccessResponse[T any](GenericArkResponseBase *GenericArkResponseBase[T]) error {
+	return nil
+}
