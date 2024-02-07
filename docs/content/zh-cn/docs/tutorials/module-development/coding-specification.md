@@ -16,7 +16,7 @@ weight: 100
       ShutdownExecutorServicesOnUninstallEventHandler.manageExecutorService(myExecutorService);
       ```
       其中，myExecutorService 需要是 ExecutorService 的子类型。
-      您也可以在模块 SpringBoot 或 SOFABoot properties 文件中配置 _com.alipay.koupleless.executor.cleanup.timeout.seconds_ 指定线程池 _awaitTermination_ 的优雅等待时间。
+      您也可以在模块 SpringBoot 或 SOFABoot properties 文件中配置 com.alipay.koupleless.executor.cleanup.timeout.seconds 指定线程池 awaitTermination 的优雅等待时间。
       <br/><br/>
     - 在模块代码中，装饰需要自动清理的 Timer，底层会调用 Timer 对象的 cancel，具体用法：
       ```
