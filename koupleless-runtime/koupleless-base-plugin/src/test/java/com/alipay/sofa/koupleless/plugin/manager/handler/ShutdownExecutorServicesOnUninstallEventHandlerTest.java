@@ -44,7 +44,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class ShutdownExecutorServicesOnUninstallEventHandlerTest {
 
-    private ClassLoader originalClassLoader = this.getClass().getClassLoader();
+    private ClassLoader originalClassLoader = currentThread().getContextClassLoader();
 
     @Before
     public void setUp() {
