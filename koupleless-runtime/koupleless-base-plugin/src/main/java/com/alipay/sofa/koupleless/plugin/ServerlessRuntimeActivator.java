@@ -19,24 +19,31 @@ package com.alipay.sofa.koupleless.plugin;
 import com.alipay.sofa.ark.spi.model.PluginContext;
 import com.alipay.sofa.ark.spi.service.PluginActivator;
 import com.alipay.sofa.ark.spi.service.event.EventAdminService;
-import com.alipay.sofa.koupleless.plugin.manager.handler.BeforeBizStartupEventHandler;
-import com.alipay.sofa.koupleless.plugin.manager.handler.BizUninstallEventHandler;
+import com.alipay.sofa.koupleless.plugin.manager.handler.*;
 
 /**
  * @author qilong.zql
  * @since 2.5.0
  */
 public class ServerlessRuntimeActivator implements PluginActivator {
+
     @Override
     public void start(PluginContext context) {
         registerEventHandler(context);
     }
 
     private void registerEventHandler(final PluginContext context) {
+
         EventAdminService eventAdminService = context.referenceService(EventAdminService.class)
             .getService();
+
         eventAdminService.register(new BizUninstallEventHandler());
         eventAdminService.register(new BeforeBizStartupEventHandler());
+
+        // 清理用户主动托管给 Serverless 运行时的 ExecutorService (含线程池), Timer 和 Thread.
+        eventAdminService.register(new ShutdownExecutorServicesOnUninstallEventHandler());
+        eventAdminService.register(new CancelTimersOnUninstallEventHandler());
+        eventAdminService.register(new ForceStopThreadsOnUninstallEventHandler());
     }
 
     @Override

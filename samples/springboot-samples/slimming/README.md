@@ -45,7 +45,7 @@ The base is built from regular SpringBoot application. The only change you need 
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-log4j2-starter</artifactId>
-    <version>${sofa.serverless.runtime.version}</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <!-- end of log4j2 -->
 ```
@@ -120,7 +120,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 ### 发起请求验证
 ### start verification request
 ```shell
-curl http://localhost:8080/biz1
+curl http://localhost:8080/biz1/
 ```
 return `hello to /biz1 deploy`
 

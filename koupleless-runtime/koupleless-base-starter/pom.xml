@@ -22,9 +22,22 @@
 
         <dependency>
             <groupId>com.alipay.sofa.koupleless</groupId>
-            <artifactId>6</artifactId>
+            <artifactId>koupleless-adapter-dubbo2.6</artifactId>
             <version>${revision}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-adapter-apollo</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+<!--        去除 -->
+<!--        <dependency>-->
+<!--            <groupId>com.alipay.sofa.koupleless</groupId>-->
+<!--            <artifactId>koupleless-adapter-dubbo2.7</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--        </dependency>-->
 
         <!--  sofa-ark begin  -->
         <dependency>

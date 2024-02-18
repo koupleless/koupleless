@@ -116,13 +116,13 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
 
 ### start verification request
 ```shell
-curl http://localhost:8080/biz1
+curl http://localhost:8080/biz1/
 ```
 return `hello to /biz1 deploy`
 
 
 ```shell
-curl http://localhost:8080/biz2
+curl http://localhost:8080/biz2/
 ```
 return `hello to /biz2 deploy`
 
