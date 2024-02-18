@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.apollo;
+package com.alipay.sofa.koupleless.adapter;
 
 import com.alipay.sofa.koupleless.common.util.MultiBizProperties;
 import org.springframework.boot.SpringApplication;

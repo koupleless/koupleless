@@ -17,6 +17,7 @@
 package com.alipay.sofa.koupleless.apollo;
 
 import com.alipay.sofa.ark.container.service.classloader.BizClassLoader;
+import com.alipay.sofa.koupleless.adapter.ApolloPropertiesClearInitializer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
