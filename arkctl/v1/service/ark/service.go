@@ -19,11 +19,10 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/koupleless/arkctl/common/contextutil"
 	"github.com/koupleless/arkctl/common/fileutil"
 	"github.com/koupleless/arkctl/common/runtime"
-
-	"github.com/go-resty/resty/v2"
 )
 
 // Service is responsible for interacting with ark container.
@@ -216,6 +215,9 @@ func (h *service) QueryAllBiz(ctx context.Context, req QueryAllArkBizRequest) (*
 }
 
 // IsSuccessResponse checks if the response is successful
-func IsSuccessResponse[T any](GenericArkResponseBase *GenericArkResponseBase[T]) error {
-	return nil
+func IsSuccessResponse[T any](resp *GenericArkResponseBase[T]) error {
+	if resp.Code == "SUCCESS" {
+		return nil
+	}
+	return fmt.Errorf("sofa-ark failed response: %s", resp.Message)
 }

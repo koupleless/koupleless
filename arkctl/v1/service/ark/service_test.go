@@ -295,3 +295,14 @@ func TestQueryAllBiz_HappyPath(t *testing.T) {
 		},
 	}, info)
 }
+
+func TestIsSuccessResponse(t *testing.T) {
+	assert.Nil(t, IsSuccessResponse(&GenericArkResponseBase[int]{
+		Code: "SUCCESS",
+	}))
+
+	assert.Errorf(t, IsSuccessResponse(&GenericArkResponseBase[int]{
+		Code:    "FAILED",
+		Message: "failed",
+	}), "sofa-ark failed response: %s", "failed")
+}

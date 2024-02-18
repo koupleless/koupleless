@@ -16,10 +16,13 @@ package uninstall
 
 import (
 	"context"
-	"github.com/koupleless/arkctl/v1/cmd/root"
+	"fmt"
+	"github.com/koupleless/arkctl/common/style"
+	"github.com/pterm/pterm"
 	"strings"
 
 	"github.com/koupleless/arkctl/common/contextutil"
+	"github.com/koupleless/arkctl/v1/cmd/root"
 	"github.com/koupleless/arkctl/v1/service/ark"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -66,7 +69,8 @@ func unInstall(_ *cobra.Command, _ []string) error {
 
 func execUnInstallLocal(ctx *contextutil.Context) error {
 	arkService := ctx.Value(ctxKeyArkService).(ark.Service)
-	return arkService.UnInstallBiz(ctx, ark.UnInstallBizRequest{
+	style.InfoPrefix("UnInstallBiz").Println(bizNameAndVersion)
+	if err := arkService.UnInstallBiz(ctx, ark.UnInstallBizRequest{
 		TargetContainer: ark.ArkContainerRuntimeInfo{
 			RunType: ark.ArkContainerRunTypeLocal,
 			Port:    &portFlag,
@@ -75,7 +79,12 @@ func execUnInstallLocal(ctx *contextutil.Context) error {
 			BizName:    strings.Split(bizNameAndVersion, ":")[0],
 			BizVersion: strings.Split(bizNameAndVersion, ":")[1],
 		},
-	})
+	}); err != nil {
+		pterm.Error.Printfln("uninstall % failed: %s", bizNameAndVersion, err)
+		return err
+	}
+	pterm.Info.Printfln(pterm.Green(fmt.Sprintf("uninstall %s success", bizNameAndVersion)))
+	return nil
 }
 
 func execUnInstallLocalWithPrompt(ctx *contextutil.Context) error {
