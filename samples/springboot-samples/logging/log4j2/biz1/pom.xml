@@ -45,6 +45,12 @@
             <version>${koupleless.runtime.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!--用ehcache模拟三方组件下沉基座后日志能能够正常隔离打印-->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

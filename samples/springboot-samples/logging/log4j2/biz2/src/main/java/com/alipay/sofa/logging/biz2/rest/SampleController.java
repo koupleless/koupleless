@@ -16,6 +16,7 @@
  */
 package com.alipay.sofa.logging.biz2.rest;
 
+import net.sf.ehcache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,10 @@ public class SampleController {
     public String hello() {
         String appName = applicationContext.getApplicationName();
         LOGGER.info("{} web test: into sample controller", appName);
+
+        CacheManager.create();
+        CacheManager.create();
+
         return String.format("hello to %s deploy", appName);
     }
 }
