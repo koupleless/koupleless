@@ -80,7 +80,7 @@ func execUnInstallLocal(ctx *contextutil.Context) error {
 			BizVersion: strings.Split(bizNameAndVersion, ":")[1],
 		},
 	}); err != nil {
-		pterm.Error.Printfln("uninstall % failed: %s", bizNameAndVersion, err)
+		pterm.Error.Printfln("uninstall %s failed: %s", bizNameAndVersion, err)
 		return err
 	}
 	pterm.Info.Printfln(pterm.Green(fmt.Sprintf("uninstall %s success", bizNameAndVersion)))
