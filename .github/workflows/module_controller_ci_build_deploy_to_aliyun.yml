@@ -4,19 +4,19 @@ run-name: ${{ github.actor }} pushed module-controller code
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'module-controller/**'
-      
+
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - 'module-controller/**'
-      
+
   # enable manually running the workflow
   workflow_dispatch:
-  
+
 env:
   CGO_ENABLED: 0
   GOOS: linux
@@ -26,7 +26,7 @@ env:
   MODULE_CONTROLLER_IMAGE_PATH: opensource/test/module-controller
   INTEGRATION_TESTS_IMAGE_PATH: opensource/test/module-controller-integration-tests
   POD_NAMESPACE: default
-  
+
 defaults:
   run:
     working-directory: module-controller
@@ -78,10 +78,10 @@ jobs:
 
       - name: Prepare development env
         run: |
-          kubectl apply -f config/crd/bases/serverless.alipay.com_moduledeployments.yaml
-          kubectl apply -f config/crd/bases/serverless.alipay.com_modulereplicasets.yaml
-          kubectl apply -f config/crd/bases/serverless.alipay.com_modules.yaml
-          kubectl apply -f config/crd/bases/serverless.alipay.com_moduletemplates.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_moduledeployments.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_modulereplicasets.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_modules.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_moduletemplates.yaml
           kubectl apply -f config/rbac/role.yaml
           kubectl apply -f config/rbac/role_binding.yaml
           kubectl apply -f config/rbac/service_account.yaml
@@ -124,7 +124,7 @@ jobs:
       - name: get moduledeployment
         run: |
           kubectl get moduledeployment
-      
+
       - name: get modulereplicaset
         run: |
           kubectl get modulereplicaset

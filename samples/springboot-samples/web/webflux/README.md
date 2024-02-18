@@ -1,56 +1,57 @@
+<div align="center">
 
-# 实验内容：基座、模块使用 webflux
+English | [简体中文](./README-zh_CN.md)
 
-## 背景
+</div>
 
-基座、模块合并部署，使用 webflux 支持两种模式：
+# Experiment: Using webflux in both Base and Module
 
-### 多host模式
-1. 直接将基座和模块的server.port设置为不同端口
-2. 基座、模块通过不同端口访问各自web服务
+## Background
+we support two kinds of mode for base and module merge deploy in one process:
 
-### 单host模式
-1. 基座和模块使用相同的server.port，默认如8080
-2. 基座、模块通过相同端口、不同context path访问各自web服务
+### multi host mode
+1. set `server.port` to different port for base and module
+2. access web service of base and module by different port
 
-该实验验证基座、模块采用单host，多context path模式使用webflux
+### single host mode
+1. set `server.prot` to same port for base and biz, like `8080`
+2. access web service of base and module with same port but different context path, like `/base` and `/biz`
 
-## 实验应用
+Here we will verify the single host mode with multi web context path
+
+## Experiment application
 ### base
-base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖，注意 ⚠️ netty-ark-plugin 版本要求 >= 2.2.5
-```xml
+The base is built from regular SpringBoot application. The only change you need to do is to add the following dependencies in pom. Note that the netty-ark-plugin version must be >= 2.2.5
 
-<!-- begin sofa-serverless相关依赖 -->
-<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+```xml
+<!-- Add dynamic module related dependencies here -->
+<!--    Be sure to put this dependency as the first dependency in the build pom, and set type= pom,
+    The principle can be found here https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
-<!-- end sofa-serverless相关依赖 -->
+<!-- end of dynamic module related dependencies -->
 
-<!-- begin spring boot webflux 相关依赖 -->
+<!-- Add dependencies for deploying multiple web applications in tomcat single host mode here -->
+<dependency>
+    <groupId>com.alipay.sofa</groupId>
+    <artifactId>netty-ark-plugin</artifactId>
+</dependency>
+<!-- end of dependencies for single host deployment -->
+
+<!-- begin spring boot webflux -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
 </dependency>
-<!-- end spring boot webflux 相关依赖 -->
-
-<!-- begin netty 单 host 模式部署多web应用的依赖 -->
-<dependency>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>netty-ark-plugin</artifactId>
-    <!-- netty-ark-plugin 版本要求 >= 2.2.5 -->
-    <version>${sofa.ark.version}</version>
-</dependency>
-<!-- end netty 单 host 部署的依赖 -->
-
+<!-- end spring boot webflux -->
 ```
 
 ### biz
-biz 是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
+biz is built from regular SpringBoot, which change packing plugin to sofa ark maven plugin, and the packaging plugin configuration is as follows:
 ```xml
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
@@ -58,7 +59,7 @@ biz 是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包�
     <scope>provided</scope>
 </dependency>
 
-<!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
+<!-- change the packaging plugin to sofa-ark biz packaging plugin, packaged as ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>sofa-ark-maven-plugin</artifactId>
@@ -75,28 +76,25 @@ biz 是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包�
         <skipArkExecutable>true</skipArkExecutable>
         <outputDirectory>./target</outputDirectory>
         <bizName>${bizName}</bizName>
-        <!-- 单host下需更换 web context path, 必须指定，否则将和基座 web context 冲突，导致启动失败 -->
+        <!-- single host mode, need to change web context path -->
         <webContextPath>/${bizName}</webContextPath>
         <declaredMode>true</declaredMode>
     </configuration>
 </plugin>
 ```
-注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 netty host 里安装多个 web 应用。
+Note that the web context path of different biz is changed to different values, so that multiple web applications can be successfully installed in a netty host.
 
+## Experiment steps
 
-## 实验步骤
+### start base
+just run the base application in IDEA like a regular SpringBoot application
 
-### 启动基座应用 base
+### packaging module application biz
 
-可以使用 IDEA run 启动基座应用
+executing `mvn clean package -DskipTest=true` in `samples/springboot-samples/web/webflux/biz` directory to package biz, and you can find the ark-biz jar package in the target directory of each bundle
 
-### 打包模块应用 biz
-
-在xx/samples/springboot-samples/web/webflux/biz 目录下执行 mvn clean package -Dmaven.test.skip=true 进行模块打包， 打包完成后可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
-
-### 安装模块应用 biz
-
-#### 执行 curl 命令安装 biz
+### install module application biz
+#### execute curl command to install biz
 
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
@@ -105,54 +103,54 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/xxxxx/sofa-serverless/samples/springboot-samples/web/webflux/biz/target/bizwebflux-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/xxxxx/koupleless/samples/springboot-samples/web/webflux/biz/target/bizwebflux-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
 
-### 发起请求验证
+### start verification request
+#### 1. verify services in base
 
-#### 1. 验证基座服务
-
-访问基座 base 的 web 服务
+access web service in base
 ```shell
 curl http://localhost:8080/hello
 ```
-返回 `Hello, city!`
+return `Hello, city!`
 ```shell
 curl curl http://localhost:8080/village
 ```
-返回 `Hello, village`
+return `Hello, village`
 
 且日志里能看到调用成功返回
+and also we can check the success log in base
 
-#### 2. 验证模块服务
+#### 2. versify services in module
 
-访问 biz 的 web 服务，由于是单host模式，模块服务也发布在8080端口，需要在path中添加在模块打包插件中配置的 <webContextPath>/${bizName}</webContextPath> 作为前缀访问
+access web services in biz, since it is single host mode, module service is also published on port 8080, we need to add <webContextPath>/${bizName}</webContextPath> configured in module packaging plugin as prefix to access
 ```shell
 curl http://localhost:8080/biz/biz
 ```
-返回 `Hello, biz webflux!`
+return `Hello, biz webflux!`
 
-且日志里能看到调用成功返回
+and also we can check the success log in biz
 
-#### 3. 验证模块卸载后，基座服务可正常访问，模块服务无法再访问
+#### 3. verify base services after uninstalling module, module services can no longer be accessed
 
-访问基座 base 的 web 服务
+access web services in base
 ```shell
 curl http://localhost:8080/hello
 ```
-返回 `Hello, city!`
+return `Hello, city!`
 
-访问 biz 的 web 服务
+access web services in biz
 ```shell
 curl http://localhost:8080/biz/biz
 ```
-返回 `{"timestamp":"2023-11-22T08:56:11.508+00:00","path":"/biz/biz","status":404,"error":"Not Found","message":null,"requestId":"a7917dd5-6"}`
-模块服务已经无法再访问，"status":404 
+return  `{"timestamp":"2023-11-22T08:56:11.508+00:00","path":"/biz/biz","status":404,"error":"Not Found","message":null,"requestId":"a7917dd5-6"}`
+this means module service can no longer be accessed, "status":404
 
-#### 4. 模块重新安装后，基座服务可正常访问，模块新服务可正常访问
+#### 4. verify base services after reinstalling module, module services can be accessed successfully
 
-#### 执行 curl 命令安装 biz
+#### execute curl command to install biz
 
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
@@ -161,23 +159,23 @@ curl --location --request POST 'localhost:1238/installBiz' \
     "bizName": "biz",
     "bizVersion": "0.0.1-SNAPSHOT",
     // local path should start with file://, alse support remote url which can be downloaded
-    "bizUrl": "file:///Users/xxxxx/sofa-serverless/samples/springboot-samples/web/webflux/biz/target/bizwebflux-0.0.1-SNAPSHOT-ark-biz.jar"
+    "bizUrl": "file:///Users/xxxxx/koupleless/samples/springboot-samples/web/webflux/biz/target/bizwebflux-0.0.1-SNAPSHOT-ark-biz.jar"
 }'
 ```
-访问基座 base 的 web 服务
+access web services in base
 ```shell
 curl http://localhost:8080/hello
 ```
-返回 `Hello, city!`
+return `Hello, city!`
 
-访问 biz 的 web 服务
+access web services in biz
 ```shell
 curl http://localhost:8080/biz/biz
 ```
-返回 `Hello, biz webflux!`
+return `Hello, biz webflux!`
 
 
-## 注意事项
-1. 支持基座、模块合并部署时采用单host多context path需要 netty-ark-plugin 依赖版本 >= 2.2.5
-2. 支持模块多次安装、多次卸载
-3. 支持模块先卸后装，不支持先装后卸
+## Precautions
+1. require netty-ark-plugin version >= 2.2.5 when using single host mode with multi web context path
+2. support module uninstall first, then install, but not support install first, then uninstall
+3. support install and uninstall modules multiple times

@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/koupleless/module-controller/api/v1alpha1"
 )
 
 func TestIsModuleChange(t *testing.T) {

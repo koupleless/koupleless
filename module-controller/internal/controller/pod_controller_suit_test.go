@@ -2,12 +2,12 @@ package controller
 
 import (
 	"context"
+	"github.com/koupleless/module-controller/api/v1alpha1"
+	"github.com/koupleless/module-controller/internal/constants/finalizer"
+	"github.com/koupleless/module-controller/internal/constants/label"
+	"github.com/koupleless/module-controller/internal/utils"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
-	"github.com/sofastack/sofa-serverless/internal/utils"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"

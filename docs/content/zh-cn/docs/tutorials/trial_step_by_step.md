@@ -1,8 +1,8 @@
-
 ---
 title: 基座与模块并行开发验证
 weight: 501
-draft: false
+description: Koupleless 基座与模块并行开发验证
+date: 2024-01-25T10:28:32+08:00
 ---
 
 欢迎使用 **Koupleless 完成多 SpringBoot 应用合并部署与动态更新模块**！本文将详细介绍操作流程与方法，希望能够帮助大家节省资源、提高研发效率。

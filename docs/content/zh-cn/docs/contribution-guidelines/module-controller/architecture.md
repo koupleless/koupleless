@@ -1,6 +1,7 @@
 ---
 title: ModuleController 架构设计
-date: 2023-09-21T10:28:35+08:00
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless ModuleController 架构设计
 weight: 100
 ---
 

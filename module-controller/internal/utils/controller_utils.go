@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/koupleless/module-controller/api/v1alpha1"
 	"golang.org/x/net/context"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
@@ -14,7 +14,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/koupleless/module-controller/internal/constants/label"
 )
 
 func AddFinalizer(meta *metav1.ObjectMeta, finalizer string) bool {

@@ -2,8 +2,8 @@ package handler
 
 import (
 	"fmt"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
-	"github.com/sofastack/sofa-serverless/internal/event"
+	"github.com/koupleless/module-controller/internal/constants/label"
+	"github.com/koupleless/module-controller/internal/event"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"

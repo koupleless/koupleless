@@ -1,24 +1,35 @@
-# 支持基座、模块使用采用独立日志配置打印logback日志
-原理详看[这里](https://github.com/sofastack/sofa-serverless/blob/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/logj42.md)
+<div align="center">
 
-# 实验内容
-## 实验应用
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+# logback logging with independent configuration for base and module
+check principle [here](https://github.com/koupleless/koupleless/blob/master/docs/content/zh-cn/docs/contribution-guidelines/runtime/logj42.md)
+
+## Experiment application
 ### base
-base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加如下依赖
+The base is built from regular SpringBoot application. The only change you need to do is to add the following dependencies in pom
+
 ```xml
-<!-- sofa-serverless 相关依赖 -->
-<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
-    原理请参考这里 https://sofaserverless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
+<!-- Add dynamic module related dependencies here -->
+<!--    Be sure to put this dependency as the first dependency in the build pom, and set type= pom,
+    The principle can be found here https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
    <groupId>com.alipay.sofa.koupleless</groupId>
    <artifactId>koupleless-base-starter</artifactId>
    <version>${koupleless.runtime.version}</version>
    <type>pom</type>
 </dependency>
+        <!-- end of dynamic module related dependencies -->
+
+        <!-- Add dependencies for deploying multiple web applications in tomcat single host mode here -->
 <dependency>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>web-ark-plugin</artifactId>
+<groupId>com.alipay.sofa</groupId>
+<artifactId>web-ark-plugin</artifactId>
 </dependency>
+        <!-- end of dependencies for single host deployment -->
+
 <!-- spring boot 相关依赖 -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -30,10 +41,10 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <artifactId>spring-boot-starter-logging</artifactId>
 </dependency>
 ```
+Attention⚠️: base and module use independent log configuration feature, sofa-ark-common version should be no less than 2.2.6
 
-注意⚠️：需要基座、模块采用独立日志配置特性，要求，sofa-ark-common 包版本不低于 2.2.6
+Log config for base defined in `logback-spring.xml`, which will output log to console with custom pattern, and add `${appname} 000` to log prefix, and define appender to output log to base name directory `${logging.file.path}/${appname}/app-default.log`
 
-基座自定义日志配置参考 logback-spring.xml，其中为控制台输出自定义pattern，日志前方添加 ${appname} 000，并且定义appender将日志输出到基座名目录下 ${logging.file.path}/${appname}/app-default.log
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
@@ -71,11 +82,10 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     </root>
 </configuration>
 ```
-注意⚠️：基座、模块日志隔离能力，依赖 logback 原生 context selector 特性，需要在jvm启动参数或系统属性中指定 contextSelector
+Attention⚠️: base and module use independent log configuration feature, which depends on logback native context selector feature, so we need to specify contextSelector in jvm startup parameters or system properties
 
-方法一：添加jvm启动参数 -Dlogback.ContextSelector=com.alipay.sofa.ark.common.adapter.ArkLogbackContextSelector
-
-方法二：添加系统属性，需要保证在首次获取 logger 前设置
+1. add jvm start parameter `-Dlogback.ContextSelector=com.alipay.sofa.ark.common.adapter.ArkLogbackContextSelector`
+2. add system properties, need to ensure set before first time get logger
 
 ```java
 @ImportResource({ "classpath*:META-INF/spring/service.xml"})
@@ -100,7 +110,7 @@ public class BaseApplication {
 ```
 
 ### biz
-biz 原来是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
+The biz contains module biz1, which is regular SpringBoot. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
 ```xml
 <plugin>
     <groupId>com.alipay.sofa</groupId>
@@ -123,9 +133,9 @@ biz 原来是普通 springboot，修改打包插件方式为 sofaArk biz 模块�
     </configuration>
 </plugin>
 ```
-注意这里将不同 biz 的 web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
+Note that the web context path of different biz is changed to different values, so that multiple web applications can be successfully installed in a tomcat host.
 
-模块自定义日志配置见模块项目资源目录中的 logback-spring.xml，其中为控制台输出自定义pattern，日志前方添加 ${appname} 111，并且定义appender将日志输出到模块名目录下 ${logging.file.path}/${appname}/app-default.log
+log config for module defined in `logback-spring.xml`, which will output log to console with custom pattern, and add `${appname} 111` to log prefix, and define appender to output log to module name directory `${logging.file.path}/${appname}/app-default.log`
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -166,11 +176,11 @@ biz 原来是普通 springboot，修改打包插件方式为 sofaArk biz 模块�
 </configuration>
 ```
 
-## 实验任务
-### 执行 mvn clean package -DskipTests
-可在各 bundle 的 target 目录里查看到打包生成的 ark-biz jar 包
-### 启动基座应用 base，确保基座启动成功
-### 执行 curl 命令安装 biz
+## Experiment Task
+### run `mvn clean package -DskipTests`
+we can check the ark-biz jar package in target directory of each bundle
+### start base application, and make sure base start successfully
+### execute curl command to install biz1
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
@@ -182,21 +192,21 @@ curl --location --request POST 'localhost:1238/installBiz' \
 }'
 ```
 
-### 验证
-
-1. 先查看基座启动日志，可以见到日志中有"base 000" 字样，满足我们日志配置中的pattern，同时在 logging.file.path=./logging/logback/logs/ 目录下存在基座日志文件
+### verification
+1. check log of base, we can see "base 000", which is satisfied with our log pattern, and log file of base is in `./logging/logback/logs/` directory
    ![img.png](img.png)
-2. 再启动模块后，查看模块启动日志，可以见到日志中有"biz1 111" 字样，满足我们日志配置中的pattern，同时在 logging.file.path=./logging/logback/logs/ 目录下存在模块日志文件
+2. check log of module, we can see "biz1 111", which is satisfied with our log pattern, and log file of module is in `./logging/logback/logs/${appName}` directory
    ![img_1.png](img_1.png)
-3. 发起请求验证模块web服务
+3. start verification request
 
 ```shell
-curl http://localhost:8080/biz2
+curl http://localhost:8080/biz1
 ```
-返回 `hello to /biz1 deploy`，同时查看控制台日志输出，满足我们日志配置中的pattern
+return `hello to /biz1 deploy`, and check console log, which is satisfied with our log pattern
+
 ```log
 biz1 111 2023-12-27 20:05:55,543  INFO  25790 --- [http-nio-8080-exec-1] [c.a.sofa.web.biz1.rest.SampleController ] [com.alipay.sofa.web.biz1.rest.SampleController:21] : [0] /biz1 web test: into sample controller
 ```
 
-## 注意事项
-这里主要使用简单应用做验证，如果复杂应用，需要注意模块做好瘦身，基座有的依赖，模块尽可能设置成 provided，尽可能使用基座的依赖。
+## Precautions
+Here mainly use simple applications for verification, if complex applications, need to pay attention to the module to do a good job of slimming, the base has dependencies, the module as much as possible set to provided, as much as possible to use the base dependencies.

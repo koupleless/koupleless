@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/sofastack/sofa-serverless/internal/event"
-	"github.com/sofastack/sofa-serverless/internal/utils"
+	"github.com/koupleless/module-controller/internal/event"
+	"github.com/koupleless/module-controller/internal/utils"
 	"testing"
 )
 

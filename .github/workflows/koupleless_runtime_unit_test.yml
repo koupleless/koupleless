@@ -1,0 +1,45 @@
+name: Koupleless Runtime Unit Test
+run-name: ${{ github.actor }} pushed code
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'koupleless-runtime/**'
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'koupleless-runtime/**'
+
+  # enable manually running the workflow
+  workflow_dispatch:
+
+env:
+  WORK_DIR: koupleless-runtime
+
+defaults:
+  run:
+    working-directory: koupleless-runtime
+
+jobs:
+  unit-test-for-jdk8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: 8
+          cache: maven
+
+      - name: Test
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -U
+          && sh ./check_format.sh
+          && mvn test
+
+      - name: upload coverage reports to Codecov with github action
+        uses: codecov/codecov-action@v3

@@ -1,6 +1,7 @@
 ---
 title: 完成第一次 PR 提交
-date: 2023-09-21T10:28:35+08:00
+date: 2024-01-25T10:28:32+08:00
+description: 完成第一次 Koupleless PR 提交
 weight: 200
 ---
 
@@ -100,7 +101,7 @@ PR 流水线校验包括：
 以上校验必须全部通过，PR 流水线才会通过并进入到 Code Review 环节。
 
 ### Code Review
-当您选择对应组件的 [Maintainer](../../role-and-promotion#member-list) 或 [PMC](../../role-member-list#member-list) 作为 Code Reviewer 数天后，仍然没有人对您的提交给予任何回复，可以在 PR 下面留言并 at 相关人员，或者在社区钉钉协作群中（钉钉群号：24970018417）直接 at 相关人员 Review 代码。对于 Code Review 的意见，Code Reviewer 会直接备注到到对应的 PR 或者 Issue 中，如果您觉得建议是合理的，也请您把这些建议更新到您的代码中并重新提交 PR。
+当您选择对应组件的 [Maintainer](../../role-and-promotion#member-list) 或 [PMC](../../role-and-promotion#member-list) 作为 Code Reviewer 数天后，仍然没有人对您的提交给予任何回复，可以在 PR 下面留言并 at 相关人员，或者在社区钉钉协作群中（钉钉群号：24970018417）直接 at 相关人员 Review 代码。对于 Code Review 的意见，Code Reviewer 会直接备注到到对应的 PR 或者 Issue 中，如果您觉得建议是合理的，也请您把这些建议更新到您的代码中并重新提交 PR。
 
 ### 合并代码到主干
 在 PR 流水线校验和 Code Review 都通过后，就由 Koupleless 维护人员操作合入主干了，代码合并之后您会收到合并成功的提示。

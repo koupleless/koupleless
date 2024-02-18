@@ -22,7 +22,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/sofastack/sofa-serverless/internal/event"
+	"github.com/koupleless/module-controller/internal/event"
 
 	"k8s.io/apimachinery/pkg/selection"
 
@@ -36,16 +36,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	"github.com/sofastack/sofa-serverless/internal/constants/finalizer"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
-	"github.com/sofastack/sofa-serverless/internal/utils"
+	"github.com/koupleless/module-controller/internal/constants/finalizer"
+	"github.com/koupleless/module-controller/internal/constants/label"
+	"github.com/koupleless/module-controller/internal/utils"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	v1alpha1 "github.com/sofastack/sofa-serverless/api/v1alpha1"
+	v1alpha1 "github.com/koupleless/module-controller/api/v1alpha1"
 )
 
 // ModuleReplicaSetReconciler reconciles a ModuleReplicaSet object
@@ -54,9 +54,9 @@ type ModuleReplicaSetReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=serverless.alipay.com,resources=modulereplicasets/finalizers,verbs=update
+//+kubebuilder:rbac:groups=koupleless.io,resources=modulereplicasets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=koupleless.io,resources=modulereplicasets/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=koupleless.io,resources=modulereplicasets/finalizers,verbs=update
 
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch
 //+kubebuilder:rbac:groups="",resources=pods,verbs=create;delete;get;list;patch;update;watch

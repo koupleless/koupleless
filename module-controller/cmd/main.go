@@ -22,8 +22,8 @@ import (
 
 	"go.uber.org/zap/zapcore"
 
-	"github.com/sofastack/sofa-serverless/internal/controller"
-	_ "github.com/sofastack/sofa-serverless/internal/handler"
+	"github.com/koupleless/module-controller/internal/controller"
+	_ "github.com/koupleless/module-controller/internal/handler"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -37,7 +37,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
+	"github.com/koupleless/module-controller/api/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -77,7 +77,7 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "2245841c.serverless.alipay.com",
+		LeaderElectionID:       "2245841c.koupleless.io",
 		// LeaderElectionReleaseOnCancel defines if the leader should step down voluntarily
 		// when the Manager ends. This requires the binary to immediately end when the
 		// Manager is stopped, otherwise, this setting is unsafe. Setting this significantly

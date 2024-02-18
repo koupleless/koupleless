@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"github.com/sofastack/sofa-serverless/internal/event"
+	"github.com/koupleless/module-controller/internal/event"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/log"

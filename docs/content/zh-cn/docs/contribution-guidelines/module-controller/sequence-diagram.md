@@ -1,6 +1,7 @@
 ---
 title: 核心流程时序图
-date: 2023-10-19T10:28:35+08:00
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless ModuleController 核心流程时序图
 weight: 600
 ---
 

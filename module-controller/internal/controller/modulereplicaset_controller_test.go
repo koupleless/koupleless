@@ -9,8 +9,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/sofastack/sofa-serverless/api/v1alpha1"
-	"github.com/sofastack/sofa-serverless/internal/constants/label"
+	"github.com/koupleless/module-controller/api/v1alpha1"
+	"github.com/koupleless/module-controller/internal/constants/label"
 )
 
 type podWithModules struct {
