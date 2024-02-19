@@ -50,7 +50,7 @@ public class MultiBizPropertiesTest {
         System.clearProperty(key2);
         System.clearProperty(key3);
         System.clearProperty(key4);
-        MultiBizProperties.initSystem(URLClassLoader.class.getName());
+        MultiBizProperties.initSystem(TestClassLoader.class.getName());
     }
 
     @After
@@ -66,7 +66,7 @@ public class MultiBizPropertiesTest {
         System.setProperty(key1, value1);
         Assert.assertEquals(value1, System.getProperty(key1));
         //biz1: not set key1 value, biz1 get key1=value1 as base
-        ClassLoader loader1 = new URLClassLoader(new URL[0]);
+        ClassLoader loader1 = new TestClassLoader();
         thread.setContextClassLoader(loader1);
         Assert.assertEquals(value1, System.getProperty(key1));
         //biz1: set key1=value2, biz1 get key1=value2
@@ -76,7 +76,7 @@ public class MultiBizPropertiesTest {
         thread.setContextClassLoader(baseClassLoader);
         Assert.assertEquals(value1, System.getProperty(key1));
         //biz2: not set key1 value, biz1 get key1=value1 as base
-        ClassLoader loader2 = new URLClassLoader(new URL[0]);
+        ClassLoader loader2 = new TestClassLoader();
         thread.setContextClassLoader(loader2);
         Assert.assertEquals(value1, System.getProperty(key1));
     }
@@ -89,7 +89,7 @@ public class MultiBizPropertiesTest {
         System.setProperty(key1, value1);
         Assert.assertEquals(value1, System.getProperty(key1));
         //biz1: not set key1 value, biz1 get key1=value1 as base
-        ClassLoader loader1 = new URLClassLoader(new URL[0]);
+        ClassLoader loader1 = new TestClassLoader();
         thread.setContextClassLoader(loader1);
         Assert.assertEquals(value1, System.getProperty(key1));
         //biz1: set key1=value2, biz1 remove key1,so biz1 get key1 is null
@@ -99,7 +99,7 @@ public class MultiBizPropertiesTest {
         thread.setContextClassLoader(baseClassLoader);
         Assert.assertEquals(value1, System.getProperty(key1));
         //biz2: not set key1 value, biz1 get key1=value1 as base
-        ClassLoader loader2 = new URLClassLoader(new URL[0]);
+        ClassLoader loader2 = new TestClassLoader();
         thread.setContextClassLoader(loader2);
         Assert.assertEquals(value1, System.getProperty(key1));
         //base: set key1=value2, base get key1=value2
@@ -126,7 +126,7 @@ public class MultiBizPropertiesTest {
     @Test
     public void testStoreAndLoad() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Properties properties = new MultiBizProperties(URLClassLoader.class.getName());
+        Properties properties = new MultiBizProperties(TestClassLoader.class.getName());
         properties.put(key1, value1);
         properties.putAll(System.getProperties());
         int size = properties.size();
@@ -177,7 +177,7 @@ public class MultiBizPropertiesTest {
 
     @Test
     public void testRead() {
-        Properties properties = new MultiBizProperties(URLClassLoader.class.getName());
+        Properties properties = new MultiBizProperties(TestClassLoader.class.getName());
         properties.setProperty(key1, value1);
         Assert.assertEquals(properties.keys().nextElement(), key1);
         Assert.assertTrue(properties.containsValue(value1));
@@ -211,7 +211,7 @@ public class MultiBizPropertiesTest {
 
     @Test
     public void testReplace() {
-        Properties properties = new MultiBizProperties(URLClassLoader.class.getName());
+        Properties properties = new MultiBizProperties(TestClassLoader.class.getName());
         properties.setProperty(key1, value1);
         properties.replace(key1, value2, value3);
         Assert.assertNotEquals(properties.get(key1), value3);
@@ -220,5 +220,11 @@ public class MultiBizPropertiesTest {
         Assert.assertEquals(properties.replace(key1, value2), value3);
         properties.replaceAll((k, v) -> v + value1);
         Assert.assertEquals(properties.get(key1), value2 + value1);
+    }
+
+    private class TestClassLoader extends URLClassLoader {
+        public TestClassLoader() {
+            super(new URL[0]);
+        }
     }
 }
