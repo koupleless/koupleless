@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>koupleless-runtime</artifactId>
+        <groupId>com.alipay.sofa.koupleless</groupId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>koupleless-base-starter-beta</artifactId>
+    <version>${revision}</version>
+    <modelVersion>4.0.0</modelVersion>
+
+    <dependencies>
+        <!--  sofa-ark begin  -->
+        <dependency>
+            <groupId>com.alipay.sofa</groupId>
+            <artifactId>sofa-ark-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.sofa</groupId>
+            <artifactId>sofa-ark-springboot-starter</artifactId>
+        </dependency>
+        <!--  sofa-ark end  -->
+
+        <!--  arklet begin  -->
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>arklet-springboot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-base-plugin</artifactId>
+        </dependency>
+        <!--  arklet end  -->
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.alipay.sofa</groupId>-->
+        <!--            <artifactId>web-ark-plugin</artifactId>-->
+        <!--            <version>${sofa.ark.version}</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.alipay.sofa</groupId>-->
+        <!--            <artifactId>netty-ark-plugin</artifactId>-->
+        <!--            <version>${sofa.ark.version}</version>-->
+        <!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-app-starter</artifactId>
+            <version>${revision}</version>
+        </dependency>
+    </dependencies>
+</project>

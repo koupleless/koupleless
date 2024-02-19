@@ -1,7 +1,19 @@
 adapterMappings:
   - matcher:
-      regexp: ".*"
+      regexp: ".*com\.ctrip\.framework\.apollo:apollo-client.*"
     adapter:
-      groupId: XXX
-      artifactId: YYY
-      version: ZZZ
+      groupId: com.alipay.sofa.koupleless
+      artifactId: koupleless-adapter-apollo
+      version: 0.5.7-SNAPSHOT
+  - matcher:
+      regexp: ".*(com\.alibaba:dubbo-dependencies-bom:2\.6|com\.alibaba:dubbo:2\.6).*"
+    adapter:
+      groupId: com.alipay.sofa.koupleless
+      artifactId: koupleless-adapter-dubbo2.6
+      version: 0.5.7-SNAPSHOT
+  - matcher:
+      regexp: ".*spring-boot-starter-log4j2.*"
+    adapter:
+      groupId: com.alipay.sofa.koupleless
+      artifactId: koupleless-adapter-log4j2
+      version: 0.5.7-SNAPSHOT
