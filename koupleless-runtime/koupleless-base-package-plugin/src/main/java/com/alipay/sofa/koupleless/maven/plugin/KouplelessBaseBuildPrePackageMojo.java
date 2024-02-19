@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
 public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project.build.directory}", readonly = true)
-    private File outputDirectory;
+    File outputDirectory;
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     MavenProject project;
@@ -75,18 +75,24 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
 
     KouplelessAdapterConfig kouplelessAdapterConfig;
 
-    private void initKouplelessAdapterConfig() {
-        InputStream mappingConfigIS = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream("adapter-mapping.yaml");
+    void initKouplelessAdapterConfig() throws Exception {
+        if (kouplelessAdapterConfig == null) {
+            InputStream mappingConfigIS = this
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("adapter-mapping.yaml");
 
-        try {
             kouplelessAdapterConfig = yamlMapper
                     .readValue(mappingConfigIS, KouplelessAdapterConfig.class);
-        } catch (Throwable t) {
-            getLog().error(t);
-            throw new RuntimeException(t);
         }
+    }
+
+    String getDependencyId(Dependency dependency) {
+        return dependency.getGroupId() + ":" +
+               dependency.getArtifactId() + ":" +
+               dependency.getVersion() + ":" +
+               dependency.getType() +
+               (dependency.getClassifier() != null ? ":" + dependency.getClassifier() : "");
     }
 
     // visible for testing
@@ -108,7 +114,8 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
             if (matcher != null && matcher.getRegexp() != null) {
                 String regexp = matcher.getRegexp();
                 for (Dependency dependency : project.getDependencies()) {
-                    if (regexp.matches(dependency.getManagementKey())) {
+                    String dependencyId = getDependencyId(dependency);
+                    if (Pattern.compile(regexp).matcher(dependencyId).matches()) {
                         adapterDependencies.add(adapterMapping.getAdapter());
                     }
                 }
@@ -118,7 +125,7 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
         return adapterDependencies;
     }
 
-    private void addDependenciesDynamically() {
+    void addDependenciesDynamically() {
         if (kouplelessAdapterConfig == null) {
             getLog().info("kouplelessAdapterConfig is null, skip adding dependencies.");
             return;
@@ -129,7 +136,6 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
             try {
                 getLog().debug("start downloading dependency: " + dependency.toString());
                 Artifact artifact = downloadAdapterDependency(dependency);
-                Preconditions.checkNotNull(artifact, "artifact is null.");
                 getLog().debug("start add dependency to project root: " + dependency.toString());
                 addArtifactToProjectRoot(artifact);
                 getLog().info("success add dependency: " + dependency.toString());
@@ -139,7 +145,7 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
         }
     }
 
-    private Artifact downloadAdapterDependency(Dependency dependency) {
+    Artifact downloadAdapterDependency(Dependency dependency) {
         DefaultArtifact patchArtifact = new DefaultArtifact(
                 dependency.getGroupId() + ":" +
                 dependency.getArtifactId() + ":" +
@@ -162,7 +168,7 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
         }
     }
 
-    private void addArtifactToProjectRoot(Artifact artifact) {
+    void addArtifactToProjectRoot(Artifact artifact) {
         File file = artifact.getFile();
         Map<String, Byte[]> entryToContent = JarFileUtils.getFileContentAsLines(file, Pattern.compile(".*\\.class$"));
         for (Map.Entry<String, Byte[]> entry : entryToContent.entrySet()) {
@@ -171,7 +177,7 @@ public class KouplelessBaseBuildPrePackageMojo extends AbstractMojo {
     }
 
     @SneakyThrows
-    private void addPatchToProjectRoot(String entryName, Byte[] bytes) {
+    void addPatchToProjectRoot(String entryName, Byte[] bytes) {
         Path outputfile = Paths.get(outputDirectory.getAbsolutePath(), "classes", entryName);
         Path parentDir = outputfile.getParent();
         byte[] primitiveByte = new byte[bytes.length];
