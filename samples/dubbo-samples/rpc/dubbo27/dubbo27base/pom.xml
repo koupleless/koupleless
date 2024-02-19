@@ -11,10 +11,6 @@
 
 	<artifactId>dubbo27base</artifactId>
 
-	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
-	</properties>
 	<dependencies>
 		<!--覆盖dubbo 2.6同名类-->
 		<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom,

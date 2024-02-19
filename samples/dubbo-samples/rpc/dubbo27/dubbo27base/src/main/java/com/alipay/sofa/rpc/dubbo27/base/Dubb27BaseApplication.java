@@ -1,6 +1,18 @@
 /*
- * Ant Group
- * Copyright (c) 2004-2023 All Rights Reserved.
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.sofa.rpc.dubbo27.base;
 
@@ -31,8 +43,8 @@ import org.springframework.context.annotation.ImportResource;
 public class Dubb27BaseApplication {
     private static Logger LOGGER = LoggerFactory.getLogger(Dubb27BaseApplication.class);
 
-//    @Autowired
-//    private MasterController masterController;
+    //    @Autowired
+    //    private MasterController masterController;
 
     public static void main(String[] args) {
 
@@ -44,7 +56,8 @@ public class Dubb27BaseApplication {
         System.setProperty("sofa.ark.embed.enable", "true");
         System.setProperty("sofa.ark.plugin.export.class.enable", "true");
 
-        ConfigurableApplicationContext context = SpringApplication.run(Dubb27BaseApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(Dubb27BaseApplication.class,
+            args);
         MasterController controller = context.getBean(MasterController.class);
         DemoResponse xxx = controller.handle("xxx");
         System.out.println(xxx.getResult());
@@ -62,7 +75,7 @@ public class Dubb27BaseApplication {
      * @param args
      * @throws Exception
      */
-//    @Override
+    //    @Override
     public static void run(String... args) throws Exception {
         try {
             installBiz("dubbo27biz/target/dubbo27biz-0.0.1-SNAPSHOT-ark-biz.jar");
@@ -77,7 +90,7 @@ public class Dubb27BaseApplication {
         File bizFile = new File(pathRoot + bizDir);
         if (bizFile.exists()) {
             File tmpFile = new File(pathRoot + "target/" + bizFile.getName());
-            if(tmpFile.exists()){
+            if (tmpFile.exists()) {
                 tmpFile.delete();
             }
             FileUtils.copyFile(bizFile, tmpFile);

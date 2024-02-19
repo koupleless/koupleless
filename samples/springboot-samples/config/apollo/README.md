@@ -26,8 +26,9 @@ System.setProperty("env", "DEV");
 ```
 3. add apollo dependency in pom
 
-4. add override class `com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer` to override apollo original logic, the difference between the original class and the override class is as follows
-![diff.png](imgs/diff.png)
+4. In the main method of the base, add the code `MultiBizProperties.initSystem();` on the first line to support system properties isolation between business applications. 
+
+    In scenarios similar to Apollo, where system properties are modified and may impact other business modules, this code can be added to facilitate environment variable isolation among different business applications.
 
 5. add apollo config in `/META-INF/app.properties` for both base and module
 Cause the initializeSystemProperty method is commented out, it is not possible to configure apollo through application.properties to initialize `app.id`. So the module needs to use `/META-INF/app.properties` for configuration.

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.alipay.sofa</groupId>
-		<artifactId>springboot-samples</artifactId>
+		<artifactId>springboot3-samples</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../../../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
@@ -15,6 +15,29 @@
 	<description>base</description>
 
 	<dependencies>
+		<!-- 这里添加动态模块相关依赖 -->
+		<dependency>
+			<groupId>com.alipay.sofa.koupleless</groupId>
+			<artifactId>koupleless-base-starter</artifactId>
+			<!-- 以上版本支持springboot3 -->
+			<version>${koupleless.runtime.version}</version>
+			<type>pom</type>
+		</dependency>
+		<!-- end 动态模块相关依赖 -->
+
+		<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
+		<dependency>
+			<groupId>com.alipay.sofa</groupId>
+			<artifactId>web-ark-plugin</artifactId>
+			<!-- 排除 web-ark-plugin 中 log-sofa-boot-starter -->
+			<exclusions>
+				<exclusion>
+					<groupId>com.alipay.sofa</groupId>
+					<artifactId>log-sofa-boot-starter</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -31,27 +54,6 @@
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
 
-		<!-- 这里添加动态模块相关依赖 -->
-		<dependency>
-			<groupId>com.alipay.sofa.koupleless</groupId>
-			<artifactId>koupleless-base-starter</artifactId>
-			<!-- 以上版本支持springboot3 -->
-			<version>${sofa.serverless.runtime.version}</version>
-		</dependency>
-		<!-- end 动态模块相关依赖 -->
-
-		<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>web-ark-plugin</artifactId>
-			<!-- 排除 web-ark-plugin 中 log-sofa-boot-starter -->
-			<exclusions>
-				<exclusion>
-					<groupId>com.alipay.sofa</groupId>
-					<artifactId>log-sofa-boot-starter</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>log-sofa-boot-starter</artifactId>
@@ -77,6 +79,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring.boot.version}</version>
 			</plugin>
 		</plugins>
 	</build>

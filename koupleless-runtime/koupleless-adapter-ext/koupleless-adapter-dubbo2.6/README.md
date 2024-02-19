@@ -1208,10 +1208,6 @@ dubbo放入base之后dubbo 由于一部分代码是static执行的 导致部分�
 
 
 ```java
-/*
- * Ant Group
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
 package com.alibaba.dubbo.demo.provider;
 
 import java.io.IOException;
