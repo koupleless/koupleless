@@ -14,30 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.maven.plugin.model;
+package com.alipay.sofa.logging.biz1;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.maven.model.Dependency;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * @author CodeNoobKing
- * @date 2024/2/6
- */
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@Builder
-public class MavenDependencyAdapterMapping {
-    /**
-     * 匹配用户的以来。
-     */
-    private MavenDependencyMatcher matcher;
+@SpringBootApplication
+public class Biz1Application {
+    private static Logger LOGGER = LoggerFactory.getLogger(Biz1Application.class);
 
-    /**
-     * 适配的依赖。
-     */
-    private Dependency             adapter;
+    public static void main(String[] args) {
+        SpringApplication.run(Biz1Application.class, args);
+
+        LOGGER.info("BaseApplication start!");
+        LOGGER.info("Spring Boot Version: "
+                    + SpringApplication.class.getPackage().getImplementationVersion());
+        LOGGER.info("BaseApplication classLoader: " + Biz1Application.class.getClassLoader());
+    }
+
 }

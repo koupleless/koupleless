@@ -1,12 +1,12 @@
 adapterMappings:
   - matcher:
-      regexp: ".*com\.ctrip\.framework\.apollo:apollo-client.*"
+      regexp: ".*com\\.ctrip\\.framework\\.apollo:apollo-client.*"
     adapter:
       groupId: com.alipay.sofa.koupleless
       artifactId: koupleless-adapter-apollo
       version: 0.5.7-SNAPSHOT
   - matcher:
-      regexp: ".*(com\.alibaba:dubbo-dependencies-bom:2\.6|com\.alibaba:dubbo:2\.6).*"
+      regexp: ".*(com\\.alibaba:dubbo-dependencies-bom:2\\.6|com\\.alibaba:dubbo:2\\.6).*"
     adapter:
       groupId: com.alipay.sofa.koupleless
       artifactId: koupleless-adapter-dubbo2.6

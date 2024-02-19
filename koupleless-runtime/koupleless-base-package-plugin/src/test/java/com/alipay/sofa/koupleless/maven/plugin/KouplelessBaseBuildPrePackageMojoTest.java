@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.sofa.koupleless.maven.plugin;
 
 import com.alipay.sofa.koupleless.maven.plugin.model.KouplelessAdapterConfig;
@@ -39,16 +55,16 @@ public class KouplelessBaseBuildPrePackageMojoTest {
     private KouplelessBaseBuildPrePackageMojo mojo;
 
     // create a tmp directory using os tmp
-    private File outputDirectory = null;
+    private File                              outputDirectory = null;
 
     @Mock
-    MavenProject project;
+    MavenProject                              project;
 
     @Mock
-    MavenSession session;
+    MavenSession                              session;
 
     @Mock
-    RepositorySystem repositorySystem;
+    RepositorySystem                          repositorySystem;
 
     @Test
     public void testLazyInitKouplelessAdapterConfig() throws Exception {
@@ -61,26 +77,14 @@ public class KouplelessBaseBuildPrePackageMojoTest {
         commonDependencies.add(mockDependency);
 
         List<MavenDependencyAdapterMapping> mappings = new ArrayList<>();
-        mappings.add(MavenDependencyAdapterMapping
-                .builder()
-                .adapter(mockDependency)
-                .matcher(MavenDependencyMatcher
-                        .builder()
-                        .regexp(".*")
-                        .build())
-                .build());
+        mappings.add(MavenDependencyAdapterMapping.builder().adapter(mockDependency)
+            .matcher(MavenDependencyMatcher.builder().regexp(".*").build()).build());
 
         mojo.initKouplelessAdapterConfig();
-        KouplelessAdapterConfig expected = KouplelessAdapterConfig
-                .builder()
-                .commonDependencies(commonDependencies)
-                .adapterMappings(mappings)
-                .build();
+        KouplelessAdapterConfig expected = KouplelessAdapterConfig.builder()
+            .commonDependencies(commonDependencies).adapterMappings(mappings).build();
 
-        Assert.assertEquals(
-                expected.toString(),
-                mojo.kouplelessAdapterConfig.toString()
-        );
+        Assert.assertEquals(expected.toString(), mojo.kouplelessAdapterConfig.toString());
     }
 
     @Test
@@ -96,20 +100,11 @@ public class KouplelessBaseBuildPrePackageMojoTest {
             commonDependencies.add(mockDependency);
 
             List<MavenDependencyAdapterMapping> mappings = new ArrayList<>();
-            mappings.add(MavenDependencyAdapterMapping
-                    .builder()
-                    .adapter(mockDependency)
-                    .matcher(MavenDependencyMatcher
-                            .builder()
-                            .regexp(".*A:B:C.*")
-                            .build())
-                    .build());
+            mappings.add(MavenDependencyAdapterMapping.builder().adapter(mockDependency)
+                .matcher(MavenDependencyMatcher.builder().regexp(".*A:B:C.*").build()).build());
 
-            mojo.kouplelessAdapterConfig = KouplelessAdapterConfig
-                    .builder()
-                    .commonDependencies(commonDependencies)
-                    .adapterMappings(mappings)
-                    .build();
+            mojo.kouplelessAdapterConfig = KouplelessAdapterConfig.builder()
+                .commonDependencies(commonDependencies).adapterMappings(mappings).build();
         }
 
         {
@@ -121,9 +116,7 @@ public class KouplelessBaseBuildPrePackageMojoTest {
             mockDependency.setVersion("C");
             dependencies.add(mockDependency);
 
-            doReturn(dependencies)
-                    .when(project)
-                    .getDependencies();
+            doReturn(dependencies).when(project).getDependencies();
         }
 
         {
@@ -132,15 +125,9 @@ public class KouplelessBaseBuildPrePackageMojoTest {
             Artifact mockArtifact = mock(Artifact.class);
             mockArtifactResult.setArtifact(mockArtifact);
 
-            URL demoJarUrl = getClass()
-                    .getClassLoader()
-                    .getResource("demo.jar");
-            doReturn(new File(demoJarUrl.toURI()))
-                    .when(mockArtifact)
-                    .getFile();
-            doReturn(mockArtifactResult)
-                    .when(repositorySystem)
-                    .resolveArtifact(any(), any());
+            URL demoJarUrl = getClass().getClassLoader().getResource("demo.jar");
+            doReturn(new File(demoJarUrl.toURI())).when(mockArtifact).getFile();
+            doReturn(mockArtifactResult).when(repositorySystem).resolveArtifact(any(), any());
         }
 
         {
@@ -151,15 +138,9 @@ public class KouplelessBaseBuildPrePackageMojoTest {
         mojo.execute();
 
         {
-            Assert.assertTrue(
-                    Paths.get(mojo.outputDirectory.getAbsolutePath(),
-                                    "classes",
-                                    "com",
-                                    "example",
-                                    "demo")
-                            .toFile()
-                            .exists()
-            );
+            Assert.assertTrue(Paths
+                .get(mojo.outputDirectory.getAbsolutePath(), "classes", "com", "example", "demo")
+                .toFile().exists());
         }
     }
 
