@@ -1,6 +1,7 @@
 package com.alipay.sofa.koupleless.maven.plugin.model;
 
 import lombok.*;
+import org.apache.maven.model.Dependency;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class KouplelessAdapterConfig {
     /**
      * 存在一些通用的依赖，需要用户引入。
      */
-    List<MavenDependency> commonDependencies;
+    List<Dependency> commonDependencies;
 
     /**
      * 适配的依赖。

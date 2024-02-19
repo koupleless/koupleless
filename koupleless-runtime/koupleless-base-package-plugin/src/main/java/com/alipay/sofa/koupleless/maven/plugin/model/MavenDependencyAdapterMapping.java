@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.maven.model.Dependency;
 
 /**
  * @author CodeNoobKing
@@ -22,5 +23,5 @@ public class MavenDependencyAdapterMapping {
     /**
      * 适配的依赖。
      */
-    private MavenDependency adapter;
+    private Dependency adapter;
 }
