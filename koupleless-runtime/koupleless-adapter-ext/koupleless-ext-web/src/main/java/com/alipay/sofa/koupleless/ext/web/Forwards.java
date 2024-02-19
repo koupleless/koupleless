@@ -24,9 +24,12 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Forwards {
-    public static final String       ROOT_PATH = "/";
+    public static final String       ROOT_PATH      = "/";
 
-    private static final String      SEPARATOR = "/";
+    private static final String      PATH_SEPARATOR = "/";
+
+    private static final String      HOST_SEPARATOR = ".";
+
     private List<ForwardItem>        items;
     private Map<String, ForwardItem> contextPathMap;
 
@@ -42,11 +45,14 @@ public class Forwards {
 
     private ForwardItem doGetForwardItem(String host, String path) {
         for (ForwardItem item : items) {
+            //host完全相同，规则没有限制host，host以$form + "." 开头，均视为域名匹配
             boolean matchHost = !StringUtils.hasLength(item.getHost())
-                                || host.startsWith(item.getHost());
+                                || Objects.equals(item.getHost(), host)
+                                || host.startsWith(item.getHost() + HOST_SEPARATOR);
+            //path完全相同，规则没有限制path，host以$form + "/" 开头，均视为路径匹配
             boolean matchPath = Objects.equals(path, item.getFrom())
                                 || Objects.equals(ROOT_PATH, item.getFrom())
-                                || path.startsWith(item.getFrom() + SEPARATOR);
+                                || path.startsWith(item.getFrom() + PATH_SEPARATOR);
             if (matchHost && matchPath) {
                 return item;
             }
