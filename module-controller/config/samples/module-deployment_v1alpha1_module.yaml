@@ -1,4 +1,4 @@
-apiVersion: serverless.alipay.com/v1alpha1
+apiVersion: koupleless.io/v1alpha1
 kind: Module
 metadata:
   labels:

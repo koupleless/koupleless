@@ -19,8 +19,8 @@ package root
 
 import (
 	"fmt"
+	"github.com/koupleless/arkctl/common/contextutil"
 	"os"
-	"serverless.alipay.com/sofa-serverless/arkctl/common/contextutil"
 
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"

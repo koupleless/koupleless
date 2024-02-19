@@ -4,13 +4,13 @@ run-name: ${{ github.actor }} pushed module-controller code
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'module-controller/**'
 
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - 'module-controller/**'
 
@@ -78,10 +78,10 @@ jobs:
 
       - name: Prepare development env
         run: |
-          kubectl apply -f config/crd/bases/serverless.alipay.com_moduledeployments.yaml
-          kubectl apply -f config/crd/bases/serverless.alipay.com_modulereplicasets.yaml
-          kubectl apply -f config/crd/bases/serverless.alipay.com_modules.yaml
-          kubectl apply -f config/crd/bases/serverless.alipay.com_moduletemplates.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_moduledeployments.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_modulereplicasets.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_modules.yaml
+          kubectl apply -f config/crd/bases/koupleless.io_moduletemplates.yaml
           kubectl apply -f config/rbac/role.yaml
           kubectl apply -f config/rbac/role_binding.yaml
           kubectl apply -f config/rbac/service_account.yaml
@@ -291,7 +291,7 @@ jobs:
       - name: random delete module then wait module available and delete base pod clean logs
         run: |
           resource_name=$(kubectl get module -o name | sort -R | head -n 1)
-          base_instance_name=$(kubectl get $resource_name -o jsonpath='{.metadata.labels.serverless\.alipay\.com/base-instance-name}')
+          base_instance_name=$(kubectl get $resource_name -o jsonpath='{.metadata.labels.koupleless\.io/base-instance-name}')
           echo "要删除的资源名称: $resource_name"
           echo "base-instance-name 的值: $base_instance_name"
           kubectl delete $resource_name
@@ -436,7 +436,7 @@ jobs:
       - name: random delete pod
         run: |
           resource_name=$(kubectl get module -o name | sort -R | head -n 1)
-          base_instance_name=$(kubectl get $resource_name -o jsonpath='{.metadata.labels.serverless\.alipay\.com/base-instance-name}')
+          base_instance_name=$(kubectl get $resource_name -o jsonpath='{.metadata.labels.koupleless\.io/base-instance-name}')
           echo "要删除的资源名称: $resource_name"
           echo "base-instance-name 的值: $base_instance_name"
           

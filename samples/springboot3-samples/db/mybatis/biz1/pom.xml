@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.alipay.sofa</groupId>
-        <artifactId>springboot-samples</artifactId>
+        <artifactId>springboot3-samples</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
@@ -54,29 +54,12 @@
             <scope>test</scope>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.alipay.sofa.koupleless</groupId>-->
-<!--            <artifactId>koupleless-app-starter</artifactId>-->
-<!--            <version>${sofa.serverless.runtime.version}</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.kafka</groupId>-->
-<!--            <artifactId>spring-kafka</artifactId>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.alipay.sofa.koupleless</groupId>
-            <artifactId>koupleless-adapter-log4j2</artifactId>
-            <version>${sofa.serverless.runtime.version}</version>
+            <artifactId>koupleless-app-starter</artifactId>
+            <version>${koupleless.runtime.version}</version>
             <scope>provided</scope>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-actuator-autoconfigure</artifactId>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
     </dependencies>
 
     <build>

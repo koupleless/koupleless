@@ -1,6 +1,7 @@
 ---
 title: log4j2 的多模块化适配
-date: 2023-10-10T20:32:35+08:00
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless log4j2 的多模块化适配
 weight: 1
 ---
 
@@ -60,5 +61,5 @@ weight: 1
    b. 日志配置时，只能使用 ctx:xxx:xxx 的配置方式
 
 ## 模块改造方式
-[详细查看源码](https://github.com/koupleless/koupleless/tree/master/koupleless-runtime/koupleless-adapter-ext/koupleless-adapter-log4j2/src/main/java/com/alipay/sofa/koupleless/log4j2)
+[详细查看源码](https://github.com/koupleless/koupleless/blob/main/koupleless-runtime/koupleless-adapter-ext/koupleless-adapter-log4j2/src/main/java/org/springframework/boot/logging/log4j2)
 

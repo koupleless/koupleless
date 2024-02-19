@@ -1,5 +1,7 @@
 ---
 title: SpringBoot 或 SOFABoot 一键升级为模块
+date: 2024-01-25T10:28:32+08:00
+description: SpringBoot 或 SOFABoot 一键升级为 Koupleless 模块
 weight: 100
 ---
 
@@ -22,6 +24,14 @@ spring.application.name = ${替换为实际模块应用名}
 
 **特别注意**： sofa ark 插件定义顺序必须在 springboot 打包插件前;
 ```xml
+<!-- 模块需要引入的依赖，主要用户跨模块间通信 --> 
+<dependencies>
+    <dependency>
+        <groupId>com.alipay.sofa.koupleless</groupId>
+        <artifactId>koupleless-app-starter</artifactId>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
 
 <plugins>
     <!--这里添加ark 打包插件-->
@@ -111,4 +121,4 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
 ```
 ### 验证能独立启动
 
-普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。通过自动瘦身改造的模块，也可以在 `target/boot` 目录下直接通过 springboot jar 包启动，[点击此处](https://github.com/koupleless/koupleless/blob/module-slimming/samples/springboot-samples/slimming )查看详情。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
+普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。通过自动瘦身改造的模块，也可以在 `target/boot` 目录下直接通过 springboot jar 包启动，[点击此处](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/slimming)查看详情。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)

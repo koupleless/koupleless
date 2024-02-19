@@ -11,10 +11,6 @@
 
 	<artifactId>dubbo27biz2</artifactId>
 
-	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
-	</properties>
 	<dependencies>
 
 		<dependency>
@@ -34,6 +30,18 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa.koupleless</groupId>
+			<artifactId>koupleless-adapter-log4j2</artifactId>
+			<version>${koupleless.runtime.version}</version>
+			<scope>provided</scope>
+		</dependency>
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-adapter-dubbo2.7</artifactId>
+            <version>${koupleless.runtime.version}</version>
+            <scope>provided</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>

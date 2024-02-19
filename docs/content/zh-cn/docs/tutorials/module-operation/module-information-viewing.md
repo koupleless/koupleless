@@ -1,6 +1,7 @@
 ---
 title: 模块信息查看
-date: 2023-11-02T09:51:23+08:00
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless 模块信息查看
 weight: 800
 ---
 

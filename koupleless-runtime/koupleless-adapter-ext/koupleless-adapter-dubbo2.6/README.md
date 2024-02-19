@@ -1,28 +1,27 @@
-# dubbo 2.6.x support
-# 实际使用
-由于目前将Dubbo放入基座 而基座的class目前无法直接增强
-针对当前2.6版本支持需要覆盖对应的dubbo class
-因此需要将对应的class复制到classpath中 一般都是按照原封不动的包名放入base模块 确保类加载器优先加载到我们的class从而增强dubbo2.6支持多classLoader
+<div align="center">
 
-# 背景
-目前我们将Dubbo放入到base基座之后 我们与此同时将biz中的dubbo组件去除
-但是我们发现Dubbo的ExtensionLoader目前是静态类
-其初次加载就已经稳定 这样无法根据classloader不同去不同的biz模块进行加载
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+# dubbo 2.6.x support
+
+## Problem Description
+
+
+After we have integrated Dubbo into the base platform, we simultaneously removed the Dubbo components from the biz module. However, we noticed that Dubbo's ExtensionLoader is a static class, which gets loaded once and then remains stable. This prevents it from loading different biz modules according to different classloaders.
 
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698218715966-4e510ce8-4031-4b0e-b5c6-293c4dcfe140.png#averageHue=%230f0f0f&clientId=u8bee2931-a7cd-4&from=paste&height=684&id=uc16f2576&originHeight=684&originWidth=1495&originalType=binary&ratio=1&rotation=0&showTitle=false&size=218206&status=done&style=none&taskId=u0b300a31-daab-4212-8ea9-85f4e5d34f0&title=&width=1495)
 
-从而导致启动新biz的时候出现报错
+This results in an error when starting a new biz.
 
-# 思路
-考虑扩充ExtensionLoader当前版本支持不同classloader
-这样可以根据ExtensionClassLoader使用不同的BizClassLoader而去重新加载对应资源
-# 改造
+## Problem solution
+Consider expanding the current version of the ExtensionLoader to support different classloaders. This way, the ExtensionClassLoader can use different BizClassLoaders to reload the corresponding resources.
 
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698218819626-c5a93c93-3b11-4e7f-a311-87655e085757.png#averageHue=%23646438&clientId=u8bee2931-a7cd-4&from=paste&height=506&id=uf0cd09e8&originHeight=506&originWidth=1422&originalType=binary&ratio=1&rotation=0&showTitle=false&size=171265&status=done&style=none&taskId=u935dc20e-8e5a-4de6-9c8e-dd6aec82457&title=&width=1422)
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698218841564-f45a7168-ad17-4f19-b765-7b1b67cf93ee.png#averageHue=%2373633d&clientId=u8bee2931-a7cd-4&from=paste&height=551&id=u9b971db3&originHeight=551&originWidth=1651&originalType=binary&ratio=1&rotation=0&showTitle=false&size=226591&status=done&style=none&taskId=u3dfd5b70-fe18-4dfd-bed8-0f1115c2937&title=&width=1651)
 
-此时由于biz加载的时候会设置对应的Thread的ContextClassLoader
-继而可以触发对应的SPI加载
+At this time, because the corresponding Thread's ContextClassLoader is set when the biz is loaded, this can in turn trigger the corresponding SPI loading.
 
 ```
 package com.alibaba.dubbo.common.extension;
@@ -972,8 +971,8 @@ public class ExtensionLoader<T> {
 ```
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698218917861-37b9d42d-b9f8-47df-9046-7edb34c62bc8.png#averageHue=%233b3f42&clientId=u8bee2931-a7cd-4&from=paste&height=425&id=ud6a171c1&originHeight=425&originWidth=508&originalType=binary&ratio=1&rotation=0&showTitle=false&size=42315&status=done&style=none&taskId=u3a538066-041e-4225-b8f3-c4f9002f3b3&title=&width=508)
 
-dubbo版本2.6.4
-dubbo多biz加载后启动出现一些classloader导致的ClassNotFoundException
+dubbo version 2.6.4
+After loading multiple biz modules in Dubbo, some ClassNotFoundExceptions occurred due to classloader issues during startup.
 
 ```
 2023-10-24 13:38:34,627 [WARN] [NettyServerWorker-9-9] c.a.d.r.p.d.DecodeableRpcInvocation:? []  [DUBBO] Decode argument failed: com.f6car.merchant.so.org.TgOrgGroupMemberSo, dubbo version: 2.6.12, current host: 172.27.121.46
@@ -1007,11 +1006,7 @@ java.lang.ClassNotFoundException: com.f6car.merchant.so.org.TgOrgGroupMemberSo
 
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698398961430-bb632e4e-d008-4cc4-a4dc-95a634a8ab9b.png#averageHue=%23e6e6e6&clientId=u9afc399f-ea80-4&from=paste&height=417&id=u6286cb3e&originHeight=417&originWidth=866&originalType=binary&ratio=1&rotation=0&showTitle=false&size=118101&status=done&style=none&taskId=u07169dd2-776b-43fb-b490-8098407824c&title=&width=866)
 
-可以看到这个明显是base的classLoader
-那么为何dubbo暴露了端口之后进行正反序列化的时候直接使用当前的classLoader呢？
-针对正常非biz隔离的场景是OK的
-针对biz存在隔离的case 除非反序列化场景时使用了独立的bizClassLoader
-但是问题是我如何知道当前场景下是应该调用哪一个biz呢？？？
+It is clear that this is the base's classLoader. So why does Dubbo directly use the current classLoader for serialization and deserialization after exposing the port? This is fine for normal, non-biz isolated scenarios. For cases where there is biz isolation, unless an independent bizClassLoader is used during deserialization, the issue is how do I know which biz should be called in the current scenario???
 
 ```java
 @Override
@@ -1085,16 +1080,11 @@ public Object decode(Channel channel, InputStream input) throws IOException {
 
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698399359953-e9745f87-c4cb-4e46-aa79-8ba355aec69f.png#averageHue=%232f2f2e&clientId=u9afc399f-ea80-4&from=paste&height=324&id=uc443f7ac&originHeight=324&originWidth=1226&originalType=binary&ratio=1&rotation=0&showTitle=false&size=64184&status=done&style=none&taskId=u958d86b2-04e1-4409-a75c-9b2158d31e6&title=&width=1226)
 
-也就是在这块需要根据相关的Path自动要解析出对应的Biz 然后根据不同的biz的classLoader进行解析【因此最好在注册rpc的时候记录相关bizClassLoader的关系 后续可以反向使用】
-为了规避此问题目前将dubbo放入biz来进行规避
-不同dubbo的biz会出现端口冲突问题 指定dubbo端口为-1即可
+This means, it is necessary to automatically resolve the corresponding Biz based on the relevant Path and then perform parsing using the classLoader of different biz **thus, it is best to record the relationship with the related bizClassLoader when registering RPCs, which can later be used in reverse**. To avoid this problem, Dubbo is currently placed inside the biz. Different Dubbo biz may encounter port conflicts, so setting the Dubbo port to -1 will resolve this issue.
 
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1698399510036-576be94b-6931-4abb-bfcc-f366931b458e.png#averageHue=%23302f2f&clientId=ua7a818cb-964d-4&from=paste&height=373&id=u6ec02f46&originHeight=373&originWidth=1304&originalType=binary&ratio=1&rotation=0&showTitle=false&size=98371&status=done&style=none&taskId=uce2b5b3e-742a-4538-8d96-fbb20342baa&title=&width=1304)
 
-
-
-多biz支持后 由于Spring的上下文会绑定到支持Dubbo的SPI的注入
-因此不同biz的容器务必隔离 避免出现bean泄露
+After supporting multiple biz, due to the Spring context being bound to the injection supported by Dubbo's SPI, it is essential to isolate the containers of different biz to prevent bean leakage.
 
 ```java
 /*
@@ -1218,10 +1208,6 @@ dubbo放入base之后dubbo 由于一部分代码是static执行的 导致部分�
 
 
 ```java
-/*
- * Ant Group
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
 package com.alibaba.dubbo.demo.provider;
 
 import java.io.IOException;
@@ -1354,21 +1340,18 @@ public class ClassLoaderJavaSerialization extends JavaSerialization {
 }
 ```
 
-我们发现为了使该方案生效 我们必须修改Java序列化
-同时其他不支持多模块的dubbo仍然保持Java的名称 而不是新建新的SPI扩展
-经过研究验证确认我们发现
+We found that in order to make this solution works well, we must modify Java serialization. Meanwhile, other Dubbos that do not support multiple modules still retain the name of Java instead of creating a new SPI extension. After research and validation, we have discovered that
 
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699262773133-6db151d9-abc0-4c61-b4fb-7d1b48a70722.png#averageHue=%23636a61&clientId=u9cade2e4-accb-4&from=paste&height=674&id=u0859502a&originHeight=674&originWidth=1120&originalType=binary&ratio=1&rotation=0&showTitle=false&size=320040&status=done&style=none&taskId=u7354dcef-1b23-4559-83f6-ce08a2c6330&title=&width=1120)
 
-原来url中携带的信息和具体的invocation可能是不匹配的
-究其原因是dubbo会作成dubbo的链接有2类，第一类是共享连接。consumer&每一个provider实例有一个多服务共享的连接。第二类是独享连接，consumer&每一个provider实例的每一个暴露的服务有独立的链接。
-因此我们需要的是要在invocation中获取到对应的path
+The information carried in the original URL may not match the specific invocation. The reason is that Dubbo has two types of connections. The first type is a shared connection where there is one multi-service shared connection between the consumer and each provider instance. The second type is an exclusive connection where there is an independent connection for each service exposed by each provider instance to the consumer.
+Therefore, what we need is to get the corresponding path in the invocation.
 
-因此我们需要复写DecodeableRpcInvocation
+Therefore, we need to overwrite DecodeableRpcInvocation.
 
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699263362261-24276699-018e-4fe8-8dae-473064b1ef8c.png#averageHue=%2326272a&clientId=u9cade2e4-accb-4&from=paste&height=597&id=ueea820e0&originHeight=597&originWidth=1315&originalType=binary&ratio=1&rotation=0&showTitle=false&size=191220&status=done&style=none&taskId=u9e8da21b-5ced-4187-9dde-5e2ab6113eb&title=&width=1315)
 
-这里有个额外需要注意的点是
+Here is an additional point that needs attention.
 
 ```java
 package com.alibaba.dubbo.common.serialize.java;
@@ -1443,4 +1426,4 @@ public class ClassLoaderJavaObjectInput extends NativeJavaObjectInput {
 
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699263409159-4bc365de-877f-429c-8a81-123d23328a36.png#averageHue=%23202124&clientId=u9cade2e4-accb-4&from=paste&height=161&id=u2ddc141f&originHeight=161&originWidth=1051&originalType=binary&ratio=1&rotation=0&showTitle=false&size=30124&status=done&style=none&taskId=ud5663a6e-def8-4ac0-9d9d-0e3bc8d2f63&title=&width=1051)![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699263420045-b82eded9-7d1a-4757-a6f3-ffb48ed282e9.png#averageHue=%231f2124&clientId=u9cade2e4-accb-4&from=paste&height=296&id=ud1663c18&originHeight=296&originWidth=817&originalType=binary&ratio=1&rotation=0&showTitle=false&size=53230&status=done&style=none&taskId=u6b26ebe9-3404-491f-b7b8-8d2b93e8845&title=&width=817)
 
-注意基类同时支持inputStream和ObjectInPutStream 如果不强行转换会走到错误的构造函数 从而导致流被破坏
+Note that the base class supports both inputStream and ObjectInputStream. If you don't forcefully convert, it will go to the wrong constructor, which will lead to the destruction of the stream.

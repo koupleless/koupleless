@@ -1,6 +1,7 @@
 ---
 title: ehcache 的多模块化最佳实践
-date: 2023-10-10T20:32:35+08:00
+date: 2024-01-25T10:28:32+08:00
+description: Koupleless ehcache 的多模块化最佳实践
 weight: 2
 ---
 

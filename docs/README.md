@@ -1,11 +1,17 @@
-## 安装依赖组件：
+<div align="center">
+
+English | [简体中文](./README-zh_CN.md)
+
+</div>
+
+## Install dependencies:
 
 
 - [node](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/get-npm)
 - [hugo](https://github.com/gohugoio/hugo/releases).
 
-## 安装 postCSS
+## Install postCSS
 ``
 npm install -D autoprefixer
 npm install -D postcss-cli
@@ -13,9 +19,9 @@ npm install -D postcss-cli
 npm install -D postcss
 ``
 
-## 启动站点
+## Start the site
 ```shell
 npm install
 hugo server
 ```
-## 打开 localhost:1313 访问
+## Open localhost:1313 to visit
