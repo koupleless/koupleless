@@ -14,15 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.base.forward;
+package com.alipay.sofa.koupleless.ext.web;
 
-import lombok.Data;
+import org.apache.catalina.Context;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import java.util.Set;
-
-@Data
-public class Forward {
-    private String           contextPath;
-    private Set<String>      hosts;
-    private Set<ForwardPath> paths;
+@Configuration
+public class CrossContextConfiguration {
+    @Bean
+    @ConditionalOnClass(Context.class)
+    @ConditionalOnBean(TomcatServletWebServerFactory.class)
+    public TomcatContextCustomizer tomcatCrossContextCustomizer() {
+        return ctx -> ctx.setCrossContext(true);
+    }
 }

@@ -17,6 +17,7 @@
         <module>koupleless-adapter-apollo</module>
         <module>koupleless-adapter-dubbo2.6</module>
         <module>koupleless-adapter-dubbo2.7</module>
+        <module>koupleless-ext-web</module>
     </modules>
 
 <!--    <build>-->

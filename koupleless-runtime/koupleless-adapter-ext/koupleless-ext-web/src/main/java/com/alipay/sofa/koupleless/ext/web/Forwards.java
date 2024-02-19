@@ -14,21 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.base.forward;
+package com.alipay.sofa.koupleless.ext.web;
 
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Forwards {
-    public static final String             ROOT_PATH      = "/";
-    private final List<ForwardItem>        items;
-    private final Map<String, ForwardItem> contextPathMap = new ConcurrentHashMap<>();
+    public static final String       ROOT_PATH = "/";
 
-    public Forwards(List<ForwardItem> items) {
+    private static final String      SEPARATOR = "/";
+    private List<ForwardItem>        items;
+    private Map<String, ForwardItem> contextPathMap;
+
+    public void setItems(List<ForwardItem> items) {
         this.items = items;
+        this.contextPathMap = new ConcurrentHashMap<>();
     }
 
     public ForwardItem getForwardItem(String host, String path) {
@@ -40,7 +44,9 @@ public class Forwards {
         for (ForwardItem item : items) {
             boolean matchHost = !StringUtils.hasLength(item.getHost())
                                 || host.startsWith(item.getHost());
-            boolean matchPath = path.startsWith(item.getFrom());
+            boolean matchPath = Objects.equals(path, item.getFrom())
+                                || Objects.equals(ROOT_PATH, item.getFrom())
+                                || path.startsWith(item.getFrom() + SEPARATOR);
             if (matchHost && matchPath) {
                 return item;
             }

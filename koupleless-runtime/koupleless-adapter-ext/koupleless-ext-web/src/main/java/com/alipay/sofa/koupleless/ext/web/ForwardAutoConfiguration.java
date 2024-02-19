@@ -14,12 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.base.forward;
+package com.alipay.sofa.koupleless.ext.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -37,7 +36,7 @@ import java.util.List;
 import java.util.Set;
 
 @ConditionalOnProperty(name = "koupleless.forward.conf.path")
-@ComponentScan(basePackages = "com.alipay.sofa.koupleless.base.forward")
+@ComponentScan(basePackages = "com.alipay.sofa.koupleless.ext.web")
 public class ForwardAutoConfiguration implements ApplicationContextAware {
     private ApplicationContext  applicationContext;
 
@@ -49,17 +48,15 @@ public class ForwardAutoConfiguration implements ApplicationContextAware {
     private String              confPath;
 
     @Bean
-    public Forwards forwards(ForwardItemComparator forwardItemComparator) throws IOException {
+    public Forwards forwards() throws IOException {
+        //load conf
         List<Forward> forwards = fromYaml();
         List<ForwardItem> items = toForwardItems(forwards);
-        items.sort(forwardItemComparator);
-        return new Forwards(items);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(ForwardItemComparator.class)
-    public ForwardItemComparator forwardItemComparator() {
-        return DefaultForwardItemComparator.getInstance();
+        items.sort(ForwardItemComparator.getInstance());
+        //make forwards bean and set conf
+        Forwards bean = new Forwards();
+        bean.setItems(items);
+        return bean;
     }
 
     private List<ForwardItem> toForwardItems(List<Forward> forwards) {
@@ -105,11 +102,9 @@ public class ForwardAutoConfiguration implements ApplicationContextAware {
             }
         }
         List<ForwardItem> items = new LinkedList<>();
-        int index = startIndex;
         for (String host : hosts) {
             for (ForwardPath path : paths) {
-                ForwardItem item = new ForwardItem(index++, contextPath, host, path.getFrom(),
-                    path.getTo());
+                ForwardItem item = new ForwardItem(contextPath, host, path.getFrom(), path.getTo());
                 items.add(item);
             }
         }

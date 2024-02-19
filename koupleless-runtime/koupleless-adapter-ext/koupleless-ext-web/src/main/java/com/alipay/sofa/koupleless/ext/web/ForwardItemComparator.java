@@ -14,21 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.base.forward;
+package com.alipay.sofa.koupleless.ext.web;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
+import java.util.Comparator;
+
 /**
  * Compares the priorities of two ForwardItem objects.
  */
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DefaultForwardItemComparator implements ForwardItemComparator {
+public class ForwardItemComparator implements Comparator<ForwardItem> {
     @Getter
-    private static final ForwardItemComparator instance = new DefaultForwardItemComparator();
+    private static final Comparator<ForwardItem> instance = new ForwardItemComparator();
 
     /**
      * Compares the priorities of two ForwardItem objects.

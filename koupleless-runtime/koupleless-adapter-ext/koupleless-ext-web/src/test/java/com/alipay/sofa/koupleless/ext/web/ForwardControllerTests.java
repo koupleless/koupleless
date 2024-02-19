@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.base.forward;
+package com.alipay.sofa.koupleless.ext.web;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -53,7 +53,7 @@ public class ForwardControllerTests {
         field.set(configuration, confPath);
         Mockito.when(applicationContext.getResources(Mockito.anyString())).thenReturn(
             new Resource[] { new ClassPathResource("forwards.yaml") });
-        Forwards forwards = configuration.forwards(DefaultForwardItemComparator.getInstance());
+        Forwards forwards = configuration.forwards();
         field = ForwardController.class.getDeclaredField("forwards");
         field.setAccessible(true);
         field.set(controller, forwards);

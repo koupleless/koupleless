@@ -14,29 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.base.forward;
+package com.alipay.sofa.koupleless.ext.web;
 
-import lombok.Getter;
+import lombok.Data;
 
-public class ForwardItem {
+import java.util.Set;
 
-    @Getter
-    private final int    index;
-    @Getter
-    private final String contextPath;
-    @Getter
-    private final String host;
-    @Getter
-    private final String from;
-
-    @Getter
-    private final String to;
-
-    public ForwardItem(int index, String contextPath, String host, String from, String to) {
-        this.index = index;
-        this.contextPath = contextPath;
-        this.host = host;
-        this.from = from;
-        this.to = to;
-    }
+@Data
+public class Forward {
+    private String           contextPath;
+    private Set<String>      hosts;
+    private Set<ForwardPath> paths;
 }
