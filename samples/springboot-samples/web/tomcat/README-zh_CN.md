@@ -22,14 +22,14 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 <!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom, 
     原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 <dependency>
-   <groupId>com.alipay.sofa.koupleless</groupId>
-   <artifactId>koupleless-base-starter</artifactId>
-   <version>${koupleless.runtime.version}</version>
-   <type>pom</type>
+    <groupId>com.alipay.sofa.koupleless</groupId>
+    <artifactId>koupleless-base-starter</artifactId>
+    <version>${koupleless.runtime.version}</version>
+    <type>pom</type>
 </dependency>
-<!-- end 动态模块相关依赖 -->
+        <!-- end 动态模块相关依赖 -->
 
-<!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
+        <!-- 这里添加 tomcat 单 host 模式部署多web应用的依赖 -->
 <dependency>
 <groupId>com.alipay.sofa</groupId>
 <artifactId>web-ark-plugin</artifactId>
@@ -39,7 +39,8 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 
 ## biz
 
-biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar 包，打包插件配置如下：
+biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修改打包插件方式为 sofaArk biz 模块打包方式，打包为 ark biz jar
+包，打包插件配置如下：
 
 ```xml
 <!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
@@ -67,6 +68,73 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 ```
 
 注意这里将不同 biz 的web context path 修改成不同的值，以此才能成功在一个 tomcat host 里安装多个 web 应用。
+
+## forward
+
+非k8s部署的情况下，尤其是在针对存量应用改造的时候，各业务模块，可能没有预留contextPath。
+
+此时，请求打到基座应用，需要进行forward。
+
+首先，在application.properties文件中，配置forward文件的路径，如：
+
+```properties
+koupleless.forward.conf.path=classpath:koupleless-forward.yaml
+```
+
+然后在resources下的koupleless-forward.yaml中，配置forward规则即可。
+
+文件中，配置的是forward规则的list，单条forward规则数据结构如下：
+
+| 字段名                  | 字段类型   | 默认值 | 说明                     |
+|----------------------|--------|-----|------------------------|
+| contextPath          | string | 否   | biz module的contextPath |
+| hosts                | array  | 可   | 域名前缀，为空表示不限制域名         |
+| paths                | array  | 可   | 路径前缀，为空表示不限制路径         |
+| &nbsp;&nbsp; └─ from | string | 否   | 原请求路径前缀                |
+| &nbsp;&nbsp; └─ to   | string | 否   | 目标路径前缀                 |
+
+示例如下：
+
+```yaml
+#a.xxx b.xxx c.xxx域名的请求，路由到biz1
+- contextPath: biz1
+  hosts:
+    - a
+    - b
+    - c
+# /idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**
+- contextPath: biz2
+  paths:
+    - from: /idx2
+      to: /
+    - from: /t2
+      to: /timestamp
+# /idx1/** -> /biz1/**, /t1/** -> /biz1/timestamp/**
+- contextPath: biz1
+  paths:
+    - from: /idx1
+      to: /
+    - from: /t1
+      to: /timestamp
+#a.xxx b.xxx c.xxx域名的请求，/idx2/** -> /biz3/**, /t2/** -> /biz3/timestamp/**    
+- contextPath: biz3
+  hosts:
+    - a
+    - b
+    - c
+  paths:
+    - from: /idx2
+      to: /
+    - from: /t2
+      to: /timestamp
+```
+
+说明事项：
+
+1. 限制域名的规则，优先级高于未限制域名的规则
+2. 路径越长，优先级越高
+3. 路径长度相同，且都限制域名时，域名限制越长，优先级越高
+4. 域名以 `.` 为分割点，路径以 `/` 为分割点
 
 # 实验内容1: 动态部署
 
@@ -151,9 +219,9 @@ curl http://localhost:8080/order2
 
 1. cd 到 static-deploy-demo 目录下。
 2. 执行 run_static_deploy_on_unix_like.sh 脚本, 该脚本会做如下几件事情：
-   1. 构建 web/tomcat 项目。
-   2. 把 biz1 和 biz2 的构建产物移动到 ./biz 目录下。
-   3. 在基座启动时扫描该上述目录，完成静态合并部署。
+    1. 构建 web/tomcat 项目。
+    2. 把 biz1 和 biz2 的构建产物移动到 ./biz 目录下。
+    3. 在基座启动时扫描该上述目录，完成静态合并部署。
 3. 观测日志，进行验证。
 
 观测到如下关键日志，代表静态合并部署开始了：
