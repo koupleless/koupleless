@@ -85,13 +85,13 @@ koupleless.forward.conf.path=classpath:koupleless-forward.yaml
 
 文件中，配置的是forward规则的list，单条forward规则数据结构如下：
 
-| 字段名                  | 字段类型   | 默认值 | 说明                     |
-|----------------------|--------|-----|------------------------|
-| contextPath          | string | 否   | biz module的contextPath |
-| hosts                | array  | 可   | 域名前缀，为空表示不限制域名         |
-| paths                | array  | 可   | 路径前缀，为空表示不限制路径         |
-| &nbsp;&nbsp; └─ from | string | 否   | 原请求路径前缀                |
-| &nbsp;&nbsp; └─ to   | string | 否   | 目标路径前缀                 |
+| 字段名                | 字段类型   | 可否为空 | 说明                     |
+|--------------------|--------|------|------------------------|
+| contextPath        | string | 否    | biz module的contextPath |
+| hosts              | array  | 可    | 域名前缀，为空表示不限制域名         |
+| paths              | array  | 可    | 路径前缀，为空表示不限制路径         |
+| &nbsp;└─&nbsp;from | string | 否    | 原请求路径前缀                |
+| &nbsp;└─&nbsp;to   | string | 否    | 目标路径前缀                 |
 
 示例如下：
 
