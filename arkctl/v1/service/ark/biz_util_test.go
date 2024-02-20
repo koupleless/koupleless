@@ -42,6 +42,8 @@ func TestParseBizModel_LocalJar(t *testing.T) {
 	zipFilePath := filepath.Join(tmpDir, newUUID.String()+".jar")
 	defer os.Remove(zipFilePath) // Schedule removal of zip file after program execution
 
+	assert.Equal(t, isJarFile(fileutil.FileUrl(zipFilePath)), true)
+
 	// Create the zip file.
 	zipFile, err := os.Create(zipFilePath)
 	if err != nil {
@@ -65,7 +67,7 @@ func TestParseBizModel_LocalJar(t *testing.T) {
 
 	fmt.Println("Zip file created and manifest added at:", zipFilePath)
 
-	model, err := parseJarBizModel(
+	model, err := ParseBizModel(
 		context.Background(),
 		fileutil.FileUrl("file://"+zipFilePath),
 	)
