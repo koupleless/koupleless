@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.biz;
+package com.alipay.sofa.koupleless.test.suite.biz;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,11 +37,11 @@ public class SOFAArkTestBizTest {
         SOFAArkServiceContainerSingleton.init(SOFAArkTestBizTest.class.getClassLoader());
 
         List<String> testClassNames = new ArrayList<>();
-        testClassNames.add("com.alipay.sofa.koupleless.test.LoadByTestBizClassA");
-        testClassNames.add("com.alipay.sofa.koupleless.test.LoadByTestBizClassB");
+        testClassNames.add("com.alipay.sofa.koupleless.test.suite.mock.LoadByTestBizClassA");
+        testClassNames.add("com.alipay.sofa.koupleless.test.suite.mock.LoadByTestBizClassB");
         List<String> includeClassPatterns = new ArrayList<>();
 
-        testBiz = new SOFAArkTestBiz("com.alipay.sofa.koupleless.test.BootStrapClass", "test",
+        testBiz = new SOFAArkTestBiz("com.alipay.sofa.koupleless.test.suite.mock.BootStrapClass", "test",
             "1.0.0", testClassNames, includeClassPatterns,
             (URLClassLoader) SOFAArkTestBizTest.class.getClassLoader());
     }

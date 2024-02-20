@@ -1,4 +1,4 @@
-package com.alipay.sofa.koupleless.test;
+package com.alipay.sofa.koupleless.test.suite.mock;
 
 import com.alipay.sofa.ark.container.service.classloader.BizClassLoader;
 import org.junit.jupiter.api.AfterAll;

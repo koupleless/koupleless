@@ -14,42 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.model;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
+package com.alipay.sofa.koupleless.test.suite.mock;
 
 /**
  * @author CodeNoobKing
- * @date 2024/1/15
+ * @date 2024/2/20
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class CompatibleTestBizConfig {
-    /**
-     * 当前测试的名字。
-     */
-    private String name;
-
-    /**
-     * 初始化的类名。
-     */
-    private String bootstrapClass;
-
-    /**
-     * 测试的类列表。
-     */
-    private List<String> testClasses;
-
-    /**
-     * 需要被模块加载的类列表。
-     */
-    private List<String> loadByBizClassLoaderPatterns;
-
+public class LoadByTestBizClassA {
 }

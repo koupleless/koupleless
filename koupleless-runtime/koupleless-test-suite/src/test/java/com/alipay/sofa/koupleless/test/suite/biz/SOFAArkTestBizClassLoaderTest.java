@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.biz;
+package com.alipay.sofa.koupleless.test.suite.biz;
 
+import com.alipay.sofa.koupleless.test.suite.mock.LoadByBaseClass;
+import com.alipay.sofa.koupleless.test.suite.mock.LoadByTestBizClassA;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,8 +33,8 @@ import java.util.regex.Pattern;
 public class SOFAArkTestBizClassLoaderTest {
 
     private URLClassLoader baseClassLoader = new URLClassLoader(((URLClassLoader) Thread
-                                               .currentThread().getContextClassLoader()).getURLs(),
-                                               Thread.currentThread().getContextClassLoader());
+            .currentThread().getContextClassLoader()).getURLs(),
+            Thread.currentThread().getContextClassLoader());
 
     @Test
     public void testResolveLocalClass() throws Throwable {
@@ -40,24 +42,24 @@ public class SOFAArkTestBizClassLoaderTest {
 
         String bizIdentity = "bizIdentity";
         List<String> includeClassNames = new ArrayList<>();
-        includeClassNames.add("com.alipay.sofa.koupleless.test.LoadByTestBizClassA");
+        includeClassNames.add(LoadByTestBizClassA.class.getName());
         List<Pattern> includeClassPatterns = new ArrayList<>();
-        includeClassPatterns.add(Pattern.compile(".*koupleless\\.test\\.LoadByTestBizClassB.*"));
+        includeClassPatterns.add(Pattern.compile(".*mock\\.LoadByTestBizClassB.*"));
 
         SOFAArkTestBizClassLoader testBizClassLoader = new SOFAArkTestBizClassLoader(bizIdentity,
-            includeClassNames, includeClassPatterns, baseClassLoader);
+                includeClassNames, includeClassPatterns, baseClassLoader);
         Assertions.assertNull(testBizClassLoader
-            .resolveLocalClass("com.alipay.sofa.koupleless.test.LoadByBaseClass"));
+                .resolveLocalClass(LoadByBaseClass.class.getName()));
 
         Assertions.assertEquals(
-            testBizClassLoader,
-            testBizClassLoader.resolveLocalClass(
-                "com.alipay.sofa.koupleless.test.LoadByTestBizClassB").getClassLoader());
+                testBizClassLoader,
+                testBizClassLoader.resolveLocalClass(
+                        LoadByTestBizClassA.class.getName()).getClassLoader());
 
         Assertions.assertEquals(
-            testBizClassLoader,
-            testBizClassLoader.resolveLocalClass(
-                "com.alipay.sofa.koupleless.test.LoadByTestBizClassA").getClassLoader());
+                testBizClassLoader,
+                testBizClassLoader.resolveLocalClass(
+                        "com.alipay.sofa.koupleless.test.suite.mock.LoadByTestBizClassB").getClassLoader());
 
     }
 }

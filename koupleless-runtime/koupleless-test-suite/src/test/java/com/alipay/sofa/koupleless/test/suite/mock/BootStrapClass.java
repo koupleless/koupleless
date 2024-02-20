@@ -14,28 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.model;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
+package com.alipay.sofa.koupleless.test.suite.mock;
 
 /**
  * @author CodeNoobKing
  * @date 2024/2/20
  */
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class CompatibleTestConfig {
-    // testNG, junit5, junit4, etc.
-    private String                        testFramework;
-
-    // mock test biz configs
-    private List<CompatibleTestBizConfig> testBizConfigs;
+public class BootStrapClass {
+    public void bootstrapBase() {
+        System.out.println("Bootstrap base class");
+    }
 }

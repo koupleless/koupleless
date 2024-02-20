@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.biz;
+package com.alipay.sofa.koupleless.test.suite.biz;
 
 import com.alipay.sofa.ark.container.service.classloader.BizClassLoader;
 import com.alipay.sofa.ark.support.common.DelegateToMasterBizClassLoaderHook;

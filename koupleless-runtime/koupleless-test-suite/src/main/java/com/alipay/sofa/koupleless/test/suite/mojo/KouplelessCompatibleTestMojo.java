@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.mojo;
+package com.alipay.sofa.koupleless.test.suite.mojo;
 
-import com.alipay.sofa.koupleless.biz.SOFAArkServiceContainerSingleton;
-import com.alipay.sofa.koupleless.biz.SOFAArkTestBiz;
-import com.alipay.sofa.koupleless.model.CompatibleTestBizConfig;
-import com.alipay.sofa.koupleless.model.CompatibleTestConfig;
-import com.alipay.sofa.koupleless.mojo.common.CustomJunit5SummaryGeneratingListener;
+import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkServiceContainerSingleton;
+import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkTestBiz;
+import com.alipay.sofa.koupleless.test.suite.model.CompatibleTestBizConfig;
+import com.alipay.sofa.koupleless.test.suite.model.CompatibleTestConfig;
+import com.alipay.sofa.koupleless.test.suite.mojo.common.CustomJunit5SummaryGeneratingListener;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

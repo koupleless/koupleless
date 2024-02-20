@@ -1,5 +1,6 @@
-package com.alipay.sofa.koupleless.mojo;
+package com.alipay.sofa.koupleless.test.suite.mojo;
 
+import com.alipay.sofa.koupleless.test.suite.mojo.KouplelessCompatibleTestMojo;
 import org.apache.maven.model.Build;
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.BeforeEach;

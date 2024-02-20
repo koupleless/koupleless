@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.test;
+package com.alipay.sofa.koupleless.test.suite.mock;
 
 /**
  * @author CodeNoobKing
  * @date 2024/2/20
  */
-public class LoadByTestBizClassA {
+public class LoadByTestBizClassB {
 }

@@ -1,4 +1,4 @@
-package com.alipay.sofa.koupleless.test;
+package com.alipay.sofa.koupleless.test.suite.mock;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
