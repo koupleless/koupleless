@@ -67,7 +67,7 @@ func TestParseBizModel_LocalJar(t *testing.T) {
 
 	fmt.Println("Zip file created and manifest added at:", zipFilePath)
 
-	model, err := parseJarBizModel(
+	model, err := ParseBizModel(
 		context.Background(),
 		fileutil.FileUrl("file://"+zipFilePath),
 	)
