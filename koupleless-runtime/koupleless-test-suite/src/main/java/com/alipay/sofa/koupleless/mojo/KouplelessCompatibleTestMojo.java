@@ -19,8 +19,10 @@ package com.alipay.sofa.koupleless.mojo;
 import com.alipay.sofa.koupleless.biz.SOFAArkServiceContainerSingleton;
 import com.alipay.sofa.koupleless.biz.SOFAArkTestBiz;
 import com.alipay.sofa.koupleless.model.CompatibleTestBizConfig;
+import com.alipay.sofa.koupleless.model.CompatibleTestConfig;
 import com.alipay.sofa.koupleless.mojo.common.CustomJunit5SummaryGeneratingListener;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lombok.SneakyThrows;
@@ -56,12 +58,13 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 public class KouplelessCompatibleTestMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", readonly = true)
-    private MavenProject project;
+    MavenProject project;
 
     @Parameter(property = "compatibleTestConfigFile", defaultValue = "sofa-ark-compatible-test-config.yaml")
-    private String       compatibleTestConfigFile;
+    String compatibleTestConfigFile = "sofa-ark-compatible-test-config.yaml";
 
-    private ObjectMapper yamlObjectMapper = new ObjectMapper(new YAMLFactory());
+    private ObjectMapper yamlObjectMapper = new ObjectMapper(new YAMLFactory())
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     @SneakyThrows
     public URLClassLoader buildURLClassLoader() {
@@ -77,39 +80,43 @@ public class KouplelessCompatibleTestMojo extends AbstractMojo {
         }
 
         return new URLClassLoader(urls.toArray(new URL[0]),
-        // this is necessary because we are calling test engine programmatically.
-        // some classes are required to be loaded by TCCL even when we are setting TCCL to biz classLoader.
-            Thread.currentThread().getContextClassLoader());
+                // this is necessary because we are calling test engine programmatically.
+                // some classes are required to be loaded by TCCL even when we are setting TCCL to biz classLoader.
+                Thread.currentThread().getContextClassLoader());
     }
 
     @SneakyThrows
-    private List<CompatibleTestBizConfig> loadConfigs() {
-        InputStream configFileIS = Thread.currentThread().getContextClassLoader()
-            .getResourceAsStream(compatibleTestConfigFile);
+    private CompatibleTestConfig loadConfigs() {
+        InputStream configFileIS = Thread
+                .currentThread()
+                .getContextClassLoader()
+                .getResourceAsStream(compatibleTestConfigFile);
 
-        return yamlObjectMapper.readValue(configFileIS,
-            new TypeReference<List<CompatibleTestBizConfig>>() {
-            });
+        return yamlObjectMapper
+                .readValue(configFileIS,
+                        new TypeReference<CompatibleTestConfig>() {
+                        }
+                );
     }
 
     private List<SOFAArkTestBiz> buildTestBiz(URLClassLoader baseClassLoader) {
-        List<CompatibleTestBizConfig> configs = loadConfigs();
+        CompatibleTestConfig configs = loadConfigs();
 
         // if root project classes is not configured to include by class loader
         // then it mused be loaded by base classloader
         List<String> rootProjectClasses = new ArrayList<>();
         rootProjectClasses.add(Paths.get(project.getBuild().getOutputDirectory()).toAbsolutePath()
-            .toString());
+                .toString());
 
         rootProjectClasses.add(Paths.get(project.getBuild().getTestOutputDirectory())
-            .toAbsolutePath().toString());
+                .toAbsolutePath().toString());
 
         List<SOFAArkTestBiz> result = new ArrayList<>();
-        for (CompatibleTestBizConfig config : CollectionUtils.emptyIfNull(configs)) {
+        for (CompatibleTestBizConfig config : CollectionUtils.emptyIfNull(configs.getTestBizConfigs())) {
 
             SOFAArkTestBiz testBiz = new SOFAArkTestBiz(config.getBootstrapClass(),
-                config.getName(), project.getVersion(), ListUtils.emptyIfNull(config
-                    .getTestClasses()), ListUtils.union(config.getLoadByBizClassLoaderPatterns(),
+                    config.getName(), project.getVersion(), ListUtils.emptyIfNull(config
+                    .getTestClasses()), ListUtils.union(ListUtils.emptyIfNull(config.getLoadByBizClassLoaderPatterns()),
                     rootProjectClasses), baseClassLoader);
 
             result.add(testBiz);
