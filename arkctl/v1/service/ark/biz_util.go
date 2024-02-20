@@ -17,8 +17,9 @@ package ark
 import (
 	"archive/zip"
 	"context"
-	"fmt"
 	"github.com/koupleless/arkctl/common/osutil"
+	"github.com/koupleless/arkctl/common/runtime"
+	"io"
 	"strings"
 
 	"github.com/koupleless/arkctl/common/fileutil"
@@ -31,17 +32,12 @@ func isJarFile(fileUrl fileutil.FileUrl) bool {
 }
 
 // parseJarBizModel parse jar file to BizModel.
-func parseJarBizModel(ctx context.Context, bizUrl fileutil.FileUrl) (*BizModel, error) {
+func parseJarBizModel(ctx context.Context, bizUrl fileutil.FileUrl) (model *BizModel, err error) {
+	defer runtime.RecoverFromError(&err)
 	fileUtil := fileutil.DefaultFileUtil()
-	localPath, err := fileUtil.Download(ctx, bizUrl)
-	if err != nil {
-		return nil, err
-	}
+	localPath := runtime.MustReturnResult(fileUtil.Download(ctx, bizUrl))
 
-	zipReader, err := zip.OpenReader(localPath[len(osutil.GetLocalFileProtocol()):])
-	if err != nil {
-		return nil, err
-	}
+	zipReader := runtime.MustReturnResult(zip.OpenReader(localPath[len(osutil.GetLocalFileProtocol()):]))
 	defer zipReader.Close()
 
 	bizName := ""
@@ -50,16 +46,12 @@ func parseJarBizModel(ctx context.Context, bizUrl fileutil.FileUrl) (*BizModel, 
 	for _, fileInfo := range zipReader.File {
 		if fileInfo.Name == "META-INF/MANIFEST.MF" {
 			// open this file
-			file, err := fileInfo.Open()
-			if err != nil {
-				return nil, err
-			}
+			file := runtime.MustReturnResult(fileInfo.Open())
+
 			// read all to string
 			buf := make([]byte, fileInfo.UncompressedSize64)
 			_, err = file.Read(buf)
-			if err != nil && err.Error() != "EOF" {
-				return nil, err
-			}
+			runtime.Assert(err == nil || err == io.EOF, "failed to read file %s", fileInfo.Name)
 			// find bizName and bizVersion
 			for _, line := range strings.Split(string(buf), "\n") {
 				// if line contains "Ark-Biz-Name:" then it's bizName
@@ -85,10 +77,6 @@ func parseJarBizModel(ctx context.Context, bizUrl fileutil.FileUrl) (*BizModel, 
 
 // ParseBizModel parse biz bundle given by bizUrl to BizModel.
 func ParseBizModel(ctx context.Context, bizUrl fileutil.FileUrl) (*BizModel, error) {
-	switch {
-	case isJarFile(bizUrl):
-		return parseJarBizModel(ctx, bizUrl)
-	default:
-		return nil, fmt.Errorf("unknown biz bundle type %s", bizUrl)
-	}
+	runtime.Assert(isJarFile(bizUrl), "unknown biz bundle type %s", bizUrl)
+	return parseJarBizModel(ctx, bizUrl)
 }
