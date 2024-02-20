@@ -43,6 +43,6 @@ public class StrategyServiceImpl implements StrategyService {
 
     @Override
     public String getAppName() {
-        return applicationContext.getApplicationName();
+        return applicationContext.getId();
     }
 }

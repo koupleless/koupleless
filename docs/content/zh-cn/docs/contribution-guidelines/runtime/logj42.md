@@ -49,9 +49,55 @@ weight: 1
 
 根据上面判断通过 bundle 的方式配置在多模块里不可行，因为 ResourceBundleLookup 可能只存在于基座中，导致始终只能拿到基座的 application.properties，导致模块的日志配置路径与基座相同，模块日志都打到基座中。所以需要改造成使用 ContextMapLookup。
 
+## static final修饰的Logger导致三方组件下沉基座后日志打印不能正常隔离
+如:
+```java
+private static final Logger LOG = LoggerFactory.getLogger(CacheManager.class);
+```
+1. static final修饰的变量只会在类加载的时候初始化话一次
+2. 组件依赖下沉基座后，类加载器使用的为基座的类加载器，初始化log实例时使用的是基座的log配置，所以会打印到基座文件中，不能正常隔离
+
+具体获取log源码如下：
+```java
+//org.apache.logging.log4j.spi.AbstractLoggerAdapter
+@Override
+public L getLogger(final String name) {
+    //关键是LoggerContext获取是否正确，往下追
+    final LoggerContext context = getContext();
+    final ConcurrentMap<String, L> loggers = getLoggersInContext(context);
+    final L logger = loggers.get(name);
+    if (logger != null) {
+        return logger;
+    }
+    loggers.putIfAbsent(name, newLogger(name, context));
+    return loggers.get(name);
+}
+
+//获取LoggerContext
+protected LoggerContext getContext() {
+    Class<?> anchor = LogManager.getFactory().isClassLoaderDependent() ? StackLocatorUtil.getCallerClass(Log4jLoggerFactory.class, CALLER_PREDICATE) : null;
+    LOGGER.trace("Log4jLoggerFactory.getContext() found anchor {}", anchor);
+    return anchor == null ? LogManager.getContext(false) : this.getContext(anchor);
+}
+
+//获取LoggerContext，关键在这里
+protected LoggerContext getContext(final Class<?> callerClass) {
+    ClassLoader cl = null;
+    if (callerClass != null) {
+        //会优先使用当前类相关的类加载器，这里肯定是基座的类加载，所以返回的是基座的LoggerContext
+        cl = callerClass.getClassLoader();
+    }
+    if (cl == null) {
+        cl = LoaderUtil.getThreadContextClassLoader();
+    }
+    return LogManager.getContext(cl, false);
+}
+
+```
+
 ## 预期多模块合并下的日志
 基座与模块都能使用独立的日志配置、配置值，完全独立。但由于上述分析中，存在两处可能导致模块无法正常初始化的逻辑，故这里需要多 log4j2 进行适配。
-
+static修饰的log在三方组件下沉基座后也会导致相关日志不能正常隔离打印，所以这里也需要做 log4j2 进行适配。
 ### 多模块适配点
 1. getLoggerContext() 能拿到模块自身的 LoggerContext
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1696938182575-51ce1066-21f0-47bb-8bdb-c3c7d0814ca3.png)
@@ -59,7 +105,35 @@ weight: 1
 
    a. 模块启动时将 application.properties 的值设置到 ThreadContext 中
    b. 日志配置时，只能使用 ctx:xxx:xxx 的配置方式
+3. LoggerFactory.getLogger()获取的是org.apache.logging.slf4j.Log4jLogger实例，他是一个包装类，所以有一定操作空间，
+针对Log4jLogger进行复写改造，根据当前线程上下文类加载器动态获取底层ExtendedLogger对象
+ ```java
+public class Log4JLogger implements LocationAwareLogger, Serializable {
+    private transient final Map<ClassLoader, ExtendedLogger> loggerMap = new ConcurrentHashMap<>();
+    private static final Map<ClassLoader, LoggerContext> LOGGER_CONTEXT_MAP = new ConcurrentHashMap<>();
 
+    pubblic void info(final String format, final Object o) {
+        //每次调用都获取对应的ExtendedLogger
+        getLogger().logIfEnabled(FQCN, Level.INFO, null, format, o);
+    }
+    
+    //根据当前线程类加载器动态获取ExtendedLogger
+    private ExtendedLogger getLogger() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ExtendedLogger extendedLogger = loggerMap.get(classLoader);
+        if (extendedLogger == null) {
+            LoggerContext loggerContext = LOGGER_CONTEXT_MAP.get(classLoader);
+            if (loggerContext == null) {
+                loggerContext = LogManager.getContext(classLoader, false);
+                LOGGER_CONTEXT_MAP.put(classLoader, loggerContext);
+            }
+            extendedLogger = loggerContext.getLogger(this.name);
+            loggerMap.put(classLoader, extendedLogger);
+        }
+        return extendedLogger;
+   }
+   } 
+```
 ## 模块改造方式
 [详细查看源码](https://github.com/koupleless/koupleless/blob/main/koupleless-runtime/koupleless-adapter-ext/koupleless-adapter-log4j2/src/main/java/org/springframework/boot/logging/log4j2)
 

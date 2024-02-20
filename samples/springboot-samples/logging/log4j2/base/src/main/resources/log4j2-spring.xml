@@ -92,6 +92,14 @@
             <AppenderRef ref="STDOUT-APPENDER"/>
         </AsyncLogger>
 
+        <AsyncLogger name="net.sf.ehcache" additivity="false"
+                     level="${ctx:logging.level.net.sf.ehcache}">
+            <AppenderRef ref="APP-DEFAULT-APPENDER"/>
+            <AppenderRef ref="WARN-APPENDER"/>
+            <AppenderRef ref="ERROR-APPENDER"/>
+            <AppenderRef ref="STDOUT-APPENDER"/>
+        </AsyncLogger>
+
         <AsyncRoot level="${ctx:logging.level.com.alipay.sofa}">
             <AppenderRef ref="APP-DEFAULT-APPENDER"/>
             <AppenderRef ref="WARN-APPENDER"/>
