@@ -34,8 +34,8 @@ public class SerializeUtils {
     private static Object _serializeTransform(Object source, ClassLoader targetClassLoader) {
         try {
             if (null == source
-                    || source.getClass().getClassLoader() == targetClassLoader
-                    || targetClassLoader.loadClass(source.getClass().getName()).getClassLoader() == source
+                || source.getClass().getClassLoader() == targetClassLoader
+                || targetClassLoader.loadClass(source.getClass().getName()).getClassLoader() == source
                     .getClass().getClassLoader()) {
                 return source;
             }
@@ -69,13 +69,13 @@ public class SerializeUtils {
         }
         return target;
     }
-    
+
     public static Object serializeTransform(Object originalSource, ClassLoader targetClassLoader) {
         if (originalSource.getClass().isArray()) {
             Object[] sources = (Object[]) originalSource;
             if (sources.length > 0) {
                 Object[] targets = (Object[]) Array.newInstance(sources.getClass()
-                        .getComponentType(), sources.length);
+                    .getComponentType(), sources.length);
 
                 for (int i = 0; i < sources.length; i++) {
                     targets[i] = _serializeTransform(sources[i], targetClassLoader);
