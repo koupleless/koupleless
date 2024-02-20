@@ -101,7 +101,7 @@ func (h *service) installBizInPod(_ context.Context, _ InstallBizRequest) error 
 
 func (h *service) InstallBiz(ctx context.Context, req InstallBizRequest) (err error) {
 	logger := contextutil.GetLogger(ctx)
-	logger.WithField("req", string(runtime.Must(json.Marshal(req)))).Info("install biz started")
+	logger.WithField("req", string(runtime.MustReturnResult(json.Marshal(req)))).Info("install biz started")
 	defer func() {
 		if err != nil {
 			logger.Error(err)
@@ -158,7 +158,7 @@ func (h *service) unInstallBizInPod(_ context.Context, _ UnInstallBizRequest) er
 
 func (h *service) UnInstallBiz(ctx context.Context, req UnInstallBizRequest) (err error) {
 	logger := contextutil.GetLogger(ctx)
-	logger.WithField("req", string(runtime.Must(json.Marshal(req)))).Info("uninstall biz started")
+	logger.WithField("req", string(runtime.MustReturnResult(json.Marshal(req)))).Info("uninstall biz started")
 	defer func() {
 		if err != nil {
 			logger.Error(err)
@@ -178,37 +178,24 @@ func (h *service) UnInstallBiz(ctx context.Context, req UnInstallBizRequest) (er
 	return
 }
 
-func (h *service) QueryAllBiz(ctx context.Context, req QueryAllArkBizRequest) (*QueryAllArkBizResponse, error) {
+func (h *service) QueryAllBiz(ctx context.Context, req QueryAllArkBizRequest) (resp *QueryAllArkBizResponse, err error) {
 	logger := contextutil.GetLogger(ctx)
-	logger.WithField("req", string(runtime.Must(json.Marshal(req)))).Info("query all biz started")
+	logger.WithField("req", string(runtime.MustReturnResult(json.Marshal(req)))).Info("query all biz started")
+	defer runtime.RecoverFromError(func(err error) {
+		logger.Error(err)
+	})()
 
-	resp, err := h.client.R().
+	httpResp := runtime.MustReturnResult(h.client.R().
 		SetContext(context.Background()).
 		SetBody(req).
-		Post(fmt.Sprintf("http://%s:%d/queryAllBiz", req.HostName, req.Port))
-
-	if err != nil {
-		logger.Error(err)
-		return nil, err
-	}
-
-	if !resp.IsSuccess() {
-		err = fmt.Errorf("query all biz http failed with code %d", resp.StatusCode())
-		logger.Error(err)
-		return nil, err
-	}
-
+		Post(fmt.Sprintf("http://%s:%d/queryAllBiz", req.HostName, req.Port)))
 	queryAllBizResponse := &QueryAllArkBizResponse{}
-	if err := json.Unmarshal(resp.Body(), queryAllBizResponse); err != nil {
-		logger.Error(err)
-		return nil, err
-	}
 
-	if IsSuccessResponse(&queryAllBizResponse.GenericArkResponseBase) != nil {
-		logger.Error(err)
-	}
-
+	runtime.Assert(httpResp.IsSuccess(), "query all biz http failed with code %d", httpResp.StatusCode())
+	runtime.Must(json.Unmarshal(httpResp.Body(), queryAllBizResponse))
+	runtime.Must(IsSuccessResponse(&queryAllBizResponse.GenericArkResponseBase))
 	logger.Info("query all biz completed")
+
 	return queryAllBizResponse, nil
 }
 
