@@ -4,8 +4,8 @@ run-name: ${{ github.actor }} pushed module-controller code
 on:
   create:
     tags:
-      - 'v*.*.*'
-  workflow_dispatch:
+      - 'v*'
+#  workflow_dispatch:
 
 env:
   CGO_ENABLED: 0
