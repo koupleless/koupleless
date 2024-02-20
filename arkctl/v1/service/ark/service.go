@@ -113,7 +113,7 @@ func (h *service) InstallBiz(ctx context.Context, req InstallBizRequest) (err er
 
 // Use http client to uninstall biz on local
 func (h *service) unInstallBizOnLocal(_ context.Context, req UnInstallBizRequest) (err error) {
-	defer runtime.RecoverFromError()()
+	defer runtime.RecoverFromError(&err)()
 
 	resp := runtime.MustReturnResult(h.client.R().
 		SetContext(context.Background()).
@@ -153,7 +153,8 @@ func (h *service) UnInstallBiz(ctx context.Context, req UnInstallBizRequest) (er
 func (h *service) QueryAllBiz(ctx context.Context, req QueryAllArkBizRequest) (resp *QueryAllArkBizResponse, err error) {
 	logger := contextutil.GetLogger(ctx)
 	logger.WithField("req", string(runtime.MustReturnResult(json.Marshal(req)))).Info("query all biz started")
-	defer runtime.RecoverFromErrorWithHandler(func(err error) {
+	defer runtime.RecoverFromErrorWithHandler(func(recover error) {
+		err = recover
 		logger.Error(err)
 	})()
 

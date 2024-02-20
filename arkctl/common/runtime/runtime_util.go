@@ -33,8 +33,10 @@ func Must(err error) {
 	}
 }
 
-func RecoverFromError() func() {
-	return RecoverFromErrorWithHandler(DefaultErrorHandler)
+func RecoverFromError(errAddr *error) func() {
+	return RecoverFromErrorWithHandler(func(err error) {
+		*errAddr = err
+	})
 }
 
 func RecoverFromErrorWithHandler(handler func(error)) func() {
