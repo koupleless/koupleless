@@ -120,7 +120,6 @@ curl curl http://localhost:8080/village
 ```
 return `Hello, village`
 
-且日志里能看到调用成功返回
 and also we can check the success log in base
 
 #### 2. versify services in module
