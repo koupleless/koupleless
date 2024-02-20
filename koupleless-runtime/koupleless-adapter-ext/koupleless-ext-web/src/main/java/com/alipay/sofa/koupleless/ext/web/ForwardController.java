@@ -17,14 +17,15 @@
 package com.alipay.sofa.koupleless.ext.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -52,6 +53,9 @@ public class ForwardController {
             sourcePath = Forwards.ROOT_PATH;
         }
         ForwardItem forwardItem = forwards.getForwardItem(host, sourcePath);
+        if (forwardItem == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         //计算要跳转的路径
         String contextPath = forwardItem.getContextPath();
         String targetPath = forwardItem.getTo()
@@ -62,7 +66,7 @@ public class ForwardController {
         ServletContext currentContext = request.getServletContext();
         ServletContext nextContext = currentContext.getContext(contextPath + targetPath);
         if (currentContext == nextContext) {
-            throw new IllegalArgumentException("No match biz for uri:" + uri);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         RequestDispatcher dispatcher = nextContext.getRequestDispatcher(targetPath);
         dispatcher.forward(request, response);

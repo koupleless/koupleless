@@ -27,6 +27,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -109,6 +110,6 @@ public class ForwardControllerTests {
 
 
         Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://test4.xxx.com/test1/xx"));
-        Assert.assertThrows(IllegalArgumentException.class, () -> controller.redirect(request, response));
+        Assert.assertThrows(ResponseStatusException.class, () -> controller.redirect(request, response));
     }
 }

@@ -57,6 +57,6 @@ public class Forwards {
                 return item;
             }
         }
-        throw new IllegalArgumentException("Not found context path by the path:" + host + path);
+        return null;
     }
 }
