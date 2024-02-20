@@ -33,7 +33,7 @@ public class SampleController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
-        String appName = applicationContext.getApplicationName();
+        String appName = applicationContext.getId();
         LOGGER.info("{} web test: into sample controller", appName);
         return String.format("hello to %s deploy", appName);
     }
