@@ -376,6 +376,17 @@ public class MultiBizProperties extends Properties {
         return newValue;
     }
 
+    /**
+     * 获得当前业务模块的类加载器
+     * 如果当前线程不属于业务模块，而是基座，将返回null
+     *
+     * @return 当前业务模块的类加载器
+     */
+    public ClassLoader getBizClassLoader() {
+        ClassLoader invokeClassLoader = Thread.currentThread().getContextClassLoader();
+        return getBizClassLoader(invokeClassLoader);
+    }
+
     private synchronized Properties getReadProperties() {
         Properties bizProperties = getWriteProperties();
         if (bizProperties == baseProperties) {
@@ -391,20 +402,36 @@ public class MultiBizProperties extends Properties {
         return properties;
     }
 
+    private ClassLoader getBizClassLoader(ClassLoader invokeClassLoader) {
+        for (ClassLoader classLoader = invokeClassLoader; classLoader != null; classLoader = classLoader
+            .getParent()) {
+            Class clazz = classLoader.getClass();
+            if (isBizClassLoader(clazz)) {
+                return classLoader;
+            }
+        }
+        return null;
+    }
+
+    private boolean isBizClassLoader(Class clazz) {
+        if (!ClassLoader.class.isAssignableFrom(clazz)) {
+            return false;
+        }
+        String name = clazz.getName();
+        if (Objects.equals(name, bizClassLoaderName)) {
+            return true;
+        }
+        return isBizClassLoader(clazz.getSuperclass());
+    }
+
     private synchronized Properties getWriteProperties() {
         ClassLoader invokeClassLoader = Thread.currentThread().getContextClassLoader();
         if (bizPropertiesMap.containsKey(invokeClassLoader)) {
             return bizPropertiesMap.get(invokeClassLoader);
         }
-        for (ClassLoader classLoader = invokeClassLoader; classLoader != null; classLoader = classLoader.getParent()) {
-            String name = classLoader.getClass().getName();
-            if (Objects.equals(name, bizClassLoaderName)) {
-                Properties props = bizPropertiesMap.computeIfAbsent(classLoader, k -> new Properties());
-                bizPropertiesMap.put(invokeClassLoader, props);
-                return props;
-            }
-        }
-        bizPropertiesMap.put(invokeClassLoader, baseProperties);
+        ClassLoader classLoader = getBizClassLoader(invokeClassLoader);
+        Properties props = classLoader != null ? bizPropertiesMap.computeIfAbsent(classLoader, k -> new Properties()) : baseProperties;
+        bizPropertiesMap.put(invokeClassLoader, props);
         return baseProperties;
     }
 
@@ -413,13 +440,11 @@ public class MultiBizProperties extends Properties {
         if (modifiedKeysMap.containsKey(invokeClassLoader)) {
             return modifiedKeysMap.get(invokeClassLoader);
         }
-        for (ClassLoader classLoader = invokeClassLoader; classLoader != null; classLoader = classLoader.getParent()) {
-            String name = classLoader.getClass().getName();
-            if (Objects.equals(name, bizClassLoaderName)) {
-                Set<String> keys = modifiedKeysMap.computeIfAbsent(classLoader, k -> new HashSet<>());
-                modifiedKeysMap.put(invokeClassLoader, keys);
-                return keys;
-            }
+        ClassLoader classLoader = getBizClassLoader(invokeClassLoader);
+        if (classLoader != null) {
+            Set<String> keys = modifiedKeysMap.computeIfAbsent(classLoader, k -> new HashSet<>());
+            modifiedKeysMap.put(invokeClassLoader, keys);
+            return keys;
         }
         return null;
     }
@@ -439,14 +464,21 @@ public class MultiBizProperties extends Properties {
      * replace the system properties to multi biz properties<br/>
      * if you want to use, you need invoke the method in base application
      */
-    public static void initSystem(String bizClassLoaderName) {
+    public static MultiBizProperties initSystem(String bizClassLoaderName) {
         Properties properties = System.getProperties();
+        if (properties instanceof MultiBizProperties) {
+            MultiBizProperties multiBizProperties = (MultiBizProperties) properties;
+            if (Objects.equals(multiBizProperties.bizClassLoaderName, bizClassLoaderName)) {
+                return multiBizProperties;
+            }
+        }
         MultiBizProperties multiBizProperties = new MultiBizProperties(bizClassLoaderName,
             properties);
         System.setProperties(multiBizProperties);
+        return multiBizProperties;
     }
 
-    public static void initSystem() {
-        initSystem(BIZ_CLASS_LOADER);
+    public static MultiBizProperties initSystem() {
+        return initSystem(BIZ_CLASS_LOADER);
     }
 }

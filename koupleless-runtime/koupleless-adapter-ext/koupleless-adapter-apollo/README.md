@@ -301,7 +301,7 @@ public abstract class Foundation {
 }
 
 ```
-There are a lot of static instance in the code, so we using the same apollo instance for different biz. And also, The `ExecutorService` is also a singleton instance for long pulling config, so we can't use different `ExecutorService` for different biz to pulling cofig for multi biz. 
+There are a lot of static instance in the code, so we using the same apollo instance for different biz. And also, The `ExecutorService` is also a singleton instance for long pulling config, so we can't use different `ExecutorService` for different biz to pulling cofig for multi biz.
 
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/145710/1699414406192-03c5207c-912a-4137-b4b4-b27007c0d0f0.png#averageHue=%23232427&clientId=u1275a813-6484-4&from=paste&height=360&id=udcf16b77&originHeight=360&originWidth=1448&originalType=binary&ratio=1&rotation=0&showTitle=false&size=137407&status=done&style=none&taskId=uba1ce80d-0bf8-4a89-ad70-63721503ec8&title=&width=1448)
 
