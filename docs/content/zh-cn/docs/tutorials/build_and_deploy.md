@@ -79,13 +79,13 @@ arkctl status
 
 ```shell
 # 调用此命令后，会列出当前部署的模块，用户可以通过上下键选择要卸载的模块。
-arkctl uninstall
+arkctl undeploy 
 ```
 
 制定模块名称卸载模块
 
 ```shell
-arkctl uninstall ${模块名称:模块版本}
+arkctl undeploy ${模块名称:模块版本}
 ```
 
 ### K8S 集群环境开发验证, 以 minikube 集群为例

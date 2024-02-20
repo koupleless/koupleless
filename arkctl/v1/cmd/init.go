@@ -20,6 +20,6 @@ import (
 	_ "github.com/koupleless/arkctl/v1/cmd/root"
 	_ "github.com/koupleless/arkctl/v1/cmd/show"
 	_ "github.com/koupleless/arkctl/v1/cmd/status"
-	_ "github.com/koupleless/arkctl/v1/cmd/uninstall"
+	_ "github.com/koupleless/arkctl/v1/cmd/undeploy"
 	_ "github.com/koupleless/arkctl/v1/cmd/version"
 )

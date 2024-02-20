@@ -204,10 +204,8 @@ func (h *service) QueryAllBiz(ctx context.Context, req QueryAllArkBizRequest) (*
 		return nil, err
 	}
 
-	if queryAllBizResponse.Code != "SUCCESS" {
-		err = fmt.Errorf("query all biz failed: %s", queryAllBizResponse.Message)
+	if IsSuccessResponse(&queryAllBizResponse.GenericArkResponseBase) != nil {
 		logger.Error(err)
-		return nil, err
 	}
 
 	logger.Info("query all biz completed")

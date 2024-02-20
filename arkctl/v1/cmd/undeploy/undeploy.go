@@ -12,19 +12,19 @@
  * limitations under the License.
  */
 
-package uninstall
+package undeploy
 
 import (
 	"context"
 	"fmt"
-	"github.com/koupleless/arkctl/common/style"
-	"github.com/pterm/pterm"
 	"strings"
 
 	"github.com/koupleless/arkctl/common/contextutil"
+	"github.com/koupleless/arkctl/common/style"
 	"github.com/koupleless/arkctl/v1/cmd/root"
 	"github.com/koupleless/arkctl/v1/service/ark"
 	"github.com/manifoldco/promptui"
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 
@@ -38,9 +38,9 @@ var (
 	ctxKeyArkService = "ctxKeyArkService"
 )
 
-// UninstallCmd is the command to uninstall arkctl
-var UninstallCmd = &cobra.Command{
-	Use:   "uninstall [bizName:bizVersion]",
+// UnDeployCmd is the command to uninstall arkctl
+var UnDeployCmd = &cobra.Command{
+	Use:   "undeploy [bizName:bizVersion]",
 	Short: "this command can help you uninstall biz in ark container",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 && strings.Contains(args[len(args)-1], ":") {
@@ -123,7 +123,7 @@ func execUnInstallLocalWithPrompt(ctx *contextutil.Context) error {
 }
 
 func init() {
-	UninstallCmd.Flags().IntVar(&portFlag, "port", 1238, "the port of ark container")
+	UnDeployCmd.Flags().IntVar(&portFlag, "port", 1238, "the port of ark container")
 
-	root.RootCmd.AddCommand(UninstallCmd)
+	root.RootCmd.AddCommand(UnDeployCmd)
 }
