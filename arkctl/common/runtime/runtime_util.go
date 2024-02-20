@@ -16,6 +16,10 @@ package runtime
 
 import "fmt"
 
+var (
+	DefaultErrorHandler = func(error) {}
+)
+
 func MustReturnResult[T any](result T, err error) T {
 	if err != nil {
 		panic(err)
@@ -29,7 +33,11 @@ func Must(err error) {
 	}
 }
 
-func RecoverFromError(handler func(error)) func() {
+func RecoverFromError() func() {
+	return RecoverFromErrorWithHandler(DefaultErrorHandler)
+}
+
+func RecoverFromErrorWithHandler(handler func(error)) func() {
 	return func() {
 		if r := recover(); r != nil {
 			if err, ok := r.(error); ok {

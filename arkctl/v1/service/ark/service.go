@@ -91,14 +91,6 @@ func (h *service) installBizOnLocal(ctx context.Context, req InstallBizRequest) 
 	return nil
 }
 
-// Use kubectl exec to install biz in pod
-// In this way, the implementation won't be overwhelmed with complicated 7 layers of k8s service
-// The constraint is that user requires with CA or token to access k8s cluster exec.
-// However, this is not a big problem, because this command is using in local DEV phase, not in production.
-func (h *service) installBizInPod(_ context.Context, _ InstallBizRequest) error {
-	panic("not implemented")
-}
-
 func (h *service) InstallBiz(ctx context.Context, req InstallBizRequest) (err error) {
 	logger := contextutil.GetLogger(ctx)
 	logger.WithField("req", string(runtime.MustReturnResult(json.Marshal(req)))).Info("install biz started")
@@ -113,8 +105,6 @@ func (h *service) InstallBiz(ctx context.Context, req InstallBizRequest) (err er
 	switch req.TargetContainer.RunType {
 	case ArkContainerRunTypeLocal:
 		err = h.installBizOnLocal(ctx, req)
-	case ArkContainerRunTypeK8s:
-		err = h.installBizInPod(ctx, req)
 	default:
 		err = fmt.Errorf("unknown run type: %s", req.TargetContainer.RunType)
 	}
@@ -122,38 +112,22 @@ func (h *service) InstallBiz(ctx context.Context, req InstallBizRequest) (err er
 }
 
 // Use http client to uninstall biz on local
-func (h *service) unInstallBizOnLocal(_ context.Context, req UnInstallBizRequest) error {
-	resp, err := h.client.R().
+func (h *service) unInstallBizOnLocal(_ context.Context, req UnInstallBizRequest) (err error) {
+	defer runtime.RecoverFromError()()
+
+	resp := runtime.MustReturnResult(h.client.R().
 		SetContext(context.Background()).
 		SetBody(req.BizModel).
-		Post(fmt.Sprintf("http://127.0.0.1:%d/uninstallBiz", req.TargetContainer.GetPort()))
-	if err != nil {
-		return err
-	}
+		Post(fmt.Sprintf("http://127.0.0.1:%d/uninstallBiz", req.TargetContainer.GetPort())))
 
-	if !resp.IsSuccess() {
-		return fmt.Errorf("uninstall biz http failed with code %d", resp.StatusCode())
-	}
-
+	runtime.Assert(resp.IsSuccess(), "uninstall biz http failed with code %d", resp.StatusCode())
 	uninstallResponse := &UnInstallBizResponse{}
-	if err := json.Unmarshal(resp.Body(), uninstallResponse); err != nil {
-		return err
-	}
+	runtime.Must(json.Unmarshal(resp.Body(), uninstallResponse))
 
-	if uninstallResponse.Code == "FAILED" && uninstallResponse.Data.Code == "NOT_FOUND_BIZ" {
-		return nil
-	}
-
-	if uninstallResponse.Code == "SUCCESS" {
-		return nil
-	}
-
-	return fmt.Errorf("uninstall biz failed: %v", *uninstallResponse)
-}
-
-// Use kubectl exec to uninstall biz in pod
-func (h *service) unInstallBizInPod(_ context.Context, _ UnInstallBizRequest) error {
-	panic("not implemented")
+	isBizNotFound := uninstallResponse.Code == "FAILED" && uninstallResponse.Data.Code == "NOT_FOUND_BIZ"
+	isInstallSuccess := uninstallResponse.Code == "SUCCESS"
+	runtime.Assert(isBizNotFound || isInstallSuccess, "uninstall biz failed: %v", *uninstallResponse)
+	return
 }
 
 func (h *service) UnInstallBiz(ctx context.Context, req UnInstallBizRequest) (err error) {
@@ -170,8 +144,6 @@ func (h *service) UnInstallBiz(ctx context.Context, req UnInstallBizRequest) (er
 	switch req.TargetContainer.RunType {
 	case ArkContainerRunTypeLocal:
 		err = h.unInstallBizOnLocal(ctx, req)
-	case ArkContainerRunTypeK8s:
-		err = h.unInstallBizInPod(ctx, req)
 	default:
 		err = fmt.Errorf("unknown run type: %s", req.TargetContainer.RunType)
 	}
@@ -181,7 +153,7 @@ func (h *service) UnInstallBiz(ctx context.Context, req UnInstallBizRequest) (er
 func (h *service) QueryAllBiz(ctx context.Context, req QueryAllArkBizRequest) (resp *QueryAllArkBizResponse, err error) {
 	logger := contextutil.GetLogger(ctx)
 	logger.WithField("req", string(runtime.MustReturnResult(json.Marshal(req)))).Info("query all biz started")
-	defer runtime.RecoverFromError(func(err error) {
+	defer runtime.RecoverFromErrorWithHandler(func(err error) {
 		logger.Error(err)
 	})()
 

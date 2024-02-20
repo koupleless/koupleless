@@ -306,3 +306,7 @@ func TestIsSuccessResponse(t *testing.T) {
 		Message: "failed",
 	}), "sofa-ark failed response: %s", "failed")
 }
+
+func TestUnImplemented(t *testing.T) {
+
+}
