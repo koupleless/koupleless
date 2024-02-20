@@ -14,9 +14,45 @@
 
 package runtime
 
-func Must[T any](result T, err error) T {
+import "fmt"
+
+var (
+	DefaultErrorHandler = func(error) {}
+)
+
+func MustReturnResult[T any](result T, err error) T {
 	if err != nil {
 		panic(err)
 	}
 	return result
+}
+
+func Must(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func RecoverFromError(errAddr *error) func() {
+	return RecoverFromErrorWithHandler(func(err error) {
+		*errAddr = err
+	})
+}
+
+func RecoverFromErrorWithHandler(handler func(error)) func() {
+	return func() {
+		if r := recover(); r != nil {
+			if err, ok := r.(error); ok {
+				handler(err)
+			} else {
+				panic(r)
+			}
+		}
+	}
+}
+
+func Assert(condition bool, format string, args ...interface{}) {
+	if !condition {
+		panic(fmt.Errorf(format, args...))
+	}
 }
