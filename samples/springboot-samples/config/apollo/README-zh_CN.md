@@ -28,9 +28,9 @@ System.setProperty("env", "DEV");
 ```
 3. pom 里引入 apollo 依赖
 
-4. 基座和模块代码里都添加 apollo 多应用治理类 `com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer`
-引入覆盖 apollo 原有逻辑的治理类，与原生的类实现的区别在于如下一行
-![diff.png](imgs/diff.png)
+4. 在基座的main方法中第一行，添加代码`MultiBizProperties.initSystem();`，支持业务应用之间的环境变量隔离。 
+
+    类似apollo这种，会改动系统变量，影响其它业务模块的场景，均可以添加上述代码，支持业务应用之间的环境变量隔离。
 
 5. 基座和模块里都添加 apollo 配置文件 `/META-INF/app.properties`
 由于注释了 initializeSystemProperty 方法，导致无法通过 application.properties 对 apollo 进行配置， 初始化 `app.id`。所以模块里需要使用 `/META-INF/app.properties` 进行配置。
