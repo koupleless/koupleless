@@ -1,6 +1,0 @@
-- name: example-project
-  bootstrapClass: sofa.ark.bootstrap.BootstrapClass
-  testClasses:
-    - example.project.ExampleServiceTest
-  loadByBizClassLoaderPatterns:
-    - example.project.biz.*
