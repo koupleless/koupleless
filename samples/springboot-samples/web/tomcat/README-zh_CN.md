@@ -75,6 +75,8 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 
 此时，请求打到基座应用，需要进行forward。
 
+**暂时需要自行安装master分支的最新sofa-ark，预计在 sofa-ark 2.2.8 版本可用。**
+
 首先，在application.properties文件中，配置forward文件的路径，如：
 
 ```properties
@@ -116,8 +118,8 @@ koupleless.forward.conf.path=classpath:koupleless-forward.yaml
       to: /
     - from: /t1
       to: /timestamp
-#a.xxx b.xxx c.xxx域名的请求，/idx2/** -> /biz3/**, /t2/** -> /biz3/timestamp/**    
-- contextPath: biz3
+#a.xxx b.xxx c.xxx域名的请求，/idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**    
+- contextPath: biz2
   hosts:
     - a
     - b
@@ -244,4 +246,31 @@ curl http://localhost:8080/order2
 ```shell
 curl http://localhost:8080/biz1/
 curl http://localhost:8080/biz2/
+```
+
+# 实验内容3：内部转发
+部署成功之后，就可以开始验证内部转发了。
+
+```shell
+curl localhost:8080/idx1
+
+hello to /biz1 deploy
+```
+
+```shell
+curl localhost:8080/idx2
+
+hello to /biz2 deploy
+```
+
+```shell
+curl localhost:8080/t1
+
+/biz1 now is $now
+```
+
+```shell
+curl localhost:8080/t2
+
+/biz2 now is $now
 ```

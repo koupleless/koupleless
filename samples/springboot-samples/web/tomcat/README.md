@@ -78,6 +78,8 @@ module may not have a reserved contextPath.
 
 At this time, the request is sent to the base application and needs to be forwarded.
 
+**It is temporarily necessary to install the latest "sofa-ark" of the master branch, which is expected to be available in "sofa-ark" version 2.2.8**
+
 First, in the application.properties file, configure the path of the forward file, such as:
 
 ```properties
@@ -250,4 +252,31 @@ and also we can verify the status of deployment by executing the following curl:
 ```shell
 curl http://localhost:8080/biz1/
 curl http://localhost:8080/biz2/
+```
+
+# Experiment3：the internal forwarding
+After the deployment is successful, you can start to verify the internal forwarding.
+
+```shell
+curl localhost:8080/idx1
+
+hello to /biz1 deploy
+```
+
+```shell
+curl localhost:8080/idx2
+
+hello to /biz2 deploy
+```
+
+```shell
+curl localhost:8080/t1
+
+/biz1 now is $now
+```
+
+```shell
+curl localhost:8080/t2
+
+/biz2 now is $now
 ```
