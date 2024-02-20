@@ -63,7 +63,7 @@ func execStatusLocal(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	style.InfoPrefix("QueryAllBiz").Println(string(runtime.Must(json.Marshal(*biz))))
+	style.InfoPrefix("QueryAllBiz").Println(string(runtime.MustReturnResult(json.Marshal(*biz))))
 	return nil
 }
 
