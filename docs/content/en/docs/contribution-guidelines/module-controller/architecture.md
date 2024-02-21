@@ -1,24 +1,24 @@
 ---
-title: ModuleController 架构设计
+title: ModuleController Architecture Design
 date: 2024-01-25T10:28:32+08:00
-description: Koupleless ModuleController 架构设计
+description: Koupleless ModuleController Architecture Design
 weight: 100
 ---
 
-## 介绍
-ModuleController 是一个 K8S 控制器，该控制器参考 K8S 架构，定义并且实现了 ModuleDeployment、ModuleReplicaSet、Module 等核心模型与调和能力，从而实现了 Serverless 模块的秒级运维调度，以及与基座的联动运维能力。
+## Introduction
+ModuleController is a K8S controller that follows the K8S architecture. It defines and implements core models and reconciling capabilities such as ModuleDeployment, ModuleReplicaSet, and Module. This enables the second-level operation and maintenance scheduling of Serverless modules, as well as coordinated operation and maintenance capabilities with the infrastructure.
 
-## 基本架构
-ModuleController 目前包含 ModuleDeployment Opertor、ModuleReplicaSet Operator、Module Operator 三个组件。和 K8S 原生 Deployment 类似，**用户创建 ModuleDeployment 会调和出 ModuleReplicaSet，ModuleReplicaSet 会进一步调和出 Module，最终 Module Operator 会调用 Pod 里的 Arklet SDK 去安装或卸载模块**。此外 ModuleController 还会为 ModuleDeployment 自动生成 K8S Service，企业可以监听该 Service 的 IP 变化实现与自身流量控制系统的集成，从而实现模块粒度的切流和挂流。<br />
-[![](../architecture.png#from=url&height=536&id=ZnBYG&originHeight=502&originWidth=645&originalType=binary&ratio=2&rotation=0&showTitle=false&status=done&style=none&title=&width=689)](architecture.png)
+## Basic Architecture
+ModuleController currently consists of three components: ModuleDeployment Operator, ModuleReplicaSet Operator, and Module Operator. Similar to the native Deployment in K8S, **creating a ModuleDeployment will reconcile a ModuleReplicaSet, which in turn reconciles a Module. Finally, the Module Operator will invoke the Arklet SDK inside the Pod to install or uninstall the module**. Additionally, ModuleController will automatically generate a K8S Service for ModuleDeployment. Enterprises can listen for changes in the IP of this Service to integrate with their own traffic control system, enabling granular traffic cutting and hanging for modules.<br />
+[![](./architecture.png#from=url&height=536&id=ZnBYG&originHeight=502&originWidth=645&originalType=binary&ratio=2&rotation=0&showTitle=false&status=done&style=none&title=&width=689)](architecture.png)
 
-## 功能清单和 RoadMap
+## Feature List and RoadMap
 
-- **08.15：0.2 版本**上线（包括非对等模块发布、卸载、扩缩容、副本保持、基座运维联动）
-- **08.25：0.3 版本**上线（包括回滚链路、各项参数校验、单测达到 80/60、CI 自动化、开发者指南）
-- **09.31：0.5 版本**上线（1:1 先扩后缩、模块回滚、两种调度策略、状态回流、1+ 端到端集成测试）
-- **10.30：0.6 版本**上线（支持以 K8S Service 方式联动企业四七层流量控制、总计 10+ 端到端集成测试）
-- **11.30：1.0 版本**上线（支持对等发布运维、各项修复打磨、总计 20+ 端到端集成测试）
-- **12.30：1.1 版本**上线（支持模块和基座自动弹性伸缩、对等与非对等发布运维能力完善）
+- **08.15: Version 0.2** Release (including asymmetric module deployment, uninstallation, scaling, replica maintenance, infrastructure operation and maintenance linkage).
+- **08.25: Version 0.3** Release (including rollback chain, parameter validation, unit test coverage of 80/60, CI automation, developer guide).
+- **09.31: Version 0.5** Release (1:1 scaling before scaling, module rollback, two scheduling strategies, state feedback, 1+ end-to-end integration tests).
+- **10.30: Version 0.6** Release (support for enterprise layer 4/7 traffic control linkage via K8S Service, a total of 10+ end-to-end integration tests).
+- **11.30: Version 1.0** Release (support for peer-to-peer deployment and operation, various fixes and polishing, a total of 20+ end-to-end integration tests).
+- **12.30: Version 1.1** Release (support for automatic elastic scaling of modules and infrastructure, enhancement of peer-to-peer and asymmetric deployment and operation capabilities).
 
 <br/>

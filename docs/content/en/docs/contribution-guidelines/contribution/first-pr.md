@@ -1,110 +1,109 @@
 ---
-title: 完成第一次 PR 提交
+title: Completing the First PR Submission
 date: 2024-01-25T10:28:32+08:00
-description: 完成第一次 Koupleless PR 提交
+description: Completing the First Koupleless PR Submission
 weight: 200
 ---
 
-## 认领或提交 Issue
-不论您是修复 bug、新增功能或者改进现有功能，在您提交代码之前，请在 [Koupleless](https://github.com/koupleless/koupleless) 或 [SOFAArk](https://github.com/sofastack/sofa-ark) GitHub 上认领一个 Issue 并将 Assignee 指定为自己（新人建议认领 <b>good-first-issue</b> 标签的新手任务）。或者提交一个新的 Issue，描述您要修复的问题或者要增加、改进的功能。这样做的好处是能避免与其他人的**工作重复**。
+## Claim or Submit an Issue
+Regardless of whether you're fixing a bug, adding a new feature, or improving an existing one, before you submit your code, please claim an issue on [Koupleless](https://github.com/koupleless/koupleless) or [SOFAArk](https://github.com/sofastack/sofa-ark) GitHub and assign yourself as the Assignee (novices are encouraged to claim tasks tagged with <b>good-first-issue</b>). Alternatively, submit a new issue describing the problem you want to fix or the feature you want to add or improve. Doing so helps avoid **duplicate work** with others.
 
-## 获取源码
-要修改或新增功能，在提 Issue 或者领取现有 Issue 后，点击左上角的`fork`按钮，复制一份 Koupleless 或 SOFAArk 主干代码到您的代码仓库。
+## Obtaining the Source Code
+To modify or add features, after claiming or taking an existing issue, click the `fork` button in the upper left corner to make a copy of Koupleless or SOFAArk's mainline code to your code repository.
 
+## Creating a Branch
+All modifications to Koupleless and SOFAArk are made on individual branches. After forking the source code, you need to:
 
-## 拉分支
-Koupleless 和 SOFAArk 所有修改都在个人分支上进行，修改完后提交 `pull request`，当前在跑通 PR 流水线之后，会由相应组件的 PMC 或 Maintainer 负责 Review 与合并代码到主干（master）。因此，在 fork 源码后，您需要：
-
--  下载代码到本地，这一步您可以选择 git/https 方式：
+- Download the code to your local machine, either via git/https:
 ```
-git clone https://github.com/您的账号名/koupleless.git
+git clone https://github.com/your-username/koupleless.git
 ```
 ```
-git clone https://github.com/您的账号名/sofa-ark.git
+git clone https://github.com/your-username/sofa-ark.git
 ```
 
--  拉分支准备修改代码：
+-  Create a branch to prepare for modifying the code:
 ```
 git branch add_xxx_feature
 ```
-<br />执行完上述命令后，您的代码仓库就切换到相应分支了。执行如下命令可以看到您当前分支：
+<br />After executing the above command, your code repository will switch to the respective branch. You can verify your current branch by executing the following command:
 ```
   git branch -a
 ```
-如果您想切换回主干，执行下面命令：
+If you want to switch back to the mainline, execute the following command:
 ```
   git checkout -b master
 ```
-如果您想切换回分支，执行下面命令：
+If you want to switch back to a branch, execute the following command:
 ```
   git checkout -b "branchName"
 ```
 
 
-## 修改代码提交到本地
-拉完分支后，就可以修改代码了。
+## Modifying and Submitting Code Locally
+After creating a branch, you can start modifying the code.
 
-### 修改代码注意事项
+### Things to Consider When Modifying Code
 
-- 代码风格保持一致。Koupleless arklet 和 sofa-ark 通过 Maven 插件来保持代码格式一致，在提交代码前，务必先本地执行：
+- Maintain consistent code style. Koupleless arklet and sofa-ark use Maven plugins to ensure consistent code formatting. Before submitting the code, make sure to execute:
 ```
 mvn clean compile
 ```
-module-controller 和 arkctl Golang 代码的格式化能力还在建设中。
+The formatting capability for module-controller and arkctl's Golang code is still under development.
 
--  补充单元测试代码。
--  确保新修改通过所有单元测试。
--  如果是 bug 修复，应该提供新的单元测试来证明以前的代码存在 bug，而新的代码已经解决了这些 bug。对于 arklet 和 sofa-ark 您可以用如下命令运行所有测试：
+- Include supplementary unit test code.
+- Ensure that new modifications pass all unit tests.
+- If it's a bug fix, provide new unit tests to demonstrate that the previous code had bugs and that the new code fixes them. For arklet and sofa-ark, you can run all tests with the following command:
 ```
 mvn clean test
 ```
-对于 module-controller 和 arkctl，您可以用如下命令运行所有测试：
+For module-controller and arkctl, you can run all tests with the following command:
 ```
 make test
 ```
-也可以通过 IDE 来辅助运行。
+You can also use an IDE to assist.
 
-### 其它注意事项
+### Other Considerations
 
-- 请保持您编辑的代码使用原有风格，尤其是空格换行等。
-- 对于无用的注释，请直接删除。注释必须使用英文。
-- 对逻辑和功能不容易被理解的地方添加注释。
-- 务必第一时间更新 docs/content/zh-cn/ 目录中的 “docs”、“contribution-guidelines” 目录中的相关文档。
+- Please keep the code you edit in the original style, especially spaces, line breaks, etc.
+- Delete unnecessary comments. Comments must be in English.
+- Add comments to logic and functionalities that are not easily understood.
+- Ensure to update the relevant documents in the `docs/content/zh-cn/` directory, specifically in the `docs` and `contribution-guidelines` directories.
 
-修改完代码后，执行如下命令提交所有修改到本地：
+After modifying the code, commit all changes to your local repository using the following command:
 ```
-git commit -am '添加xx功能'
+git commit -am 'Add xx feature'
 ```
 
 
-## 提交代码到远程仓库
-在代码提交到本地后，就是与远程仓库同步代码了。执行如下命令提交本地修改到 github 上：
+## Submitting Code to Remote Repository
+After committing the code locally, it's time to synchronize the code with the remote repository. Submit your local modifications to GitHub with the following command:
 ```
 git push origin "branchname"
 ```
-如果前面您是通过 fork 来做的，那么这里的 origin 是 push 到您的代码仓库，而不是 Koupleless 的代码仓库。
+If you used fork earlier, then here "origin" pushes to your code repository, not Koupleless's repository.
 
 
-## 提交合并代码到主干的请求
-在的代码提交到 GitHub 后，您就可以发送请求来把您改好的代码合入 Koupleless 或 SOFAArk 主干代码了。此时您需要进入您的 GitHub 上的对应仓库，按右上角的 `pull request`按钮。选择目标分支，一般就是 `master`，当前需要选择组件的 [Maintainer](../../role-and-promotion#member-list) 或 [PMC](../../role-and-promotion#member-list) 作为 Code Reviewer，如果 PR 流水线校验和 Code Review 都通过，您的代码就会合入主干成为 Koupleless 的一部分。
+## Requesting to Merge Code into Main Branch
+After submitting the code to GitHub, you can request to merge your well-improved code into Koupleless's or SOFAArk's mainline code. At this point, you need to go to your GitHub repository and click the `pull request` button in the upper right corner. Select the target branch, usually `master`, and the [Maintainer](../../role-and-promotion#member-list) or [PMC](../../role-and-promotion#member-list) of the corresponding component as the Code Reviewer. If the PR pipeline check and Code Review are both successful, your code will be merged into the mainline and become a part of Koupleless.
 
-### PR 流水线校验
-PR 流水线校验包括：
+### PR Pipeline Check
+The PR pipeline check includes:
 
-1. CLA 签署。第一次提交 PR 必须完成 CLA 协议的签署，如果打不开 CLA 签署页面请尝试使用代理。
-2. 自动为每个文件追加 Apache 2.0 License 声明和作者。
-3. 执行全部单元测试且必须全部通过。
-4. 检测覆盖率是否达到行覆盖 >= 80%，分支覆盖 >= 60%。
-5. 检测提交的代码是否存在安全漏洞。
-6. 检测提交的代码是否符合基本代码规范。
+1. CLA signing. The first time you submit a PR, you must sign the CLA agreement. If you cannot open the CLA signing page, try using a proxy.
+2. Automatic appending of Apache 2.0 License declaration and author to each file.
+3. Execution of all unit tests, and all must pass.
+4. Checking if the coverage rate reaches line coverage >= 80% and branch coverage >= 60%.
+5. Detecting if the submitted code has security vulnerabilities.
+6. Checking if the submitted code complies with basic code standards.
 
-以上校验必须全部通过，PR 流水线才会通过并进入到 Code Review 环节。
+All the above checks must pass for the PR pipeline to pass and enter the Code Review stage.
 
 ### Code Review
-当您选择对应组件的 [Maintainer](../../role-and-promotion#member-list) 或 [PMC](../../role-and-promotion#member-list) 作为 Code Reviewer 数天后，仍然没有人对您的提交给予任何回复，可以在 PR 下面留言并 at 相关人员，或者在社区钉钉协作群中（钉钉群号：24970018417）直接 at 相关人员 Review 代码。对于 Code Review 的意见，Code Reviewer 会直接备注到到对应的 PR 或者 Issue 中，如果您觉得建议是合理的，也请您把这些建议更新到您的代码中并重新提交 PR。
+If you choose the [Maintainer](../../role-and-promotion#member-list) or [PMC](../../role-and-promotion#member-list) of the corresponding component as the Code Reviewer, and after several days, there is still no response to your submission, you can leave a message below the PR and mention the relevant people, or directly mention them in the community DingTalk collaboration group (DingTalk group ID: 24970018417) to review the code. The comments on the Code Review will be directly noted in the corresponding PR or Issue. If you find the suggestions reasonable, please update your code accordingly and resubmit the PR.
 
-### 合并代码到主干
-在 PR 流水线校验和 Code Review 都通过后，就由 Koupleless 维护人员操作合入主干了，代码合并之后您会收到合并成功的提示。
+### Merging Code into Main Branch
+After the PR pipeline check and Code Review are both successful, Koupleless maintainers will merge the code into the mainline. After the code is merged, you will receive a notification of successful merging.
 
 
 <br/>

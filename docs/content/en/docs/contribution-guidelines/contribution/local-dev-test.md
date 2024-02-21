@@ -1,30 +1,30 @@
 ---
-title: 本地开发测试
+title: Local Development Testing
 date: 2024-01-25T10:28:32+08:00
-description: Koupleless 本地开发测试
+description: Koupleless Local Development Testing
 weight: 100
 ---
 
-## SOFAArk 和 Arklet
-SOFAArk 是一个普通 Java SDK 项目，使用 Maven 作为依赖管理和构建工具，只需要本地安装 Maven 3.6 及以上版本即可正常开发代码和单元测试，无需其它的环境准备工作。<br />关于代码提交细节请参考：[完成第一次 PR 提交](../first-pr)。
+## SOFAArk and Arklet
+SOFAArk is a regular Java SDK project that uses Maven as its dependency management and build tool. You only need to install Maven 3.6 or higher locally to develop code and run unit tests normally, without any other environment preparation. <br /> For details on code submission, please refer to: [Completing the First PR Submission](../first-pr).
 
 ## ModuleController
-ModuleController 是一个标准的 K8S Golang Operator 组件，里面包含了 ModuleDeployment Operator、ModuleReplicaSet Operator、Module Operator，在本地可以使用 minikube 做开发测试，具体请参考[本地快速开始](/docs/quick-start)。<br />
-编译构建请在 module-controller 目录下执行：
+ModuleController is a standard K8S Golang Operator component, which includes ModuleDeployment Operator, ModuleReplicaSet Operator, and Module Operator. You can use minikube for local development testing. For details, please refer to [Local Quick Start](/docs/quick-start). <br />
+To compile and build, execute the following command in the module-controller directory:
 ```bash
 go mod download   # if compile module-controller first time
 go build -a -o manager cmd/main.go  
 ```
-单元测试执行请在 module-controller 目录下执行：
+To run unit tests, execute the following command in the module-controller directory:
 ```bash
 make test
 ```
-您也可以使用 IDE 进行编译构建、开发调试和单元测试执行。<br />
-module-controller 开发方式和标准 K8S Operator 开发方式完全一样，您可以参考 K8S Operator 开发[官方文档](https://kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/operator/)。
+You can also use an IDE for compiling, building, debugging, and running unit tests.<br />
+The development approach for module-controller is exactly the same as the standard K8S Operator development approach. You can refer to the [official K8S Operator development documentation](https://kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/operator/)。
 
 ## Arkctl
-Arkctl 是一个普通 Golang 项目，他是一个命令行工具集，包含了用户在本地开发和运维模块过程中的常用工具。
-[可参考此处](/docs/tutorials/build_and_deploy)
+Arkctl is a regular Golang project, which is a command-line toolset that includes common tools for users to develop and maintain modules locally.
+[You can refer here](/docs/tutorials/build_and_deploy)
 
 
 <br/>

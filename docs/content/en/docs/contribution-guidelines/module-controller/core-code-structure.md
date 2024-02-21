@@ -11,8 +11,7 @@ weight: 400
 
 <br/>
 
-核心代码逻辑在 moduledeployment_controller.go、modulereplicaset_controller.go、module_controller.go、controller_utils.go，里面有详细注释。
-
+The core code logic resides in `moduledeployment_controller.go`, `modulereplicaset_controller.go`, `module_controller.go`, `controller_utils.go`, with detailed comments.
 
 <br/>
 <br/>
