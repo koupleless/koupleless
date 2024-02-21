@@ -58,13 +58,15 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 public class KouplelessCompatibleTestMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", readonly = true)
-    MavenProject project;
+    MavenProject         project;
 
     @Parameter(property = "compatibleTestConfigFile", defaultValue = "sofa-ark-compatible-test-config.yaml")
-    String compatibleTestConfigFile = "sofa-ark-compatible-test-config.yaml";
+    String               compatibleTestConfigFile = "sofa-ark-compatible-test-config.yaml";
 
-    private ObjectMapper yamlObjectMapper = new ObjectMapper(new YAMLFactory())
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private ObjectMapper yamlObjectMapper         = new ObjectMapper(new YAMLFactory())
+                                                      .configure(
+                                                          DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                                                          false);
 
     @SneakyThrows
     public URLClassLoader buildURLClassLoader() {
@@ -80,23 +82,18 @@ public class KouplelessCompatibleTestMojo extends AbstractMojo {
         }
 
         return new URLClassLoader(urls.toArray(new URL[0]),
-                // this is necessary because we are calling test engine programmatically.
-                // some classes are required to be loaded by TCCL even when we are setting TCCL to biz classLoader.
-                Thread.currentThread().getContextClassLoader());
+        // this is necessary because we are calling test engine programmatically.
+        // some classes are required to be loaded by TCCL even when we are setting TCCL to biz classLoader.
+            Thread.currentThread().getContextClassLoader());
     }
 
     @SneakyThrows
     private CompatibleTestConfig loadConfigs() {
-        InputStream configFileIS = Thread
-                .currentThread()
-                .getContextClassLoader()
-                .getResourceAsStream(compatibleTestConfigFile);
+        InputStream configFileIS = Thread.currentThread().getContextClassLoader()
+            .getResourceAsStream(compatibleTestConfigFile);
 
-        return yamlObjectMapper
-                .readValue(configFileIS,
-                        new TypeReference<CompatibleTestConfig>() {
-                        }
-                );
+        return yamlObjectMapper.readValue(configFileIS, new TypeReference<CompatibleTestConfig>() {
+        });
     }
 
     private List<SOFAArkTestBiz> buildTestBiz(URLClassLoader baseClassLoader) {
@@ -106,17 +103,19 @@ public class KouplelessCompatibleTestMojo extends AbstractMojo {
         // then it mused be loaded by base classloader
         List<String> rootProjectClasses = new ArrayList<>();
         rootProjectClasses.add(Paths.get(project.getBuild().getOutputDirectory()).toAbsolutePath()
-                .toString());
+            .toString());
 
         rootProjectClasses.add(Paths.get(project.getBuild().getTestOutputDirectory())
-                .toAbsolutePath().toString());
+            .toAbsolutePath().toString());
 
         List<SOFAArkTestBiz> result = new ArrayList<>();
-        for (CompatibleTestBizConfig config : CollectionUtils.emptyIfNull(configs.getTestBizConfigs())) {
+        for (CompatibleTestBizConfig config : CollectionUtils.emptyIfNull(configs
+            .getTestBizConfigs())) {
 
             SOFAArkTestBiz testBiz = new SOFAArkTestBiz(config.getBootstrapClass(),
-                    config.getName(), project.getVersion(), ListUtils.emptyIfNull(config
-                    .getTestClasses()), ListUtils.union(ListUtils.emptyIfNull(config.getLoadByBizClassLoaderPatterns()),
+                config.getName(), project.getVersion(), ListUtils.emptyIfNull(config
+                    .getTestClasses()), ListUtils.union(
+                    ListUtils.emptyIfNull(config.getLoadByBizClassLoaderPatterns()),
                     rootProjectClasses), baseClassLoader);
 
             result.add(testBiz);

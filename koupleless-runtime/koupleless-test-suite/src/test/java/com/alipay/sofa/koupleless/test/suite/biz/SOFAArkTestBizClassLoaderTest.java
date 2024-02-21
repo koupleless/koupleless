@@ -33,8 +33,8 @@ import java.util.regex.Pattern;
 public class SOFAArkTestBizClassLoaderTest {
 
     private URLClassLoader baseClassLoader = new URLClassLoader(((URLClassLoader) Thread
-            .currentThread().getContextClassLoader()).getURLs(),
-            Thread.currentThread().getContextClassLoader());
+                                               .currentThread().getContextClassLoader()).getURLs(),
+                                               Thread.currentThread().getContextClassLoader());
 
     @Test
     public void testResolveLocalClass() throws Throwable {
@@ -47,19 +47,18 @@ public class SOFAArkTestBizClassLoaderTest {
         includeClassPatterns.add(Pattern.compile(".*mock\\.LoadByTestBizClassB.*"));
 
         SOFAArkTestBizClassLoader testBizClassLoader = new SOFAArkTestBizClassLoader(bizIdentity,
-                includeClassNames, includeClassPatterns, baseClassLoader);
-        Assertions.assertNull(testBizClassLoader
-                .resolveLocalClass(LoadByBaseClass.class.getName()));
+            includeClassNames, includeClassPatterns, baseClassLoader);
+        Assertions
+            .assertNull(testBizClassLoader.resolveLocalClass(LoadByBaseClass.class.getName()));
+
+        Assertions.assertEquals(testBizClassLoader,
+            testBizClassLoader.resolveLocalClass(LoadByTestBizClassA.class.getName())
+                .getClassLoader());
 
         Assertions.assertEquals(
-                testBizClassLoader,
-                testBizClassLoader.resolveLocalClass(
-                        LoadByTestBizClassA.class.getName()).getClassLoader());
-
-        Assertions.assertEquals(
-                testBizClassLoader,
-                testBizClassLoader.resolveLocalClass(
-                        "com.alipay.sofa.koupleless.test.suite.mock.LoadByTestBizClassB").getClassLoader());
+            testBizClassLoader,
+            testBizClassLoader.resolveLocalClass(
+                "com.alipay.sofa.koupleless.test.suite.mock.LoadByTestBizClassB").getClassLoader());
 
     }
 }

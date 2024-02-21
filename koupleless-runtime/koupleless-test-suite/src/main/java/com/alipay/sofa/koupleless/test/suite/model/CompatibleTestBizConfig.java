@@ -35,12 +35,12 @@ public class CompatibleTestBizConfig {
     /**
      * 当前测试的名字。
      */
-    private String name;
+    private String       name;
 
     /**
      * 初始化的类名。
      */
-    private String bootstrapClass;
+    private String       bootstrapClass;
 
     /**
      * 测试的类列表。

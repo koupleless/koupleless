@@ -42,7 +42,7 @@ public class SOFAArkTestBizClassLoader extends BizClassLoader {
         bizClassLoaderHookField.setAccessible(false);
 
         Field bizClassLoaderIsHookLoadedField = BizClassLoader.class
-                .getDeclaredField("isHookLoaded");
+            .getDeclaredField("isHookLoaded");
         bizClassLoaderIsHookLoadedField.setAccessible(true);
         bizClassLoaderIsHookLoadedField.set(this, new AtomicBoolean(true));
         bizClassLoaderIsHookLoadedField.setAccessible(false);
