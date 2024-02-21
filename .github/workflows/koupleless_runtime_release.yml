@@ -20,6 +20,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+
+      - name: Update Maven version to 3.9.x to enable cross bundle without install
+        env:
+          MAVEN_VERSION: '3.9.5'
+        run: |
+          wget https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
+          tar xzvf apache-maven-${MAVEN_VERSION}-bin.tar.gz
+          echo "MAVEN_HOME=$GITHUB_WORKSPACE/apache-maven-${MAVEN_VERSION}" >> $GITHUB_ENV
+          echo "$GITHUB_WORKSPACE/apache-maven-${MAVEN_VERSION}/bin" >> $GITHUB_PATH
+
       - name: Build with Maven
         working-directory: koupleless-runtime
         run: mvn clean install  -DskipTests -B -U -e && sh ./check_format.sh
