@@ -165,7 +165,7 @@ curl --location --request POST 'localhost:1238/queryAllBiz'
 模块biz远程调用biz2发布的dubbo服务（因为有dubbo网络调用，执行前请关闭vpn，否则可能出现调用超时）
 ```shell
 curl localhost:8080/biz/
-{"result":"bizcom.alipay.sofa.rpc.dubbo27.biz2.service.BizDemoServiceImpl"}
+{"result":"biz->com.alipay.sofa.rpc.dubbo27.biz2.service.BizDemoServiceImpl"}
 
 curl "localhost:8080/biz/?ref=second"
 {"result":"biz->com.alipay.sofa.rpc.dubbo27.biz2.service.SecondDemoServiceImpl"}
