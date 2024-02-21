@@ -124,7 +124,7 @@ curl http://localhost:8080/hello
 ```
 返回 `Hello, city!`
 ```shell
-curl curl http://localhost:8080/village
+curl http://localhost:8080/village
 ```
 返回 `Hello, village`
 

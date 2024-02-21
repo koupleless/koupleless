@@ -116,7 +116,7 @@ curl http://localhost:8080/hello
 ```
 return `Hello, city!`
 ```shell
-curl curl http://localhost:8080/village
+curl http://localhost:8080/village
 ```
 return `Hello, village`
 
