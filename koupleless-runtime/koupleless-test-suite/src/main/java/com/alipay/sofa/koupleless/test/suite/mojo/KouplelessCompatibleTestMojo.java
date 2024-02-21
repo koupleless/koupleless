@@ -20,11 +20,11 @@ import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkServiceContainerSingleto
 import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkTestBiz;
 import com.alipay.sofa.koupleless.test.suite.model.CompatibleTestBizConfig;
 import com.alipay.sofa.koupleless.test.suite.model.CompatibleTestConfig;
-import com.alipay.sofa.koupleless.test.suite.mojo.common.CustomJunit5SummaryGeneratingListener;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
@@ -34,21 +34,14 @@ import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 
 /**
  * @author CodeNoobKing
@@ -89,11 +82,10 @@ public class KouplelessCompatibleTestMojo extends AbstractMojo {
 
     @SneakyThrows
     private CompatibleTestConfig loadConfigs() {
-        InputStream configFileIS = Thread.currentThread().getContextClassLoader()
-            .getResourceAsStream(compatibleTestConfigFile);
-
-        return yamlObjectMapper.readValue(configFileIS, new TypeReference<CompatibleTestConfig>() {
-        });
+        return yamlObjectMapper.readValue(
+            Paths.get(project.getBuild().getTestOutputDirectory(), compatibleTestConfigFile)
+                .toUri().toURL(), new TypeReference<CompatibleTestConfig>() {
+            });
     }
 
     private List<SOFAArkTestBiz> buildTestBiz(URLClassLoader baseClassLoader) {
@@ -124,38 +116,28 @@ public class KouplelessCompatibleTestMojo extends AbstractMojo {
     }
 
     @SneakyThrows
-    public void executeJunit5() {
+    public void executeJunit4() {
         URLClassLoader baseClassLoader = buildURLClassLoader();
         SOFAArkServiceContainerSingleton.init(baseClassLoader);
         List<SOFAArkTestBiz> sofaArkTestBizs = buildTestBiz(baseClassLoader);
         for (SOFAArkTestBiz sofaArkTestBiz : sofaArkTestBizs) {
             getLog().info(String.format("%s, CompatibleTestStarted", sofaArkTestBiz.getIdentity()));
 
-            LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
-                    .request()
-                    .selectors(sofaArkTestBiz
-                            .getTestClasses()
-                            .stream()
-                            .map(DiscoverySelectors::selectClass)
-                            .toArray(ClassSelector[]::new)
-                    )
-                    .build();
-            Launcher launcher = LauncherFactory.create();
-            // Optional: Add a listener for test execution results
-            SummaryGeneratingListener listener = new CustomJunit5SummaryGeneratingListener(getLog());
-            launcher.registerTestExecutionListeners(listener);
-            // the following code would change TCCL to BizClassLoader
             sofaArkTestBiz.executeTest(new Runnable() {
                 @Override
                 public void run() {
-                    launcher.execute(request);
+                    Result result = JUnitCore.runClasses(sofaArkTestBiz.getTestClasses().toArray(
+                        new Class[0]));
+                    getLog().info(
+                        String.format("%s, CompatibleTestFinished", sofaArkTestBiz.getIdentity()));
+                    Preconditions.checkState(result.wasSuccessful(),
+                        "Test failed: " + result.getFailures());
                 }
             }).get();
-            listener.getSummary().printTo(new PrintWriter(System.out));
         }
     }
 
     public void execute() {
-        executeJunit5();
+        executeJunit4();
     }
 }

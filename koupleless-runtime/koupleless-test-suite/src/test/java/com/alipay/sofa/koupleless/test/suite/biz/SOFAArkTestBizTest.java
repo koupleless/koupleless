@@ -16,9 +16,9 @@
  */
 package com.alipay.sofa.koupleless.test.suite.biz;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class SOFAArkTestBizTest {
 
     private static SOFAArkTestBiz testBiz;
 
-    @BeforeAll
+    @BeforeClass
     public static void setUp() {
         SOFAArkServiceContainerSingleton.init(SOFAArkTestBizTest.class.getClassLoader());
 
@@ -50,14 +50,14 @@ public class SOFAArkTestBizTest {
     public void testTestBiz() {
 
         {
-            Assertions.assertTrue(testBiz.isDeclaredMode());
-            Assertions.assertTrue(testBiz.isDeclared(null, null));
+            Assert.assertTrue(testBiz.isDeclaredMode());
+            Assert.assertTrue(testBiz.isDeclared(null, null));
         }
 
-        Assertions.assertEquals(2, testBiz.getTestClasses().size());
+        Assert.assertEquals(2, testBiz.getTestClasses().size());
 
         testBiz.executeTest(() -> {
-            Assertions.assertInstanceOf(SOFAArkTestBizClassLoader.class, Thread.currentThread().getContextClassLoader());
+            Assert.assertTrue(Thread.currentThread().getContextClassLoader() instanceof SOFAArkTestBizClassLoader);
         });
     }
 }

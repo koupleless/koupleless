@@ -14,29 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alipay.sofa.koupleless.test.suite.mock;
+package pkg;
 
-import com.alipay.sofa.ark.container.service.classloader.BizClassLoader;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author CodeNoobKing
- * @date 2024/2/20
+ * @date 2024/2/21
  */
-public class TestJunit5Class {
-    @AfterAll
-    public static void afterAll() {
-        TestJunit5BootStrap.IN_BIZ_CLASSLOADER.set(false);
-    }
+public class BootstrapClass {
+    public static AtomicBoolean IS_BOOT_STRAP = new AtomicBoolean(false);
 
-    @Test
-    public void TestIsInBizClassLoader() {
-        System.out.println("IsInBizClassLoader " + TestJunit5BootStrap.IN_BIZ_CLASSLOADER.get());
-        if (TestJunit5BootStrap.IN_BIZ_CLASSLOADER.get()) {
-            Assertions.assertInstanceOf(BizClassLoader.class, Thread.currentThread()
-                .getContextClassLoader());
-        }
+    public void bootstrapBase() {
+        System.out.println("BootstrapClass");
+        IS_BOOT_STRAP.set(true);
     }
 }

@@ -18,8 +18,8 @@ package com.alipay.sofa.koupleless.test.suite.biz;
 
 import com.alipay.sofa.koupleless.test.suite.mock.LoadByBaseClass;
 import com.alipay.sofa.koupleless.test.suite.mock.LoadByTestBizClassA;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -48,14 +48,13 @@ public class SOFAArkTestBizClassLoaderTest {
 
         SOFAArkTestBizClassLoader testBizClassLoader = new SOFAArkTestBizClassLoader(bizIdentity,
             includeClassNames, includeClassPatterns, baseClassLoader);
-        Assertions
-            .assertNull(testBizClassLoader.resolveLocalClass(LoadByBaseClass.class.getName()));
+        Assert.assertNull(testBizClassLoader.resolveLocalClass(LoadByBaseClass.class.getName()));
 
-        Assertions.assertEquals(testBizClassLoader,
+        Assert.assertEquals(testBizClassLoader,
             testBizClassLoader.resolveLocalClass(LoadByTestBizClassA.class.getName())
                 .getClassLoader());
 
-        Assertions.assertEquals(
+        Assert.assertEquals(
             testBizClassLoader,
             testBizClassLoader.resolveLocalClass(
                 "com.alipay.sofa.koupleless.test.suite.mock.LoadByTestBizClassB").getClassLoader());

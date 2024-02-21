@@ -16,18 +16,27 @@
  */
 package com.alipay.sofa.koupleless.test.suite.mock;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import com.alipay.sofa.ark.container.service.classloader.BizClassLoader;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author CodeNoobKing
  * @date 2024/2/20
  */
-public class TestJunit5BootStrap {
-    public static AtomicBoolean IN_BIZ_CLASSLOADER = new AtomicBoolean(false);
+public class TestJunit4Class {
+    @AfterClass
+    public static void afterAll() {
+        TestJunit4BootStrap.IN_BIZ_CLASSLOADER.set(false);
+    }
 
-    public void bootstrapBase() {
-        System.out.println("TestJunit5BootStrap");
-        IN_BIZ_CLASSLOADER.set(true);
+    @Test
+    public void TestIsInBizClassLoader() {
+        System.out.println("IsInBizClassLoader " + TestJunit4BootStrap.IN_BIZ_CLASSLOADER.get());
+        if (TestJunit4BootStrap.IN_BIZ_CLASSLOADER.get()) {
+            Assert
+                .assertTrue(Thread.currentThread().getContextClassLoader() instanceof BizClassLoader);
+        }
     }
 }

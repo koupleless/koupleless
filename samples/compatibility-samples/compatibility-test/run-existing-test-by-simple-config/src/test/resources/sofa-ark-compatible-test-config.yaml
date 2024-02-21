@@ -1,0 +1,8 @@
+testFramework: junit4
+testBizConfigs:
+  - name: 'sofa-ark-compatible-test'
+    bootstrapClass: 'pkg.BootstrapClass'
+    testClasses:
+      - 'pkg.OriginalTest'
+    loadByBizClassLoaderPatterns:
+      - 'pkg.CommonClass'

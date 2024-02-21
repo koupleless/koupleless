@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkServiceContainerSingleton;
 import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkTestBiz;
 import mock.ClassBeIncludedInBizClassLoader;
 import mock.MockTestRunner;
 import mock.TestClassInBizClassLoaderA;
 import mock.BaseBootStrap;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class UseTestBizClassLoaderTest {
     private SOFAArkTestBiz createTestBiz() {
         // 基座 ClassLoader
         URLClassLoader baseClassLoader = (URLClassLoader) Thread.currentThread()
-            .getContextClassLoader();
+                .getContextClassLoader();
 
         // 测试类
         ArrayList<String> testClasses = new ArrayList<>();
@@ -49,13 +50,13 @@ public class UseTestBizClassLoaderTest {
         ArrayList<String> includedInBizClassLoaderPatterns = new ArrayList<>();
         includedInBizClassLoaderPatterns.add(".*"
                                              + ClassBeIncludedInBizClassLoader.class
-                                                 .getSimpleName() + ".*");
+                                                     .getSimpleName() + ".*");
 
         // 创建测试 BIZ
         return new SOFAArkTestBiz(
-            // bootstrap class 用来模拟一些基座初始化的行为。
-            BaseBootStrap.class.getName(), "test", "1.0.0", testClasses,
-            includedInBizClassLoaderPatterns, baseClassLoader);
+                // bootstrap class 用来模拟一些基座初始化的行为。
+                BaseBootStrap.class.getName(), "test", "1.0.0", testClasses,
+                includedInBizClassLoaderPatterns, baseClassLoader);
     }
 
     @Test
