@@ -1,0 +1,6 @@
+testFramework: junit4
+testBizConfigs:
+  - name: 'sofa-ark-compatible-test'
+    bootstrapClass: 'com.alipay.sofa.koupleless.test.suite.mock.TestJunit4BootStrap'
+    testClasses:
+      - 'com.alipay.sofa.koupleless.test.suite.mock.TestJunit4Class'
