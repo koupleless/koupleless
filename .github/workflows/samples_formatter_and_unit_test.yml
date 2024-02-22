@@ -5,8 +5,8 @@ on:
   push:
     branches:
       - main
-      - 2.0.x
-      - 2.1.x
+      - runtime-2.0.x
+      - runtime-2.1.x
     paths:
       - 'koupleless-runtime/**'
       - 'samples/**'
@@ -14,8 +14,8 @@ on:
   pull_request:
     branches:
       - main
-      - 2.0.x
-      - 2.1.x
+      - runtime-2.0.x
+      - runtime-2.1.x
     paths:
       - 'koupleless-runtime/**'
       - 'samples/**'
