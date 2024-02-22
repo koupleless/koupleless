@@ -2,7 +2,7 @@ name: Module Controller Release
 run-name: ${{ github.actor }} pushed module-controller code
 
 on:
-  create:
+  push:
     tags:
       - 'v*.*.*'
   workflow_dispatch:

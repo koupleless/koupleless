@@ -326,6 +326,7 @@
                         <exclude>**/sofa/serverless/common/exception/**/*</exclude>
                         <exclude>**/com/alibaba/dubbo/**/*</exclude>
                         <exclude>**/org/springframework/boot/**/*</exclude>
+                        <exclude>**/org/apache/logging/slf4j/**/*</exclude>
                         <exclude>**/com/ctrip/framework/apollo/spring/boot/**/*</exclude>
                     </excludes>
                 </configuration>

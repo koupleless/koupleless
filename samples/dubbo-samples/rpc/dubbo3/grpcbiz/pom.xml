@@ -84,6 +84,12 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-app-starter</artifactId>
+            <version>${koupleless.runtime.version}</version>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
 
     <build>
