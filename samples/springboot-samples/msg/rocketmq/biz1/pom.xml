@@ -58,7 +58,7 @@
 
 		<dependency>
 			<groupId>com.alipay.sofa.koupleless</groupId>
-			<artifactId>koupleless-adapter-log4j2</artifactId>
+			<artifactId>koupleless-app-starter</artifactId>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
