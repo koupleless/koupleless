@@ -61,12 +61,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.alipay.sofa.koupleless</groupId>
-            <artifactId>koupleless-adapter-log4j2</artifactId>
-            <version>${koupleless.runtime.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.alipay.sofa</groupId>
             <artifactId>sofa-ark-api</artifactId>
             <version>${sofa.ark.version}</version>
