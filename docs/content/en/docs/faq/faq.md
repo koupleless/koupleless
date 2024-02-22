@@ -1,24 +1,24 @@
 ---
-title: 常见问题列表
+title: FAQ List
 date: 2024-01-25T10:28:32+08:00
-description: Koupleless FAQ。Koupleless 常见问题列表。
+description: Koupleless FAQ. List of common questions about Koupleless.
 weight: 10
 ---
 
-#### 问题 1-1：模块 compile 引入 springboot 依赖，模块安装时报错
+#### Question 1-1: Error Occurs During Module Installation Due to Spring Boot Dependency in Module Compile
 ```text
 java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.koupleless.common.spring.KouplelessApplicationListener
 ```
-##### 解决方式
-模块需要做好瘦身，参考这里：[模块瘦身](/docs/tutorials/module-development/module-slimming)
+##### Solution
+The module needs to be slimmed down. Refer to this guide: [Module Slimming]](/docs/tutorials/module-development/module-slimming)
 
-#### 问题 1-2：模块安装找不到 `KouplelessApplicationListener`
-报错信息如下：
+#### Question 1-2: Unable to Find `KouplelessApplicationListener` During Module Installation
+Error message:
 ```text
 com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SNAPSHOT : can not load class: com.alipay.koupleless.common.spring.KouplelessApplicationListener
 ```
-##### 解决方式
-请在模块里面添加如下依赖：
+##### Solution
+Please add the following dependency in the module:
 ```xml
 <dependency>
     <groupId>com.alipay.koupleless</igroupId>
@@ -26,23 +26,23 @@ com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SN
     <version>0.5.6</version>
 </dependency>
 ```
-或者升级 koupleless 版本到最新版本
+Or upgrade the Koupleless version to the latest one.
 
-#### 问题 1-3: 通过 go install 无法安装 arkctl
-执行如下命令，报错
+#### Question 1-3: Unable to install arkctl via go install
+Encounter error when executing the following command:
 ```shell
 go install koupleless.alipay.com/koupleless/v1/arkctl@latest
 ```
-报错信息如下：
+Error message:
 ```text
 go: koupleless.alipay.com/koupleless/v1/arkctl@latest: module koupleless.alipay.com/koupleless/v1/arkctl: Get "https://proxy.golang.org/koupleless.alipay.com/koupleless/v1/arkctl/@v/list": dial tcp 142.251.42.241:443: i/o timeout
 ```
-##### 解决方式
-arkctl 是作为 koupleless 子目录的方式存在的，所以没法直接 go get，可以从这下面下载执行文件, 请参考[安装 arkctl](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.0)
+##### Solution
+arkctl is present as a subdirectory of Koupleless, so it cannot be directly installed using go get, You can download the executable from here, Please refer to[ Install arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.0)
 
-#### 问题 1-4：模块安装报 `Master biz environment is null`
+#### Question 1-4: Encounter `Master biz environment is null` error during module installation. 
 
-##### 解决方式，升级 koupleless 版本到最新版本
+##### Solution: Upgrade Koupleless to the latest version.
 ```xml
 <dependency>
     <groupId>com.alipay.koupleless</igroupId>
@@ -51,8 +51,8 @@ arkctl 是作为 koupleless 子目录的方式存在的，所以没法直接 go 
 </dependency>
 ```
 
-#### 问题 1-5：模块静态合并部署无法从制定的目录里找到模块包
-##### 解决方式：升级 koupleless 版本到最新版本
+#### Question 1-5: Module static merge deployment cannot find module package in the specified directory.
+##### Solution: Upgrade Koupleless to the latest version.
 ```xml
 <dependency>
     <groupId>com.alipay.koupleless</igroupId>
@@ -60,14 +60,14 @@ arkctl 是作为 koupleless 子目录的方式存在的，所以没法直接 go 
     <version>${最新版本号}</version>
 </dependency>
 ```
-#### 问题 1-6：用户工程与 koupleless 里 guice 版本不一致，且版本较老
-报错信息：
+#### Question 1-6: The user project has a different and outdated version of Guice compared to the version in Koupleless.
+Error Message: 
 ```text
 Caused by: java.Lang.ClassNotFoundException: com.google.inject.multibindings.Multibinder
 ```
 ![guice_version_incompatibility.png](imgs/guice_version_incompatibility.png)
 
-##### 解决方式：升级 guice 版本到较新版本，如
+##### Solution: Upgrade the Guice version to a newer one, such as.
 ```xml
 <dependency>
     <groupId>com.google.inject</groupId>
@@ -76,14 +76,15 @@ Caused by: java.Lang.ClassNotFoundException: com.google.inject.multibindings.Mul
 </dependency>
 ```
 
-#### 问题 1-7：模块与基座共库时，模块启动了基座的逻辑
-例如基座引入了 druid，但是模块里没有引入，按照设计模块应该不需要初始化 dataSource，但是如果遇到模块也初始化了 dataSource，那么该行为是不符合预期的，也可能导致报错。
+#### Question 1-7: When sharing libraries between the module and the base, the module initializes the base's logic.
+For example, if the base includes Druid but the module does not, according to the design, the module should not need to initialize the dataSource. However, if the module also initializes the dataSource, this behavior is unexpected and may result in errors.
 
-##### 解决方式
-1. 确保模块可以独立构建，也就是可以在模块的目录里执行 `mvn clean package`，并且不会报错
-2. 升级 koupleless 版本到最新版本 0.5.7
+##### Solution
+1. Ensure that the module can be built independently, meaning it can execute `mvn clean package` in the module's directory without errors.
+2. Upgrade Koupleless to the latest version, version 0.5.7.
 
-#### 问题 1-8: SOFABoot 基座或模块启动报 `The following classes could not be excluded because they are not auto-configuration classes: org.springframework.boot.actuate.autoconfigure.startup.StartupEndpointAutoConfiguration`
-SOFABoot 正确引入需要同时引入 spring-boot-actuator-autoconfiguration，因为 [sofa-boot 里通过代码定义](https://github.com/sofastack/sofa-boot/blob/82d0ca388b433ac18fb44704e2f2b280fda1b760/sofa-boot-project/sofa-boot/src/main/java/com/alipay/sofa/boot/env/SofaBootEnvironmentPostProcessor.java#L88)了 spring.exclude.autoconfiguration = `org.springframework.boot.actuate.autoconfigure.startup.StartupEndpointAutoConfiguration`, 当启动时找不到该类时就会报错。
-##### 解决方式
-基座或模块里引入 sprign-boot-actuator-autoconfiguration
+#### Question 1-8: SOFABoot 基座或模块启动报 `The following classes could not be excluded because they are not auto-configuration classes: org.springframework.boot.actuate.autoconfigure.startup.StartupEndpointAutoConfiguration`
+SOFABoot requires the concurrent inclusion of spring-boot-actuator-autoconfiguration，This is because in [sofa-boot through code definition](https://github.com/sofastack/sofa-boot/blob/82d0ca388b433ac18fb44704e2f2b280fda1b760/sofa-boot-project/sofa-boot/src/main/java/com/alipay/sofa/boot/env/SofaBootEnvironmentPostProcessor.java#L88)spring.exclude.autoconfiguration = `org.springframework.boot.actuate.autoconfigure.startup.StartupEndpointAutoConfiguration` is defined. If this class cannot be found during startup, an error occurs.
+
+##### Solution
+Include `spring-boot-actuator-autoconfiguration` in the base or module.

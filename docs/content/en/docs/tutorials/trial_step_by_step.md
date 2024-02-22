@@ -53,7 +53,7 @@ date: 2024-01-25T10:28:32+08:00
 ### 2. 模块 1 接入改造
 
 1. 添加模块需要的依赖和打包插件
-```json
+```xml
 <plugins>
     <!--这里添加ark 打包插件-->
     <plugin>
@@ -89,7 +89,7 @@ date: 2024-01-25T10:28:32+08:00
 2. 参考官网模块瘦身里[自动排包部分](https://koupleless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB)，下载排包配置文件 **rules.txt**，放在在 **conf/ark/** 目录下
 
 3. 开发模块，例如增加 Rest Controller，提供 Rest 接口
-```json
+```java
 @RestController
 public class SampleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SampleController.class);
@@ -117,7 +117,7 @@ hello to ${模块1名} deploy
 开发与验证需要完成**修改代码并发布 V2 版本**。具体操作如下：
 
 1. 修改 Rest 代码
-```json
+```java
 @RestController
 public class SampleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SampleController.class);
@@ -153,7 +153,7 @@ hello to ${模块1名} deploy v2
 通信类需要以 **独立 bundle **的方式存在，才能被模块引入。可参考以下方式：
 
 1. 新建 bundle，定义接口类
-```xml
+```java
 public class ProductInfo {
     private String  name;
     private String  author;
