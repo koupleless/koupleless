@@ -1,55 +1,55 @@
 ---
-title: 快速开始
+title: Quick Start
 date: 2024-01-25T10:28:32+08:00
-description: Koupleless 快速开始
+description: Koupleless Quick Start
 weight: 200
 ---
 
-# 实验 1：一键实现多应用合并部署
+# Experiment 1: One-Click Multi-Application Consolidated Deployment
 
-合并部署是指：选定一个应用作为底座，然后将多个其它应用合并部署到这个底座之上，从而实现长尾应用的极致资源降本。典型业务场景为应用的低成本交付 以及 微服务过度拆分一键重新合并。
+Consolidated deployment refers to selecting one application as the base and then consolidating multiple other applications onto this base to achieve the ultimate resource cost reduction for long-tail applications. Typical business scenarios include low-cost delivery of applications and one-click reconsolidation of over-split microservices.
 
-1. 选定一个应用作为底座（Koupleless 术语叫**基座**），将普通应用[一键升级为基座](/docs/tutorials/base-create/springboot-and-sofaboot/)。
-2. 选定一个应用作为上层应用（Koupleless 术语叫**模块**），将其[一键转为模块应用并完成合并部署](/docs/tutorials/module-create/springboot-and-sofaboot/)。
+1. Select an application as the base (referred to as **foundation** in Koupleless terminology) and [upgrade a regular application to the foundation](/docs/tutorials/base-create/springboot-and-sofaboot/).
+2. Select an application as the upper-layer application (referred to as **module** in Koupleless terminology) and [convert it to a module application and complete the consolidated deployment](/docs/tutorials/module-create/springboot-and-sofaboot/).
 <br/>
-您也可以直接使用 [官方 Demo 和文档](https://github.com/koupleless/koupleless/tree/master/samples/springboot-samples/service) 在本地完成实验。 
+You can also directly use the [official demo and documentation](https://github.com/koupleless/koupleless/tree/master/samples/springboot-samples/service) 在本地完成实验。 
 
-小贴士：无论**基座**还是**模块**，接入 Koupleless 后，同一套代码分支既能像原来一样独立启动，又能做到合并部署。
+Tip: Whether it is the **base** or the **module**, after integrating Koupleless, the same code branch can both start independently as before and achieve consolidated deployment.
 
 <br/>
 <br/>
 
 
-# 实验 2：一键体验应用秒级热部署
+# Experiment 2: One-Click Experience of Application Instant Hot Deployment
 
-## 步骤 1：本地软件安装
-下载安装 **go**（建议 1.20 或以上）、**docker**、**minikube**、**kubectl**。
-- 注：第2步前，请启动好 docker、minikube
+## Step 1: Local Software Installation
+Download and install **go** (recommended version 1.20 or above), **docker**, **minikube**, **kubectl**.
+- Note: Before Step 2, please start docker and minikube
 ```shell
-# mac 可执行如下命令
-# 启动docker
+# For macOS, run the following commands:
+# open --background -a Docker
 open --background -a Docker
 
-# 启动minikube
+# minikube start
 minikube start
 ```
 
-## 步骤 2：一键启动 Koupleless
-使用 **git** 拉取 GitHub Koupleless 项目：[https://github.com/koupleless/koupleless](https://github.com/koupleless/koupleless) <br />在 **module-controller** 目录下执行 **make dev** 命令一键部署环境，会自动执行 minikube service 命令弹出网页，由于此时您还没有发布模块，所以网页不会有任何内容显示。
+## Step 2: One-Click Start Koupleless
+Use **git** to clone the Koupleless project from GitHub: [https://github.com/koupleless/koupleless](https://github.com/koupleless/koupleless) <br />Execute the **make dev** command under the **module-controller** directory to deploy the environment with one click. The minikube service command will be automatically executed to pop up a webpage. Since you have not yet released the module, the webpage will not display any content.
 
-## 步骤 3：秒级发布模块
-执行以下命令：
+## Step 3: Module Deployment in Seconds
+Execute the following command:
 ```bash
 kubectl apply -f config/samples/module-deployment_v1alpha1_moduledeployment_provider.yaml
 ```
-即可秒级发布上线模块应用。请等待本地 Module CR 资源 Status 字段值变更为 Available**（约 1 秒，表示模块发布完毕）**，再刷新步骤 2 自动打开的网页，即可看到一个简单的卖书页面，这个卖书逻辑就是在模块里实现的：<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694161452232-15aec134-3b2a-491f-9295-0c5f8f7341af.png#clientId=ue383ca9b-aa63-4&from=paste&height=443&id=ub3eb7eb8&originHeight=1318&originWidth=1626&originalType=binary&ratio=2&rotation=0&showTitle=false&size=168110&status=done&style=none&taskId=u07f60163-67e4-42fa-bc41-76e43a09c1f&title=&width=546)
+You can deploy the module application online in seconds. Please wait for the local Module CR resource Status field value to change to **Available** (about 1 second, indicating that the module has been deployed). Then, refresh the webpage automatically opened in Step 2, and you will see a simple book selling page. The logic of selling books is implemented in the module: <br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/671/1694161452232-15aec134-3b2a-491f-9295-0c5f8f7341af.png#clientId=ue383ca9b-aa63-4&from=paste&height=443&id=ub3eb7eb8&originHeight=1318&originWidth=1626&originalType=binary&ratio=2&rotation=0&showTitle=false&size=168110&status=done&style=none&taskId=u07f60163-67e4-42fa-bc41-76e43a09c1f&title=&width=546)
 
-## 步骤 4：清理本地环境
-您可以使用 **make undev** 删除所有本地资源，清理本地环境。
+## Step 4: Clean Up Local Environment
+You can use **make undev** to clean all local resources and clean up the local environment.
 
 <br/>
 <br/>
 
-# 欢迎大家学习 Koupleless 视频教程
+# Welcome to Learn Koupleless Video Tutorials
 
-[点击此处](/docs/video-training/)查看 Koupleless 平台与研发框架视频培训教程。
+[Click here](/docs/video-training/)to view the Koupleless platform and development framework video training courses.
