@@ -7,7 +7,7 @@ weight: 10
 
 #### 问题 1-1：模块 compile 引入 springboot 依赖，模块安装时报错
 ```text
-java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.koupleless.common.spring.KouplelessApplicationListener
+java.lang.IllegalArgumentException: Cannot instantiate interface org.springframework.context.ApplicationListener : com.alipay.sofa.koupleless.common.spring.KouplelessApplicationListener
 ```
 ##### 解决方式
 模块需要做好瘦身，参考这里：[模块瘦身](/docs/tutorials/module-development/module-slimming)
@@ -15,13 +15,13 @@ java.lang.IllegalArgumentException: Cannot instantiate interface org.springframe
 #### 问题 1-2：模块安装找不到 `KouplelessApplicationListener`
 报错信息如下：
 ```text
-com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SNAPSHOT : can not load class: com.alipay.koupleless.common.spring.KouplelessApplicationListener
+com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SNAPSHOT : can not load class: com.alipay.sofa.koupleless.common.spring.KouplelessApplicationListener
 ```
 ##### 解决方式
 请在模块里面添加如下依赖：
 ```xml
 <dependency>
-    <groupId>com.alipay.koupleless</igroupId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-app-starter</artifactId>
     <version>0.5.6</version>
 </dependency>
@@ -45,7 +45,7 @@ arkctl 是作为 koupleless 子目录的方式存在的，所以没法直接 go 
 ##### 解决方式，升级 koupleless 版本到最新版本
 ```xml
 <dependency>
-    <groupId>com.alipay.koupleless</igroupId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-app-starter</artifactId>
     <version>${最新版本号}</version>
 </dependency>
@@ -55,7 +55,7 @@ arkctl 是作为 koupleless 子目录的方式存在的，所以没法直接 go 
 ##### 解决方式：升级 koupleless 版本到最新版本
 ```xml
 <dependency>
-    <groupId>com.alipay.koupleless</igroupId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-app-starter</artifactId>
     <version>${最新版本号}</version>
 </dependency>

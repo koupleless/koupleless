@@ -30,7 +30,7 @@ spring.application.name = ${替换为实际基座应用名}
 ```xml
 <!-- 注意放在构建 pom 的第一个依赖位置 -->
 <dependency>
-    <groupId>com.alipay.koupleless</groupId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <version>${koupleless.runtime.version}</version>
     <type>pom</type>
