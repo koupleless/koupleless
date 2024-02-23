@@ -1,75 +1,75 @@
 ---
-title: 开发验证与部署上线
+title: Development Validation and Deployment
 date: 2024-01-25T10:28:32+08:00
-description: Koupleless 基座、模块开发验证与部署上线
+description: Koupleless Base and Module Development Validation and Deployment
 weight: 500
 ---
 
-本文主要介绍动态合并部署模式，用于省资源与提高研发效率。如果你只是想节省资源，可以使用[静态合并部署](/docs/tutorials/module-development/static-merge-deployment/)。
+This document mainly introduces the dynamic merge deployment mode, which is used to save resources and improve development efficiency. If you only want to save resources, you can use [static merge deployment](/docs/tutorials/module-development/static-merge-deployment/)。
 
 ![img.png](/img/build_and_deploy.png)
 
-这里也提供了视频教程，[可点击此处查看](/docs/video-training/)。
+A video tutorial is also available [here](/docs/video-training/)。
 
-## 基座接入
-[可参考此处](/docs/tutorials/base-create/springboot-and-sofaboot)
+## Base Integration
+[Refer here for reference](/docs/tutorials/base-create/springboot-and-sofaboot)
 
-## 模块接入
-[可参考此处](/docs/tutorials/module-create/springboot-and-sofaboot)
+## Module Integration
+[Refer here for reference](/docs/tutorials/module-create/springboot-and-sofaboot)
 
-## 模块开发验证
-可以有两种开发验证方式：
-1. 本地环境开发验证
-2. K8S 集群环境开发验证
+## Module Development Verification
+There can be two ways for development verification:
+1. Local Environment Development Verification
+2. K8S Cluster Environment Development Verification
 
-### 本地环境开发验证
-#### 安装
-1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.1)。
-2. 将对应的二进制解压并放到合适的系统变量 PATH 下。
-3. 在基座和模块已经改造完成后，启动好基座后，可以使用 arkctl 快速完成构建与部署，将模块部署到基座中。
+### Local Environment Development Verification
+#### Installation
+1. Download [arkctl](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.1) according to the actual operating system.
+2. Unzip the corresponding binary and place it in the appropriate system variable PATH.
+3. After the base and module are refactored, and the base is started, arkctl can be used to quickly build and deploy, deploying the module to the base.
 <br/>
 
-#### 如何找到 PATH 的值？
-Linux/Mac 下在终端执行
+#### How to find the value of PATH?
+In Linux/Mac, execute the following command in the terminal:
 ```shell
 echo $PATH
-# 选择一个目录，将 arkctl 放到该目录下
+# Choose a directory and place arkctl in that directory
 ```
-Windows 下 
-1. 右键我的电脑。
-2. 点击属性。
-3. 点击高级系统设置。
-4. 点击环境变量。
-5. 双击 Path 变量。
-6. 在弹出的对话框中，可以看到当前的 Path 变量值。
-7. 找到对应的目录，将 arkctl.exe 放到该目录下。
+In Windows:
+1. Right-click on My Computer. 
+2. Click on Properties. 
+3. Click on Advanced System Settings. 
+4. Click on Environment Variables. 
+5. Double-click on the Path variable. 
+6. In the popped dialog box, you can see the current Path variable value. 
+7. Find the corresponding directory and place arkctl.exe in that directory.
 
-#### 使用
-快速部署构建好的模块 jar 包。
+#### Usage
+Quickly deploy the built module jar package.
 ```shell
-arkctl deploy ${模块构建出的 jar 包路径}
+arkctl deploy ${path to the module jar package}
 ```
-构建当前目录下的 pom 项目，并将 target 目录下的 biz jar 包部署到基座中。
+Build the pom project in the current directory and deploy the biz jar package in the target directory to the base.
 ```shell
 arkctl deploy 
 ```
-### K8S 集群环境开发验证, 以 minikube 集群为例
-#### 基座发布
-1. 基座构建成镜像，推送到镜像中心
-2. 基座部署到 k8s 集群中，创建基座的 service，暴露端口, 可[参考这里](https://github.com/koupleless/koupleless/blob/master/module-controller/config/samples/dynamic-stock-service.yaml)
-3. 执行 minikube service base-web-single-host-service, 访问基座的服务
+### K8S Cluster Environment Development Verification, using minikube cluster as an example
+#### Base Deployment
+1. Build the base into an image and push it to the image center.
+2. Deploy the base to the k8s cluster, create a service for the base, expose the port, can [refer here](https://github.com/koupleless/koupleless/blob/master/module-controller/config/samples/dynamic-stock-service.yaml)
+3. Execute minikube service base-web-single-host-service to access the base service.
 
-#### 模块发布
-1. 部署模块到 k8s 集群中
+#### Module Deployment
+1. Deploy the module to the k8s cluster
 ```shell
-arkctl deploy ${模块构建出的 jar 包路径} --pod ${namespace}/${podname}
+arkctl deploy ${path to the module jar package} --pod ${namespace}/${podname}
 ```
 
-## 模块部署上线
-1. 使用 helm 方式部署 ModuleController 到 k8s 集群
-2. 使用 ModuleController 提供的模块部署能力，发布模块到集群机器上，具备可灰度、可追溯、流量无损能力，详细可[参见此处](/docs/tutorials/module-operation/module-online-and-offline/)
+## Module Deployment and Online
+1. Use helm to deploy ModuleController to the k8s cluster.
+2. Use the module deployment capability provided by ModuleController to publish the module to the cluster machines, with gray, traceable, and traffic-free capabilities. For details, please [refer here](/docs/tutorials/module-operation/module-online-and-offline/)
 
 
-## 更多实验请查看 samples 用例
+## For more experiments, please refer to the samples directory
 
-[点击此处](https://github.com/koupleless/koupleless/tree/master/samples)
+[Refer here for reference](https://github.com/koupleless/koupleless/tree/master/samples)

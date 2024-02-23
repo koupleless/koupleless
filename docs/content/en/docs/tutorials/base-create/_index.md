@@ -1,5 +1,5 @@
 ---
-title: 基座接入
+title: Base Access
 date: 2024-01-25T10:28:32+08:00
 weight: 300
 ---

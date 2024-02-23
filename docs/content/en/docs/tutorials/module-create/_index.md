@@ -1,6 +1,6 @@
 ---
-title: 模块接入
+title: Module Access
 date: 2024-01-25T10:28:32+08:00
-description: Koupleless 模块接入
+description: Koupleless Module Access
 weight: 400
 ---

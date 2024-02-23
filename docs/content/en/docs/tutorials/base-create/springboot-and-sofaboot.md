@@ -1,25 +1,25 @@
 ---
-title: SpringBoot 或 SOFABoot 升级为基座
+title: SpringBoot or SOFABoot Upgrade to Foundation
 date: 2024-01-25T10:28:32+08:00
-description: SpringBoot 或 SOFABoot 升级为 Koupleless 基座
+description: Upgrade SpringBoot or SOFABoot to Koupleless Foundation
 weight: 100
 ---
 
-## 前提条件
-1. SpringBoot 版本 >= 2.3.0（针对 SpringBoot 用户）
-2. SOFABoot 版本 >= 3.9.0 或 SOFABoot >= 4.0.0（针对 SOFABoot 用户）
+## Prerequisites
+1. SpringBoot version >= 2.3.0 (for SpringBoot users)
+2. SOFABoot version >= 3.9.0 or SOFABoot >= 4.0.0 (for SOFABoot users)
 
-## 接入步骤
+## Access Steps
 
-### 代码与配置修改
+### Code and Configuration Modifications
 
-#### 修改 application.properties
+#### Modify application.properties
 ```properties
-# 需要定义应用名
-spring.application.name = ${替换为实际基座应用名}
+# Need to define the application name
+spring.application.name = ${Replace with actual base app name}
 ```
 
-#### 修改主 pom.xml
+#### Modify the main pom.xml
 ```xml
 <properties>
     <sofa.ark.verion>2.2.7</sofa.ark.verion>
@@ -28,7 +28,7 @@ spring.application.name = ${替换为实际基座应用名}
 ```
 
 ```xml
-<!-- 注意放在构建 pom 的第一个依赖位置 -->
+<!-- Place this as the first dependency in your build pom -->
 <dependency>
     <groupId>com.alipay.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
@@ -36,15 +36,15 @@ spring.application.name = ${替换为实际基座应用名}
     <type>pom</type>
 </dependency>
 
-<!-- 如果使用了 springboot web，则加上这个依赖，详细查看https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ -->
+<!-- If using Spring Boot web, add this dependency. For more details, see https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/ -->
 <dependency>
     <groupId>com.alipay.sofa</groupId>
     <artifactId>web-ark-plugin</artifactId>
 </dependency>
 ```
 
-### 启动验证
-基座应用能正常启动即表示验证成功！
+### Startup Verification
+If the foundation application can start normally, the validation is successful!
 
 <br/>
 <br/>

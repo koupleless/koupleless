@@ -1,7 +1,7 @@
 ---
-title: 使用 maven archtype 脚手架自动生成
+title: Generating Modules Using Maven Archetype
 date: 2024-01-25T10:28:32+08:00
 weight: 100
 ---
 
-正在更新中，预计 2 月上线。
+This section is currently being updated and is expected to be available in February.

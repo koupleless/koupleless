@@ -1,30 +1,30 @@
 ---
-title: SpringBoot 或 SOFABoot 一键升级为模块
+title: Upgrade to Module with One-Click for SpringBoot or SOFABoot
 date: 2024-01-25T10:28:32+08:00
-description: SpringBoot 或 SOFABoot 一键升级为 Koupleless 模块
+description: Upgrade to Koupleless Module with One-Click for SpringBoot or SOFABoot
 weight: 100
 ---
 
-本文讲解了 SpringBoot 或 SOFABoot 一键升级为模块的操作和验证步骤，仅需加一个 ark 打包插件即可实现普通应用一键升级为模块应用，并且能做到同一套代码分支，既能像原来 SpringBoot 一样独立启动，也能作为模块与其它应用合并部署在一起启动。
+This article explains the steps and verification process for upgrading SpringBoot or SOFABoot to a module with one click. With just one ark packaging plugin, ordinary applications can be upgraded to module applications. The same code branch can be used for both independent startup like SpringBoot and for deployment as modules alongside other applications.
 
-## 前提条件
-1. SpringBoot 版本 >= 2.3.0（针对 SpringBoot 用户）
-2. SOFABoot >= 3.9.0 或 SOFABoot >= 4.0.0（针对 SOFABoot 用户）
+## Prerequisites
+1. SpringBoot version >= 2.3.0 (for SpringBoot users)
+2. SOFABoot >= 3.9.0 or SOFABoot >= 4.0.0 (for SOFABoot users)
 
-## 接入步骤
+## Access Steps
 
-### 步骤 1：修改 application.properties
+### Step 1: Modify application.properties
 
 ```properties
-# 需要定义应用名
-spring.application.name = ${替换为实际模块应用名}
+# Need to define the application name
+spring.application.name = ${Replace with actual module app name}
 ```
 
-### 步骤 2：添加模块需要的依赖和打包插件
+### Step 2: Add Dependencies and Packaging Plugins for the Module
 
-**特别注意**： sofa ark 插件定义顺序必须在 springboot 打包插件前;
+**Note**： The order of defining the sofa-ark plugin must be before the springboot packaging plugin;
 ```xml
-<!-- 模块需要引入的依赖，主要用户跨模块间通信 --> 
+<!-- Dependencies required for the module, mainly for inter-module communication --> 
 <dependencies>
     <dependency>
         <groupId>com.alipay.sofa.koupleless</groupId>
@@ -34,7 +34,7 @@ spring.application.name = ${替换为实际模块应用名}
 </dependencies>
 
 <plugins>
-    <!--这里添加ark 打包插件-->
+<!-- Add the ark packaging plugin here -->
     <plugin>
         <groupId>com.alipay.sofa</groupId>
         <artifactId>sofa-ark-maven-plugin</artifactId>
@@ -50,58 +50,58 @@ spring.application.name = ${替换为实际模块应用名}
         <configuration>
             <skipArkExecutable>true</skipArkExecutable>
             <outputDirectory>./target</outputDirectory>
-            <bizName>${替换为模块名}</bizName>
-            <webContextPath>${模块自定义的 web context path}</webContextPath>
+            <bizName>${Replace with module name}</bizName>
+            <webContextPath>${Module's custom web context path}</webContextPath>
             <declaredMode>true</declaredMode>
         </configuration>
     </plugin>
-    <!--  构建出普通 SpringBoot fatjar，支持独立部署时使用，如果不需要可以删除  -->
+<!-- Build a regular SpringBoot fat jar, used for independent deployment, can be removed if not needed -->
     <plugin>
-        <!--原来 spring-boot 打包插件 -->
+        <!-- Original spring-boot packaging plugin -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
     </plugin>
 </plugins>
 ```
 
-### 步骤 3：自动化瘦身模块
+### Step 3: Automate Module Slimming
 
-您可以使用 ark 打包插件的自动化瘦身能力，自动化瘦身模块应用里的 maven 依赖。这一步是必选的，否则构建出的模块 jar 包会非常大，而且启动会报错。
-_扩展阅读_：如果模块不做依赖瘦身[独立引入 SpringBoot 框架会怎样？](/docs/faq/import-full-springboot-in-module)
+You can leverage the automated slimming capability provided by the ark packaging plugin to slim down the Maven dependencies in your module application. This step is mandatory; otherwise, the resulting module JAR file will be very large, and startup may fail.
+_Extended Reading_: If the module does not optimize its dependencies[What will happen if SpringBoot framework is imported independently?](/docs/faq/import-full-springboot-in-module)
 
-### 步骤 4：构建成模块 jar 包
+Step 4: Build the Module Jar Package
 
-执行 `mvn clean package -DskipTest`, 可以在 target 目录下找到打包生成的 ark biz jar 包，也可以在 target/boot 目录下找到打包生成的普通的 springboot jar 包。
+Execute **mvn clean package -DskipTest**, you can find the packaged ark biz jar in the target directory, or you can find the packaged regular springboot jar in the target/boot directory.
 
-**小贴士**：[模块中支持的完整中间件清单](/docs/tutorials/module-development/runtime-compatibility-list/)。
+**Tip**：[Full Middleware Compatibility List Supported in the Module](/docs/tutorials/module-development/runtime-compatibility-list/)。
 
 
-## 实验：验证模块既能独立启动，也能被合并部署
+## Experiment: Verifying that the module can be started independently and deployed as a combined module
 
-增加模块打包插件（sofa-ark-maven-plugin）进行打包后，只会新增 ark-biz.jar 构建产物，与原生 spring-boot-maven-plugin 打包的可执行Jar 互相不冲突、不影响。
-当服务器部署时，期望独立启动，就使用原生 spring-boot-maven-plugin 构建出的可执行 Jar 作为构建产物；期望作为 ark 模块部署到基座中时，就使用 sofa-ark-maven-plugin 构建出的 xxx-ark-biz.jar 作为构建产物
+After adding the module packaging plugin (sofa-ark-maven-plugin) for packaging, only the ark-biz.jar build artifact will be added, which does not conflict with or affect the executable Jar built by the native spring-boot-maven-plugin.
+When deploying on the server, if you want to start independently, use the executable Jar built by the native spring-boot-maven-plugin as the build artifact; if you want to deploy as an ark module to the base, use the ark-biz.jar built by the sofa-ark-maven-plugin as the build artifact.
 
-### 验证能合并部署到基座上
+### Verification of Deployment to the Base
 
-1. 启动上一步（验证能独立启动步骤）的基座
-2. 发起模块部署
+1. Start the base from the previous step (verification of independent startup).
+2. Initiate module deployment
 ```shell
 curl --location --request POST 'localhost:1238/installBiz' \
 --header 'Content-Type: application/json' \
 --data '{
-    "bizName": "${模块名}",
-    "bizVersion": "${模块版本}",
+    "bizName": "${Module Name}",
+    "bizVersion": "${Module Version}",
     "bizUrl": "file:///path/to/ark/biz/jar/target/xx-xxxx-ark-biz.jar"
 }'
 ```
-返回如下信息表示模块安装成功<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695021262517-34e6728e-b39e-4996-855b-d866e839fd0a.png#clientId=ueb52f3f0-186e-4&from=paste&height=226&id=u8ab265a1&originHeight=452&originWidth=1818&originalType=binary&ratio=2&rotation=0&showTitle=false&size=60390&status=done&style=none&taskId=uf3b43b8e-80dd-43db-b486-3ca38663e5e&title=&width=909)
+If the following information is returned, it indicates that the module is installed successfully.<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695021262517-34e6728e-b39e-4996-855b-d866e839fd0a.png#clientId=ueb52f3f0-186e-4&from=paste&height=226&id=u8ab265a1&originHeight=452&originWidth=1818&originalType=binary&ratio=2&rotation=0&showTitle=false&size=60390&status=done&style=none&taskId=uf3b43b8e-80dd-43db-b486-3ca38663e5e&title=&width=909)
 
-3. 查看当前模块信息，除了基座 base 以外，还存在一个模块 dynamic-provider
+3. View Current Module Information: Besides the base "base," there is also a module named "dynamic-provider."
 
 ![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695021372335-9fbce7ae-ab41-44e8-ab51-6a771bddfef3.png#clientId=ueb52f3f0-186e-4&from=paste&height=367&id=u301dd5fb&originHeight=734&originWidth=1186&originalType=binary&ratio=2&rotation=0&showTitle=false&size=97949&status=done&style=none&taskId=u8570e201-b10d-460a-946a-d9c94529834&title=&width=593)
 
-4. 卸载模块
-```json
+4. Uninstall the module
+```shell
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -109,7 +109,7 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
     "bizVersion": "0.0.1-SNAPSHOT"
 }'
 ```
-返回如下，表示卸载成功
+If the following information is returned, it indicates that the uninstallation was successful.
 ```json
 {
     "code": "SUCCESS",
@@ -119,6 +119,6 @@ curl --location --request POST 'localhost:1238/uninstallBiz' \
     }
 }
 ```
-### 验证能独立启动
+### Verification of Independent Startup
 
-普通应用改造成模块之后，还是可以独立启动，可以验证一些基本的启动逻辑，只需要在启动配置里勾选自动添加 `provided`scope 到 classPath 即可，后启动方式与普通应用方式一致。通过自动瘦身改造的模块，也可以在 `target/boot` 目录下直接通过 springboot jar 包启动，[点击此处](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/slimming)查看详情。<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
+After transforming a regular application into a module, it can still be started independently to verify some basic startup logic. Simply check the option to automatically add `provided` scope to the classpath in the startup configuration, and then use the same startup method as for regular applications. Modules transformed through automatic slimming can also be started directly using the SpringBoot jar package located in the `target/boot` directory. For more details, please refer to [this link](https://github.com/koupleless/koupleless/tree/main/samples/springboot-samples/slimming)<br />![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/149473/1695032642009-a5248a99-d91b-4420-b830-600b35eaa402.png#clientId=u4eb3445f-d3dc-4&from=paste&height=606&id=ued085b28&originHeight=1212&originWidth=1676&originalType=binary&ratio=2&rotation=0&showTitle=false&size=169283&status=done&style=none&taskId=u78d21e68-c71c-42d1-ac4c-8b41381bfa4&title=&width=838)
