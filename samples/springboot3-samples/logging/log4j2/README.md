@@ -19,7 +19,7 @@ The base is built from regular SpringBoot application. The only change you need 
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <!-- The above version supports springboot3 -->
-    <version>0.5.5-jdk17</version>
+    <version>2.0.0</version>
 </dependency>
         <!-- end dynamic module related dependencies -->
 
@@ -52,7 +52,8 @@ The base is built from regular SpringBoot application. The only change you need 
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-log4j2-starter</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>2.0.0</version>
 </dependency>
         <!-- end log4j2 dependency introduction -->
 ```
@@ -64,7 +65,8 @@ The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The pa
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-log4j2</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>2.0.0</version>
     <scope>provided</scope>
 </dependency>
 

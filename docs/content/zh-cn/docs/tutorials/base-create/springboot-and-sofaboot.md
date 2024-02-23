@@ -32,7 +32,8 @@ spring.application.name = ${替换为实际基座应用名}
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
     <type>pom</type>
 </dependency>
 

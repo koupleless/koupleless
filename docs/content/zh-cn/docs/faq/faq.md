@@ -23,7 +23,7 @@ com.alipay.sofa.ark.exception.ArkLoaderException: [ArkBiz Loader] module1:1.0-SN
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-app-starter</artifactId>
-    <version>0.5.6</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 或者升级 koupleless 版本到最新版本
@@ -47,7 +47,8 @@ arkctl 是作为 koupleless 子目录的方式存在的，所以没法直接 go 
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-app-starter</artifactId>
-    <version>${最新版本号}</version>
+    <!--<version>${最新版本号}</version>-->
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -57,7 +58,8 @@ arkctl 是作为 koupleless 子目录的方式存在的，所以没法直接 go 
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-app-starter</artifactId>
-    <version>${最新版本号}</version>
+    <!--<version>${最新版本号}</version>-->
+    <version>1.0.0</version>
 </dependency>
 ```
 #### 问题 1-6：用户工程与 koupleless 里 guice 版本不一致，且版本较老

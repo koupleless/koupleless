@@ -33,7 +33,8 @@ The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The pa
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
     <type>pom</type>
 </dependency>
 <!-- end of dynamic module related dependencies -->

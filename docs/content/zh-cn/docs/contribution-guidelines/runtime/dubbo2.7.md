@@ -14,7 +14,8 @@ dubbo2.7多模块适配SDK
 <dependency>
    <groupId>com.alipay.sofa.koupleless</groupId>
    <artifactId>koupleless-adapter-dubbo2.7</artifactId>
-   <version>${koupleless.runtime.version}</version>
+   <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
 </dependency>
 ```
 

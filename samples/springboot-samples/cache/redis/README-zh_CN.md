@@ -18,7 +18,8 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
     <type>pom</type>
 </dependency>
 <!-- end 动态模块相关依赖 -->
@@ -37,7 +38,8 @@ biz 是普通 springboot 应用，修改打包插件方式为 sofaArk biz 模块
 ```xml
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
-    <artifactId>koupleless-app-starter</artifactId>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
     <scope>provided</scope>
 </dependency>
 

@@ -16,7 +16,7 @@ weight: 300
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-app-starter</artifactId>
-    <version>0.5.6</version>
+    <version>1.0.0</version>
     <scope>provided</scope>
 </dependency>
 ```

@@ -139,7 +139,8 @@ base/com.alipay.sofa.rpc.dubbo3.model.CommonService
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-log4j2</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
     <scope>provided</scope>
 </dependency>
 ```

@@ -13,7 +13,8 @@ The base is build from a normal dubbo application, the only thing you need to do
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-dubbo2.6</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
 </dependency>
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
@@ -103,7 +104,8 @@ If you need to communicate between the base and the module, the module classes t
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-log4j2</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
     <scope>provided</scope>
 </dependency>
 ```

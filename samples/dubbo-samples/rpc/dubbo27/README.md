@@ -6,7 +6,8 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-dubbo2.7</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
 </dependency>
 <!-- koupleless 依赖-->
 <dependency>
@@ -67,14 +68,16 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-log4j2</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
     <scope>provided</scope>
 </dependency>
 <!--提供 dubbo2.7 适配-->
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-dubbo2.7</artifactId>
-    <version>${koupleless.runtime.version}</version>
+    <!--    <version>${koupleless.runtime.version}</version>-->
+    <version>1.0.0</version>
     <scope>provided</scope>
 </dependency>
 <!-- 通信类-->

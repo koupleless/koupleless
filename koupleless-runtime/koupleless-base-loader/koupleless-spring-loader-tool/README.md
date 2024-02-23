@@ -28,8 +28,8 @@ English | [简体中文](./README-zh_CN.md)
         <dependency>
             <groupId>com.alipay.sofa.koupleless</groupId>
             <artifactId>koupleless-spring-loader-tool</artifactId>
-            <!--最新版本0.5.6-->
-            <version>0.5.6</version>
+            <!--最新版本1.0.0-->
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </plugin>

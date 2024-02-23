@@ -34,7 +34,8 @@ date: 2024-01-25T10:28:32+08:00
     <dependency>
         <groupId>com.alipay.sofa.koupleless</groupId>
         <artifactId>koupleless-base-starter</artifactId>
-        <version>${koupleless.runtime.version}</version>
+        <!--    <version>${koupleless.runtime.version}</version>-->
+        <version>1.0.0</version>
     </dependency>
 </dependencies>
 ```
