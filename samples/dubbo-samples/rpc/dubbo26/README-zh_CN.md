@@ -12,8 +12,7 @@ base 为普通 dubbo 应用改造而成，改造内容只需在主 pom 里增加
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-dubbo2.6</artifactId>
-    <!--    <version>${koupleless.runtime.version}</version>-->
-    <version>1.0.0</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
@@ -101,8 +100,7 @@ base/com.alipay.sofa.rpc.dubbo26.model.DemoService
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-log4j2</artifactId>
-    <!--    <version>${koupleless.runtime.version}</version>-->
-    <version>1.0.0</version>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
 ```

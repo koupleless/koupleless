@@ -21,8 +21,7 @@ base 为普通 springboot 改造成的基座，改造内容为在主 pom 里增�
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
-    <!--    <version>${koupleless.runtime.version}</version>-->
-    <version>1.0.0</version>
+    <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
 <!-- end 动态模块相关依赖 -->
@@ -49,8 +48,7 @@ base 为普通 springboot 改造成的基座，改造内容为在主 pom 里增�
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-log4j2-starter</artifactId>
-    <!--    <version>${koupleless.runtime.version}</version>-->
-    <version>1.0.0</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <!-- end log4j2 依赖引入 -->
 
@@ -65,8 +63,7 @@ biz1 包含两个打包插件，一个常规 springboot 插件, 构建普通 spr
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-log4j2</artifactId>
-    <!--    <version>${koupleless.runtime.version}</version>-->
-    <version>1.0.0</version>
+    <version>${koupleless.runtime.version}</version>
     <!--<scope>provided</scope> -->
     <!-- 不进行模块瘦身，需要修改依赖 scope 为 provided，使得模块复用基座的 jar 包 -->
     <!-- 添加模块自动瘦身后，不需要修改模块的任何代码 -->

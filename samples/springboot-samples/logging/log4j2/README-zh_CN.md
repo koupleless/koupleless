@@ -20,8 +20,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
-    <!--    <version>${koupleless.runtime.version}</version>-->
-    <version>1.0.0</version>
+    <version>${koupleless.runtime.version}</version>
     <type>pom</type>
 </dependency>
 <!-- end 动态模块相关依赖 -->
@@ -48,8 +47,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-log4j2-starter</artifactId>
-    <!--    <version>${koupleless.runtime.version}</version>-->
-    <version>1.0.0</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <!-- end log4j2 依赖引入 -->
 
@@ -69,8 +67,7 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-adapter-log4j2</artifactId>
-    <!--    <version>${koupleless.runtime.version}</version>-->
-    <version>1.0.0</version>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
 

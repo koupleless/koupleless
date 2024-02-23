@@ -30,8 +30,7 @@ Koupleless 是一种多应用的架构，而传统的中间件可能只考虑了
 <dependency>
   <groupId>com.alipay.sofa.koupleless</groupId>
   <artifactId>koupleless-base-starter</artifactId>
-  <!--    <version>${koupleless.runtime.version}</version>-->
-    <version>1.0.0</version>
+  <version>${koupleless.runtime.version}</version>
   <type>pom</type>
 </dependency>
 ```
