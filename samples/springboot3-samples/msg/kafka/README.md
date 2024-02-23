@@ -14,7 +14,7 @@ The base is built from regular SpringBoot application. The only change you need 
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <!-- The above version supports springboot3 -->
-    <version>0.5.5-jdk17</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <!-- end dynamic module related dependencies -->
         

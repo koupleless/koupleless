@@ -84,11 +84,11 @@ Scenario 4: Build an maven multi module project and deploy a sub module to a run
 `,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			defaultArg = runtime.Must(os.Getwd())
+			defaultArg = runtime.MustReturnResult(os.Getwd())
 		} else {
 			defaultArg = args[len(args)-1]
 			if !filepath.IsAbs(defaultArg) {
-				defaultArg = filepath.Join(runtime.Must(os.Getwd()), defaultArg)
+				defaultArg = filepath.Join(runtime.MustReturnResult(os.Getwd()), defaultArg)
 			}
 		}
 		doBuild = !strings.HasSuffix(defaultArg, ".jar")
@@ -175,7 +175,7 @@ func execParseBizModel(ctx *contextutil.Context) bool {
 	}
 
 	ctx.Put(ctxKeyBizModel, bizModel)
-	style.InfoPrefix("BizBundleInfo").Println(string(runtime.Must(json.Marshal(*bizModel))))
+	style.InfoPrefix("BizBundleInfo").Println(string(runtime.MustReturnResult(json.Marshal(*bizModel))))
 	pterm.Info.Println(pterm.Green("parse biz bundle success!"))
 	pterm.Println()
 
@@ -190,7 +190,7 @@ func execUploadBizBundle(ctx *contextutil.Context) bool {
 		targetPath := fmt.Sprintf("/tmp/%s",
 			bizModel.BizName+"-"+
 				bizModel.BizVersion+"-"+
-				runtime.Must(uuid.NewUUID()).String()+"-"+
+				runtime.MustReturnResult(uuid.NewUUID()).String()+"-"+
 				"ark-biz.jar",
 		)
 		kubecpcmd := cmdutil.BuildCommand(ctx,
@@ -239,7 +239,7 @@ func execInstallInKubePod(ctx *contextutil.Context) bool {
 		"-H",
 		"'Content-Type: application/json'",
 		"-d",
-		string(runtime.Must(json.Marshal(ark.BizModel{
+		string(runtime.MustReturnResult(json.Marshal(ark.BizModel{
 			BizName:    bizModel.BizName,
 			BizVersion: bizModel.BizVersion,
 		}))),
@@ -287,7 +287,7 @@ func execInstallInKubePod(ctx *contextutil.Context) bool {
 		"-H",
 		"'Content-Type: application/json'",
 		"-d",
-		string(runtime.Must(json.Marshal(ark.BizModel{
+		string(runtime.MustReturnResult(json.Marshal(ark.BizModel{
 			BizName:    bizModel.BizName,
 			BizVersion: bizModel.BizVersion,
 			BizUrl:     fileutil.FileUrl(osutil.GetLocalFileProtocol() + ctx.Value(ctxKeyArkBizBundlePathInSidePod).(string)),
