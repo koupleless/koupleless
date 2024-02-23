@@ -28,7 +28,7 @@ Koupleless 是一种多应用的架构，而传统的中间件可能只考虑了
 在诸多方案中，A 和 D 能做到完全兼容，不过 A 方案不需要业务改代码，也不会侵入运行时逻辑，仅需要用户在 maven dependency 的第一行中加入如下依赖:
 ```xml
 <dependency>
-  <groupId>com.alipay.koupleless</groupId>
+  <groupId>com.alipay.sofa.koupleless</groupId>
   <artifactId>koupleless-base-starter</artifactId>
   <version>${koupleless.runtime.version}</version>
   <type>pom</type>

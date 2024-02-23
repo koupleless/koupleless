@@ -14,9 +14,9 @@ weight: 300
 
 ```xml
 <dependency>
-    <groupId>com.alipay.koupleless</groupId>
+    <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-app-starter</artifactId>
-    <version>0.5.6</version>
+    <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
 ```

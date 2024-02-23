@@ -19,7 +19,7 @@ The base is built from regular SpringBoot application. The only change you need 
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <!-- The above version supports springboot3 -->
-    <version>0.5.5-jdk17</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
         <!-- end dynamic module related dependencies -->
 
@@ -126,7 +126,7 @@ If you want to verify the uninstallation, you can also execute
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
 --data '{
-    "bizName": "biz1",
+    "bizName": "biz1-log4j2",
     "bizVersion": "0.0.1-SNAPSHOT"
 }'
 ```
@@ -145,11 +145,11 @@ Return `hello to /biz2 deploy`
 
 ### Check if the log printing is normal
 1. Check content 1, you can see the log when the module starts in the
-![img.png](imgs/biz1-log.png)
-![img_1.png](imgs/biz2-log.png)
+![img.png](../imgs/biz1-log.png)
+![img_1.png](../imgs/biz2-log.png)
 
 2.Check content 2, the log dir structure in the `./samples/logging/log4j2/logs/` directory as the following
-![img_2.png](imgs/logs-structure.png)
+![img_2.png](../imgs/logs-structure.png)
 
 - The application log of biz1 is in the `./samples/logging/log4j2/logs/biz1/` directory
 - The application log of biz2 is in the `./samples/logging/log4j2/logs/biz2/` directory
