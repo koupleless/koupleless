@@ -60,6 +60,9 @@
                                     <class>
                                         org.springframework.boot.logging.log4j2.Log4J2LoggingSystem
                                     </class>
+                                    <class>
+                                        org.apache.logging.slf4j.Log4jLogger
+                                    </class>
                                 </classes>
                             </exported>
                             <excludes>

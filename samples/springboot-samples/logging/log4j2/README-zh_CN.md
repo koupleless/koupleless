@@ -51,6 +51,13 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
 </dependency>
 <!-- end log4j2 依赖引入 -->
 
+<!--用ehcache模拟三方组件下沉基座后日志能能够正常隔离打印-->
+<dependency>
+    <groupId>net.sf.ehcache</groupId>
+    <artifactId>ehcache</artifactId>
+</dependency>
+<!-- end ehcache 依赖引入-->
+
 ```
 
 ### biz
@@ -63,6 +70,14 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
     <version>${koupleless.runtime.version}</version>
     <scope>provided</scope>
 </dependency>
+
+<!--用ehcache模拟三方组件下沉基座后日志能能够正常隔离打印-->
+<dependency>
+    <groupId>net.sf.ehcache</groupId>
+    <artifactId>ehcache</artifactId>
+    <scope>provided</scope>
+</dependency>
+<!-- end ehcache 依赖引入-->
 
 <!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
 <plugin>
@@ -148,9 +163,13 @@ curl http://localhost:8080/biz2/
 2. 检查内容2, `./samples/logging/log4j2/logs/` 目录里的日志分布在符合如下情况
 ![img_2.png](../imgs/logs-structure.png)
 
-- biz1 的应用日志在 `./samples/logging/log4j2/logs/biz1/` 目录下
-- biz2 的应用日志在 `./samples/logging/log4j2/logs/biz2/` 目录下
-- base 的应用日志在 `./samples/logging/log4j2/logs/base/` 目录下
+3. 三方组件(这里如:ehcache)依赖下沉基座后日志正常隔离打印
+![img_1.png](../imgs/biz1-3-log.png)
+![img.png](../imgs/biz2-3-log.png)
+
+- biz1 的应用及三方组件(ehcache)日志在 `./samples/logging/log4j2/logs/biz1/` 目录下
+- biz2 的应用及三方组件(ehcache)日志在 `./samples/logging/log4j2/logs/biz2/` 目录下
+- base 的应用及三方组件(ehcache)日志在 `./samples/logging/log4j2/logs/base/` 目录下
 - biz1, biz2, base 的框架日志(如 spring sofaArk arklet等)，统一合并在同一个目录文件里
 
 

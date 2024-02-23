@@ -32,7 +32,7 @@ date: 2024-01-25T10:28:32+08:00
 </properties>
 <dependencies>
     <dependency>
-        <groupId>com.alipay.koupleless</groupId>
+        <groupId>com.alipay.sofa.koupleless</groupId>
         <artifactId>koupleless-base-starter</artifactId>
         <version>${koupleless.runtime.version}</version>
     </dependency>

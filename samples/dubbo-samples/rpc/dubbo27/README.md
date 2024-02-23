@@ -142,7 +142,7 @@ mvn clean install
 cd ../
 mvn clean package
 ```
-3. 启动基座应用Dubbo26BaseApplication.java，为了方便本地测试用，启动基座时，默认也启动模块
+3. 启动基座应用Dubbo27BaseApplication.java，为了方便本地测试用，启动基座时，默认也启动模块
 ```java 
 public static void run(String... args) throws Exception {
     try {
@@ -165,7 +165,7 @@ curl --location --request POST 'localhost:1238/queryAllBiz'
 模块biz远程调用biz2发布的dubbo服务（因为有dubbo网络调用，执行前请关闭vpn，否则可能出现调用超时）
 ```shell
 curl localhost:8080/biz/
-{"result":"bizcom.alipay.sofa.rpc.dubbo27.biz2.service.BizDemoServiceImpl"}
+{"result":"biz->com.alipay.sofa.rpc.dubbo27.biz2.service.BizDemoServiceImpl"}
 
 curl "localhost:8080/biz/?ref=second"
 {"result":"biz->com.alipay.sofa.rpc.dubbo27.biz2.service.SecondDemoServiceImpl"}

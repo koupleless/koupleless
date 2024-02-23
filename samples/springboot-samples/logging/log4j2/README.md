@@ -45,12 +45,27 @@ The base is built from regular SpringBoot application. The only change you need 
 </dependency>
 <!-- end of log4j2 -->
 
+<!-- After simulating the sinking base of the tripartite component with ehcache, the log can be isolated and printed normally -->
+<dependency>
+    <groupId>net.sf.ehcache</groupId>
+    <artifactId>ehcache</artifactId>
+</dependency>
+<!-- end of ehcache -->
+
 ```
 
 ### biz
 The biz contains two modules, biz1 and biz2, both are regular SpringBoot. The packaging plugin method is modified to the sofaArk biz module packaging method, packaged as an ark biz jar package, and the packaging plugin configuration is as follows:
 
 ```xml
+<!-- After simulating the sinking base of the tripartite component with ehcache, the log can be isolated and printed normally -->
+<dependency>
+    <groupId>net.sf.ehcache</groupId>
+    <artifactId>ehcache</artifactId>
+    <scope>provided</scope>
+</dependency>
+<!-- end of ehcache -->
+
 <!-- change the packaging plugin to sofa-ark biz packaging plugin, packaged as ark biz jar -->
 <plugin>
     <groupId>com.alipay.sofa</groupId>
@@ -134,9 +149,12 @@ return `hello to /biz2 deploy`
 2. check content 2, the logs in the `./samples/logging/log4j2/logs/` printed into as following
 ![img_2.png](../imgs/logs-structure.png)
 
-- log of biz1 is in `./samples/logging/log4j2/logs/biz1/` directory
-- log of biz2 is in `./samples/logging/log4j2/logs/biz2/` directory
-- log of base is in `./samples/logging/log4j2/logs/base/` directory
+3. The three-party component (ehcache) relies on the log isolation to print normally after sinking the base
+![img_1.png](../imgs/biz1-3-log.png)
+![img.png](../imgs/biz2-3-log.png)
+- log of biz1 and tripartite components (ehcache) is in `./samples/logging/log4j2/logs/biz1/` directory
+- log of biz2 and tripartite components (ehcache) is in `./samples/logging/log4j2/logs/biz2/` directory
+- log of base and tripartite components (ehcache) is in `./samples/logging/log4j2/logs/base/` directory
 - framework log of biz1, biz2, base (such as spring sofaArk arklet, etc.) are merged into the same directory file
 
 
