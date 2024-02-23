@@ -30,8 +30,7 @@ weight: 500
 
 #### 安装
 
-1.
-根据实际运行操作系统，[下载 arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.1)。
+1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.2.0)。
 2. 将对应的二进制解压并放到合适的系统变量 PATH 下。
 3. 在基座和模块已经改造完成后，启动好基座后，可以使用 arkctl 快速完成构建与部署，将模块部署到基座中。
    <br/>
@@ -54,6 +53,10 @@ Windows 下
 5. 双击 Path 变量。
 6. 在弹出的对话框中，可以看到当前的 Path 变量值。
 7. 找到对应的目录，将 arkctl.exe 放到该目录下。
+
+注意，在 Windows 环境下，如果开启 Windows Defender，浏览器下载二进制时可能会误报，提示如下：
+![error-hint.png](./imgs/error-hint.png) <br/>
+报错原因可参考[go 官方文档](https://go.dev/doc/faq#virus)。此报错可以忽略，放心下载。
 
 #### 使用
 
@@ -82,7 +85,7 @@ arkctl status
 arkctl undeploy 
 ```
 
-制定模块名称卸载模块
+指定模块名称卸载模块
 
 ```shell
 arkctl undeploy ${模块名称:模块版本}
