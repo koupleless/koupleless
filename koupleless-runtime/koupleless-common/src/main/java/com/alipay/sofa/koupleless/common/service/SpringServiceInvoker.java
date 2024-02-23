@@ -30,6 +30,8 @@ import java.lang.reflect.Method;
 
 import static com.alipay.sofa.koupleless.common.exception.ErrorCodes.SpringContextManager.E100003;
 import static com.alipay.sofa.koupleless.common.exception.ErrorCodes.SpringContextManager.E100004;
+import static com.alipay.sofa.koupleless.common.service.ServiceProxyFactory.determineMostSuitableBiz;
+import static com.alipay.sofa.koupleless.common.service.ServiceProxyFactory.getService;
 import static com.alipay.sofa.koupleless.common.util.SerializeUtils.serializeTransform;
 
 /**
@@ -47,11 +49,13 @@ public class SpringServiceInvoker implements MethodInterceptor {
 
     private Object              target;                                                    // 被调用方目标bean
 
+    private String              name;
+
+    private Class<?>            clientType;
+
     private String              bizName;                                                   // 被调用方bizName
 
     private String              bizVersion;                                                // 被调用方bizVersion
-
-    private String              bizIdentity;                                               // 被调用方bizIdentity
 
     private ClassLoader         clientClassLoader;                                         // 调用方classloader
 
@@ -60,25 +64,37 @@ public class SpringServiceInvoker implements MethodInterceptor {
     public SpringServiceInvoker() {
     }
 
-    public SpringServiceInvoker(Object target, String bizName, String bizVersion,
-                                String bizIdentity, ClassLoader clientClassLoader,
+    public SpringServiceInvoker(Object target, String name, Class<?> clientType, String bizName,
+                                String bizVersion, ClassLoader clientClassLoader,
                                 ClassLoader serviceClassLoader) {
         this.target = target;
+        this.name = name;
+        this.clientType = clientType;
         this.bizName = bizName;
         this.bizVersion = bizVersion;
-        this.bizIdentity = bizIdentity;
         this.clientClassLoader = clientClassLoader;
         this.serviceClassLoader = serviceClassLoader;
     }
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        Biz biz = ArkClient.getBizManagerService().getBiz(bizName, bizVersion);
+        // todo bizVersion = "" 时
+        Biz biz = determineMostSuitableBiz(bizName, bizVersion);
         if (biz == null) {
             throw new BizRuntimeException(E100003, "biz does not exist when called");
         }
         if (BizState.ACTIVATED != biz.getBizState() && BizState.DEACTIVATED != biz.getBizState()) {
             throw new BizRuntimeException(E100004, "biz state is not valid");
+        }
+
+        // delayed addressing
+        if (this.target == null) {
+            this.target = getService(bizName, bizVersion, name, clientType);
+            if (this.target == null) {
+                throw new BizRuntimeException(E100004, "Cannot find service bean from the biz "
+                                                       + biz.getIdentity());
+            }
+            this.serviceClassLoader = this.target.getClass().getClassLoader();
         }
 
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
@@ -155,7 +171,7 @@ public class SpringServiceInvoker implements MethodInterceptor {
         try {
             return target.getClass().getMethod(method.getName(), argumentTypes);
         } catch (NoSuchMethodException ex) {
-            throw new IllegalStateException(target + " in " + bizIdentity
+            throw new IllegalStateException(target + " in " + bizName + ":" + bizVersion
                                             + " don't have the method " + method);
         }
     }

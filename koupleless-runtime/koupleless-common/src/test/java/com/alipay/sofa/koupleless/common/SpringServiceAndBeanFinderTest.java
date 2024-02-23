@@ -136,7 +136,6 @@ public class SpringServiceAndBeanFinderTest {
         Mockito.when(biz2.getBizState()).thenReturn(BizState.ACTIVATED);
         Mockito.when(biz2.getBizClassLoader()).thenReturn(loader);
         Mockito.when(biz2.getBizName()).thenReturn("biz2");
-        Mockito.when(biz2.getBizVersion()).thenReturn("version1");
         BizRuntimeContext biz2Runtime = new BizRuntimeContext(biz2, biz2Ctx);
         BizRuntimeContextRegistry.registerBizRuntimeManager(biz2Runtime);
         ModuleBean foundModuleBean = SpringServiceFinder.getModuleService("biz2", "version1",
