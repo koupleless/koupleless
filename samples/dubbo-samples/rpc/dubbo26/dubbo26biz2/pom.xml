@@ -14,6 +14,19 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.alibaba.boot</groupId>
+			<artifactId>dubbo-spring-boot-starter</artifactId>
+			<version>${dubbo.spring.boot.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+			<version>${dubbo.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<scope>provided</scope>
@@ -38,6 +51,12 @@
 		<dependency>
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>dubbo26model</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sofa.koupleless</groupId>
+			<artifactId>koupleless-app-starter</artifactId>
+			<version>${koupleless.runtime.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
