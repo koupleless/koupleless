@@ -16,21 +16,17 @@
  */
 package com.alipay.sofa.koupleless.ext.web;
 
-import com.alipay.sofa.koupleless.ext.web.gateway.ForwardAutoConfiguration;
-import com.alipay.sofa.koupleless.ext.web.gateway.ForwardController;
-import com.alipay.sofa.koupleless.ext.web.gateway.Forwards;
+import com.alibaba.fastjson.JSONArray;
+import com.alipay.sofa.koupleless.ext.web.gateway.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.server.ResponseStatusException;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -44,19 +40,21 @@ import java.lang.reflect.Field;
 public class ForwardControllerTests {
     @InjectMocks
     private ForwardAutoConfiguration configuration;
-    @Mock
-    private ApplicationContext       applicationContext;
-    private String                   confPath   = "classpath:forwards.yaml";
+    private String                   confPath   = "forwards.yaml";
 
     private ForwardController        controller = new ForwardController();
 
     @Before
     public void before() throws NoSuchFieldException, IllegalAccessException, IOException {
-        Field field = ForwardAutoConfiguration.class.getDeclaredField("confPath");
+        Field field = ForwardAutoConfiguration.class.getDeclaredField("gatewayProperties");
         field.setAccessible(true);
-        field.set(configuration, confPath);
-        Mockito.when(applicationContext.getResources(Mockito.anyString())).thenReturn(
-            new Resource[] { new ClassPathResource("forwards.yaml") });
+        Yaml yaml = new Yaml();
+        JSONArray array = yaml.loadAs(ForwardControllerTests.class.getClassLoader()
+            .getResourceAsStream(confPath), JSONArray.class);
+        GatewayProperties properties = new GatewayProperties();
+        properties.setForwards(array.toJavaList(Forward.class));
+        field.set(configuration, properties);
+
         Forwards forwards = configuration.forwards();
         field = ForwardController.class.getDeclaredField("forwards");
         field.setAccessible(true);
