@@ -30,14 +30,7 @@ weight: 500
 
 #### 安装
 
-1.
-<<<<<<< HEAD
-
-根据实际运行操作系统，[下载 arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.1)。
-
-=======
-根据实际运行操作系统，[下载 arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.1)。
->>>>>>> b18d4adaa69aeb372bdb5fa8a03c0abf8d54f453
+1. 根据实际运行操作系统，[下载 arkctl ](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.2.0)。
 2. 将对应的二进制解压并放到合适的系统变量 PATH 下。
 3. 在基座和模块已经改造完成后，启动好基座后，可以使用 arkctl 快速完成构建与部署，将模块部署到基座中。
    <br/>
@@ -79,8 +72,6 @@ arkctl deploy ${模块构建出的 jar 包路径}
 arkctl deploy 
 ```
 
-<<<<<<< HEAD
-=======
 查看基座目前部署的模块
 
 ```shell
@@ -94,13 +85,12 @@ arkctl status
 arkctl undeploy 
 ```
 
-制定模块名称卸载模块
+指定模块名称卸载模块
 
 ```shell
 arkctl undeploy ${模块名称:模块版本}
 ```
 
->>>>>>> b18d4adaa69aeb372bdb5fa8a03c0abf8d54f453
 ### K8S 集群环境开发验证, 以 minikube 集群为例
 
 #### 基座发布
