@@ -29,7 +29,7 @@
             <groupId>com.alipay.sofa.koupleless</groupId>
             <artifactId>koupleless-spring-loader-tool</artifactId>
             <!--最新版本1.0.0-->
-            <version>1.0.0</version>
+            <version>${koupleless.runtime.version}</version>
         </dependency>
     </dependencies>
 </plugin>
