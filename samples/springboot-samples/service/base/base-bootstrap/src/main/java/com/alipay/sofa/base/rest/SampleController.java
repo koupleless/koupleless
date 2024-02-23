@@ -42,7 +42,6 @@ public class SampleController {
     @AutowiredFromBiz(bizName = "biz1", name = "teacherProvider")
     private Provider teacherProvider;
 
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
         Result tmp = studentProvider.provide(new Param());
