@@ -37,8 +37,7 @@ biz 是普通 springboot 应用，修改打包插件方式为 sofaArk biz 模块
 ```xml
 <dependency>
     <groupId>com.alipay.sofa.koupleless</groupId>
-    <version>${koupleless.runtime.version}</version>
-    <scope>provided</scope>
+    <artifactId>koupleless-app-starter</artifactId>    <scope>provided</scope>
 </dependency>
 
 <!-- 修改打包插件为 sofa-ark biz 打包插件，打包成 ark biz jar -->
