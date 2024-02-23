@@ -106,7 +106,7 @@ public class SampleController {
 }
 ```
 
-4. [点击这里下载 Arkctl](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.0)，mac/linux 电脑放入 `**/usr/local/bin**` 目录中，windows 可以考虑直接放在项目根目录下
+4. [点击这里下载 Arkctl](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.2.0)，mac/linux 电脑放入 `**/usr/local/bin**` 目录中，windows 可以考虑直接放在项目根目录下
 
 5. 执行 `arkctl deploy` 构建部署，成功后 `curl localhost:8080/${模块1 web context path}/` 验证服务返回。显示正常，进入下一步。
 ```
@@ -234,5 +234,5 @@ public class StrategyServiceImpl implements StrategyService {
 1. 本实验工程样例地址：[https://github.com/koupleless/koupleless/tree/master/samples/springboot-samples/web/tomcat](https://github.com/koupleless/koupleless/tree/master/samples/springboot-samples/web/tomcat)
 2. `web-ark-plugin` 原理： [https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/](https://www.sofastack.tech/projects/sofa-boot/sofa-ark-multi-web-component-deploy/)
 3. 自动排包原理与配置文件下载：[https://koupleless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB](https://koupleless.gitee.io/docs/tutorials/module-development/module-slimming/#%E4%B8%80%E9%94%AE%E8%87%AA%E5%8A%A8%E7%98%A6%E8%BA%AB)
-4. Arkctl 下载地址：[https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.0](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.1.0)
+4. Arkctl 下载地址：[https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.2.0](https://github.com/koupleless/koupleless/releases/tag/arkctl-release-0.2.0)
 5. 本文档地址：[https://koupleless.gitee.io/docs/tutorials/trial_step_by_step/](https://koupleless.gitee.io/docs/tutorials/trial_step_by_step/)
