@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>com.alipay.sofa.koupleless</groupId>
-            <artifactId>koupleless-ext-web</artifactId>
+            <artifactId>koupleless-ext-web-gateway</artifactId>
             <version>${revision}</version>
         </dependency>
 
