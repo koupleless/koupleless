@@ -130,7 +130,7 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
             if (serviceProxy != null) {
                 ReflectionUtils.makeAccessible(field);
                 ReflectionUtils.setField(field, bean, serviceProxy);
-                LOGGER.info("Finished processing bean [{}], success to inject object [{}] to bean [{}] field [{}]", beanName, serviceProxy, bean, field);
+                LOGGER.info("Finished processing bean [{}], success to inject service proxy to bean [{}] field [{}]", beanName, bean, field);
             }
 
         }, field -> !Modifier.isStatic(field.getModifiers())

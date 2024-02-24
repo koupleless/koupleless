@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.alipay.sofa.koupleless.common.constant.Constants.SERVICE_LAZY_INIT;
 import static com.alipay.sofa.koupleless.common.exception.ErrorCodes.SpringContextManager.E100002;
 import static com.alipay.sofa.koupleless.common.exception.ErrorCodes.SpringContextManager.E100003;
 import static com.alipay.sofa.koupleless.common.exception.ErrorCodes.SpringContextManager.E100004;
@@ -72,7 +73,7 @@ public class ServiceProxyFactory {
                                     Class<?> clientType) {
         Biz biz = determineMostSuitableBiz(bizName, bizVersion);
 
-        if (biz == null && Boolean.getBoolean("spring.service.delay.addressing.enable")) {
+        if (biz == null && Boolean.getBoolean(SERVICE_LAZY_INIT)) {
             return null;
         }
         if (biz == null) {
@@ -80,8 +81,8 @@ public class ServiceProxyFactory {
                 bizName, bizVersion));
         } else if (biz.getBizState() != BizState.ACTIVATED
                    && biz.getBizState() != BizState.DEACTIVATED) {
-            throw new BizRuntimeException(E100004, String.format("biz %s:%s state is not valid",
-                bizName, bizVersion));
+            throw new BizRuntimeException(E100004, String.format("biz %s:%s state %s is not valid",
+                bizName, bizVersion, biz.getBizState()));
         }
 
         BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);

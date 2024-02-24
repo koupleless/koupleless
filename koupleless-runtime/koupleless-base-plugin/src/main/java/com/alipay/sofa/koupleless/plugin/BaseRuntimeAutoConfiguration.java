@@ -17,7 +17,6 @@
 package com.alipay.sofa.koupleless.plugin;
 
 import com.alipay.sofa.koupleless.common.BizRuntimeContext;
-import com.alipay.sofa.koupleless.common.environment.ConditionalOnNotMasterBiz;
 import com.alipay.sofa.koupleless.common.service.ArkAutowiredBeanPostProcessor;
 import com.alipay.sofa.koupleless.common.BizRuntimeContextRegistry;
 import org.springframework.context.ApplicationContext;
