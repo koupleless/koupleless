@@ -86,10 +86,6 @@ public class ServiceProxyFactory {
         }
 
         BizRuntimeContext bizRuntimeContext = BizRuntimeContextRegistry.getBizRuntimeContext(biz);
-        if (bizRuntimeContext == null) {
-            throw new BizRuntimeException(E100002, String.format(
-                "biz %s:%s runtime context is null", bizName, bizVersion));
-        }
         if (bizRuntimeContext.getRootApplicationContext() == null) {
             throw new BizRuntimeException(E100002, String.format(
                 "biz %s:%s spring context is null", bizName, bizVersion));
