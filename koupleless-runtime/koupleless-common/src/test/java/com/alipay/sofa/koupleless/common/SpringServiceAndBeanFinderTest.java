@@ -24,6 +24,8 @@ import com.alipay.sofa.koupleless.common.api.AutowiredFromBase;
 import com.alipay.sofa.koupleless.common.api.AutowiredFromBiz;
 import com.alipay.sofa.koupleless.common.api.SpringBeanFinder;
 import com.alipay.sofa.koupleless.common.api.SpringServiceFinder;
+import com.alipay.sofa.koupleless.common.constant.Constants;
+import com.alipay.sofa.koupleless.common.exception.BizRuntimeException;
 import com.alipay.sofa.koupleless.common.service.ArkAutowiredBeanPostProcessor;
 import org.junit.Assert;
 import org.junit.Before;
@@ -96,6 +98,34 @@ public class SpringServiceAndBeanFinderTest {
     }
 
     @Test
+    public void testSpringServiceInvoker() {
+        ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
+                "moduleBean", ModuleBean.class);
+        Assert.assertNotNull(moduleBean);
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(null);
+        Exception exception = Assert.assertThrows(BizRuntimeException.class, () -> moduleBean.test());
+        Assert.assertEquals("biz biz1:version1 does not exist when called", exception.getMessage());
+
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        Mockito.when(biz1.getBizState()).thenReturn(BizState.RESOLVED);
+        Exception exception1 = Assert.assertThrows(BizRuntimeException.class, () -> moduleBean.test());
+        Assert.assertEquals("biz biz1:version1 state resolved is not valid", exception1.getMessage());
+    }
+
+    @Test
+    public void testSpringServiceInvokerWithLazyInit() {
+        System.setProperty(Constants.SERVICE_LAZY_INIT, "true");
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(null);
+
+        ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
+            "moduleBean", ModuleBean.class);
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        Mockito.when(biz1.getBizState()).thenReturn(BizState.ACTIVATED);
+        Assert.assertEquals("module", moduleBean.test());
+        System.clearProperty(Constants.SERVICE_LAZY_INIT);
+    }
+
+    @Test
     public void testSpringServiceFinder() {
         BaseBean baseBean = SpringServiceFinder.getBaseService("baseBean", BaseBean.class);
         Assert.assertNotNull(baseBean);
@@ -136,7 +166,6 @@ public class SpringServiceAndBeanFinderTest {
         Mockito.when(biz2.getBizState()).thenReturn(BizState.ACTIVATED);
         Mockito.when(biz2.getBizClassLoader()).thenReturn(loader);
         Mockito.when(biz2.getBizName()).thenReturn("biz2");
-        Mockito.when(biz2.getBizVersion()).thenReturn("version1");
         BizRuntimeContext biz2Runtime = new BizRuntimeContext(biz2, biz2Ctx);
         BizRuntimeContextRegistry.registerBizRuntimeManager(biz2Runtime);
         ModuleBean foundModuleBean = SpringServiceFinder.getModuleService("biz2", "version1",
@@ -144,7 +173,84 @@ public class SpringServiceAndBeanFinderTest {
         Assert.assertNotNull(foundModuleBean);
         Assert.assertEquals(newModuleBean.toString(), foundModuleBean.toString());
         Assert.assertEquals("module", foundModuleBean.test());
+    }
 
+    // test with expected exception
+    @Test
+    public void testSpringServiceFinderWithoutBiz() {
+        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(null);
+        Exception exception = Assert.assertThrows(BizRuntimeException.class, () -> {
+            SpringServiceFinder.getModuleService("biz1", "version1",
+                "moduleBean", ModuleBean.class);
+        });
+        Assert.assertEquals("biz biz1:version1 does not exist", exception.getMessage());
+
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        Mockito.when(biz1.getBizState()).thenReturn(BizState.RESOLVED);
+        Exception exception1 = Assert.assertThrows(BizRuntimeException.class, () -> {
+            SpringServiceFinder.getModuleService("biz1", "version1",
+                    "moduleBean", ModuleBean.class);
+        });
+        Assert.assertEquals("biz biz1:version1 state resolved is not valid", exception1.getMessage());
+
+        Object newModuleBean = null;
+        URL url = SpringServiceAndBeanFinderTest.class.getClassLoader().getResource("");
+        URLClassLoader loader = new URLClassLoader(new URL[] { url }, null);
+        try {
+            Class<?> aClass = loader
+                    .loadClass("com.alipay.sofa.koupleless.common.SpringServiceAndBeanFinderTest$ModuleBean");
+            newModuleBean = aClass.newInstance();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        Mockito.when(biz1.getBizState()).thenReturn(BizState.ACTIVATED);
+        ConfigurableApplicationContext biz1Ctx = buildApplicationContext("biz1");
+        biz1Ctx.getBeanFactory().registerSingleton("moduleBean", newModuleBean);
+        BizRuntimeContext biz1Runtime = new BizRuntimeContext(biz1, biz1Ctx);
+        biz1Runtime.setRootApplicationContext(null);
+        BizRuntimeContextRegistry.registerBizRuntimeManager(biz1Runtime);
+        Exception exception2 = Assert.assertThrows(BizRuntimeException.class, () -> {
+            SpringServiceFinder.getModuleService("biz1", "version1",
+                    "moduleBean", ModuleBean.class);
+        });
+        Assert.assertEquals("biz biz1:version1 spring context is null", exception2.getMessage());
+    }
+
+    @Test
+    public void testSpringServiceLazyInit() {
+        System.setProperty(Constants.SERVICE_LAZY_INIT, "true");
+        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(null);
+        ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
+            "moduleBean", ModuleBean.class);
+        Assert.assertNotNull(moduleBean);
+        ModuleBean moduleBean1 = SpringServiceFinder.getModuleService("biz1", "version1",
+            ModuleBean.class);
+        Assert.assertNotNull(moduleBean1);
+
+        // test to invoke crossing classloader
+        URL url = SpringServiceAndBeanFinderTest.class.getClassLoader().getResource("");
+        URLClassLoader loader = new URLClassLoader(new URL[] { url }, null);
+        Object newModuleBean = null;
+        try {
+            Class<?> aClass = loader
+                .loadClass("com.alipay.sofa.koupleless.common.SpringServiceAndBeanFinderTest$ModuleBean");
+            newModuleBean = aClass.newInstance();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        ConfigurableApplicationContext biz1Ctx = buildApplicationContext("biz1");
+        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        biz1Ctx.getBeanFactory().registerSingleton("moduleBean", newModuleBean);
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        Mockito.when(biz1.getBizState()).thenReturn(BizState.ACTIVATED);
+        Mockito.when(biz1.getBizClassLoader()).thenReturn(loader);
+        Mockito.when(biz1.getBizName()).thenReturn("biz1");
+        BizRuntimeContext biz1Runtime = new BizRuntimeContext(biz1, biz1Ctx);
+        BizRuntimeContextRegistry.registerBizRuntimeManager(biz1Runtime);
+        Assert.assertEquals("module", moduleBean.test());
+
+        System.clearProperty(Constants.SERVICE_LAZY_INIT);
     }
 
     @Test
@@ -220,6 +326,11 @@ public class SpringServiceAndBeanFinderTest {
 
         public String test() {
             return "module";
+        }
+
+        @Override
+        public String toString() {
+            return "ModuleBean";
         }
     }
 

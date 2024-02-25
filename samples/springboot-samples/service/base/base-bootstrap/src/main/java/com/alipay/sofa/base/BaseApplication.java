@@ -24,6 +24,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 public class BaseApplication {
 
     public static void main(String[] args) {
+        System.setProperty("koupleless.service.lazy.init.enable", "true");
+
         SpringApplication.run(BaseApplication.class, args);
         System.out.println("SofaArkSpringGuidesApplication start!");
         System.out.println("Spring Boot Version: "
