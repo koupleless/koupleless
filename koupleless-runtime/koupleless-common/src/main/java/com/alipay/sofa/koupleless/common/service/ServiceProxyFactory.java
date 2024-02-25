@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.alipay.sofa.koupleless.common.constant.Constants.SERVICE_LAZY_INIT;
 import static com.alipay.sofa.koupleless.common.exception.ErrorCodes.SpringContextManager.E100002;
 import static com.alipay.sofa.koupleless.common.exception.ErrorCodes.SpringContextManager.E100003;
 import static com.alipay.sofa.koupleless.common.exception.ErrorCodes.SpringContextManager.E100004;
@@ -73,12 +72,8 @@ public class ServiceProxyFactory {
                                     Class<?> clientType) {
         Biz biz = determineMostSuitableBiz(bizName, bizVersion);
 
-        if (biz == null && Boolean.getBoolean(SERVICE_LAZY_INIT)) {
-            return null;
-        }
         if (biz == null) {
-            throw new BizRuntimeException(E100003, String.format("biz %s:%s does not exist",
-                bizName, bizVersion));
+            return null;
         } else if (biz.getBizState() != BizState.ACTIVATED
                    && biz.getBizState() != BizState.DEACTIVATED) {
             throw new BizRuntimeException(E100004, String.format("biz %s:%s state %s is not valid",
