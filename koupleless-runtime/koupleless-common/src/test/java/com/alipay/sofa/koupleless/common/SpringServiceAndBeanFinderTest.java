@@ -98,6 +98,34 @@ public class SpringServiceAndBeanFinderTest {
     }
 
     @Test
+    public void testSpringServiceInvoker() {
+        ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
+                "moduleBean", ModuleBean.class);
+        Assert.assertNotNull(moduleBean);
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(null);
+        Exception exception = Assert.assertThrows(BizRuntimeException.class, () -> moduleBean.test());
+        Assert.assertEquals("biz biz1:version1 does not exist when called", exception.getMessage());
+
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        Mockito.when(biz1.getBizState()).thenReturn(BizState.RESOLVED);
+        Exception exception1 = Assert.assertThrows(BizRuntimeException.class, () -> moduleBean.test());
+        Assert.assertEquals("biz biz1:version1 state resolved is not valid", exception1.getMessage());
+    }
+
+    @Test
+    public void testSpringServiceInvokerWithLazyInit() {
+        System.setProperty(Constants.SERVICE_LAZY_INIT, "true");
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(null);
+
+        ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
+            "moduleBean", ModuleBean.class);
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        Mockito.when(biz1.getBizState()).thenReturn(BizState.ACTIVATED);
+        Assert.assertEquals("module", moduleBean.test());
+        System.clearProperty(Constants.SERVICE_LAZY_INIT);
+    }
+
+    @Test
     public void testSpringServiceFinder() {
         BaseBean baseBean = SpringServiceFinder.getBaseService("baseBean", BaseBean.class);
         Assert.assertNotNull(baseBean);
@@ -157,8 +185,6 @@ public class SpringServiceAndBeanFinderTest {
         });
         Assert.assertEquals("biz biz1:version1 does not exist", exception.getMessage());
 
-
-        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
         Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
         Mockito.when(biz1.getBizState()).thenReturn(BizState.RESOLVED);
         Exception exception1 = Assert.assertThrows(BizRuntimeException.class, () -> {
@@ -194,9 +220,6 @@ public class SpringServiceAndBeanFinderTest {
     public void testSpringServiceLazyInit() {
         System.setProperty(Constants.SERVICE_LAZY_INIT, "true");
         when(bizManagerService.getBiz("biz1", "version1")).thenReturn(null);
-        ModuleBean moduleBean0 = SpringServiceFinder.getModuleService("biz1", "version1",
-            "moduleBean", ModuleBean.class);
-
         ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
             "moduleBean", ModuleBean.class);
         Assert.assertNotNull(moduleBean);

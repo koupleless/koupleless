@@ -142,7 +142,7 @@ mvn clean install
 cd ../
 mvn clean package
 ```
-3. 启动基座应用Dubbo26BaseApplication.java，为了方便本地测试用，启动基座时，默认也启动模块
+3. 启动基座应用Dubbo27BaseApplication.java，为了方便本地测试用，启动基座时，默认也启动模块
 ```java 
 public static void run(String... args) throws Exception {
     try {
