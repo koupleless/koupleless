@@ -146,7 +146,6 @@ public class SpringServiceAndBeanFinderTest {
         Assert.assertEquals("module", moduleBean.test());
 
         // test to invoke crossing classloader
-
         URL url = SpringServiceAndBeanFinderTest.class.getClassLoader().getResource("");
         URLClassLoader loader = new URLClassLoader(new URL[] { url }, null);
         Object newModuleBean = null;
@@ -175,13 +174,6 @@ public class SpringServiceAndBeanFinderTest {
     // test with expected exception
     @Test
     public void testSpringServiceFinderWithoutBiz() {
-//        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(null);
-//        Exception exception = Assert.assertThrows(BizRuntimeException.class, () -> {
-//            SpringServiceFinder.getModuleService("biz1", "version1",
-//                "moduleBean", ModuleBean.class);
-//        });
-//        Assert.assertEquals("biz biz1:version1 does not exist", exception.getMessage());
-
         Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
         Mockito.when(biz1.getBizState()).thenReturn(BizState.RESOLVED);
         Exception exception1 = Assert.assertThrows(BizRuntimeException.class, () -> {
@@ -219,6 +211,7 @@ public class SpringServiceAndBeanFinderTest {
         ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
             "moduleBean", ModuleBean.class);
         Assert.assertNotNull(moduleBean);
+        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
         ModuleBean moduleBean1 = SpringServiceFinder.getModuleService("biz1", "version1",
             ModuleBean.class);
         Assert.assertNotNull(moduleBean1);
@@ -273,6 +266,42 @@ public class SpringServiceAndBeanFinderTest {
     }
 
     @Test
+    public void testCrossSerialize() {
+        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(null);
+        ModuleBean moduleBean = SpringServiceFinder.getModuleService("biz1", "version1",
+            "moduleBean", ModuleBean.class);
+        Assert.assertNotNull(moduleBean);
+        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+
+        // test to invoke crossing classloader
+        URL url = SpringServiceAndBeanFinderTest.class.getClassLoader().getResource("");
+        URLClassLoader loader = new URLClassLoader(new URL[] { url }, null);
+        Object newModuleBean = null;
+        try {
+            Class<?> aClass = loader
+                .loadClass("com.alipay.sofa.koupleless.common.SpringServiceAndBeanFinderTest$ModuleBean");
+            newModuleBean = aClass.newInstance();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        ConfigurableApplicationContext biz1Ctx = buildApplicationContext("biz1");
+        when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        biz1Ctx.getBeanFactory().registerSingleton("moduleBean", newModuleBean);
+        Mockito.when(bizManagerService.getBiz("biz1", "version1")).thenReturn(biz1);
+        Mockito.when(biz1.getBizState()).thenReturn(BizState.ACTIVATED);
+        Mockito.when(biz1.getBizClassLoader()).thenReturn(loader);
+        Mockito.when(biz1.getBizName()).thenReturn("biz1");
+        BizRuntimeContext biz1Runtime = new BizRuntimeContext(biz1, biz1Ctx);
+        BizRuntimeContextRegistry.registerBizRuntimeManager(biz1Runtime);
+
+        ModuleBean moduleBean1 = SpringServiceFinder.getModuleService("biz1", "version1",
+            "moduleBean", ModuleBean.class);
+        Assert.assertEquals("test model name",
+            moduleBean1.crossInvoker(new Model("test model name")));
+    }
+
+    @Test
     public void testGetBaseBean() {
         Object baseBean = SpringBeanFinder.getBaseBean("baseBean");
         BaseBean baseBean1 = SpringBeanFinder.getBaseBean(BaseBean.class);
@@ -294,8 +323,23 @@ public class SpringServiceAndBeanFinderTest {
 
     }
 
-    public static class BaseBean {
+    public static class Model {
+        private String name;
 
+        public Model(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static class BaseBean {
         public String test() {
             return "base";
         }
@@ -322,10 +366,8 @@ public class SpringServiceAndBeanFinderTest {
             return "module";
         }
 
-        @Override
-        public String toString() {
-            return "ModuleBean";
+        public String crossInvoker(Model model) {
+            return model.getName();
         }
     }
-
 }
