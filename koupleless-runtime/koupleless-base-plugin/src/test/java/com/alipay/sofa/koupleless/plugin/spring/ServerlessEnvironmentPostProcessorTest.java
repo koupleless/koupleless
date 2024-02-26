@@ -91,10 +91,12 @@ public class ServerlessEnvironmentPostProcessorTest {
         try {
             Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
             System.setProperty(ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION, "xxxx");
+            System.setProperty(ServerlessEnvironmentPostProcessor.SPRING_ACTIVE_PROFILES, "biz");
             serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
                 springApplication);
         } finally {
             System.clearProperty(ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION);
+            System.clearProperty(ServerlessEnvironmentPostProcessor.SPRING_ACTIVE_PROFILES);
             Thread.currentThread().setContextClassLoader(tccl);
         }
 
@@ -104,19 +106,12 @@ public class ServerlessEnvironmentPostProcessorTest {
         Assert.assertEquals("./logs", masterPropertySources.get("compatiblePropertySource")
             .getProperty("logging.path"));
 
-        // test with specific biz application.properties
-        try {
-            URL url = this.getClass().getClassLoader()
-                .getResource("config/mockbiz/application.properties");
-            Thread.currentThread().setContextClassLoader(
-                new URLClassLoader(new URL[] { url }, null));
-            serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
-                springApplication);
-            PropertySource<?> otherPropertySource = propertySources
+        PropertySource<?> otherPropertySource = propertySources
                 .get("Biz-Config resourceconfig/mockbiz/application.properties");
-            Assert.assertEquals("abc", otherPropertySource.getProperty("kay"));
-        } finally {
-            Thread.currentThread().setContextClassLoader(tccl);
-        }
+        Assert.assertEquals("abc", otherPropertySource.getProperty("kay"));
+
+        PropertySource<?> otherBizPropertySource = propertySources
+                .get("Biz-Config resourceconfig/mockbiz/application-biz.properties");
+        Assert.assertEquals("abc-biz", otherBizPropertySource.getProperty("kay1"));
     }
 }
