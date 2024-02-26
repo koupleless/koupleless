@@ -53,18 +53,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>log-sofa-boot-starter</artifactId>
-			<version>3.9.1</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.alipay.sofa.common</groupId>
-					<artifactId>sofa-common-tools</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<!-- 增加适配 springboot3 的 sofa-common-tools 版本 -->
 			<groupId>com.alipay.sofa.common</groupId>

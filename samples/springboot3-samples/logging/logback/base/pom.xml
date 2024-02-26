@@ -30,12 +30,6 @@
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>web-ark-plugin</artifactId>
 		</dependency>
-
-		<!-- start 增加适配 springboot3 的 sofa-common-tools 版本 -->
-		<dependency>
-			<groupId>com.alipay.sofa</groupId>
-			<artifactId>log-sofa-boot-starter</artifactId>
-		</dependency>
 		<!-- end 增加适配 springboot3 的 sofa-common-tools 版本 -->
 
 		<dependency>
