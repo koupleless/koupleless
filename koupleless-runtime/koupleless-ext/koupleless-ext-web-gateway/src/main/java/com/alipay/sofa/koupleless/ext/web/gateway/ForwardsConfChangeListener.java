@@ -23,6 +23,13 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBean;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
+import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -37,6 +44,9 @@ public class ForwardsConfChangeListener implements ConfigChangeListener, Initial
 
     @Value("${apollo.bootstrap.namespaces:application}")
     private String              namespaces;
+
+    @Autowired
+    private ApplicationContext  applicationContext;
     private static final String WATCH_KEY_PREFIX = "koupleless.web.gateway";
 
     @Override
@@ -58,6 +68,18 @@ public class ForwardsConfChangeListener implements ConfigChangeListener, Initial
             }
         }
         if (watchKeyChanged) {
+            Set<String> beanNames = applicationContext.getBeansOfType(GatewayProperties.class)
+                .keySet();
+            String beanName = beanNames.iterator().next();
+            ConfigurationPropertiesBean bean = ConfigurationPropertiesBean.get(
+                this.applicationContext, gatewayProperties, beanName);
+            Bindable<?> target = bean.asBindTarget();
+            ConfigurableEnvironment environment = applicationContext
+                .getBean(ConfigurableEnvironment.class);
+            Iterable<ConfigurationPropertySource> configurationPropertySources = ConfigurationPropertySources
+                .from(environment.getPropertySources());
+            Binder binder = new Binder(configurationPropertySources);
+            binder.bind(WATCH_KEY_PREFIX, target);
             ForwardItems.init(forwards, gatewayProperties);
         }
     }
