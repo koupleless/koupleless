@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Set;
 
 @EnableConfigurationProperties(GatewayProperties.class)
-@ConditionalOnProperty(name = "koupleless.forward.conf.path")
 @ComponentScan(basePackages = "com.alipay.sofa.koupleless.ext.web")
 public class ForwardAutoConfiguration {
     private static final String EMPTY               = "";
