@@ -52,9 +52,9 @@ public class ServerlessEnvironmentPostProcessorTest {
 
     private final Biz                     masterBiz         = mock(Biz.class);
 
-    private final BizManagerService bizManagerService = mock(BizManagerServiceImpl.class);
+    private final BizManagerService       bizManagerService = mock(BizManagerServiceImpl.class);
 
-    private final Biz                     otherBiz         = mock(Biz.class);
+    private final Biz                     otherBiz          = mock(Biz.class);
 
     @Test
     public void testPostProcessEnvironment() {
@@ -102,16 +102,19 @@ public class ServerlessEnvironmentPostProcessorTest {
         Assert.assertTrue(masterPropertySource instanceof MasterBizPropertySource);
         Assert.assertEquals("masterValue", masterPropertySource.getProperty("masterKey"));
         Assert.assertEquals("./logs", masterPropertySources.get("compatiblePropertySource")
-                .getProperty("logging.path"));
+            .getProperty("logging.path"));
 
         // test with specific biz application.properties
-        try{
-            URL url = this.getClass().getClassLoader().getResource("config/mockbiz/application.properties");
-            Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[]{url},null));
+        try {
+            URL url = this.getClass().getClassLoader()
+                .getResource("config/mockbiz/application.properties");
+            Thread.currentThread().setContextClassLoader(
+                new URLClassLoader(new URL[] { url }, null));
             serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
-                    springApplication);
-            PropertySource<?> otherPropertySource = propertySources.get("Biz-Config resourceconfig/mockbiz/application.properties");
-            Assert.assertEquals("abc",otherPropertySource.getProperty("kay"));
+                springApplication);
+            PropertySource<?> otherPropertySource = propertySources
+                .get("Biz-Config resourceconfig/mockbiz/application.properties");
+            Assert.assertEquals("abc", otherPropertySource.getProperty("kay"));
         } finally {
             Thread.currentThread().setContextClassLoader(tccl);
         }

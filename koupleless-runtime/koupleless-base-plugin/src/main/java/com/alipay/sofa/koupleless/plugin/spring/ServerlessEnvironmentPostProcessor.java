@@ -78,7 +78,7 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
     private static final AtomicReference<Environment> MASTER_ENV                                 = new AtomicReference<>();
 
     @ArkInject
-    private BizManagerService bizManagerService;
+    private BizManagerService                         bizManagerService;
 
     static {
         COMPATIBLE_KEYS.put("logging.path", "logging.file.path");
@@ -134,17 +134,17 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
 
     private List<String> inferConfigurationPropertiesPaths(ConfigurableEnvironment environment) {
         Biz biz = getBizManagerService().getBizByClassLoader(
-                Thread.currentThread().getContextClassLoader());
+            Thread.currentThread().getContextClassLoader());
         List<String> configurationPropertiesPath = new ArrayList<>();
         String propertyFromSys = System.getProperty(SPRING_ACTIVE_PROFILES);
         String propertyFromDefault = environment.getProperty(SPRING_ACTIVE_PROFILES);
         String property = StringUtils.isEmpty(propertyFromSys) ? propertyFromDefault
-                : propertyFromSys;
+            : propertyFromSys;
         if (!StringUtils.isEmpty(property)) {
             String[] activeProfiles = property.split(",");
             for (String activeProfile : activeProfiles) {
                 configurationPropertiesPath.add(String.format(ACTIVE_CONFIG_FORMAT,
-                        biz.getBizName(), activeProfile));
+                    biz.getBizName(), activeProfile));
             }
         }
         configurationPropertiesPath.add(String.format(DEFAULT_CONFIG_FORMAT, biz.getBizName()));
