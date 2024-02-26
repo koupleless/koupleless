@@ -33,10 +33,18 @@ public class SerializeUtils {
 
     private static Object _serializeTransform(Object source, ClassLoader targetClassLoader) {
         try {
-            if (null == source
-                || source.getClass().getClassLoader() == targetClassLoader
-                || targetClassLoader.loadClass(source.getClass().getName()).getClassLoader() == source
-                    .getClass().getClassLoader()) {
+            if (source == null) {
+                return source;
+            }
+            Class<?> sourceClass;
+            if (source.getClass().equals(Class.class)) {
+                sourceClass = (Class<?>) source;
+            } else {
+                sourceClass = source.getClass();
+            }
+            if (sourceClass.getClassLoader() == targetClassLoader
+                || targetClassLoader.loadClass(sourceClass.getName()).getClassLoader() == sourceClass
+                    .getClassLoader()) {
                 return source;
             }
         } catch (ClassNotFoundException e) {
