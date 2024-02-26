@@ -19,7 +19,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <!-- 以上版本支持springboot3 -->
-    <version>0.5.5-jdk17</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <!-- end 动态模块相关依赖 -->
 
@@ -128,7 +128,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
 --data '{
-    "bizName": "biz1",
+    "bizName": "biz1-log4j2",
     "bizVersion": "0.0.1-SNAPSHOT"
 }'
 ```
@@ -147,11 +147,11 @@ curl http://localhost:8080/biz2/
 
 ### 查看日志打印是否正常
 1. 检查内容1, 控制台里能看到模块启动时的日志
-![img.png](imgs/biz1-log.png)
-![img_1.png](imgs/biz2-log.png)
+![img.png](../imgs/biz1-log.png)
+![img_1.png](../imgs/biz2-log.png)
 
 2. 检查内容2, `./samples/logging/log4j2/logs/` 目录里的日志分布在符合如下情况
-![img_2.png](imgs/logs-structure.png)
+![img_2.png](../imgs/logs-structure.png)
 
 - biz1 的应用日志在 `./samples/logging/log4j2/logs/biz1/` 目录下
 - biz2 的应用日志在 `./samples/logging/log4j2/logs/biz2/` 目录下

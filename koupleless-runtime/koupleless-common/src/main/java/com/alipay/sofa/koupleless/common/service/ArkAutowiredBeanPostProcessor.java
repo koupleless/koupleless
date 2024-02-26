@@ -59,15 +59,19 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
             AutowiredFromBase autowiredFromBase = field.getAnnotation(AutowiredFromBase.class);
             AutowiredFromBiz autowiredFromBiz = field.getAnnotation(AutowiredFromBiz.class);
 
-            Biz biz;
+            String bizName;
+            String bizVersion;
             String name;
             boolean required;
             if (autowiredFromBase != null) {
-                biz = ArkClient.getMasterBiz();
+                Biz masterBiz = ArkClient.getMasterBiz();
+                bizName = masterBiz.getBizName();
+                bizVersion = masterBiz.getBizVersion();
                 name = autowiredFromBase.name();
                 required = autowiredFromBase.required();
             } else if (autowiredFromBiz != null) {
-                biz = determineMostSuitableBiz(autowiredFromBiz.bizName(), autowiredFromBiz.bizVersion());
+                bizName = autowiredFromBiz.bizName();
+                bizVersion = autowiredFromBiz.bizVersion();
                 name = autowiredFromBiz.name();
                 required = autowiredFromBiz.required();
             } else {
@@ -80,12 +84,12 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
             try {
                 Class<?> fieldType = field.getType();
                 if (StringUtils.hasText(name)) {
-                    serviceProxy = ServiceProxyFactory.createServiceProxy(biz, name, fieldType, clientClassLoader);
+                    serviceProxy = ServiceProxyFactory.createServiceProxy(bizName, bizVersion, name, fieldType, clientClassLoader);
                 }
 
                 if (serviceProxy == null) {
                     if (!Collection.class.isAssignableFrom(fieldType) && !Map.class.isAssignableFrom(fieldType)) {
-                        serviceProxy = ServiceProxyFactory.createServiceProxy(biz, fieldType, clientClassLoader);
+                        serviceProxy = ServiceProxyFactory.createServiceProxy(bizName, bizVersion, null, fieldType, clientClassLoader);
                     }
                 }
 
@@ -98,7 +102,7 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
                         serviceType = (Class<?>) actualTypeArguments[1];
                     }
 
-                    Map<String, ?> serviceProxyMap = ServiceProxyFactory.batchCreateServiceProxy(biz, serviceType, clientClassLoader);
+                    Map<String, ?> serviceProxyMap = ServiceProxyFactory.batchCreateServiceProxy(bizName, bizVersion, serviceType, clientClassLoader);
 
                     if (Map.class.isAssignableFrom(fieldType)) {
                         serviceProxy = serviceProxyMap;
@@ -126,7 +130,7 @@ public class ArkAutowiredBeanPostProcessor implements BeanPostProcessor {
             if (serviceProxy != null) {
                 ReflectionUtils.makeAccessible(field);
                 ReflectionUtils.setField(field, bean, serviceProxy);
-                LOGGER.info("Finished processing bean [{}], injected object [{}] to bean [{}] field [{}]", beanName, serviceProxy, bean, field);
+                LOGGER.info("Finished processing bean [{}], success to inject service proxy to bean [{}] field [{}]", beanName, bean, field);
             }
 
         }, field -> !Modifier.isStatic(field.getModifiers())

@@ -1,3 +1,8 @@
 [submodule "sofa-ark"]
 	path = sofa-ark
 	url = https://github.com/sofastack/sofa-ark.git
+	branch = master
+[submodule "docs"]
+	path = docs
+	url = https://github.com/koupleless/docs.git
+	branch = main
