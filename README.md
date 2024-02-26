@@ -52,6 +52,11 @@ The base is just a regular application, same with the original app (such as stan
 ## quick start
 Please check [the official website Quick Start](https://koupleless.gitee.io/docs/quick-start/).
 
+<video width=100% controls autoplay>
+<source src="https://koupleless.oss-cn-shanghai.aliyuncs.com/outer-materials/docs/videos/module_dev_and_deploy.mp4" type="video/mp4">
+Your browser does not support the video tag.  
+</video>
+
 ## Koupleless Components
 
 ![image](https://github.com/sofastack/sofa-serverless/assets/101314559/995f1e17-f3be-4672-b1b8-c0c041590fb0)
@@ -62,7 +67,7 @@ We appreciate anyone who contribute here together. Please scan the QR code to jo
 | IAM                        | number      | QR code                                                                                                                          |
 |----------------------------|-------------|----------------------------------------------------------------------------------------------------------------------------------|
 | DingTalk group (recommand) | 24970018417 | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/7ba1db74-20c1-43a4-a2ab-d38c99a920cd"> |
-| QQ Group                   | 813757901   | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/4445e3b3-dbc9-4761-a578-90c578e21954"> |
+| WeChat                     | zzl_ing     | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/35ebc2bc-86cd-4a24-b12e-e9f44cccc2d7"> |
 
 ## Long-term planning and our vision
 We hope to further refine and open up these capabilities to be more extreme and applicable to a wider range of scenarios. Help more businesses solve application development problems, achieve cost reduction and efficiency improvement, and ultimately become an excellent research and development framework and solution for global green computing, achieving:

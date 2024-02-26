@@ -50,6 +50,11 @@ Koupleless 是蚂蚁集团内部经过 5 年打磨成熟的研发框架和运维
 ## 快速开始
 请查看[官网快速开始](https://koupleless.gitee.io/docs/quick-start/)
 
+<video width=100% controls autoplay>
+<source src="https://koupleless.oss-cn-shanghai.aliyuncs.com/outer-materials/docs/videos/module_dev_and_deploy.mp4" type="video/mp4">
+Your browser does not support the video tag.  
+</video>
+
 ## Koupleless 组件
 
 ![image](https://github.com/sofastack/sofa-serverless/assets/101314559/995f1e17-f3be-4672-b1b8-c0c041590fb0)
@@ -60,7 +65,7 @@ Koupleless 是蚂蚁集团内部经过 5 年打磨成熟的研发框架和运维
 |软件|群号|二维码|
 |-|-|-|
 | 钉钉群（推荐）| 24970018417 | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/7ba1db74-20c1-43a4-a2ab-d38c99a920cd"> |
-| QQ 群 | 813757901 | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/4445e3b3-dbc9-4761-a578-90c578e21954"> |
+| WeChat                     | zzl_ing     | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/35ebc2bc-86cd-4a24-b12e-e9f44cccc2d7"> |
 
 ## 长期规划与愿景
 希望将这些能力做得更加极致、更加开放，适用更多的场景。帮助更多的企业解决应用研发问题，实现降本增效，最终成为全球绿色计算优秀的研发框架和解决方案，做到：
