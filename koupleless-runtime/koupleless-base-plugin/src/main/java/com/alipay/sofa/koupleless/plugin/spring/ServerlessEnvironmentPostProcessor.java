@@ -18,6 +18,10 @@ package com.alipay.sofa.koupleless.plugin.spring;
 
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.common.util.StringUtils;
+import com.alipay.sofa.ark.spi.model.Biz;
+import com.alipay.sofa.ark.spi.service.ArkInject;
+import com.alipay.sofa.ark.spi.service.biz.BizManagerService;
+import com.alipay.sofa.koupleless.common.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,9 +36,11 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.util.Assert;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -51,6 +57,14 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
 
     public static final String                        SPRING_ADDITIONAL_LOCATION                 = "spring.config.additional-location";
 
+    public static final String                        SPRING_ACTIVE_PROFILES                     = "spring.profiles.active";
+
+    private final static String                       ACTIVE_CONFIG_FORMAT                       = "config/%s/application-%s.properties";
+
+    private final static String                       DEFAULT_CONFIG_FORMAT                      = "config/%s/application.properties";
+
+    private final static String                       SOFA_ARK_BIZ_PROPERTY_SOURCE_PREFIX        = "Biz-Config resource";
+
     // 框架定义的允许共享的配置列表
     private static final Set<String>                  DEFAULT_SHARE_KEYS                         = new HashSet<>();
 
@@ -62,6 +76,9 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
     private static final Set<String>                  BASE_APP_SHARE_ENV_KEYS                    = new HashSet<>();
 
     private static final AtomicReference<Environment> MASTER_ENV                                 = new AtomicReference<>();
+
+    @ArkInject
+    private BizManagerService bizManagerService;
 
     static {
         COMPATIBLE_KEYS.put("logging.path", "logging.file.path");
@@ -98,9 +115,47 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
                 getLogger().info("disable biz additional location: {}", toRemove);
             }
 
+            // 添加模块 config/${app}/application-${profile}.properties
+            List<String> propertiesPaths = inferConfigurationPropertiesPaths(environment);
+            for (String propertiesPath : propertiesPaths) {
+                Properties properties = PropertiesUtil.loadProperties(Thread.currentThread().getContextClassLoader(), propertiesPath);
+                if (!properties.isEmpty()) {
+                    PropertiesPropertySource newPropertySource = new PropertiesPropertySource(
+                            SOFA_ARK_BIZ_PROPERTY_SOURCE_PREFIX.concat(propertiesPath), properties);
+                    environment.getPropertySources().addLast(newPropertySource);
+                    getLogger().info("customize biz properties: {}", propertiesPath);
+                }
+            }
+
             // 添加基座共享的 environment
             registerMasterBizPropertySource(MASTER_ENV.get(), environment);
         }
+    }
+
+    private List<String> inferConfigurationPropertiesPaths(ConfigurableEnvironment environment) {
+        Biz biz = getBizManagerService().getBizByClassLoader(
+                Thread.currentThread().getContextClassLoader());
+        List<String> configurationPropertiesPath = new ArrayList<>();
+        String propertyFromSys = System.getProperty(SPRING_ACTIVE_PROFILES);
+        String propertyFromDefault = environment.getProperty(SPRING_ACTIVE_PROFILES);
+        String property = StringUtils.isEmpty(propertyFromSys) ? propertyFromDefault
+                : propertyFromSys;
+        if (!StringUtils.isEmpty(property)) {
+            String[] activeProfiles = property.split(",");
+            for (String activeProfile : activeProfiles) {
+                configurationPropertiesPath.add(String.format(ACTIVE_CONFIG_FORMAT,
+                        biz.getBizName(), activeProfile));
+            }
+        }
+        configurationPropertiesPath.add(String.format(DEFAULT_CONFIG_FORMAT, biz.getBizName()));
+        return configurationPropertiesPath;
+    }
+
+    public BizManagerService getBizManagerService() {
+        if (bizManagerService == null) {
+            ArkClient.getInjectionService().inject(this);
+        }
+        return bizManagerService;
     }
 
     private void initShareEnvKeys(ConfigurableEnvironment environment) {
