@@ -17,8 +17,11 @@
 package com.alipay.sofa.koupleless.ext.web.gateway;
 
 import com.ctrip.framework.apollo.ConfigChangeListener;
+import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 
@@ -26,12 +29,23 @@ import java.util.Set;
 
 @Component
 @ConditionalOnClass(ConfigChangeListener.class)
-public class ForwardsConfChangeListener implements ConfigChangeListener {
+public class ForwardsConfChangeListener implements ConfigChangeListener, InitializingBean {
     @Autowired
     private Forwards            forwards;
     @Autowired
     private GatewayProperties   gatewayProperties;
+
+    @Value("${apollo.bootstrap.namespaces:application}")
+    private String              namespaces;
     private static final String WATCH_KEY_PREFIX = "koupleless.web.gateway";
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        String[] array = namespaces.split(",");
+        for (String namespace : array) {
+            ConfigService.getConfig(namespace).addChangeListener(this);
+        }
+    }
 
     @Override
     public void onChange(ConfigChangeEvent event) {
