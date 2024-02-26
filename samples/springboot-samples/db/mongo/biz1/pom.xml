@@ -45,17 +45,6 @@
             <scope>test</scope>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.alipay.sofa.koupleless</groupId>-->
-<!--            <artifactId>koupleless-app-starter</artifactId>-->
-<!--            <version>${koupleless.runtime.version}</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>com.alipay.sofa.koupleless</groupId>
-            <artifactId>koupleless-adapter-log4j2</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>com.alipay.sofa.koupleless</groupId>
             <artifactId>koupleless-app-starter</artifactId>

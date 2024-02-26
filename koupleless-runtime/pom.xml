@@ -9,9 +9,9 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>2.0.0</revision>
-        <sofa.ark.version>3.0.2</sofa.ark.version>
-        <spring.boot.version>3.0.9</spring.boot.version>
+        <revision>1.0.0</revision>
+        <sofa.ark.version>2.2.7</sofa.ark.version>
+        <spring.boot.version>2.7.15</spring.boot.version>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
@@ -323,6 +323,7 @@
                         <exclude>**/sofa/serverless/common/exception/**/*</exclude>
                         <exclude>**/com/alibaba/dubbo/**/*</exclude>
                         <exclude>**/org/springframework/boot/**/*</exclude>
+                        <exclude>**/org/apache/logging/slf4j/**/*</exclude>
                         <exclude>**/com/ctrip/framework/apollo/spring/boot/**/*</exclude>
                     </excludes>
                 </configuration>

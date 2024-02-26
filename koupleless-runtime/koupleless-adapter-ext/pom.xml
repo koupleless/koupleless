@@ -13,9 +13,16 @@
     <packaging>pom</packaging>
 
     <modules>
+<<<<<<< HEAD
         <module>koupleless-adapter-log4j2</module>
         <module>koupleless-adapter-logback</module>
         <module>koupleless-adapter-apollo</module>
+=======
+        <module>koupleless-adapter-apollo</module>
+        <module>koupleless-adapter-log4j2</module>
+        <module>koupleless-adapter-dubbo2.6</module>
+        <module>koupleless-adapter-dubbo2.7</module>
+>>>>>>> main
     </modules>
 
 <!--    <build>-->
