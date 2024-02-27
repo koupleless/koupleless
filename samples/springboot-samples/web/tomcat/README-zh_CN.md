@@ -77,14 +77,6 @@ biz 包含两个模块，分别为 biz1 和 biz2, 都是普通 springboot，修�
 
 **暂时需要自行安装master分支的最新sofa-ark，预计在 sofa-ark 2.2.8 版本可用。**
 
-首先，在application.properties文件中，配置forward文件的路径，如：
-
-```properties
-koupleless.forward.conf.path=classpath:koupleless-forward.yaml
-```
-
-然后在resources下的koupleless-forward.yaml中，配置forward规则即可。
-
 文件中，配置的是forward规则的list，单条forward规则数据结构如下：
 
 | 字段名                | 字段类型   | 可否为空 | 说明                     |
@@ -95,40 +87,66 @@ koupleless.forward.conf.path=classpath:koupleless-forward.yaml
 | &nbsp;└─&nbsp;from | string | 否    | 原请求路径前缀                |
 | &nbsp;└─&nbsp;to   | string | 否    | 目标路径前缀                 |
 
-示例如下：
+properties示例如下：
+
+```properties
+# host in [a.xxx,b.xxx,c.xxx] path /abc --forward to--> biz1/abc
+koupleless.web.gateway.forwards[0].contextPath=biz1
+koupleless.web.gateway.forwards[0].hosts[0]=a
+koupleless.web.gateway.forwards[0].hosts[1]=b
+koupleless.web.gateway.forwards[0].hosts[2]=c
+# /idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**
+koupleless.web.gateway.forwards[1].contextPath=biz2
+koupleless.web.gateway.forwards[1].paths[0].from=/idx2
+koupleless.web.gateway.forwards[1].paths[0].to=/
+koupleless.web.gateway.forwards[1].paths[1].from=/t2
+koupleless.web.gateway.forwards[1].paths[1].to=/timestamp
+# /idx1/** -> /biz1/**, /t1/** -> /biz1/timestamp/**
+koupleless.web.gateway.forwards[2].contextPath=biz1
+koupleless.web.gateway.forwards[2].paths[0].from=/idx1
+koupleless.web.gateway.forwards[2].paths[0].to=/
+koupleless.web.gateway.forwards[2].paths[1].from=/t1
+koupleless.web.gateway.forwards[2].paths[1].to=/timestamp
+```
+
+yaml示例如下：
 
 ```yaml
 #a.xxx b.xxx c.xxx域名的请求，路由到biz1
-- contextPath: biz1
-  hosts:
-    - a
-    - b
-    - c
-# /idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**
-- contextPath: biz2
-  paths:
-    - from: /idx2
-      to: /
-    - from: /t2
-      to: /timestamp
-# /idx1/** -> /biz1/**, /t1/** -> /biz1/timestamp/**
-- contextPath: biz1
-  paths:
-    - from: /idx1
-      to: /
-    - from: /t1
-      to: /timestamp
-#a.xxx b.xxx c.xxx域名的请求，/idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**    
-- contextPath: biz2
-  hosts:
-    - a
-    - b
-    - c
-  paths:
-    - from: /idx2
-      to: /
-    - from: /t2
-      to: /timestamp
+koupleless:
+  web:
+    gateway:
+      forwards:
+        - contextPath: biz1
+          hosts:
+            - a
+            - b
+            - c
+        # /idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**
+        - contextPath: biz2
+          paths:
+            - from: /idx2
+              to: /
+            - from: /t2
+              to: /timestamp
+        # /idx1/** -> /biz1/**, /t1/** -> /biz1/timestamp/**
+        - contextPath: biz1
+          paths:
+            - from: /idx1
+              to: /
+            - from: /t1
+              to: /timestamp
+        #a.xxx b.xxx c.xxx域名的请求，/idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**    
+        - contextPath: biz2
+          hosts:
+            - a
+            - b
+            - c
+          paths:
+            - from: /idx2
+              to: /
+            - from: /t2
+              to: /timestamp
 ```
 
 说明事项：
@@ -249,6 +267,7 @@ curl http://localhost:8080/biz2/
 ```
 
 # 实验内容3：内部转发
+
 部署成功之后，就可以开始验证内部转发了。
 
 ```shell

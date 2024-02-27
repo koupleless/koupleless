@@ -78,15 +78,8 @@ module may not have a reserved contextPath.
 
 At this time, the request is sent to the base application and needs to be forwarded.
 
-**It is temporarily necessary to install the latest "sofa-ark" of the master branch, which is expected to be available in "sofa-ark" version 2.2.8**
-
-First, in the application.properties file, configure the path of the forward file, such as:
-
-```properties
-koupleless.forward.conf.path=classpath:koupleless-forward.yaml
-```
-
-Then in the resources folder, you can configure the forward rules in the file coupleless-forward.yaml.
+**It is temporarily necessary to install the latest "sofa-ark" of the master branch, which is expected to be available
+in "sofa-ark" version 2.2.8**
 
 In this file, you configure a list of forward rules. The data structure of a single forward rule is as follows:
 
@@ -98,40 +91,68 @@ In this file, you configure a list of forward rules. The data structure of a sin
 | &nbsp;└─&nbsp;from | string     | Yes      | prefix of original request path                            |
 | &nbsp;└─&nbsp;to   | string     | Yes      | destination path prefix                                    |
 
-Example：
+Example for properties:
+
+```properties
+# host in [a.xxx,b.xxx,c.xxx] path /abc --forward to--> biz1/abc
+koupleless.web.gateway.forwards[0].contextPath=biz1
+koupleless.web.gateway.forwards[0].hosts[0]=a
+koupleless.web.gateway.forwards[0].hosts[1]=b
+koupleless.web.gateway.forwards[0].hosts[2]=c
+# /idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**
+koupleless.web.gateway.forwards[1].contextPath=biz2
+koupleless.web.gateway.forwards[1].paths[0].from=/idx2
+koupleless.web.gateway.forwards[1].paths[0].to=/
+koupleless.web.gateway.forwards[1].paths[1].from=/t2
+koupleless.web.gateway.forwards[1].paths[1].to=/timestamp
+# /idx1/** -> /biz1/**, /t1/** -> /biz1/timestamp/**
+koupleless.web.gateway.forwards[2].contextPath=biz1
+koupleless.web.gateway.forwards[2].paths[0].from=/idx1
+koupleless.web.gateway.forwards[2].paths[0].to=/
+koupleless.web.gateway.forwards[2].paths[1].from=/t1
+koupleless.web.gateway.forwards[2].paths[1].to=/timestamp
+```
+
+
+
+Example for yaml：
 
 ```yaml
 # a.xxx b.xxx c.xxx domain requests, routed to biz1 
-- contextPath: biz1
-  hosts:
-    - a
-    - b
-    - c
-# /idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**
-- contextPath: biz2
-  paths:
-    - from: /idx2
-      to: /
-    - from: /t2
-      to: /timestamp
-# /idx1/** -> /biz1/**, /t1/** -> /biz1/timestamp/**
-- contextPath: biz1
-  paths:
-    - from: /idx1
-      to: /
-    - from: /t1
-      to: /timestamp
-  #a.xxx b.xxx c.xxx domain requests, /idx2/** -> /biz3/**, /t2/** -> /biz3/timestamp/** 
-- contextPath: biz3
-  hosts:
-    - a
-    - b
-    - c
-  paths:
-    - from: /idx2
-      to: /
-    - from: /t2
-      to: /timestamp
+koupleless:
+  web:
+    gateway:
+      forwards:
+        - contextPath: biz1
+          hosts:
+            - a
+            - b
+            - c
+        # /idx2/** -> /biz2/**, /t2/** -> /biz2/timestamp/**
+        - contextPath: biz2
+          paths:
+            - from: /idx2
+              to: /
+            - from: /t2
+              to: /timestamp
+        # /idx1/** -> /biz1/**, /t1/** -> /biz1/timestamp/**
+        - contextPath: biz1
+          paths:
+            - from: /idx1
+              to: /
+            - from: /t1
+              to: /timestamp
+          #a.xxx b.xxx c.xxx domain requests, /idx2/** -> /biz3/**, /t2/** -> /biz3/timestamp/** 
+        - contextPath: biz3
+          hosts:
+            - a
+            - b
+            - c
+          paths:
+            - from: /idx2
+              to: /
+            - from: /t2
+              to: /timestamp
 ```
 
 Notes:
@@ -255,6 +276,7 @@ curl http://localhost:8080/biz2/
 ```
 
 # Experiment3：the internal forwarding
+
 After the deployment is successful, you can start to verify the internal forwarding.
 
 ```shell
