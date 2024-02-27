@@ -107,11 +107,11 @@ public class ServerlessEnvironmentPostProcessorTest {
             .getProperty("logging.path"));
 
         PropertySource<?> otherPropertySource = propertySources
-                .get("Biz-Config resourceconfig/mockbiz/application.properties");
+            .get("Biz-Config resourceconfig/mockbiz/application.properties");
         Assert.assertEquals("abc", otherPropertySource.getProperty("kay"));
 
         PropertySource<?> otherBizPropertySource = propertySources
-                .get("Biz-Config resourceconfig/mockbiz/application-biz.properties");
+            .get("Biz-Config resourceconfig/mockbiz/application-biz.properties");
         Assert.assertEquals("abc-biz", otherBizPropertySource.getProperty("kay1"));
     }
 }
