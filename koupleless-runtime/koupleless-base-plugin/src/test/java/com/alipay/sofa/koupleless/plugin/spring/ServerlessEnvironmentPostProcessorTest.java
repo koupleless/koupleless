@@ -91,7 +91,8 @@ public class ServerlessEnvironmentPostProcessorTest {
         try {
             Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
             System.setProperty(ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION, "xxxx");
-            System.setProperty(ServerlessEnvironmentPostProcessor.SPRING_ACTIVE_PROFILES, "biz,abc");
+            System
+                .setProperty(ServerlessEnvironmentPostProcessor.SPRING_ACTIVE_PROFILES, "biz,abc");
             serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
                 springApplication);
         } finally {
