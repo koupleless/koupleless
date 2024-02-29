@@ -16,6 +16,18 @@
         <!-- include adapter libs first -->
         <dependency>
             <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-adapter-apollo</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-ext-web-gateway</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
             <artifactId>koupleless-adapter-log4j2</artifactId>
             <version>${revision}</version>
         </dependency>
@@ -71,17 +83,17 @@
         </dependency>
         <!--  arklet end  -->
 
-<!--        <dependency>-->
-<!--            <groupId>com.alipay.sofa</groupId>-->
-<!--            <artifactId>web-ark-plugin</artifactId>-->
-<!--            <version>${sofa.ark.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alipay.sofa</groupId>-->
+        <!--            <artifactId>web-ark-plugin</artifactId>-->
+        <!--            <version>${sofa.ark.version}</version>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>com.alipay.sofa</groupId>-->
-<!--            <artifactId>netty-ark-plugin</artifactId>-->
-<!--            <version>${sofa.ark.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alipay.sofa</groupId>-->
+        <!--            <artifactId>netty-ark-plugin</artifactId>-->
+        <!--            <version>${sofa.ark.version}</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>com.alipay.sofa.koupleless</groupId>
