@@ -19,8 +19,6 @@ package com.alipay.sofa.koupleless.plugin.spring;
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.common.util.StringUtils;
 import com.alipay.sofa.ark.spi.model.Biz;
-import com.alipay.sofa.ark.spi.service.ArkInject;
-import com.alipay.sofa.ark.spi.service.biz.BizManagerService;
 import com.alipay.sofa.koupleless.common.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,9 +75,6 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
 
     private static final AtomicReference<Environment> MASTER_ENV                                 = new AtomicReference<>();
 
-    @ArkInject
-    private BizManagerService                         bizManagerService;
-
     static {
         COMPATIBLE_KEYS.put("logging.path", "logging.file.path");
     }
@@ -133,7 +128,7 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
     }
 
     private List<String> inferConfigurationPropertiesPaths(ConfigurableEnvironment environment) {
-        Biz biz = getBizManagerService().getBizByClassLoader(
+        Biz biz = ArkClient.getBizManagerService().getBizByClassLoader(
             Thread.currentThread().getContextClassLoader());
         List<String> configurationPropertiesPath = new ArrayList<>();
         String propertyFromSys = System.getProperty(SPRING_ACTIVE_PROFILES);
@@ -149,13 +144,6 @@ public class ServerlessEnvironmentPostProcessor implements EnvironmentPostProces
         }
         configurationPropertiesPath.add(String.format(DEFAULT_CONFIG_FORMAT, biz.getBizName()));
         return configurationPropertiesPath;
-    }
-
-    public BizManagerService getBizManagerService() {
-        if (bizManagerService == null) {
-            ArkClient.getInjectionService().inject(this);
-        }
-        return bizManagerService;
     }
 
     private void initShareEnvKeys(ConfigurableEnvironment environment) {

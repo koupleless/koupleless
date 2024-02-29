@@ -83,7 +83,7 @@ public class ServerlessEnvironmentPostProcessorTest {
         when(otherEnvironment.getPropertySources()).thenReturn(propertySources);
 
         ClassLoader tccl = Thread.currentThread().getContextClassLoader();
-        doReturn(bizManagerService).when(serverlessEnvironmentPostProcessor).getBizManagerService();
+        ArkClient.setBizManagerService(bizManagerService);
         doReturn(otherBiz).when(bizManagerService).getBizByClassLoader(any());
         doReturn("mockbiz").when(otherBiz).getBizName();
 
@@ -91,7 +91,7 @@ public class ServerlessEnvironmentPostProcessorTest {
         try {
             Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
             System.setProperty(ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION, "xxxx");
-            System.setProperty(ServerlessEnvironmentPostProcessor.SPRING_ACTIVE_PROFILES, "biz");
+            System.setProperty(ServerlessEnvironmentPostProcessor.SPRING_ACTIVE_PROFILES, "biz,abc");
             serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
                 springApplication);
         } finally {

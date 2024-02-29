@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * @author gaosaroma@outlook.com
+ * @author gaosaroma@gmail.com
  * @version $Id: PropertiesUtil.java, v 0.1 2024年02月26日 17:34 lipeng Exp $
  */
 public class PropertiesUtil {
