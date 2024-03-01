@@ -79,6 +79,9 @@ public class SerializeUtils {
     }
 
     public static Object serializeTransform(Object originalSource, ClassLoader targetClassLoader) {
+        if (originalSource == null) {
+            return null;
+        }
         if (originalSource.getClass().isArray()) {
             Object[] sources = (Object[]) originalSource;
             if (sources.length > 0) {
