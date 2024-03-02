@@ -4,12 +4,12 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
 		<groupId>com.alipay.sofa</groupId>
-		<artifactId>dubbo-samples</artifactId>
+		<artifactId>dubbo32-samples</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>dubbo3</artifactId>
+	<artifactId>dubbo32</artifactId>
 	<groupId>com.alipay.sofa</groupId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -21,17 +21,17 @@
 	</modules>
 
 	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
-		<java.version>1.8</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<spring.boot.version>2.7.16</spring.boot.version>
-		<sofa.ark.version>2.2.7</sofa.ark.version>
-		<koupleless.runtime.version>1.0.0</koupleless.runtime.version>
+		<spring.boot.version>3.2.2</spring.boot.version>
+		<sofa.ark.version>3.1.0</sofa.ark.version>
+		<koupleless.runtime.version>2.0.0</koupleless.runtime.version>
 		<disruptor.version>3.4.2</disruptor.version>
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
-		<dubbo.version>3.1.11</dubbo.version>
+		<dubbo.version>3.2.10</dubbo.version>
 		<protobuf.plugin.version>0.6.1</protobuf.plugin.version>
 		<protobuf.version>3.19.6</protobuf.version>
 		<protoc.version>3.18.3</protoc.version>
@@ -116,6 +116,21 @@
 				<groupId>com.google.protobuf</groupId>
 				<artifactId>protobuf-java</artifactId>
 				<version>${protobuf.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-protobuf</artifactId>
+				<version>${grpc.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.protobuf</groupId>
+				<artifactId>protobuf-java-util</artifactId>
+				<version>${protobuf.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-stub</artifactId>
+				<version>${grpc.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

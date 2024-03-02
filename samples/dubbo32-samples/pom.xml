@@ -3,10 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.alipay.sofa</groupId>
-    <artifactId>dubbo-samples</artifactId>
+    <artifactId>dubbo32-samples</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>dubbo-samples</name>
-    <description>Demo project for Dubbo with JDK 8</description>
+    <description>Demo project for Dubbo JDK17</description>
     <packaging>pom</packaging>
 
     <properties>
@@ -24,9 +23,7 @@
     </properties>
 
     <modules>
-		<module>rpc/dubbo3</module>
-		<module>rpc/dubbo26</module>
-		<module>rpc/dubbo27</module>
+        <module>rpc/dubbo32</module>
 	</modules>
 
     <build>

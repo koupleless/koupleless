@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.alipay.sofa</groupId>
-        <artifactId>dubbo3</artifactId>
+        <artifactId>dubbo32</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
@@ -12,7 +12,6 @@
     <groupId>com.alipay.sofa.rpc.grpc</groupId>
     <artifactId>triplebiz</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>triplebiz</name>
 
     <dependencies>
 		<!--和基座通信-->
