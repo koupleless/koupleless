@@ -82,7 +82,8 @@
         <module>arklet-springboot-starter</module>
         <module>koupleless-adapter-ext</module>
         <module>koupleless-base-loader</module>
-	</modules>
+        <module>koupleless-ext</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>

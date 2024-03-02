@@ -12,6 +12,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.alipay.sofa.koupleless</groupId>
+			<artifactId>koupleless-base-starter</artifactId>
+			<version>${koupleless.runtime.version}</version>
+			<type>jar</type>
+		</dependency>
+
 		<!--    务必将次依赖放在构建 pom 的第一个依赖引入, 并且设置 type= pom,
             原理请参考这里 https://koupleless.gitee.io/docs/contribution-guidelines/runtime/multi-app-padater/ -->
 		<!--    must add this dependency as the first one in the pom for building jar, and set type=pom,
@@ -22,6 +29,7 @@
 			<version>${koupleless.runtime.version}</version>
 			<type>pom</type>
 		</dependency>
+
 		<dependency>
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>web-ark-plugin</artifactId>

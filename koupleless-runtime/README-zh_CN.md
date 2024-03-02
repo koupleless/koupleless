@@ -41,7 +41,7 @@ Arklet 通过外部暴露指令 API，通过每个 API 映射的 CommandHandler 
 下面所有的指令 API 都是通过 POST(application/json) 请求格式访问 arklet
 
 使用的是 http 协议，1238 端口
-> 你可以通过设置 `sofa.serverless.arklet.http.port` JVM 启动参数覆盖默认端口
+> 你可以通过设置 `koupleless.arklet.http.port` JVM 启动参数覆盖默认端口
 
 ## 查询支持的指令
 - URL: 127.0.0.1:1238/help
