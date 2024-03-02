@@ -34,7 +34,8 @@ Koupleless is a mature development framework and operational scheduling platform
 <img width="788" alt="image" src="https://github.com/sofastack/sofa-serverless/assets/3754074/11d1d662-d33b-482b-946b-bf600aeb34da">
 
 Here are performance data comparing modular development and deployment with traditional image-based approaches for an actual production application.
-![image](https://github.com/koupleless/koupleless/assets/3754074/cf8877c6-80f1-4138-8314-0fd4deec6b40)
+
+<img width="600" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/913a6f11-54cb-4c8b-b417-d014e53c920a"/>
 
 ## What is a Module?
 
@@ -49,7 +50,7 @@ So, in physical terms, a module can be considered as one ClassLoader + one Sprin
 ## What is the Base？
 The base is just a regular application, same with the original app (such as standard SpringBoot).
 
-## quick start
+## Quick start
 Please check [the official website Quick Start](https://koupleless.gitee.io/docs/quick-start/).
 
 <video width=100% controls autoplay>
