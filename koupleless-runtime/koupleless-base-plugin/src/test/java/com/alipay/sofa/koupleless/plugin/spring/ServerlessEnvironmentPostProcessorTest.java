@@ -17,7 +17,9 @@
 package com.alipay.sofa.koupleless.plugin.spring;
 
 import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.ark.container.service.biz.BizManagerServiceImpl;
 import com.alipay.sofa.ark.spi.model.Biz;
+import com.alipay.sofa.ark.spi.service.biz.BizManagerService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.boot.SpringApplication;
@@ -30,7 +32,10 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 /**
@@ -47,6 +52,10 @@ public class ServerlessEnvironmentPostProcessorTest {
 
     private final Biz                     masterBiz         = mock(Biz.class);
 
+    private final BizManagerService       bizManagerService = mock(BizManagerServiceImpl.class);
+
+    private final Biz                     otherBiz          = mock(Biz.class);
+
     @Test
     public void testPostProcessEnvironment() {
         // process master biz
@@ -58,7 +67,7 @@ public class ServerlessEnvironmentPostProcessorTest {
             new Properties()));
         when(masterEnvironment.getPropertySources()).thenReturn(masterPropertySources);
 
-        ServerlessEnvironmentPostProcessor serverlessEnvironmentPostProcessor = new ServerlessEnvironmentPostProcessor();
+        ServerlessEnvironmentPostProcessor serverlessEnvironmentPostProcessor = spy(new ServerlessEnvironmentPostProcessor());
         serverlessEnvironmentPostProcessor.postProcessEnvironment(masterEnvironment,
             springApplication);
 
@@ -74,22 +83,36 @@ public class ServerlessEnvironmentPostProcessorTest {
         when(otherEnvironment.getPropertySources()).thenReturn(propertySources);
 
         ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+        ArkClient.setBizManagerService(bizManagerService);
+        doReturn(otherBiz).when(bizManagerService).getBizByClassLoader(any());
+        doReturn("mockbiz").when(otherBiz).getBizName();
+
+        // test with spring.config.location
         try {
             Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
             System.setProperty(ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION, "xxxx");
+            System
+                .setProperty(ServerlessEnvironmentPostProcessor.SPRING_ACTIVE_PROFILES, "biz,abc");
             serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
                 springApplication);
         } finally {
             System.clearProperty(ServerlessEnvironmentPostProcessor.SPRING_CONFIG_LOCATION);
+            System.clearProperty(ServerlessEnvironmentPostProcessor.SPRING_ACTIVE_PROFILES);
             Thread.currentThread().setContextClassLoader(tccl);
         }
-        serverlessEnvironmentPostProcessor.postProcessEnvironment(otherEnvironment,
-            springApplication);
 
         PropertySource<?> masterPropertySource = propertySources.get("MasterBiz-Config resource");
         Assert.assertTrue(masterPropertySource instanceof MasterBizPropertySource);
         Assert.assertEquals("masterValue", masterPropertySource.getProperty("masterKey"));
         Assert.assertEquals("./logs", masterPropertySources.get("compatiblePropertySource")
             .getProperty("logging.path"));
+
+        PropertySource<?> otherPropertySource = propertySources
+            .get("Biz-Config resourceconfig/mockbiz/application.properties");
+        Assert.assertEquals("abc", otherPropertySource.getProperty("kay"));
+
+        PropertySource<?> otherBizPropertySource = propertySources
+            .get("Biz-Config resourceconfig/mockbiz/application-biz.properties");
+        Assert.assertEquals("abc-biz", otherBizPropertySource.getProperty("kay1"));
     }
 }
