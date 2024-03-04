@@ -6,16 +6,12 @@
 		<artifactId>dubbo3</artifactId>
 		<groupId>com.alipay.sofa</groupId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>common-model</artifactId>
 
-	<properties>
-		<grpc.version>1.54.1</grpc.version>
-		<protobuf.version>3.18.3</protobuf.version>
-		<protoc.version>3.18.3</protoc.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -41,6 +37,10 @@
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-stub</artifactId>
 			<version>${grpc.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
 		</dependency>
 	</dependencies>
 	<build>

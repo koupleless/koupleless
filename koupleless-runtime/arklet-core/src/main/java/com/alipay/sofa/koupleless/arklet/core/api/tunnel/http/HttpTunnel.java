@@ -40,7 +40,7 @@ public class HttpTunnel implements Tunnel {
 
     private static final ArkletLogger LOGGER                   = ArkletLoggerFactory
                                                                    .getDefaultLogger();
-    private final static String       HTTP_PORT_ATTRIBUTE      = "sofa.serverless.arklet.http.port";
+    private final static String       HTTP_PORT_ATTRIBUTE      = "koupleless.arklet.http.port";
     private int                       port                     = -1;
     private final static int          DEFAULT_HTTP_PORT        = 1238;
     private final static int          DEFAULT_SELECT_PORT_SIZE = 100;

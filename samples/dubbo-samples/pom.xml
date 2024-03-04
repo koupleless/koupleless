@@ -6,7 +6,7 @@
     <artifactId>dubbo-samples</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dubbo-samples</name>
-    <description>Demo project for Dubbo</description>
+    <description>Demo project for Dubbo with JDK 8</description>
     <packaging>pom</packaging>
 
     <properties>
@@ -26,7 +26,6 @@
     <modules>
 		<module>rpc/dubbo3</module>
 		<module>rpc/dubbo26</module>
-		<!--dubbo 2.7暂不支持-->
 		<module>rpc/dubbo27</module>
 	</modules>
 
