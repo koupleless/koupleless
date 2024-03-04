@@ -82,7 +82,6 @@
         <module>koupleless-adapter-ext</module>
         <module>koupleless-base-loader</module>
         <module>koupleless-ext</module>
-        <module>koupleless-adapter-ext/koupleless-adapter-log4j2-springboot2.1.9</module>
     </modules>
 
     <dependencyManagement>

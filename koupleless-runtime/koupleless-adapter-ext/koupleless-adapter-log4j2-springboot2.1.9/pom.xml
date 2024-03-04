@@ -72,7 +72,7 @@
                             </exported>
                             <excludes>
                                 <exclude>*:*:*</exclude>
-                                <exclude>com.alipay.sofa.koupleless:koupleless-adapter-log4j2</exclude>
+                                <exclude>com.alipay.sofa.koupleless:koupleless-adapter-log4j2-springboot2.1.9</exclude>
                             </excludes>
                         </configuration>
                     </execution>

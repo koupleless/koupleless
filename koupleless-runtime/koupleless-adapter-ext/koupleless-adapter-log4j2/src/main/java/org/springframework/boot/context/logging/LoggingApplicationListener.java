@@ -317,7 +317,7 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 
     private LoggingSystemProperties getLoggingSystemProperties(ConfigurableEnvironment environment) {
         return (this.loggingSystem != null) ? this.loggingSystem.getSystemProperties(environment)
-                : new LoggingSystemProperties(environment);
+            : new LoggingSystemProperties(environment);
     }
 
     private void initializeEarlyLoggingLevel(ConfigurableEnvironment environment) {
