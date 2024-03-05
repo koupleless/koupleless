@@ -23,6 +23,6 @@ on:
 jobs:
   analyze:
     name: Analyze
-    uses: .github/workflows/codeql.yml@main
+    uses: koupleless/.github/workflows/codeql.yml@main
     secrets: inherit
     
