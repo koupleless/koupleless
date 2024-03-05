@@ -17,6 +17,8 @@
         <module>koupleless-adapter-log4j2</module>
         <module>koupleless-adapter-dubbo2.6</module>
         <module>koupleless-adapter-dubbo2.7</module>
+        <module>koupleless-adapter-dubbo3.1</module>
+        <module>koupleless-adapter-dubbo3.2</module>
     </modules>
 
 <!--    <build>-->
