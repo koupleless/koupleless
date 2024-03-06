@@ -19,7 +19,7 @@ base 为普通 springboot 改造成的基座，改造内容为在 pom 里增加�
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <!-- 以上版本支持springboot3 -->
-    <version>0.5.5-jdk17</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <!-- end 动态模块相关依赖 -->
 
@@ -99,7 +99,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
 --data '{
-    "bizName": "biz1",
+    "bizName": "biz1-web-single-host",
     "bizVersion": "0.0.1-SNAPSHOT"
 }'
 ```

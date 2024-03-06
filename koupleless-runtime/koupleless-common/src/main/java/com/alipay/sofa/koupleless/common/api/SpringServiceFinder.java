@@ -32,35 +32,38 @@ public class SpringServiceFinder {
 
     public static <T> T getBaseService(String name, Class<T> serviceType) {
         Biz masterBiz = ArkClient.getMasterBiz();
-        return ServiceProxyFactory.createServiceProxy(masterBiz, name, serviceType, null);
+        return ServiceProxyFactory.createServiceProxy(masterBiz.getBizName(),
+            masterBiz.getBizVersion(), name, serviceType, null);
     }
 
     public static <T> T getBaseService(Class<T> serviceType) {
         Biz masterBiz = ArkClient.getMasterBiz();
-        return ServiceProxyFactory.createServiceProxy(masterBiz, serviceType, null);
+        return ServiceProxyFactory.createServiceProxy(masterBiz.getBizName(),
+            masterBiz.getBizVersion(), null, serviceType, null);
     }
 
     public static <T> Map<String, T> listBaseServices(Class<T> serviceType) {
         Biz masterBiz = ArkClient.getMasterBiz();
-        return ServiceProxyFactory.batchCreateServiceProxy(masterBiz, serviceType, null);
+        return ServiceProxyFactory.batchCreateServiceProxy(masterBiz.getBizName(),
+            masterBiz.getBizVersion(), serviceType, null);
     }
 
     public static <T> T getModuleService(String moduleName, String moduleVersion, String name,
                                          Class<T> serviceType) {
-        Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
-        return ServiceProxyFactory.createServiceProxy(biz, name, serviceType, null);
+        return ServiceProxyFactory.createServiceProxy(moduleName, moduleVersion, name, serviceType,
+            null);
     }
 
     public static <T> T getModuleService(String moduleName, String moduleVersion,
                                          Class<T> serviceType) {
-        Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
-        return ServiceProxyFactory.createServiceProxy(biz, serviceType, null);
+        return ServiceProxyFactory.createServiceProxy(moduleName, moduleVersion, null, serviceType,
+            null);
     }
 
     public static <T> Map<String, T> listModuleServices(String moduleName, String moduleVersion,
                                                         Class<T> serviceType) {
-        Biz biz = determineMostSuitableBiz(moduleName, moduleVersion);
-        return ServiceProxyFactory.batchCreateServiceProxy(biz, serviceType, null);
+        return ServiceProxyFactory.batchCreateServiceProxy(moduleName, moduleVersion, serviceType,
+            null);
     }
 
 }

@@ -51,7 +51,7 @@ public class BaseRuntimeAutoConfigurationTest {
     public void test() {
         contextRunner.run(context -> {
             Assertions.assertThat(context).hasSingleBean(BizRuntimeContext.class);
-            Assertions.assertThat(context).doesNotHaveBean(ArkAutowiredBeanPostProcessor.class);
+            Assertions.assertThat(context).hasSingleBean(ArkAutowiredBeanPostProcessor.class);
         });
     }
 }

@@ -191,7 +191,7 @@ curl --location --request POST 'localhost:1238/installBiz' \
 3. 发起请求验证模块web服务
 
 ```shell
-curl http://localhost:8080/biz2
+curl http://localhost:8080/biz1/
 ```
 返回 `hello to /biz1 deploy`，同时查看控制台日志输出，满足我们日志配置中的pattern
 ```log

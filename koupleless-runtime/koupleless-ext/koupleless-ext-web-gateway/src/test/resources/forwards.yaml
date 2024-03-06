@@ -1,0 +1,13 @@
+- contextPath: test1
+  hosts:
+    - test1
+  paths:
+    - from: /test1
+- contextPath: test2
+  paths:
+    - from: /test2
+    - from: /api/test2
+    - from: /api-test2
+- contextPath: test3
+  hosts:
+    - test3

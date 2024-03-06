@@ -20,6 +20,12 @@
             <version>${revision}</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.alipay.sofa.koupleless</groupId>-->
+<!--            <artifactId>koupleless-adapter-log4j2-springboot2.1.9</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>com.alipay.sofa.koupleless</groupId>
             <artifactId>koupleless-adapter-dubbo2.6</artifactId>
@@ -71,17 +77,17 @@
         </dependency>
         <!--  arklet end  -->
 
-<!--        <dependency>-->
-<!--            <groupId>com.alipay.sofa</groupId>-->
-<!--            <artifactId>web-ark-plugin</artifactId>-->
-<!--            <version>${sofa.ark.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alipay.sofa</groupId>-->
+        <!--            <artifactId>web-ark-plugin</artifactId>-->
+        <!--            <version>${sofa.ark.version}</version>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>com.alipay.sofa</groupId>-->
-<!--            <artifactId>netty-ark-plugin</artifactId>-->
-<!--            <version>${sofa.ark.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alipay.sofa</groupId>-->
+        <!--            <artifactId>netty-ark-plugin</artifactId>-->
+        <!--            <version>${sofa.ark.version}</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>com.alipay.sofa.koupleless</groupId>

@@ -17,7 +17,7 @@ The base is built from regular SpringBoot application. The only change you need 
     <groupId>com.alipay.sofa.koupleless</groupId>
     <artifactId>koupleless-base-starter</artifactId>
     <!-- The above version supports springboot3 -->
-    <version>0.5.5-jdk17</version>
+    <version>${koupleless.runtime.version}</version>
 </dependency>
 <!-- end of dynamic module related dependencies -->
 
@@ -96,7 +96,7 @@ If you want to verify hot deployment, you can uninstall and deploy multiple time
 curl --location --request POST 'localhost:1238/uninstallBiz' \
 --header 'Content-Type: application/json' \
 --data '{
-    "bizName": "biz1",
+    "bizName": "biz1-web-single-host",
     "bizVersion": "0.0.1-SNAPSHOT"
 }'
 ```
