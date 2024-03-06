@@ -18,6 +18,7 @@ package com.alipay.sofa.koupleless.arklet.core.ops;
 
 import com.alipay.sofa.koupleless.arklet.core.common.log.ArkletLoggerFactory;
 import com.alipay.sofa.koupleless.arklet.core.util.ManifestUtil;
+import com.alipay.sofa.koupleless.common.util.OSUtils;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 
@@ -122,6 +123,7 @@ public class BatchInstallHelper {
     @SneakyThrows
     public Map<String, Object> getMainAttributes(String bizUrl) {
         if (bizUrl.endsWith(".jar")) {
+            bizUrl = bizUrl.replace(OSUtils.getLocalFileProtocolPrefix(),"");
             try (JarFile jarFile = new JarFile(bizUrl)) {
                 Manifest manifest = jarFile.getManifest();
                 Preconditions.checkState(manifest != null, "Manifest file not found in the JAR.");
