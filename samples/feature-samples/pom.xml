@@ -3,13 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.16</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
-
     <groupId>com.alipay.sofa</groupId>
     <artifactId>feature-samples</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -18,9 +11,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <spring.boot.version>2.7.16</spring.boot.version>
         <java.version>1.8</java.version>
-        <sofa.ark.version>2.2.7</sofa.ark.version>
+        <sofa.ark.version>2.2.8-SNAPSHOT</sofa.ark.version>
         <koupleless.runtime.version>1.0.0</koupleless.runtime.version>
         <disruptor.version>3.4.2</disruptor.version>
         <os.plugin.version>1.7.1</os.plugin.version>
@@ -30,6 +22,7 @@
     </properties>
 
     <modules>
+        <module>sdk_updating</module>
     </modules>
 
     <dependencyManagement>
@@ -48,23 +41,6 @@
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>base-web-single-host-facade</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>${spring.boot.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-webflux</artifactId>
-                <version>${spring.boot.version}</version>
             </dependency>
 
             <!-- 这里添加动态模块相关依赖 -->
