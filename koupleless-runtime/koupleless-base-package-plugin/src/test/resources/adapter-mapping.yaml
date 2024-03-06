@@ -1,0 +1,12 @@
+commonDependencies:
+  - groupId: XXX
+    artifactId: YYY
+    version: ZZZ
+
+adapterMappings:
+  - matcher:
+      regexp: ".*"
+    adapter:
+      groupId: XXX
+      artifactId: YYY
+      version: ZZZ

@@ -27,7 +27,6 @@
 			<groupId>com.alipay.sofa.koupleless</groupId>
 			<artifactId>koupleless-base-starter</artifactId>
 			<version>${koupleless.runtime.version}</version>
-			<type>pom</type>
 		</dependency>
 
 		<dependency>
@@ -70,6 +69,18 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring.boot.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.alipay.sofa.koupleless</groupId>
+				<artifactId>koupleless-base-package-plugin</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>add-patch</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>1.0.0</revision>
+        <revision>1.0.1-SNAPSHOT</revision>
         <sofa.ark.version>2.2.7</sofa.ark.version>
         <spring.boot.version>2.7.15</spring.boot.version>
         <project.encoding>UTF-8</project.encoding>
@@ -73,8 +73,10 @@
     </scm>
 
     <modules>
+        <module>koupleless-base-package-plugin</module>
         <module>koupleless-common</module>
         <module>koupleless-base-starter</module>
+        <module>koupleless-base-starter-beta</module>
         <module>koupleless-base-plugin</module>
         <module>koupleless-app-starter</module>
         <module>arklet-core</module>
