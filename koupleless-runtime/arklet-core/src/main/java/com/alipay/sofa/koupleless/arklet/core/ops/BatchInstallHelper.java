@@ -16,11 +16,12 @@
  */
 package com.alipay.sofa.koupleless.arklet.core.ops;
 
-import com.alipay.sofa.koupleless.arklet.core.common.log.ArkletLogger;
 import com.alipay.sofa.koupleless.arklet.core.common.log.ArkletLoggerFactory;
+import com.alipay.sofa.koupleless.arklet.core.util.ManifestUtil;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 
+import java.io.File;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ import java.util.jar.Manifest;
  */
 public class BatchInstallHelper {
 
+    // mark标记文件
+    private static final String MarkFilePath = "/com/alipay/sofa/ark/biz/mark";
+
     /**
      * 判断是否是 biz jar 文件
      * 目前简单的以后缀 '-biz.jar' 为约束。
@@ -52,21 +56,60 @@ public class BatchInstallHelper {
         }
     }
 
+    private String manifestFilePath(String folder) {
+        return folder + File.separator + "META-INF" + File.separator + "MANIFEST.MF";
+    }
+
+    /**
+     * 判断是否是 biz 文件夹
+     * 目前简单的以后缀 '-biz.jar' 为约束。
+     * @param path 文件路径。
+     * @return 是否是 biz jar 文件。
+     */
+    public boolean isBizFolderFile(String path) {
+        String manifestFilePath = manifestFilePath(path);
+        Map<String, Object> manifestProperties = ManifestUtil.readProperties(manifestFilePath);
+        return manifestProperties.containsKey("Ark-Biz-Name");
+    }
+
+    private static String pathToPackageName(String path) {
+        return path.replaceAll("\\\\", "/").replaceAll("/", ".");
+    }
+
+    private static String convert2linuxPath(String path) {
+        return path.replaceAll("\\\\", "/");
+    }
+
     @SneakyThrows
-    public List<String> getBizUrlsFromLocalFileSystem(String absoluteBizDirPath) {
+    public List<String> getBizUrlsFromLocalFileSystem(String absoluteBizDirPaths) {
         List<String> bizUrls = new ArrayList<>();
-        Files.walkFileTree(Paths.get(absoluteBizDirPath), new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                Path absolutePath = file.toAbsolutePath();
-                if (isBizJarFile(absolutePath)) {
-                    ArkletLoggerFactory.getDefaultLogger().info("Found biz jar file: {}",
-                        absolutePath);
-                    bizUrls.add(absolutePath.toString());
+        // 支持 ; 分割配置多个文件路径
+        String[] absoluteBizDirPathList = absoluteBizDirPaths.split(";");
+        for (String absoluteBizDirPath : absoluteBizDirPathList) {
+            Files.walkFileTree(Paths.get(absoluteBizDirPath), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    Path absolutePath = file.toAbsolutePath();
+
+                    if (isBizJarFile(absolutePath)) {
+                        ArkletLoggerFactory.getDefaultLogger().info("Found biz jar file: {}",
+                            absolutePath);
+                        bizUrls.add(absolutePath.toString());
+                    } else {
+                        String pathStr = convert2linuxPath(absolutePath.toString());
+                        if (pathStr.endsWith(MarkFilePath)) {
+                            String bizFolder = pathStr.replace(MarkFilePath, "");
+                            if (isBizFolderFile(bizFolder)) {
+                                ArkletLoggerFactory.getDefaultLogger().info(
+                                    "Found biz folder file: {}", bizFolder);
+                                bizUrls.add(bizFolder);
+                            }
+                        }
+                    }
+                    return FileVisitResult.CONTINUE;
                 }
-                return FileVisitResult.CONTINUE;
-            }
-        });
+            });
+        }
 
         return bizUrls;
     }
@@ -78,12 +121,16 @@ public class BatchInstallHelper {
      */
     @SneakyThrows
     public Map<String, Object> getMainAttributes(String bizUrl) {
-        try (JarFile jarFile = new JarFile(bizUrl)) {
-            Manifest manifest = jarFile.getManifest();
-            Preconditions.checkState(manifest != null, "Manifest file not found in the JAR.");
-            Map<String, Object> result = new HashMap<>();
-            manifest.getMainAttributes().forEach((k, v) -> result.put(k.toString(), v));
-            return result;
+        if (bizUrl.endsWith(".jar")) {
+            try (JarFile jarFile = new JarFile(bizUrl)) {
+                Manifest manifest = jarFile.getManifest();
+                Preconditions.checkState(manifest != null, "Manifest file not found in the JAR.");
+                Map<String, Object> result = new HashMap<>();
+                manifest.getMainAttributes().forEach((k, v) -> result.put(k.toString(), v));
+                return result;
+            }
+        } else {
+           return ManifestUtil.readProperties(manifestFilePath(bizUrl));
         }
     }
 }
