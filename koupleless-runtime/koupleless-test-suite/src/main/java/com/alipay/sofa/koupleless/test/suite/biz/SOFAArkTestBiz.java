@@ -16,9 +16,12 @@
  */
 package com.alipay.sofa.koupleless.test.suite.biz;
 
+import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.container.model.BizModel;
 import com.alipay.sofa.ark.spi.model.BizState;
+import com.alipay.sofa.ark.spi.model.Plugin;
 import com.alipay.sofa.ark.spi.service.biz.BizManagerService;
+import com.alipay.sofa.ark.spi.service.plugin.PluginManagerService;
 import lombok.SneakyThrows;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,9 +47,9 @@ public class SOFAArkTestBiz extends BizModel {
      * This certain behaviour is that some logic need to be executed in master biz classLoader.
      * Therefore, we need to delegate the class loading to master biz classLoader and executed with master biz TCCL.
      */
-    private String       bootstrapClassName;
+    private String bootstrapClassName;
 
-    private ClassLoader  baseClassLoader = null;
+    private ClassLoader baseClassLoader = null;
 
     public SOFAArkTestBiz(
             String bootstrapClassName,
@@ -64,12 +67,18 @@ public class SOFAArkTestBiz extends BizModel {
                 map(Pattern::compile).
                 collect(Collectors.toList());
 
+        List<URL> pluginUrls = new ArrayList<>();
+        PluginManagerService pluginManagerService = SOFAArkServiceContainerSingleton.instance().getService(PluginManagerService.class);
+        for (Plugin plugin : pluginManagerService.getPluginsInOrder()) {
+            pluginUrls.add(plugin.getPluginURL());
+        }
         this.setBizName(bizName).
                 setBizVersion(bizVersion).
                 setBizState(BizState.RESOLVED).
                 setDenyImportClasses("").
                 setDenyImportPackages("").
-                setDenyImportPackages("");
+                setDenyImportPackages("").
+                setPluginClassPath(pluginUrls.toArray(new URL[0]));
         registerBiz();
 
         SOFAArkTestBizClassLoader testBizClassLoader = new SOFAArkTestBizClassLoader(
@@ -89,8 +98,8 @@ public class SOFAArkTestBiz extends BizModel {
 
     public void registerBiz() {
         // firstly, we need to register the biz into ark container.
-        SOFAArkServiceContainerSingleton.instance().getService(BizManagerService.class)
-            .registerBiz(this);
+        ArkClient.getBizManagerService()
+                .registerBiz(this);
     }
 
     /**

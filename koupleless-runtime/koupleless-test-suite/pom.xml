@@ -120,6 +120,10 @@
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-common</artifactId>
+        </dependency>
 
 
     </dependencies>

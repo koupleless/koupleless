@@ -17,10 +17,19 @@
 package com.alipay.sofa.koupleless.test.suite.biz;
 
 import com.alipay.sofa.ark.api.ArkClient;
+import com.alipay.sofa.ark.api.ArkConfigs;
 import com.alipay.sofa.ark.container.model.BizModel;
+import com.alipay.sofa.ark.container.model.PluginModel;
 import com.alipay.sofa.ark.container.service.ArkServiceContainer;
+import com.alipay.sofa.ark.container.service.ArkServiceContainerHolder;
+import com.alipay.sofa.ark.spi.service.event.EventAdminService;
+import com.alipay.sofa.ark.spi.service.plugin.PluginManagerService;
+import com.alipay.sofa.koupleless.common.BizRuntimeContext;
+import com.alipay.sofa.koupleless.common.BizRuntimeContextRegistry;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.alipay.sofa.ark.spi.constant.Constants.MASTER_BIZ;
 
 public class SOFAArkServiceContainerSingleton {
 
@@ -30,8 +39,11 @@ public class SOFAArkServiceContainerSingleton {
     public static void init(ClassLoader baseClassLoader) {
         if (started.compareAndSet(false, true)) {
             INSTANCE.start();
-            ArkClient.setMasterBiz(new BizModel().setBizName("compatible-test-goal")
-                .setBizVersion("VERSION").setClassLoader(baseClassLoader));
+            ArkClient.setMasterBiz(new BizModel().setBizName("master biz")
+                    .setBizVersion("VERSION").setClassLoader(baseClassLoader));
+            BizRuntimeContext bizRuntimeContext = new BizRuntimeContext(ArkClient.getMasterBiz());
+            BizRuntimeContextRegistry.registerBizRuntimeManager(bizRuntimeContext);
+            ArkConfigs.setSystemProperty(MASTER_BIZ, "master biz");
         }
     }
 

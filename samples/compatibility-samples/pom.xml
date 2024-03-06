@@ -39,6 +39,7 @@
     <modules>
         <module>compatibility-test/manual-write-test</module>
         <module>compatibility-test/run-existing-test-by-simple-config</module>
+        <module>compatibility-test/eazy-spring-test</module>
     </modules>
 
     <dependencyManagement>
