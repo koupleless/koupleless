@@ -1,6 +1,0 @@
-## Append samples of your project ##
-resources:
-- module-deployment_v1alpha1_moduledeployment_provider.yaml
-- module-deployment_v1alpha1_module.yaml
-- module-deployment_v1alpha1_modulereplicaset.yaml
-#+kubebuilder:scaffold:manifestskustomizesamples
