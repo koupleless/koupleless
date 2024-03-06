@@ -9,3 +9,6 @@
 [submodule "arkctl"]
 	path = arkctl
 	url = https://github.com/koupleless/arkctl.git
+[submodule "module-controller"]
+	path = module-controller
+	url = https://github.com/koupleless/module-controller.git
