@@ -26,12 +26,8 @@
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<spring.boot.version>3.2.2</spring.boot.version>
-		<sofa.ark.version>3.1.0</sofa.ark.version>
-		<koupleless.runtime.version>2.1.0</koupleless.runtime.version>
 		<disruptor.version>3.4.2</disruptor.version>
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
-		<dubbo.version>3.2.10</dubbo.version>
 		<protobuf.plugin.version>0.6.1</protobuf.plugin.version>
 		<protobuf.version>3.19.6</protobuf.version>
 		<protoc.version>3.18.3</protoc.version>
