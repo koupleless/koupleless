@@ -28,11 +28,10 @@ ROOTDir=$(pwd)
 testSuite=$1
 echo "start testsuite:$testSuite"
 if [[ $testSuite == "jdk8" ]];then
-  suiteReg="*[^3|^dubbo]-samples"
+  suiteReg="*[^3|^dubbo|^dubbo32]-samples"
 else
 #  suiteReg="*[3|dubbo]-samples"
   suiteReg="*[3]-samples"
-
 fi
 #测试路径
 for TEST_DIR in $(find $(pwd) -name "$suiteReg");do
