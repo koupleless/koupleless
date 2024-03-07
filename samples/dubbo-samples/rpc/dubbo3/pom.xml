@@ -27,7 +27,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<spring.boot.version>2.7.16</spring.boot.version>
-		<sofa.ark.version>2.2.7</sofa.ark.version>
+		<sofa.ark.version>2.2.8</sofa.ark.version>
 		<koupleless.runtime.version>1.0.0</koupleless.runtime.version>
 		<disruptor.version>3.4.2</disruptor.version>
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
