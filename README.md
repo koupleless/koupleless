@@ -2,7 +2,7 @@
 ![license](https://img.shields.io/badge/license-Apache--2.0-green.svg)
 ![Maven Central](https://img.shields.io/maven-central/v/com.alipay.sofa.koupleless/koupleless-runtime)
 
-<h1 align="center">Koupleless: Modular Development Framework and Operation Platform</h1>
+<h1 align="center">Koupleless: Modular Development Framework and Serving Platform</h1>
 
 <div align="center">
 
