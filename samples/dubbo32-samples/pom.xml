@@ -9,6 +9,10 @@
     <packaging>pom</packaging>
 
     <properties>
+        <spring.boot.version>3.2.2</spring.boot.version>
+        <sofa.ark.version>3.1.0</sofa.ark.version>
+        <koupleless.runtime.version>2.1.0</koupleless.runtime.version>
+        <dubbo.version>3.2.10</dubbo.version>
         <license.maven.plugin>3.0</license.maven.plugin>
         <maven.java.formatter.plugin>0.4</maven.java.formatter.plugin>
         <maven.compiler.plugin>3.1</maven.compiler.plugin>
