@@ -12,3 +12,9 @@
 [submodule "module-controller"]
 	path = module-controller
 	url = https://github.com/koupleless/module-controller.git
+[submodule "runtime"]
+	path = runtime
+	url = https://github.com/koupleless/runtime.git
+[submodule "samples"]
+	path = samples
+	url = https://github.com/koupleless/samples.git
