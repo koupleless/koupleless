@@ -1,9 +1,0 @@
-coverage:
-  status:
-    project:
-      default:
-        threshold: 80%
-        if_not_found: success
-    patch:
-      default:
-        if_not_found: success
