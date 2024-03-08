@@ -39,7 +39,7 @@ for TEST_DIR in $(find $(pwd) -name "$suiteReg");do
   echo "TESTAPP_DIR=$TESTAPP_DIR"
   cd ${TESTAPP_DIR}
   mvn clean install -U -Dmaven.test.skip=true
-  for BaseDir in $( find $(pwd)  -type d -name "*base" |grep -v src|grep -v target|grep -v mybatis|grep -v logs|grep -v "base/redis/base"|grep -v rocketmq|grep -v apollo|grep -v "samples/service/base");do
+  for BaseDir in $( find $(pwd)  -type d -name "*base" |grep -v src|grep -v target|grep -v mybatis|grep -v logs|grep -v "base/redis/base"|grep -v rocketmq|grep -v "samples/service/base");do
     echo "BaseDir $BaseDir"
     export BaseDir=$BaseDir
     cd $BaseDir
@@ -59,6 +59,11 @@ for TEST_DIR in $(find $(pwd) -name "$suiteReg");do
     echo "Start health check"
     if echo $BaseDir | grep "webflux"; then
       if ! bash $ROOTDir/.github/workflows/ccbin/healthcheck.sh 8080/actuator;then
+        echo "基座健康检查失败！"
+        exit 1
+      fi
+    elif echo $BaseDir | grep "apollo";  then
+      if ! bash $ROOTDir/.github/workflows/ccbin/healthcheck.sh 8081;then
         echo "基座健康检查失败！"
         exit 1
       fi

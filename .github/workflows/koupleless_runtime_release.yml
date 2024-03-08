@@ -59,6 +59,7 @@ jobs:
           docker run -d -p 9876:9876 -p 10909:10909 -p 10910:10910 -p 10911:10911 -p 10912:10912 -v $(pwd)/samples/springboot-samples/msg/rocketmq/config/start.sh:/home/rocketmq/rocketmq-4.9.7/bin/start.sh -v $(pwd)/samples/springboot-samples/msg/rocketmq/config/broker.conf:/home/rocketmq/rocketmq-4.9.7/bin/broker.conf apache/rocketmq:4.9.7 sh /home/rocketmq/rocketmq-4.9.7/bin/start.sh
           sudo apt-get install redis-server -y
           sudo systemctl start redis-server
+          docker-compose  -f samples/springboot-samples/config/apollo/config/docker-compose.yml up -d
           sudo cp .github/workflows/ccbin/arkctl /usr/bin/arkctl 
 
       - name: Run jdk8 koupleless runtime test

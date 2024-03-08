@@ -9,7 +9,7 @@ dubbo:
     port: 50051
 
 server:
-  port: 8089
+  port: 8080
 
 spring:
   application:
