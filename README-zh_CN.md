@@ -50,10 +50,7 @@ Koupleless 是蚂蚁集团内部经过 5 年打磨成熟的研发框架和运维
 ## 快速开始
 请查看[官网快速开始](https://koupleless.gitee.io/docs/quick-start/)
 
-<video width=100% controls autoplay>
-<source src="https://koupleless.oss-cn-shanghai.aliyuncs.com/outer-materials/docs/videos/module_dev_and_deploy.mp4" type="video/mp4">
-Your browser does not support the video tag.  
-</video>
+https://github.com/koupleless/koupleless/assets/3754074/e44c9406-4bd4-4fcf-babc-4ae9e615984e
 
 ## Koupleless 组件
 
