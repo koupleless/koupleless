@@ -35,7 +35,8 @@ public class SampleController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello() {
-        String appName = applicationContext.getId();
+        String appName = applicationContext
+                .getId();
         LOGGER.info("{} web test: into sample controller", appName);
 
         CacheManager.create();
