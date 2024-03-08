@@ -2,10 +2,6 @@
 	path = sofa-ark
 	url = https://github.com/sofastack/sofa-ark.git
 	branch = master
-[submodule "docs"]
-	path = docs
-	url = https://github.com/koupleless/docs.git
-	branch = main
 [submodule "arkctl"]
 	path = arkctl
 	url = https://github.com/koupleless/arkctl.git
