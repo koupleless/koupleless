@@ -123,7 +123,10 @@ for moduleBootDir in $(find $(pwd) -type d -path "*/biz[1-9]"  -o -path "*/*biz"
     moduleVersion=$(echo "$moduleJar" | sed "s/.*$moduleName-\(.*\)-ark-biz.jar/\1/")
     echo "find one module, moduleName:$moduleName,moduleVersion:$moduleVersion, jar:$moduleJar"
     echo ''>test_output.txt
-    arkctl_module_biz_install_test ${moduleName} ${moduleVersion} $moduleJar
+    if ! arkctl_module_biz_install_test ${moduleName} ${moduleVersion} $moduleJar;then
+        echo "模块测试异常退出！"
+        exit 1
+    fi
 #    echo "start check module install result "
 #    cat test_output.txt|while read line;do
 #      if [[ $line =~ "failed" ]];then

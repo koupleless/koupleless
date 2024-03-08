@@ -55,9 +55,11 @@ jobs:
           docker run --name mongodb -d -p 27017:27017 -v /home/runner/work/data:/data/db mongo:7.0.2-jammy
           docker pull zookeeper:3.9.0
           docker run -p 2181:2181 -it --name zookeeper --restart always -d zookeeper:3.9.0
+          docker pull apache/rocketmq:4.9.7
+          docker run -d -p 9876:9876 -p 10909:10909 -p 10910:10910 -p 10911:10911 -p 10912:10912 -v $(pwd)/samples/springboot-samples/msg/rocketmq/config/start.sh:/home/rocketmq/rocketmq-4.9.7/bin/start.sh -v $(pwd)/samples/springboot-samples/msg/rocketmq/config/broker.conf:/home/rocketmq/rocketmq-4.9.7/bin/broker.conf apache/rocketmq:4.9.7 sh /home/rocketmq/rocketmq-4.9.7/bin/start.sh
           sudo apt-get install redis-server -y
           sudo systemctl start redis-server
-          sudo cp .github/workflows/ccbin/arkctl /usr/bin/arkctl
+          sudo cp .github/workflows/ccbin/arkctl /usr/bin/arkctl 
 
       - name: Run jdk8 koupleless runtime test
         run: |
