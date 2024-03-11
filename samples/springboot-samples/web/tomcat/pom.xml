@@ -17,6 +17,7 @@
         <module>base</module>
         <module>biz1</module>
         <module>biz2</module>
+        <module>intergration-test</module>
     </modules>
 
     <dependencyManagement>

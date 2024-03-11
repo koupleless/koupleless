@@ -23,7 +23,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+@SpringBootApplication(
+        scanBasePackages = "com.alipay.sofa.web.base",
+        exclude = { DataSourceAutoConfiguration.class }
+)
 public class BaseApplication {
     private static Logger LOGGER = LoggerFactory.getLogger(BaseApplication.class);
 
