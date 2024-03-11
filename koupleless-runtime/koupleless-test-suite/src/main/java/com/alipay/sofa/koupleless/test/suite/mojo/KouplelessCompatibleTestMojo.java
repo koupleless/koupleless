@@ -16,7 +16,7 @@
  */
 package com.alipay.sofa.koupleless.test.suite.mojo;
 
-import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkServiceContainerSingleton;
+import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkTestBootstrap;
 import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkTestBiz;
 import com.alipay.sofa.koupleless.test.suite.model.CompatibleTestBizConfig;
 import com.alipay.sofa.koupleless.test.suite.model.CompatibleTestConfig;
@@ -118,7 +118,7 @@ public class KouplelessCompatibleTestMojo extends AbstractMojo {
     @SneakyThrows
     public void executeJunit4() {
         URLClassLoader baseClassLoader = buildURLClassLoader();
-        SOFAArkServiceContainerSingleton.init(baseClassLoader);
+        SOFAArkTestBootstrap.init(baseClassLoader);
         List<SOFAArkTestBiz> sofaArkTestBizs = buildTestBiz(baseClassLoader);
         for (SOFAArkTestBiz sofaArkTestBiz : sofaArkTestBizs) {
             getLog().info(String.format("%s, CompatibleTestStarted", sofaArkTestBiz.getIdentity()));

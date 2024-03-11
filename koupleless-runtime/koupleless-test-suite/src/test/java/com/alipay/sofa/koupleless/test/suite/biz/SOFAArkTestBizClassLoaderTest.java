@@ -38,7 +38,7 @@ public class SOFAArkTestBizClassLoaderTest {
 
     @Test
     public void testResolveLocalClass() throws Throwable {
-        SOFAArkServiceContainerSingleton.init(baseClassLoader);
+        SOFAArkTestBootstrap.init(baseClassLoader);
 
         String bizIdentity = "bizIdentity";
         List<String> includeClassNames = new ArrayList<>();

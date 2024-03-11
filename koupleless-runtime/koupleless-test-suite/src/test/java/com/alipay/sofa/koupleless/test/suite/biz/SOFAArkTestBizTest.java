@@ -34,7 +34,7 @@ public class SOFAArkTestBizTest {
 
     @BeforeClass
     public static void setUp() {
-        SOFAArkServiceContainerSingleton.init(SOFAArkTestBizTest.class.getClassLoader());
+        SOFAArkTestBootstrap.init(SOFAArkTestBizTest.class.getClassLoader());
 
         List<String> testClassNames = new ArrayList<>();
         testClassNames.add("com.alipay.sofa.koupleless.test.suite.mock.LoadByTestBizClassA");

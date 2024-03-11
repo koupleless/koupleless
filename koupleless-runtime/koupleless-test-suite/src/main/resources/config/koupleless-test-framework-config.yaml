@@ -1,0 +1,6 @@
+biz:
+  excludeDependencyRegexps:
+    - koupleless-adapter
+    - sofa-ark-springboot-starter
+    - arklet-springboot-starter
+    - koupleless-base-starter

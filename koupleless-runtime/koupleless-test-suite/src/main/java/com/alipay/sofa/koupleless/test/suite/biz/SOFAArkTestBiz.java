@@ -18,9 +18,9 @@ package com.alipay.sofa.koupleless.test.suite.biz;
 
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.container.model.BizModel;
+import com.alipay.sofa.ark.container.service.ArkServiceContainerHolder;
 import com.alipay.sofa.ark.spi.model.BizState;
 import com.alipay.sofa.ark.spi.model.Plugin;
-import com.alipay.sofa.ark.spi.service.biz.BizManagerService;
 import com.alipay.sofa.ark.spi.service.plugin.PluginManagerService;
 import lombok.SneakyThrows;
 import org.apache.commons.collections4.CollectionUtils;
@@ -68,7 +68,7 @@ public class SOFAArkTestBiz extends BizModel {
                 collect(Collectors.toList());
 
         List<URL> pluginUrls = new ArrayList<>();
-        PluginManagerService pluginManagerService = SOFAArkServiceContainerSingleton.instance().getService(PluginManagerService.class);
+        PluginManagerService pluginManagerService = ArkClient.getPluginManagerService();
         for (Plugin plugin : pluginManagerService.getPluginsInOrder()) {
             pluginUrls.add(plugin.getPluginURL());
         }
