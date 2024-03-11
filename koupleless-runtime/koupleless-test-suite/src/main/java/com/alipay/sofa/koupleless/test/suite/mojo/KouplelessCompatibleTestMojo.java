@@ -34,6 +34,7 @@ import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
@@ -119,17 +120,20 @@ public class KouplelessCompatibleTestMojo extends AbstractMojo {
     public void executeJunit4() {
         URLClassLoader baseClassLoader = buildURLClassLoader();
         SOFAArkTestBootstrap.init(baseClassLoader);
+        SOFAArkTestBootstrap.registerMasterBiz();
         List<SOFAArkTestBiz> sofaArkTestBizs = buildTestBiz(baseClassLoader);
         for (SOFAArkTestBiz sofaArkTestBiz : sofaArkTestBizs) {
             getLog().info(String.format("%s, CompatibleTestStarted", sofaArkTestBiz.getIdentity()));
 
             sofaArkTestBiz.executeTest(new Runnable() {
                 @Override
+                @SneakyThrows
                 public void run() {
-                    Result result = JUnitCore.runClasses(sofaArkTestBiz.getTestClasses().toArray(
-                        new Class[0]));
+                    List<Class<?>> testClasses = sofaArkTestBiz.getTestClasses();
+                    Result result = JUnitCore.runClasses(testClasses.toArray(new Class[0]));
                     getLog().info(
                         String.format("%s, CompatibleTestFinished", sofaArkTestBiz.getIdentity()));
+
                     Preconditions.checkState(result.wasSuccessful(),
                         "Test failed: " + result.getFailures());
                 }

@@ -32,7 +32,7 @@ public class TestJunit4Class {
     }
 
     @Test
-    public void TestIsInBizClassLoader() {
+    public void testWhereAmI() {
         System.out.println("IsInBizClassLoader " + TestJunit4BootStrap.IN_BIZ_CLASSLOADER.get());
         if (TestJunit4BootStrap.IN_BIZ_CLASSLOADER.get()) {
             Assert

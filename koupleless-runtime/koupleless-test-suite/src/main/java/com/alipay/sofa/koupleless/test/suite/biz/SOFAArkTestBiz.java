@@ -47,9 +47,9 @@ public class SOFAArkTestBiz extends BizModel {
      * This certain behaviour is that some logic need to be executed in master biz classLoader.
      * Therefore, we need to delegate the class loading to master biz classLoader and executed with master biz TCCL.
      */
-    private String bootstrapClassName;
+    private String       bootstrapClassName;
 
-    private ClassLoader baseClassLoader = null;
+    private ClassLoader  baseClassLoader = null;
 
     public SOFAArkTestBiz(
             String bootstrapClassName,
@@ -98,8 +98,7 @@ public class SOFAArkTestBiz extends BizModel {
 
     public void registerBiz() {
         // firstly, we need to register the biz into ark container.
-        ArkClient.getBizManagerService()
-                .registerBiz(this);
+        ArkClient.getBizManagerService().registerBiz(this);
     }
 
     /**

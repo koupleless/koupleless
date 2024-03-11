@@ -25,6 +25,7 @@ import com.alipay.sofa.ark.container.service.ArkServiceContainerHolder;
 import com.alipay.sofa.ark.loader.JarPluginArchive;
 import com.alipay.sofa.ark.loader.archive.JarFileArchive;
 import com.alipay.sofa.ark.spi.archive.PluginArchive;
+import com.alipay.sofa.ark.spi.model.BizState;
 import com.alipay.sofa.ark.spi.model.Plugin;
 import com.alipay.sofa.ark.spi.service.PriorityOrdered;
 import com.alipay.sofa.ark.spi.service.biz.BizFactoryService;
@@ -52,12 +53,13 @@ import static com.alipay.sofa.ark.spi.constant.Constants.MASTER_BIZ;
 public class SOFAArkTestBootstrap {
 
     @Getter
-    private static URLClassLoader baseClassLoader;
+    private static URLClassLoader      baseClassLoader;
 
-    private static ArkServiceContainer INSTANCE = new ArkServiceContainer(new String[0]);
-    private static AtomicBoolean       started  = new AtomicBoolean();
+    private static ArkServiceContainer INSTANCE            = new ArkServiceContainer(new String[0]);
+    private static AtomicBoolean       started             = new AtomicBoolean();
+    private static AtomicBoolean       masterBizRegistered = new AtomicBoolean();
 
-    private static List<String> pluginDependencies = new ArrayList<>();
+    private static List<String>        pluginDependencies  = new ArrayList<>();
 
     private static boolean isPluginDependency(String path) {
         return pluginDependencies.stream().anyMatch(
@@ -70,23 +72,16 @@ public class SOFAArkTestBootstrap {
         pluginDependencies.add("web-ark-plugin");
         pluginDependencies.add("koupleless-base-plugin");
 
-        ArkServiceContainer container = ArkServiceContainerHolder
-                .getContainer();
+        ArkServiceContainer container = ArkServiceContainerHolder.getContainer();
         for (URL url : SOFAArkTestBootstrap.getBaseClassLoader().getURLs()) {
             String path = url.getPath();
             if (isPluginDependency(path)) {
                 JarFileArchive archive = new JarFileArchive(new File(url.getFile()));
                 PluginArchive pluginArchive = new JarPluginArchive(archive);
-                Plugin plugin = container
-                        .getService(PluginFactoryService.class)
-                        .createEmbedPlugin(
-                                pluginArchive,
-                                Thread.currentThread().getContextClassLoader()
-                        );
+                Plugin plugin = container.getService(PluginFactoryService.class).createEmbedPlugin(
+                    pluginArchive, Thread.currentThread().getContextClassLoader());
 
-                ArkClient
-                        .getPluginManagerService()
-                        .registerPlugin(plugin);
+                ArkClient.getPluginManagerService().registerPlugin(plugin);
             }
         }
         container.getService(ClassLoaderService.class).prepareExportClassAndResourceCache();
@@ -96,38 +91,30 @@ public class SOFAArkTestBootstrap {
     public static void publicService() {
         ArkServiceContainer container = ArkServiceContainerHolder.getContainer();
         RegistryService registryService = container.getService(RegistryService.class);
-        registryService.publishService(
-                BizManagerService.class, container.getService(BizManagerService.class),
-                new ContainerServiceProvider(PriorityOrdered.HIGHEST_PRECEDENCE)
-        );
-        registryService.publishService(
-                ClassLoaderService.class, container.getService(ClassLoaderService.class),
-                new ContainerServiceProvider(PriorityOrdered.HIGHEST_PRECEDENCE)
-        );
-        registryService.publishService(
-                InjectionService.class, container.getService(InjectionService.class),
-                new ContainerServiceProvider(PriorityOrdered.HIGHEST_PRECEDENCE)
-        );
-        registryService.publishService(
-                BizFactoryService.class, container.getService(BizFactoryService.class),
-                new ContainerServiceProvider(PriorityOrdered.HIGHEST_PRECEDENCE)
-        );
-        registryService.publishService(
-                PluginManagerService.class, container.getService(PluginManagerService.class),
-                new ContainerServiceProvider(PriorityOrdered.HIGHEST_PRECEDENCE)
-        );
-        registryService.publishService(
-                PluginFactoryService.class, container.getService(PluginFactoryService.class),
-                new ContainerServiceProvider(PriorityOrdered.HIGHEST_PRECEDENCE)
-        );
-        registryService.publishService(
-                EventAdminService.class, container.getService(EventAdminService.class),
-                new ContainerServiceProvider(PriorityOrdered.HIGHEST_PRECEDENCE)
-        );
-        registryService.publishService(
-                RegistryService.class, container.getService(RegistryService.class),
-                new ContainerServiceProvider(PriorityOrdered.HIGHEST_PRECEDENCE)
-        );
+        registryService.publishService(BizManagerService.class, container
+            .getService(BizManagerService.class), new ContainerServiceProvider(
+            PriorityOrdered.HIGHEST_PRECEDENCE));
+        registryService.publishService(ClassLoaderService.class, container
+            .getService(ClassLoaderService.class), new ContainerServiceProvider(
+            PriorityOrdered.HIGHEST_PRECEDENCE));
+        registryService.publishService(InjectionService.class, container
+            .getService(InjectionService.class), new ContainerServiceProvider(
+            PriorityOrdered.HIGHEST_PRECEDENCE));
+        registryService.publishService(BizFactoryService.class, container
+            .getService(BizFactoryService.class), new ContainerServiceProvider(
+            PriorityOrdered.HIGHEST_PRECEDENCE));
+        registryService.publishService(PluginManagerService.class, container
+            .getService(PluginManagerService.class), new ContainerServiceProvider(
+            PriorityOrdered.HIGHEST_PRECEDENCE));
+        registryService.publishService(PluginFactoryService.class, container
+            .getService(PluginFactoryService.class), new ContainerServiceProvider(
+            PriorityOrdered.HIGHEST_PRECEDENCE));
+        registryService.publishService(EventAdminService.class, container
+            .getService(EventAdminService.class), new ContainerServiceProvider(
+            PriorityOrdered.HIGHEST_PRECEDENCE));
+        registryService.publishService(RegistryService.class, container
+            .getService(RegistryService.class), new ContainerServiceProvider(
+            PriorityOrdered.HIGHEST_PRECEDENCE));
     }
 
     public static void init(ClassLoader baseClassLoader) {
@@ -138,6 +125,17 @@ public class SOFAArkTestBootstrap {
             setUpPlugins();
 
             ArkServiceContainerHolder.setContainer(INSTANCE);
+        }
+    }
+
+    public static void registerMasterBiz() {
+        if (masterBizRegistered.compareAndSet(false, true)) {
+            BizModel bizModel = new BizModel();
+            bizModel.setBizName("master biz");
+            bizModel.setBizVersion("TEST");
+            bizModel.setClassLoader(baseClassLoader);
+            bizModel.setBizState(BizState.RESOLVED);
+            ArkClient.setMasterBiz(bizModel);
         }
     }
 }

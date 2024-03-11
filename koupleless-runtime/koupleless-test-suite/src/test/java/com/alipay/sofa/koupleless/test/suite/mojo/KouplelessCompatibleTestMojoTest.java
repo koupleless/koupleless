@@ -16,6 +16,7 @@
  */
 package com.alipay.sofa.koupleless.test.suite.mojo;
 
+import com.alipay.sofa.koupleless.test.suite.mock.TestJunit4Class;
 import org.apache.maven.model.Build;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
@@ -50,7 +51,7 @@ public class KouplelessCompatibleTestMojoTest {
     }
 
     @Test
-    public void testJunit4() {
+    public void testJunit4() throws Throwable {
         mojo.execute();
     }
 }
