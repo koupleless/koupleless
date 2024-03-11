@@ -99,6 +99,7 @@ public class KouplelessBizSpringTestApplication {
                 eventAdminService.sendEvent(new BeforeBizStartupEvent(testBiz));
                 Class<?> mainClass = testBiz.getBizClassLoader().loadClass(config.getMainClass());
                 SpringApplication springApplication = new SpringApplication(mainClass);
+                springApplication.setAdditionalProfiles(config.getBizName());
                 applicationContext = springApplication.run();
                 eventAdminService.sendEvent(new AfterBizStartupEvent(testBiz));
 

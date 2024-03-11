@@ -18,19 +18,20 @@ package com.alipay.sofa.koupleless.test.suite.spring.base;
 
 import com.alipay.sofa.ark.api.ArkClient;
 import com.alipay.sofa.ark.api.ArkConfigs;
-import com.alipay.sofa.ark.container.model.BizModel;
 import com.alipay.sofa.koupleless.common.BizRuntimeContext;
 import com.alipay.sofa.koupleless.common.BizRuntimeContextRegistry;
 import com.alipay.sofa.koupleless.test.suite.biz.SOFAArkTestBootstrap;
 import com.alipay.sofa.koupleless.test.suite.spring.model.KouplelessBaseSpringTestConfig;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import static com.alipay.sofa.ark.spi.constant.Constants.MASTER_BIZ;
@@ -71,6 +72,7 @@ public class KouplelessBaseSpringTestApplication {
                         .collect(Collectors.toList()));
             }
         };
+        springApplication.setAdditionalProfiles("base");
 
         springApplication.addListeners(
                 new ApplicationListener<ApplicationEnvironmentPreparedEvent>() {
