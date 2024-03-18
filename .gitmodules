@@ -5,15 +5,20 @@
 [submodule "arkctl"]
 	path = arkctl
 	url = https://github.com/koupleless/arkctl.git
+	branch = main
 [submodule "module-controller"]
 	path = module-controller
 	url = https://github.com/koupleless/module-controller.git
+	branch = main
 [submodule "runtime"]
 	path = runtime
 	url = https://github.com/koupleless/runtime.git
+	branch = main
 [submodule "samples"]
 	path = samples
 	url = https://github.com/koupleless/samples.git
+	branch = main
 [submodule "docs"]
 	path = docs
 	url = https://github.com/koupleless/docs.git
+	branch = main
