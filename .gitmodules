@@ -1,24 +1,24 @@
 [submodule "sofa-ark"]
 	path = sofa-ark
-	url = https://github.com/sofastack/sofa-ark/tree/master
+	url = https://github.com/sofastack/sofa-ark
 	branch = master
 [submodule "arkctl"]
 	path = arkctl
-	url = https://github.com/koupleless/arkctl/tree/main
+	url = https://github.com/koupleless/arkctl
 	branch = main
 [submodule "module-controller"]
 	path = module-controller
-	url = https://github.com/koupleless/module-controller/tree/main
+	url = https://github.com/koupleless/module-controller
 	branch = main
 [submodule "runtime"]
 	path = runtime
-	url = https://github.com/koupleless/runtime/tree/main
+	url = https://github.com/koupleless/runtime
 	branch = main
 [submodule "samples"]
 	path = samples
-	url = https://github.com/koupleless/samples/tree/main
+	url = https://github.com/koupleless/samples
 	branch = main
 [submodule "docs"]
 	path = docs
-	url = https://github.com/koupleless/docs/tree/main
+	url = https://github.com/koupleless/docs
 	branch = main
