@@ -22,3 +22,7 @@
 	path = docs
 	url = https://github.com/koupleless/docs
 	branch = main
+[submodule "adapter"]
+	path = adapter
+	url = git@github.com:koupleless/adapter.git
+	branch = main
