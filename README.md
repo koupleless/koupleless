@@ -21,7 +21,7 @@ Would you like your application to start in just 10 seconds, consuming only 20MB
 7. High costs associated with microservice decomposition and evolution
 
 How does Koupleless address these issues? Koupleless vertically and horizontally splits traditional applications, with the vertical split separating the base and the horizontal split separating multiple modules. The base shields modules from infrastructure concerns, while modules contain only the business-specific portion, enabling quick startup and insulating them from infrastructure concerns, allowing module developers to experience a Serverless-like environment. Koupleless thus evolves into a low-cost, Serverless solution by refining the granularity of development and operations while shielding infrastructure. For detailed explanations of the principles, please refer to the official website.
-Further detailed explanations of the principles are available on [the official website](https://koupleless.gitee.io/docs/introduction/architecture/arch-principle/).
+Further detailed explanations of the principles are available on [the official website](https://koupleless.io/docs/introduction/architecture/arch-principle/).
 
 ![image](https://github.com/koupleless/koupleless/assets/3754074/004c0fa5-62f6-42d7-a77e-f7152ac89248)
 
@@ -51,7 +51,7 @@ So, in physical terms, a module can be considered as one ClassLoader + one Sprin
 The base is just a regular application, same with the original app (such as standard SpringBoot).
 
 ## Quick start
-Please check [the official website Quick Start](https://koupleless.gitee.io/docs/quick-start/).
+Please check [the official website Quick Start](https://koupleless.io/docs/quick-start/).
 
 https://github.com/koupleless/koupleless/assets/3754074/e44c9406-4bd4-4fcf-babc-4ae9e615984e
 
