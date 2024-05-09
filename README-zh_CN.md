@@ -21,7 +21,7 @@ English | [简体中文](./README-zh_CN.md)
 7. 微服务拆分、演进成本高
 
 为什么 Koupleless 能解决呢？原因是 Koupleless 对传统应用同时进行了纵向和横向的拆分，纵向拆分出基座，横向拆分出多个模块，基座为模块屏蔽基础设施，模块只包含业务自身部分启动快且不感知基础设施专注于业务本身，模块开发者实际上具备了 Serverless 的体验。所以 Koupleless 是从细化研发运维粒度和屏蔽基础设施的两个方面，演进出的一套低成本接入的 Serverless 解决方案。
-详细原理介绍[可以查看官网介绍](https://koupleless.gitee.io/docs/introduction/architecture/arch-principle/)。
+详细原理介绍[可以查看官网介绍](https://koupleless.io/docs/introduction/architecture/arch-principle/)。
 
 ![image](https://github.com/koupleless/koupleless/assets/3754074/004c0fa5-62f6-42d7-a77e-f7152ac89248)
 
@@ -48,7 +48,7 @@ Koupleless 是蚂蚁集团内部经过 5 年打磨成熟的研发框架和运维
 基座就是普通应用，与原有体系（比如标准 SpringBoot）没有任何区别。
 
 ## 快速开始
-请查看[官网快速开始](https://koupleless.gitee.io/docs/quick-start/)
+请查看[官网快速开始](https://koupleless.io/docs/quick-start/)
 
 https://github.com/koupleless/koupleless/assets/3754074/e44c9406-4bd4-4fcf-babc-4ae9e615984e
 
