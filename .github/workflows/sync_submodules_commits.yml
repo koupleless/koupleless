@@ -1,0 +1,47 @@
+name: Sync Submodules Commits
+
+on:
+  workflow_dispatch:
+  # 定时任务，每天在 UTC 时间 00:00 执行
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      # 检出代码
+      - name: Checkout main repository
+        uses: actions/checkout@v2
+        with:
+          # 确保将 submodules 也检出
+          submodules: 'recursive'
+
+      # 同步子模块的 commit 信息
+      - name: Sync submodule commits
+        run: |
+          ### 这里需要添加您的自定义脚本 ###
+          # 如此简单的脚本可以在这里直接运行，但对更复杂的情况来说，
+          # 您可能需要创建一个专门的脚本文件，并在这里调用它。
+          echo "Syncing submodule commits..."
+          
+          # 循环访问所有子模块
+          for submodule in $(git config --file .gitmodules --get-regexp path | awk '{ print $2 }')
+          do
+            echo "Checking latest commits for $submodule ..."
+            # 拉取子模块的最新信息，确保主仓库的子模块引用是最新的
+            git -C $submodule pull
+            echo "Synced latest commits for $submodule."
+          done
+          ### 自定义脚本结束 ###
+
+      # 如果submodule有更新，则提交到主仓库
+      - name: Commit changes
+        run: |
+          git config --global user.name 'lvjing2'
+          git config --global user.email 'leojames.googol@gmail.com'
+          git add .
+          git commit -m "Updated submodules to latest commits" || echo "No commits to update"
+          git push
+
+# 注意：该工作流程只是一个模板，具体详细逻辑可能需要在脚本中实现，并且需要适当配置您的Git 用户名和邮箱。
