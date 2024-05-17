@@ -20,21 +20,7 @@ jobs:
       # 同步子模块的 commit 信息
       - name: Sync submodule commits
         run: |
-          ### 这里需要添加您的自定义脚本 ###
-          # 如此简单的脚本可以在这里直接运行，但对更复杂的情况来说，
-          # 您可能需要创建一个专门的脚本文件，并在这里调用它。
-          echo "Syncing submodule commits..."
-          
-          # 循环访问所有子模块
-          for submodule in $(git config --file .gitmodules --get-regexp path | awk '{ print $2 }')
-          do
-            echo "Checking latest commits for $submodule ..."
-            # 拉取子模块的最新信息，确保主仓库的子模块引用是最新的
-            git -C $submodule pull
-            echo "Synced latest commits for $submodule."
-          done
-          ### 自定义脚本结束 ###
-
+          git submodule update --recursive --remote
       # 如果submodule有更新，则提交到主仓库
       - name: Commit changes
         run: |
