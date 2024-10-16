@@ -67,7 +67,7 @@ We appreciate anyone who contribute here together. Please scan the QR code to jo
 | DingTalk group (recommand) | 24970018417 | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/7ba1db74-20c1-43a4-a2ab-d38c99a920cd"> |
 | WeChat                     | zzl_ing     | <img width="256" alt="image" src="https://github.com/koupleless/koupleless/assets/3754074/35ebc2bc-86cd-4a24-b12e-e9f44cccc2d7"> |
 
-you can also join us by [discord](https://discord.gg/JxgX5Xam)
+you can also join us by [discord](https://discord.gg/bqx9RDbSfF)
 
 ## Long-term planning and our vision
 We hope to further refine and open up these capabilities to be more extreme and applicable to a wider range of scenarios. Help more businesses solve application development problems, achieve cost reduction and efficiency improvement, and ultimately become an excellent research and development framework and solution for global green computing, achieving:
