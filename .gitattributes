@@ -1,0 +1,2 @@
+*.java linguist-language=java
+*.gitmodules linguist-language=java
