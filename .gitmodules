@@ -26,3 +26,9 @@
 	path = adapter
 	url = git@github.com:koupleless/adapter.git
 	branch = main
+[submodule "scanner"]
+	path = scanner
+	url = git@github.com:koupleless/scanner.git
+[submodule "koupleless-idea"]
+	path = koupleless-idea
+	url = git@github.com:koupleless/koupleless-idea.git
