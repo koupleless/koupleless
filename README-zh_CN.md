@@ -50,6 +50,14 @@ Koupleless 是蚂蚁集团内部经过 5 年打磨成熟的研发框架和运维
 ## 快速开始
 请查看[官网快速开始](https://koupleless.io/docs/quick-start/)
 
+## 黑客松高手学习
+已经掌握基础知识，想要在黑客松中挑战高阶场景？请查看 **[黑客松高手学习指南](./HACKATHON.md)**，涵盖：
+- 存量应用低成本模块化改造
+- 跨模块服务调用（`@AutowiredFromBase`、`@AutowiredFromBiz`、`SpringServiceFinder`）
+- 模块动态热更新与回滚
+- 类加载隔离问题排查
+- 中台模式（SPI + 多模块策略）实战
+
 https://github.com/koupleless/koupleless/assets/3754074/e44c9406-4bd4-4fcf-babc-4ae9e615984e
 
 ## Koupleless 组件

@@ -53,6 +53,14 @@ The base is just a regular application, same with the original app (such as stan
 ## Quick start
 Please check [the official website Quick Start](https://koupleless.io/docs/quick-start/).
 
+## Hackathon Expert Learning
+Already familiar with the basics and ready for advanced hackathon challenges? Check out the **[Hackathon Expert Learning Guide](./HACKATHON.md)** (Chinese), covering:
+- Low-cost modularization of existing applications
+- Cross-module service invocation (`@AutowiredFromBase`, `@AutowiredFromBiz`, `SpringServiceFinder`)
+- Module hot-update and rollback with zero downtime
+- Troubleshooting ClassLoader isolation issues
+- Middle-tier (SPI + multi-module strategy) architecture in practice
+
 https://github.com/koupleless/koupleless/assets/3754074/e44c9406-4bd4-4fcf-babc-4ae9e615984e
 
 ## Koupleless Components
